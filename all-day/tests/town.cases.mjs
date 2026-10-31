@@ -287,7 +287,7 @@ export async function townCases(h) {
       photo: !!document.querySelector('.tf-photo .ph'), news: document.querySelector('.tf-news .tf-tag').textContent }));
     check(JSON.stringify(top.chips.slice(0, 3)) === JSON.stringify(['Pretend parking ban tonight', '1 school closing or delay', '40 without power']) && top.chips.includes('54°') && top.chips.includes('Lake 51°') && top.chips.some((c) => /^Sunset \d/.test(c)), 'the demo’s top: a ban, a closing, an outage, the weather', top.chips.join(' | '));
     check(!top.cam, 'the demo makes no call to the camera', '');
-    check(top.night >= 3 && top.title === 'Tonight', 'the demo’s Tonight has its rows', JSON.stringify(top));
+    check(top.night >= 3 && /^(Tonight|Tomorrow)$/.test(top.title), 'the demo’s Tonight has its rows', JSON.stringify(top));
     check(/12\s+new on the calendar/.test(top.rollup) && top.photo && top.news === 'Demo Daily', 'the demo has a rollup, a painted picture and a news tile', JSON.stringify(top));
     await page.click('#subnav .secpill .chip[data-chip="homes"], #subnav .secpill .chip:has-text("Homes")');
     await page.waitForTimeout(250);
@@ -689,7 +689,7 @@ export async function townCases(h) {
     await settle(page);
     check(await page.$eval('#panel-guides [data-k="new-library"]', (r) => r.classList.contains('done')), 'and is still ticked next time', '');
     const pages = await page.$$eval('#panel-guides [data-sec="all"] .lrow a.t', (as) => as.map((a) => new URL(a.href).pathname));
-    check(['/housing.html', '/contractors.html', '/volunteer.html', '/beaches.html', '/hobbies.html', '/history.html', '/gifts.html'].every((x) => pages.includes(x)), 'All guides opens each guide page', JSON.stringify(pages));
+    check(['/housing.html', '/volunteer.html', '/beaches.html', '/hobbies.html', '/history.html', '/gifts.html'].every((x) => pages.includes(x)), 'All guides opens each guide page', JSON.stringify(pages));
     await ctx.close();
   });
 

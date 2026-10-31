@@ -545,5 +545,8 @@ export function seedDemo(fake) {
   add(2, 'rescue', 'rescue', 'Eight bowls of noodles at close', { ago: 1, meta: { spot: 'A noodle bar on Church St', until: '10 pm', price: 0, portions: 8 }, votes: 5 });
   add(6, 'rescue', 'rescue', 'Day-old bread, half price', { ago: 2, meta: { spot: 'A bakery in the Old North End', until: '7 pm', price: 3, portions: 12 }, votes: 3 });
   add(9, 'rescue', 'rescue', 'Soup at the end of the night', { ago: 4, meta: { spot: 'A cafe on Pine St', until: '9 pm', price: 4, portions: 6 }, votes: 2 });
+  add(0, 'mind', 'sit', 'Five minutes on the bench at Oakledge. Came back a different person.', { ago: 1, meta: { minutes: 5 } });
+  add(1, 'mind', 'sit', 'Mind wandered the whole time. Stayed anyway.', { ago: 9, meta: { minutes: 3 } });
+  add(4, 'mind', 'sit', 'Ten minutes before the kids woke up.', { ago: 30, meta: { minutes: 10 } });
   return fake;
 }

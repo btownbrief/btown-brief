@@ -66,6 +66,9 @@
      on Burlington's Monday. Mark done is kept on this device, like a
      mission's.
 
+   - Talk (2026-10-30, All Day only): something to talk about, one big card
+     at a time. A view of its own, in talk.js.
+
    ?demo=1 runs this same file on data/demo/whatnow.json, which holds every
    payload in its real shape; its dates are moved to today on load. */
 
@@ -78,9 +81,11 @@ import { sectionBar, hold } from '../sections.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
 import { sunScore } from '../sun.js';
+import * as talk from './talk.js';
 
 const KEY = 'whatnow';
-const MODES = ['spin', 'missions', 'tonight'];
+const HAS_TALK = app.APP.id === 'all-day';
+const MODES = HAS_TALK ? ['spin', 'missions', 'talk', 'tonight'] : ['spin', 'missions', 'tonight'];
 const MISSIONS_URL = '../data/missions.json';
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 const MEETS_SHOWN = 3;
@@ -186,7 +191,7 @@ function load() {
 }
 
 function repaint() {
-  if (!root || app.activeTab() !== KEY || S.rolling || (S.mode === 'tonight' && embed)) return;
+  if (!root || app.activeTab() !== KEY || S.rolling || S.mode === 'talk' || (S.mode === 'tonight' && embed)) return;
   const y = panel() ? panel().scrollTop : 0;
   render();
   app.paintSubnav();
@@ -230,7 +235,8 @@ function render() {
   if (!root) return;
   closeBandcamp();
   root.innerHTML = '';
-  if (S.mode === 'tonight') {
+  if (S.mode === 'talk') talk.render(root);
+  else if (S.mode === 'tonight') {
     const wx = weatherLine(true);
     if (wx) root.appendChild(wx);
     renderTonight();
@@ -1302,11 +1308,12 @@ function stopReel() {
 }
 
 /* Spin and Missions are one view, so moving between them is a scroll;
-   Tonight is the other view. */
+   Tonight and Talk are views of their own. */
 const PILL = 'sec-whatnow';
 const jumpMissions = () => { const s = root && root.querySelector('[data-sec="missions"]'); if (s) app.jumpTo(s); };
 function setMode(mode) {
-  const sameView = mode !== 'tonight' && S.mode !== 'tonight';
+  const alone = (m) => m === 'tonight' || m === 'talk';
+  const sameView = !alone(mode) && !alone(S.mode);
   if (!sameView) stopReel();
   S.mode = mode;
   /* the pill's water goes to the mode now; the scroll to Missions waits for it */
@@ -1317,13 +1324,19 @@ function setMode(mode) {
   if (mode === 'missions') jumpMissions(); else app.scrollTop();
 }
 
-/* #whatnow/spin|missions|tonight picks the mode; #whatnow/m14 opens a
-   mission in the list and flashes it; #whatnow/e-<id> a card tonight. */
+/* #whatnow/spin|missions|talk|tonight picks the mode; #whatnow/m14 opens a
+   mission in the list and flashes it; #whatnow/e-<id> a card tonight;
+   #whatnow/t-<id> deals that card in Talk. */
 function land() {
   if (!pending || !ready) return;
   const k = pending; pending = null;
   if (MODES.includes(k)) { if (S.mode !== k) setMode(k); return; }
-  const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : /^c-/.test(k) && S.mode === 'tonight' ? 'spin' : null;
+  if (HAS_TALK && /^t-/.test(k)) {
+    if (S.mode !== 'talk') setMode('talk');
+    talk.open(k.slice(2)).then((found) => { if (!found) app.toast('That one has passed.'); });
+    return;
+  }
+  const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : /^c-/.test(k) && S.mode !== 'spin' && S.mode !== 'missions' ? 'spin' : null;
   if (want && (S.mode !== want || (want === 'missions' && S.theme !== 'all'))) { stopReel(); S.mode = want; S.theme = 'all'; app.paintSubnav(); render(); }
   if (!app.flashHit(root, k)) app.toast(want === 'missions' ? 'That mission isn’t on the list any more.' : /^c-/.test(k) ? 'That challenge isn’t up this week.' : 'That one has passed.');
 }
@@ -1356,9 +1369,10 @@ app.register(KEY, {
       items: [
         { key: 'spin', label: 'Spin', icon: ICON.shuffle },
         { key: 'missions', label: 'Missions', n: S.missions ? doneCount() + '/' + missions().length : null },
+        ...(HAS_TALK ? [{ key: 'talk', label: 'Talk' }] : []),
         { key: 'tonight', label: 'Tonight', n: S.events ? tonight().length : null },
       ],
-      find: (k) => (!root || S.mode === 'tonight' ? null : k === 'spin' ? root.firstElementChild : k === 'missions' ? root.querySelector('[data-sec="missions"]') : null),
+      find: (k) => (!root || S.mode === 'tonight' || S.mode === 'talk' ? null : k === 'spin' ? root.firstElementChild : k === 'missions' ? root.querySelector('[data-sec="missions"]') : null),
       onPick: (k) => { if (k !== S.mode) setMode(k); else if (k === 'missions') jumpMissions(); else app.scrollTop(true); } });
   },
   keepSubnav: true,

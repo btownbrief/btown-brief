@@ -32,7 +32,7 @@
    The segments are buttons with the shared chip markup (data-chip, the
    label, an optional count), so a tab reads and is tested the same way.
 
-   Top tabs (2026-10-29, wave 0 of the eight apps). The pill is each bottom
+   Top tabs (2026-10-29). The pill is each bottom
    tab's row of top tabs, under the mast on every tab and still there as
    you scroll (the shell keeps any tab's .secbar when the mast steps away).
    Three shell rules any tab can use:

@@ -37,6 +37,12 @@ The file:
        channels' last 365 days, newest first, then the back catalogue
    "skip":["B6Z9MM1LhEA"]}                                     films.json keys that will not play
 
+A film with a Rotten Tomatoes score carries `tm`, the percent. One on
+films.json has its score there; the channels' other finds ask OMDb by IMDb id
+(OMDB_API_KEY) at most 100 times a day, each about weekly, and the answers
+wait in trailers-seen.json. With no key no entry has a score, and any OMDb
+trouble leaves the file as it would have been.
+
 The back catalogue is every film on films.json with a trailer key that is not
 already in the file, in shelf order. These rows have no at and no ch, and no
 overview, to keep the file small; the page reads a row with no at as one with
@@ -49,8 +55,9 @@ is used. A failure anywhere keeps the last file. The last file is also read
 back in as the memory of older weeks, since a feed only holds 15 items.
 
 trailers-seen.json, beside it and not read by the page: titles TMDB has not
-matched (retried for 7 days, because TMDB lags a new upload) and the keys
-already checked, films.json's and the last file's own (again after 30 days).
+matched (retried for 7 days, because TMDB lags a new upload), the keys
+already checked, films.json's and the last file's own (again after 30 days),
+and OMDb's answers.
 
   python3 scripts/build_trailers.py --out data/trailers.json
   python3 scripts/build_trailers.py --selftest
@@ -89,7 +96,8 @@ HOT_HOURS = 72
 PAST_DAYS = 365
 PAST_MAX = 300
 BACK_SHELVES = ("now", "soon", "trend", "stream", "top")    # movies only: the card's list is films
-BACK_FIELDS = ("id", "t", "y", "d", "g", "rt", "p", "yt")
+BACK_FIELDS = ("id", "t", "y", "d", "g", "rt", "p", "yt", "tm")
+SCORE_MAX = 100          # OMDb asks a day; build_films.py has 800 of the free 1,000
 RELEASE_BACK = 120       # a film released longer ago than this is not new
 RETRY_DAYS = 7           # TMDB can lag a new upload this long
 RECHECK_DAYS = 30
@@ -563,6 +571,32 @@ def back_catalogue(fresh, past, films, prev, dead):
     return out
 
 
+def add_scores(rows, films, seen, omdb, api, today):
+    """`tm` on each row: from films.json when the film is on it, else OMDb."""
+    if omdb is None:
+        for e in rows:
+            e.pop("tm", None)
+        return
+    shelved = {f["id"]: f.get("tm") for shelf in BACK_SHELVES for f in (films or {}).get(shelf) or [] if isinstance(f, dict) and "id" in f}
+    cache = seen["scores"] = bf.clean_scores(seen.get("scores"))
+    left = bf.asks_left(cache, today, SCORE_MAX)
+    asks = []
+    for e in rows:
+        fid = e.get("id")
+        if fid in shelved:
+            if shelved[fid] is None:
+                e.pop("tm", None)
+            else:
+                e["tm"] = shelved[fid]
+        elif isinstance(fid, int) and fid < LOCAL_ID:
+            imdb = (cache["titles"].get(f"m{fid}") or {}).get("i", "")
+            if not imdb and api and left > 0:     # a title's IMDb id is asked for only when OMDb can be too
+                left -= 1
+                imdb = bf.imdb_of({"external_ids": api.get(f"/movie/{fid}/external_ids")})
+            asks.append((f"m{fid}", imdb, e))
+    bf.score(asks, cache, omdb, today, SCORE_MAX)
+
+
 def strip(entry):
     return {k: v for k, v in entry.items() if not k.startswith("_") and v != ""}
 
@@ -587,13 +621,15 @@ def check_keys(keys, facts_for, seen, now, limit=None):
     return [k for k in keys if k in checked and not checked[k][1]]
 
 
-def run(args, fetch=None, api=None, now=None):
+def run(args, fetch=None, api=None, now=None, omdb=None):
     fetch = fetch or http_get
     now = now or int(datetime.now(timezone.utc).timestamp())
     yt_key = "" if args.rss else os.environ.get("YOUTUBE_API_KEY", "").strip()
     tmdb_key = os.environ.get("TMDB_API_KEY", "").strip()
     if api is None and tmdb_key:
         api = bf.Tmdb(tmdb_key)
+    omdb_key = os.environ.get("OMDB_API_KEY", "").strip()
+    omdb = omdb or (bf.Omdb(omdb_key) if omdb_key else None)
     prev = read_json(args.out)
     seen_path = args.seen or os.path.join(os.path.dirname(args.out) or ".", "trailers-seen.json")
     seen = read_json(seen_path)
@@ -627,6 +663,10 @@ def run(args, fetch=None, api=None, now=None):
         log("nothing passed the gates; keeping the last file")
         return 0
     past = back_catalogue(fresh, past, films, prev, dead)
+    try:
+        add_scores(fresh + past, films, seen, omdb, api, datetime.fromtimestamp(now, timezone.utc).date().isoformat())
+    except Exception as e:  # noqa: BLE001 — a score is never worth the file
+        log(f"no new scores this run ({type(e).__name__})")
     built = datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     source = ("YouTube" if yt_key else "YouTube RSS") + (", TMDB" if api else "")
     bf.write_json(args.out, {"v": 1, "built": built, "source": source, "fresh": fresh, "past": past, "skip": skip})
@@ -752,6 +792,41 @@ def selftest():
         assert build([old], lambda ids: {"rejectedOne": {"secs": secs, "plays": plays, "views": 0}}, prior, {}, {}, SELFTEST_NOW) == ([], [])
     assert build([], lambda ids: {}, prior, {}, {}, SELFTEST_NOW, dead={"rejectedOne"}) == ([], [])
     assert [e["yt"] for e in build([], lambda ids: {}, prior, {}, {}, SELFTEST_NOW)[1]] == ["rejectedOne"], "unknown is not rejected"
+
+    # Rotten Tomatoes: films.json's score first, a fake OMDb for the rest
+    class FakeOmdb:
+        asked = []
+
+        def score(self, imdb):
+            self.asked.append(imdb)
+            return {"tt0000011": 88, "tt0000012": 40}.get(imdb)
+
+    class Ids:
+        calls = 0
+
+        def get(self, path, **params):
+            Ids.calls += 1
+            return {"imdb_id": "tt%07d" % int(path.split("/")[2])}
+
+    day = "2026-10-30"
+    films = {"top": [{"id": 1, "t": "Shelved", "yt": "aaaaaaaaaaa", "tm": 97}, {"id": 2, "t": "Unscored", "yt": "bbbbbbbbbbb"}]}
+    back = back_catalogue([], [], films, {}, set())
+    assert back[0]["tm"] == 97 and "tm" not in back[1], "the back catalogue carries films.json's score"
+    rows = [{"id": 1}, {"id": 2, "tm": 5}, {"id": 11}, {"id": 12}, {"id": 13}, {"id": LOCAL_ID + 3}]
+    seen = {}
+    omdb = FakeOmdb()
+    add_scores(rows, films, seen, omdb, Ids(), day)
+    assert [r.get("tm") for r in rows] == [97, None, 88, 40, None, None], rows
+    assert omdb.asked == ["tt0000011", "tt0000012", "tt0000013"] and Ids.calls == 3, "only what is not on films.json asks, and a local id never does"
+    assert seen["scores"]["used"] == 3 and json.loads(json.dumps(seen))["scores"]["titles"]["m11"]["tm"] == 88
+    add_scores(rows, films, seen, omdb, Ids(), day)
+    assert len(omdb.asked) == 3 and Ids.calls == 3 and rows[2]["tm"] == 88, "an answer is held for the week"
+    add_scores(rows, {}, {"scores": {"day": day, "used": SCORE_MAX, "titles": {}}}, omdb, Ids(), day)
+    assert len(omdb.asked) == 3 and Ids.calls == 3, "the day's asks are spent"
+    assert rows[0]["tm"] == 97, "films.json not loading leaves a carried score alone"
+    add_scores(rows, films, seen, None, Ids(), day)
+    assert not any("tm" in r for r in rows), "no key, no score"
+    assert "scores" in seen and len(omdb.asked) == 3
     print("selftest ok")
 
 

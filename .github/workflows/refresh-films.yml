@@ -35,6 +35,10 @@ name: Refresh the Watch tab's films
 # the time machine skip quietly; showtimes still build (their TMDB match,
 # which adds posters, is skipped).
 #
+# OMDB_API_KEY, a second secret, adds Rotten Tomatoes scores to the film list.
+# Without it the list builds with no scores. data/tomatoes.json, the scores
+# already asked for, rides on the films-data branch from run to run.
+#
 # Failure posture: a builder that fails writes nothing and the branch keeps
 # that file's last good copy; whatever did build is still published, and
 # the run then fails (red, so it is seen). A manual run from any branch but
@@ -134,7 +138,10 @@ jobs:
         continue-on-error: true
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        run: python3 scripts/build_films.py --out /tmp/films-new/data/films.json
+          OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
+        run: |
+          python3 scripts/build_films.py --out /tmp/films-new/data/films.json \
+            --tomatoes-prev /tmp/films-out/data/tomatoes.json
 
       - name: Build the time machine
         id: tm

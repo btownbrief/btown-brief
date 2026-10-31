@@ -51,7 +51,7 @@ const TRAIL_CAP = 40;
 const VISIT_GAP = 1800; // 30 quiet minutes starts a new visit
 
 /* ---------------------------------------------------------------- the app */
-/* The eight apps share one origin, so one reader's saves, mutes, reads,
+/* The apps share one origin, so one reader's saves, mutes, reads,
    theme and settings are the same in all of them. What is each app's own:
    the visit ("new since you last looked" is since you last looked HERE),
    and whether it is on the home screen. All Day keeps its old keys. */

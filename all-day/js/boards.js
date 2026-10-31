@@ -498,6 +498,7 @@ app.onAct('bdelete', (it) => {
    its title and body, its own fields as a small schema, and its notes
    ("We feature, we don't review."). Fields:
      { key, label, type: 'text' | 'int' | 'enum' | 'url', options: [[value, label]], placeholder, required }
+   opts.meta: fields the tab already knows, sent without asking.
    Only keys the board's rules know are accepted by the server. */
 export function compose(opts) {
   const board = opts.board, kind = opts.kind;
@@ -598,7 +599,7 @@ function form(body, card, close, opts, rule, prof) {
     e.preventDefault();
     const fd = new FormData(f);
     const say = (code) => { msg.textContent = message(code); msg.classList.add('err'); go.disabled = false; };
-    const meta = {};
+    const meta = { ...opts.meta };
     (opts.fields || []).forEach((x) => {
       const v = String(fd.get('m:' + x.key) || '').trim();
       if (!v) return;

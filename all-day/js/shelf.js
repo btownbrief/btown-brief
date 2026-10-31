@@ -1,5 +1,5 @@
-/* shelf.js — the tab a mode has not been built for yet (wave 0 of the eight
-   apps, 2026-10-29). Never a blank screen:
+/* shelf.js — the tab a mode has not been built for, or that failed to load.
+   Never a blank screen:
 
    - Live, it is the shell's empty state: the tab's icon, its name, its
      promise from the map (APP-MAP.html), "Coming soon", and the top tabs it

@@ -136,7 +136,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['reddit.js', 'reddit-lib.js', 'app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['reddit.js', 'reddit-lib.js', 'app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'talk.js', 'talk-core.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -4282,7 +4282,7 @@ async function theGames(browser, base) {
     const cats = new Set(tiles.map((t) => web.games.find((g) => 'web:' + g.id === t.k).category));
     check(cats.size === 4, 'and they mix all four categories', [...cats].join(','));
     check(JSON.stringify(tiles.map((t) => t.href)) === JSON.stringify(tiles.map((t) => web.games.find((g) => 'web:' + g.id === t.k).url)), 'each tile goes to the file’s own link', '');
-    check(!!(await page.$(gmPanel + ' [data-slot="picks"] .rail-wrap .rail')) && !!(await page.$(gmPanel + ' [data-web-all]')), 'a horizontal row, so it has the switch to a vertical list', '');
+    check(!!(await page.$(gmPanel + ' [data-slot="picks"] .rail-wrap .rail')) && !!(await page.$(gmPanel + ' [data-slot="picks"] [data-railmode="games-picks"]')) && !!(await page.$(gmPanel + ' [data-web-all]')), 'a horizontal row, with See as a list and See all', '');
     check(!(await page.$(gmPanel + ' [data-slot="picks"] img')), 'no logos are scraped: a lettered tile in the category colour', '');
     /* the same list, expanded */
     check(/^See all 19$/.test(await page.$eval(gmPanel + ' [data-web-all]', (b) => b.textContent.trim())), '“See all 19”', '');
@@ -4297,7 +4297,7 @@ async function theGames(browser, base) {
     const bar = await page.$eval(gmPanel + ' [data-slot="picks"] .collapsebar', (b) => ({ pos: getComputedStyle(b).position, n: b.querySelectorAll('button').length, label: b.querySelector('button').getAttribute('aria-label') }));
     check(bar.pos === 'sticky' && bar.n === 1 && /Collapse/.test(bar.label), 'the sticky Collapse bar rides under the open list', JSON.stringify(bar));
     await page.click(gmPanel + ' [data-slot="picks"] [data-collapse]');
-    check(await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-web', (n) => n.length) === 5 && !(await page.$(gmPanel + ' [data-slot="picks"] .collapsebar')), 'Collapse folds it back to the five', '');
+    check(await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-web', (n) => n.length) === 5 && !(await page.$(gmPanel + ' [data-slot="picks"] .collapsebar:not([hidden])')), 'Collapse folds it back to the five', '');
     check(await page.evaluate(() => document.activeElement && document.activeElement.hasAttribute('data-web-all')), 'and keeps the keyboard on See all', '');
     /* the rotation is a pure function of the date */
     const probe = await page.evaluate(async (cfg) => {
@@ -5167,9 +5167,224 @@ function foodInstagram(withVideo) {
   return { generated: new Date().toISOString(), expires_hint_days: 4, handles: [...new Set(posts.map((p) => p.h))], posts };
 }
 
+/* Talk, What Now's card deck */
+const talkCard = (page) => page.$eval(wnPanel + ' .tk-card', (n) => ({ id: n.dataset.card || '', q: n.querySelector('.tk-q').textContent, eyebrow: (n.querySelector('.eyebrow') || {}).textContent || '' }));
+const talkReady = (page) => page.waitForSelector(wnPanel + ' .tk-card:not(.fly-r):not(.fly-l)', { timeout: 15000 });
+const talkNext = async (page, button) => { const before = (await talkCard(page)).id; await page.click(wnPanel + ' ' + button); await page.waitForFunction(([p, id]) => { const n = document.querySelector(p + ' .tk-card'); return n && n.dataset.card !== id && !n.classList.contains('fly-r') && !n.classList.contains('fly-l'); }, [wnPanel, before]); return talkCard(page); };
+const talkBubble = async (page, k) => { await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="' + k + '"]'); await page.waitForFunction(([p, b]) => document.querySelector(p + ' .tk-bubbles .chip[data-chip="' + b + '"]').classList.contains('on'), [wnPanel, k]); await talkReady(page); };
+const talkCount = (page) => page.$eval(wnPanel + ' .tk-group', (b) => Number((b.querySelector('b') || {}).textContent || 0));
+async function talkWalk(page) { const seen = []; for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id) break; seen.push(c.q); await page.keyboard.press('ArrowRight'); await page.waitForFunction(([p, id]) => { const n = document.querySelector(p + ' .tk-card'); return n && n.dataset.card !== id && !n.classList.contains('fly-r'); }, [wnPanel, c.id]); } return seen; }
+
+async function theTalk(browser, base) {
+  await group('Talk: the deck', async () => {
+    const deck = JSON.parse(await readFile(path.join(REPO, 'data/talk-deck.json'), 'utf8')).cards;
+    const table = JSON.parse(await readFile(path.join(REPO, 'data/table-talk.json'), 'utf8')).prompts;
+    const ids = new Set(deck.map((c) => c.id));
+    check(ids.size === deck.length, 'ids are unique', '');
+    check(table.every((p) => ids.has(p.id) && deck.find((c) => c.id === p.id).q === p.q), 'every Table Talk card keeps its id and words', '');
+    check(table.filter((p) => ['fight', 'either'].includes(p.kind)).every((p) => deck.find((c) => c.id === p.id).b === 'debate'), 'debates are the fight and either kinds', '');
+    check(ids.has('q207'), 'q207 is in the deck', '');
+    check(deck.filter((c) => c.heavy).every((c) => c.b === 'deep'), 'heavy cards are Deep cards', '');
+    const core = await import('../js/talk-core.js');
+    check(!core.queue('mix', deck, { head: [], sports: [] }).some((c) => c.heavy), 'Mix never deals a heavy card', '');
+    check(core.queue('deep', deck, { head: [], sports: [] }).some((c) => c.heavy), 'Deep does', '');
+    check(!core.fit('Jennifer Whitlock opens up about her neighbor') && !core.fit('Man dies in Route 7 crash') && !core.fit('Fine story', 'public-safety') && core.fit('Church Street keeps outdoor dining'), 'the dinner guard', '');
+    check(!core.fit('Jim’s Obituary Corner’s tribute') && !core.fit('Town pays tribute to a beloved teacher') && !core.fit('Barn fires spread') && !core.fit('Maria Lopez') && !core.fit('Sato Kenji is back') && !core.fit('Sato Kenji has news') && core.fit('The Beatles has a new mix') && core.fit('Sato Kenji opens a bakery'), 'the wider guard', '');
+    const paper = { sources: { s: { name: 'Seven Days' } }, updates: [{ items: [{ id: 'ob', title: 'Remembering a neighbor', url: 'https://x.example/obituaries/a', ch: 'local', src: 's' }, { id: 'ok', title: 'Church Street keeps outdoor dining', url: 'https://x.example/news/a', ch: 'local', src: 's' }] }] };
+    check(core.stories(paper).head.map((c) => c.id).join() === 'ok', 'an obituary page is out by its address', '');
+  });
+  await group('Talk: the card (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await talkReady(page);
+    check(await page.$eval('#subnav .chip.on', (b) => /Talk/.test(b.innerText)), '#whatnow/talk opens Talk, a word in the mode switch', '');
+    check((await page.$$eval(wnPanel + ' .tk-bubbles .chip', (c) => c.map((x) => x.innerText).join('|'))) === 'Mix|Headlines|Sports|Local|Icebreakers|Deep|Debates', 'the bubbles, Mix first', '');
+    check(await page.$eval(wnPanel + ' .tk-bubbles .chip.on', (b) => b.dataset.chip === 'mix'), 'Mix is on', '');
+    check((await page.$$(wnPanel + ' .tk-card')).length === 1, 'one card at a time', '');
+    const size = await page.evaluate((p) => { const c = document.querySelector(p + ' .tk-card').getBoundingClientRect(), y = document.querySelector(p + ' .tk-yes').getBoundingClientRect(); return { w: c.width, h: c.height, btm: y.bottom, vh: innerHeight, over: document.documentElement.scrollWidth - innerWidth, tab: document.querySelector('#tabs, .tabs, nav')?.getBoundingClientRect().top }; }, wnPanel);
+    check(size.w === 358 && size.h > 400 && size.over <= 0, 'big, and no sideways scroll at 390', JSON.stringify(size));
+    const a = await talkCard(page);
+    const b = await talkNext(page, '.tk-yes');
+    check(a.id !== b.id && (await talkCount(page)) === 1, 'the check marks it used, counts it, and deals the next', JSON.stringify([a, b]));
+    const c = await talkNext(page, '.tk-no');
+    check((await talkCount(page)) === 1 && c.id !== b.id, 'the x skips and counts nothing', '');
+    await page.keyboard.press('ArrowRight');
+    await page.waitForFunction((n) => document.querySelector(n + ' .tk-group b').textContent === '2', wnPanel);
+    await talkReady(page);
+    check(true, 'the right arrow marks it used', '');
+    const skipFrom = (await talkCard(page)).id;
+    await page.keyboard.press('ArrowLeft');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card').dataset.card !== id, [wnPanel, skipFrom]);
+    await talkReady(page);
+    check((await talkCount(page)) === 2, 'the left arrow skips', '');
+    await page.waitForTimeout(700);
+    const box = await page.$eval(wnPanel + ' .tk-card', (n) => { const r = n.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; });
+    const drag = async (dx) => { await page.mouse.move(box.x + box.w / 2, box.y + box.h / 2); await page.mouse.down(); await page.mouse.move(box.x + box.w / 2 + dx / 2, box.y + box.h / 2, { steps: 4 }); await page.mouse.move(box.x + box.w / 2 + dx, box.y + box.h / 2, { steps: 4 }); await page.mouse.up(); };
+    await drag(30);
+    await page.waitForTimeout(350);
+    check((await talkCount(page)) === 2, 'a short drag springs back', '');
+    await drag(120);
+    await page.waitForFunction((n) => document.querySelector(n + ' .tk-group b').textContent === '3', wnPanel);
+    check(true, 'a swipe right marks it used', '');
+    await talkReady(page);
+    await page.waitForTimeout(700);
+    const before = (await talkCard(page)).id;
+    await drag(-120);
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card').dataset.card !== id, [wnPanel, before]);
+    check((await talkCount(page)) === 3, 'a swipe left skips', '');
+    await talkReady(page);
+    await page.click(wnPanel + ' .tk-card .act.star');
+    check(await page.$eval(wnPanel + ' .tk-card .act.star', (s) => s.classList.contains('on')), 'a card stars', '');
+    check(!(await page.$(wnPanel + ' .tk-card [data-act="comment"]')), 'no comments', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Talk: the news is fit for dinner (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await talkReady(page);
+    await talkBubble(page, 'head');
+    const first = await page.$eval(wnPanel + ' .tk-card', (n) => ({ src: n.querySelector('.tk-src').textContent, href: n.querySelector('.tk-src').href, text: n.innerText }));
+    check(/Seven Days · \d+(m|h)/.test(first.src) && /example\.org/.test(first.href), 'source, age and a link to the story', JSON.stringify(first));
+    check(!/Not shown/.test(first.text), 'no written line on a story', first.text);
+    const head = await talkWalk(page);
+    const bad = /stabbing|Earthquake|Whitlock|Wildfire|dies|CSA share/;
+    check(head.length === 6 && !head.some((t) => bad.test(t)), 'crime, deaths, disasters, private people and posts stay out', head.join(' | '));
+    await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="sports"]');
+    await talkReady(page);
+    const sports = await talkWalk(page);
+    check(sports.some((t) => /Catamounts/.test(t)) && sports.some((t) => /Patriots/.test(t)) && !sports.some((t) => /arrested/.test(t)), 'Sports has the local team and the national ones', sports.join(' | '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Talk: groups survive a reload (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#whatnow/talk');
+    await talkReady(page);
+    await talkBubble(page, 'debate');
+    const name = async (g, color) => {
+      await page.click(wnPanel + ' .tk-group');
+      await page.fill('#sheet .tk-input', g);
+      await page.click('#sheet .tk-swatch:nth-child(' + color + ')');
+      await page.click('#sheet .tk-new .btn');
+      await page.waitForSelector('#sheet', { state: 'hidden' });
+    };
+    await name('Family', 3);
+    await talkReady(page);
+    check(/Family/.test(await page.$eval(wnPanel + ' .tk-group', (b) => b.innerText)), 'a new group is the one on', '');
+    check(await page.$eval(wnPanel + ' .tk-group .tk-dot', (d) => getComputedStyle(d).backgroundColor === 'rgb(47, 158, 110)'), 'its dot is its colour', '');
+    const used = [];
+    for (let i = 0; i < 3; i += 1) { used.push((await talkCard(page)).id); await talkNext(page, '.tk-yes'); }
+    await page.reload();
+    await talkReady(page);
+    check(/Family/.test(await page.$eval(wnPanel + ' .tk-group', (b) => b.innerText)) && (await talkCount(page)) === 3, 'the group and its count survive a reload', '');
+    await talkBubble(page, 'debate');
+    const left = [];
+    for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id || left.includes(c.id)) break; left.push(c.id); await talkNext(page, '.tk-no'); }
+    check(left.length === 32 && !left.some((id) => used.includes(id)), 'a used card never comes back for that group', left.length + ' left');
+    await name('Work crew', 4);
+    await talkReady(page);
+    const other = [];
+    for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id || other.includes(c.id)) break; other.push(c.id); await talkNext(page, '.tk-no'); }
+    check(other.length === 35 && used.every((id) => other.includes(id)), 'another group still sees it', other.length + ' cards');
+    await page.click(wnPanel + ' .tk-group');
+    await page.click('#sheet [data-group]:has-text("Family") .tk-gname');
+    await page.waitForSelector('#sheet', { state: 'hidden' });
+    await page.click(wnPanel + ' .tk-group');
+    await page.click('#sheet .tk-over');
+    await page.click('#confirm [data-yes]');
+    await page.waitForFunction((p) => !document.querySelector(p + ' .tk-group b'), wnPanel);
+    check(true, 'start over clears that group', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Talk: when a source fails', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/wire-today\.json/, (r) => r.abort());
+    await page.goto(base + '/all-day/#whatnow/talk');
+    await talkReady(page);
+    check(!!(await talkCard(page)).id, 'the decks still deal in Mix with the Wire down', '');
+    await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="head"]');
+    await page.waitForFunction((p) => /No headlines/.test(document.querySelector(p + ' .tk-card').innerText), wnPanel, { timeout: 20000 });
+    await page.click(wnPanel + ' .tk-empty .btn');
+    await talkReady(page);
+    check(!!(await talkCard(page)).id, 'Headlines says so, and leads to the decks', '');
+    await ctx.close();
+    const n = await newPage(browser, base);
+    await n.page.route(/data\/talk-deck\.json/, (r) => r.abort());
+    await n.page.goto(base + '/all-day/#whatnow/talk');
+    await talkReady(n.page);
+    await n.page.waitForFunction((p) => document.querySelector(p + ' .tk-card').dataset.card, wnPanel, { timeout: 15000 });
+    check(true, 'the Wire still deals with the decks down', '');
+    await n.page.click(wnPanel + ' .tk-yes');
+    await n.page.waitForSelector(wnPanel + ' .tk-group b');
+    await n.page.click(wnPanel + ' .tk-bubbles [data-chip="ice"]');
+    await n.page.waitForSelector(wnPanel + ' .tk-empty');
+    const failed = await n.page.$eval(wnPanel + ' .tk-empty', (e) => e.innerText);
+    check(/Couldn’t load/.test(failed) && /Try again/.test(failed) && !/Start over/.test(failed), 'a failed deck says so, with a used card too: Try again, no Start over', failed);
+    await n.ctx.close();
+    check(!errors.filter((e) => !/ERR_FAILED|Failed to load/.test(e)).length, 'no console errors but the failed fetch', errors.join(' | '));
+  });
+  await group('Talk: a small phone (360x640)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 360, height: 640 } });
+    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await talkReady(page);
+    const m = await page.evaluate((p) => {
+      const q = document.querySelector(p + ' .tk-q');
+      q.textContent = 'x '.repeat(65).trim();
+      q.classList.add('long');
+      return { btns: document.querySelector(p + ' .tk-btns').getBoundingClientRect().bottom, bar: document.getElementById('tabbar').getBoundingClientRect().top,
+        foot: document.querySelector(p + ' .tk-foot').getBoundingClientRect().bottom, card: document.querySelector(p + ' .tk-card').getBoundingClientRect().bottom };
+    }, wnPanel);
+    check(m.btns <= m.bar, 'the buttons clear the bar', JSON.stringify(m));
+    check(m.foot <= m.card, 'the longest headline stays on the card', JSON.stringify(m));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Talk: reduced motion, dark, Games', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce', scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await talkReady(page);
+    const a = await talkCard(page);
+    await page.keyboard.press('ArrowRight');
+    const b = await talkCard(page);
+    check(a.id !== b.id, 'reduced motion: the next card is there at once', '');
+    check(await page.$eval(wnPanel + ' .tk-card', (n) => getComputedStyle(n).animationName === 'none'), 'reduced motion: no turn', '');
+    const ink = await page.$eval(wnPanel + ' .tk-card', (n) => getComputedStyle(n).backgroundColor);
+    check(!/^rgb\(255|^rgba\(0, 0, 0, 0/.test(ink), 'dark: the card has its ground', ink);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const g = await newPage(browser, base);
+    await g.page.goto(base + '/all-day/#games');
+    await g.page.waitForSelector('#panel-games .gm-grid .more, #panel-games .ghost.more', { timeout: 15000 });
+    await g.page.click('#panel-games .ghost.more');
+    const play = g.page.locator('[data-slug="stay-awhile"] .gm-acts a').first();
+    check((await play.getAttribute('href')) === '#whatnow/talk' && !(await play.getAttribute('target')), 'Stay Awhile’s Play in Games leads to Talk', '');
+    await play.click();
+    await talkReady(g.page);
+    check(await g.page.$eval('#subnav .chip.on', (b) => /Talk/.test(b.innerText)), 'and lands there', '');
+    await g.ctx.close();
+  });
+  await group('Talk: links and coming back', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow/t-d9');
+    await page.waitForFunction((p) => document.querySelector(p + ' .tk-card')?.dataset.card === 'd9', wnPanel, { timeout: 15000 });
+    check(true, 'a card’s link deals that card', '');
+    await page.click('#subnav .chip[data-chip="tonight"]');
+    await page.waitForSelector(wnPanel + ' [data-sec="tonight"]');
+    await page.click('#subnav .chip[data-chip="talk"]');
+    await page.waitForFunction((p) => document.querySelector(p + ' .tk-card')?.dataset.card === 'd9', wnPanel);
+    check(true, 'leaving and coming back keeps the card', '');
+    await page.goto(base + '/all-day/?demo=1#whatnow/t-nothing');
+    await page.reload();
+    await page.waitForFunction(() => /passed/.test(document.getElementById('toast').textContent), null, { timeout: 15000 });
+    check(true, 'a card that is gone says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function theFood(browser, base) {
-  /* All Day's Food tab is Eat's Open now since wave 1 (apps/w1-eat), with its own groups (theEat…); food.js and this group go in the next shell wave */
-  if (appOf('food') !== 'all-day') { console.log('  skip theFood: All Day’s Food tab left for Eat, whose own groups cover Open now'); return; }
   /* Friday, October 16, 2026, in Burlington; the reader is in Los Angeles */
   const NINE = Date.parse('2026-10-16T21:00:00-04:00');
   const fd = await foodData(NINE);
@@ -6687,7 +6902,8 @@ async function theWatch(browser, base) {
     const moveD = (f) => { const nd = new Date((wDayNum(f.d) + wDayNum(today) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10); return nd; };
     const moved = [...d.films.top, ...[...d.films.trend, ...d.films.now].map((f) => ({ ...f, d: moveD(f) }))];
     const pool = moved.filter((f, i) => moved.findIndex((x) => x.id === f.id) === i);
-    const newest = pool.filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
+    /* The Night Ferry is in the demo only in theaters, so it is not on Past */
+    const newest = pool.filter((f) => f.d <= today && f.t !== 'The Night Ferry').sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(newest.slice(0, 60)), 'Newest: everything released, newest first', JSON.stringify((await wTiles(page)).slice(0, 5)));
     await pick('genre');
     const shelves = await page.$$eval(wPanel + ' [data-shelf]', (n) => n.map((x) => x.dataset.shelf));
@@ -6729,27 +6945,27 @@ async function theWatch(browser, base) {
     const bhead = await page.$eval(wPanel + ' [data-sec="back"]', (h) => ({ title: h.querySelector('h2').textContent, sub: (h.querySelector('p') || {}).textContent, sub2: h.closest('[data-slot]').querySelector('.dateline .s').textContent }));
     check(bhead.title === 'Back then' && bhead.sub === 'Rotten Tomatoes’ front page, month by month' && bhead.sub2 === '', 'it says what it is: Rotten Tomatoes’ front page, month by month', JSON.stringify(bhead));
     const n0 = s.ids.length;
-    const allBtn = () => page.$eval(wPanel + ' [data-back-all]', (b) => [b.textContent, b.dataset.backAll, b.getAttribute('aria-expanded')]);
-    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show all ' + n0, 'closed', 'false']) && await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null,
-      'a rail, with a Show all button', JSON.stringify(await allBtn()));
-    await page.click(wPanel + ' [data-back-all]');
+    const backList = () => page.$eval(wPanel + ' [data-slot="back"] [data-railmode]', (b) => [b.textContent, b.dataset.railmode, b.getAttribute('aria-pressed')]);
+    check(JSON.stringify(await backList()) === JSON.stringify(['See as a list', 'watch-back', 'false']) && await page.$(wPanel + ' [data-slot="back"] .rail[data-back]:not(.aslist)') !== null,
+      'a rail, with the See as a list button', JSON.stringify(await backList()));
+    await page.click(wPanel + ' [data-slot="back"] [data-railmode]');
     const grid = await page.evaluate(() => { const g = document.querySelector('#panel-watch [data-slot="back"] [data-back]'); const r = [...g.querySelectorAll('.poster')].map((a) => a.getBoundingClientRect());
-      return { grid: g.classList.contains('wgrid'), rail: !!g.closest('.rail-wrap'), wrap: g.scrollWidth <= g.clientWidth + 1, rows: new Set(r.map((x) => Math.round(x.top))).size, n: r.length }; });
-    check(grid.grid && !grid.rail && grid.wrap && grid.n === n0 && grid.rows > 1, 'Show all opens every title in a wrapping grid that scrolls down', JSON.stringify(grid));
-    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await allBtn()));
+      return { list: g.classList.contains('aslist'), wrap: g.scrollWidth <= g.clientWidth + 1, rows: new Set(r.map((x) => Math.round(x.top))).size, n: r.length }; });
+    check(grid.list && grid.wrap && grid.n === n0 && grid.rows > 1, 'See as a list opens every title in a wrapping grid that scrolls down', JSON.stringify(grid));
+    check(JSON.stringify(await backList()) === JSON.stringify(['See as a row', 'watch-back', 'true']), 'and the button says See as a row', JSON.stringify(await backList()));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
-    check(await page.$(wPanel + ' [data-slot="back"] .wgrid[data-back]') !== null, 'it stays a grid from month to month', '');
+    check(await page.$(wPanel + ' [data-slot="back"] .rail.aslist[data-back]') !== null, 'it stays a grid from month to month', '');
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
-    await page.click(wPanel + ' [data-back-all]');
-    check(await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null && (await allBtn())[1] === 'closed', 'Show less folds it back into the rail', '');
+    await page.click(wPanel + ' [data-slot="back"] [data-railmode]');
+    check(await page.$(wPanel + ' [data-slot="back"] .rail[data-back]:not(.aslist)') !== null && (await backList())[2] === 'false', 'See as a row folds it back into the rail', '');
     /* Stephen, 2026-10-18: a long opened list must be easy to fold back. The
        Collapse bar rides just above the tab bar while the grid is on screen. */
-    await page.click(wPanel + ' [data-back-all]');
+    await page.click(wPanel + ' [data-slot="back"] [data-railmode]');
     const bar = await page.evaluate(() => {
       const panel = document.querySelector('#panel-watch');
-      const g = document.querySelector('#panel-watch [data-slot="back"] .wgrid[data-back]');
+      const g = document.querySelector('#panel-watch [data-slot="back"] .rail.aslist[data-back]');
       panel.scrollTop += g.getBoundingClientRect().bottom - innerHeight - 160;   // the grid's end 160px below the screen
-      const b = g.parentElement.querySelector('.collapsebar [data-collapse]');
+      const b = g.closest('.rail-wrap').nextElementSibling.querySelector('[data-collapse]');
       /* the bar at its full size: scrolling down settles it to 88% for a moment (2026-10-19) */
       const t = document.querySelector('.tabbar'); t.style.transition = 'none'; t.style.transform = 'none';
       const r = b.getBoundingClientRect(), tb = t.getBoundingClientRect(), gr = g.getBoundingClientRect();
@@ -6760,9 +6976,9 @@ async function theWatch(browser, base) {
       'mid-grid, a Collapse bar sits just above the tab bar', JSON.stringify(bar));
     await page.click(wPanel + ' [data-slot="back"] [data-collapse]');
     await page.waitForTimeout(700);
-    const folded = await page.evaluate(() => { const h = document.querySelector('#panel-watch [data-sec="back"]').getBoundingClientRect().top;
-      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar:not([hidden])'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
-    check(folded.rail && !folded.bar && folded.ok && (await allBtn())[1] === 'closed', 'Collapse folds it into the rail and lands on Back then’s head', JSON.stringify(folded));
+    const folded = await page.evaluate(() => { const h = document.querySelector('#panel-watch [data-slot="back"] .dateline').getBoundingClientRect().top;
+      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]:not(.aslist)'), bar: !!document.querySelector('#panel-watch .collapsebar:not([hidden])'), top: Math.round(h), ok: h >= -60 && h < innerHeight / 2 }; });
+    check(folded.rail && !folded.bar && folded.ok, 'Collapse folds it into the rail and lands on the month', JSON.stringify(folded));
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     s = await shown();
@@ -6900,7 +7116,7 @@ async function theWatch(browser, base) {
     check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
     check(back[1][1] === '<img src=x onerror=alert(1)>' && !back[1][2] && !(await page.$(wPanel + ' [data-back] img[src="x"]')), 'a title is text, never markup, and a bad poster path is dropped', JSON.stringify(back[1]));
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline b', (b) => b.textContent) === new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(m(12) + '-15T12:00:00Z')), 'and the month is named', '');
-    check(!(await page.$(wPanel + ' [data-back-all]')), 'two titles fit the rail: no Show all', '');
+    check(await page.$$eval(wPanel + ' [data-slot="back"] [data-back] .poster', (n) => n.length) === 2, 'two titles sit in the rail', '');
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline .s', (n) => n.textContent) === 'Most popular on TMDB', 'a month the archive missed says it is TMDB’s most popular, not the front page', '');
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
@@ -6990,7 +7206,7 @@ async function theWatch(browser, base) {
     await page.click('#subnav [data-side="past"]');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
     const p = await page.evaluate(() => ({ slots: [...document.querySelectorAll('#panel-watch [data-slot]')].map((x) => x.dataset.slot), on: document.querySelector('#subnav [data-side].on').dataset.side }));
-    check(JSON.stringify(p) === '{"slots":["kind","back","town","list","chat"],"on":"past"}', 'Past: the switch, back then, the town’s ratings, the list, chat', JSON.stringify(p));
+    check(JSON.stringify(p) === '{"slots":["drop","kind","back","town","list","chat"],"on":"past"}', 'Past: the trailer card, the switch, back then, the town’s ratings, the list, chat', JSON.stringify(p));
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-past.png') });
     /* deep links pick the side */
     await page.goto(base + '/all-day/?demo=1#watch/stream:9404');
@@ -7092,6 +7308,94 @@ async function wWalk(page) {
   return keys;
 }
 
+/* Rotten Tomatoes: `tm` in films.json and trailers.json, one badge wherever the title shows */
+async function theTomatoes(browser, base) {
+  const badge = (root) => { const b = root.querySelector('.wt-tm'); return b ? { n: b.dataset.tm, text: b.textContent, fresh: b.classList.contains('fresh'), rotten: b.classList.contains('rotten') } : null; };
+  await group('Watch, the Rotten Tomatoes badge (live)', async () => {
+    const films = await watchFilms();
+    [92, 60, 59, 0, undefined, 101].forEach((tm, i) => { if (tm === undefined) delete films.top[i].tm; else films.top[i].tm = tm; });
+    films.soon[0].tm = 88;
+    films.now[1].tm = films.top[0].tm;
+    const trailers = watchTrailers(films);
+    trailers.fresh[0].tm = 75;
+    trailers.fresh[1].tm = 30;
+    trailers.fresh.push({ ...trailers.fresh[0], id: 880004, t: 'Fresh Three', yt: 'freshTrail3', tm: undefined });
+    const today = wToday();
+    const tomorrow = new Date(wDayNum(today) * W_DAY + W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+    const day = [{ t: films.top[0].t, id: films.top[0].id, times: ['23:59'] }, { t: 'A Film Nobody Listed', times: ['23:59'] }];
+    const showtimes = { v: 1, theaters: [{ id: 'partizanfilm', ok: true, closed: false, back: '', days: { [today]: day, [tomorrow]: day } }] };
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers, showtimes });
+    await page.route(/youtube-nocookie\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+
+    const card = await page.$eval(wPanel + ' .wt-drop-media', (c) => { const b = c.querySelector('.wt-tm'); return b && [b.dataset.tm, b.textContent, b.classList.contains('fresh')]; });
+    check(JSON.stringify(card) === '["75","75%",true]', 'the trailer card shows its score, and only the number', JSON.stringify(card));
+    const rail = await page.$$eval(wPanel + ' [data-slot="soon"] .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, (a.querySelector('.c-media .wt-tm') || {}).textContent || '', a.getAttribute('aria-label')]));
+    const harbor = rail.find((x) => x[0] === 'Harbor Lights'), plain = rail.find((x) => x[0] === 'Plain Sight');
+    check(harbor && harbor[1] === '88%' && /Rotten Tomatoes 88%$/.test(harbor[2]) && plain && plain[1] === '' && !/Rotten/.test(plain[2]), 'a rail poster has its badge; a title with no score has none, and the page says nothing about it', JSON.stringify(rail));
+    check(rail.some((x) => x[0] === films.now[1].t && x[1] === '92%'), 'a shelf title carries its own score on the rail', JSON.stringify(rail));
+    const next = await page.$$eval(wPanel + ' .wt-next-i', (n) => n.map((b) => [b.querySelector('.t').textContent, (b.querySelector('.wt-tm') || {}).textContent || '']));
+    check(next.some((x) => x[0] === films.top[0].t && x[1] === '92%') && next.every((x) => x[0] !== 'A Film Nobody Listed' || !x[1]), 'Next up: a known film has its badge, one off the lists has none', JSON.stringify(next));
+    const shows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.dataset.film, (r.querySelector('.wt-tm') || {}).textContent || '']));
+    check(shows.length === 2 && shows[0][1] === '92%' && !shows[1][1], 'showtimes: the same', JSON.stringify(shows));
+
+    await page.click(wPanel + ' [data-trailer-sheet]');
+    await page.waitForSelector('[data-trailer-list] .wt-tl');
+    const rows = await page.$$eval('[data-trailer-list] .wt-tl', (n) => n.map((b) => [b.dataset.trailer, (b.querySelector('.wt-tl-pic .wt-tm') || {}).textContent || '', b.getAttribute('aria-label')]));
+    const two = rows.find((x) => x[0] === 'freshTrail2');
+    check(two && two[1] === '30%' && /Rotten Tomatoes 30%$/.test(two[2]) && rows.some((x) => !x[1]), 'a trailer row has its badge; one with no score has none', JSON.stringify(rows.slice(0, 5)));
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('[data-trailer-list]'));
+
+    await page.click('#subnav [data-sides] button[data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid] .poster');
+    const tile = (i) => page.$eval(wPanel + ' [data-grid] .poster[data-id="' + films.top[i].id + '"]', (a) => { const b = a.querySelector('.c-media .wt-tm'); return b ? [b.textContent, b.classList.contains('fresh') ? 'fresh' : b.classList.contains('rotten') ? 'rotten' : ''] : null; });
+    const line = [await tile(0), await tile(1), await tile(2), await tile(3), await tile(4), await tile(5)];
+    check(JSON.stringify(line) === '[["92%","fresh"],["60%","fresh"],["59%","rotten"],["0%","rotten"],null,null]', 'the list: 60 is fresh, 59 is rotten, zero is a score, no score or a bad one shows nothing', JSON.stringify(line));
+    const looks = await page.evaluate((ids) => {
+      const paint = (id) => { const c = getComputedStyle(document.querySelector('#panel-watch .poster[data-id="' + id + '"] .wt-tm')); return [c.backgroundColor, c.color, c.position]; };
+      const probe = document.createElement('i');
+      document.body.appendChild(probe);
+      const token = (n) => { probe.style.color = 'var(' + n + ')'; return getComputedStyle(probe).color; };
+      const out = { fresh: paint(ids[0]), rotten: paint(ids[1]), tokens: [token('--tomato-fresh'), token('--tomato-rotten'), token('--tomato-ink')] };
+      probe.remove();
+      return out;
+    }, [films.top[0].id, films.top[2].id]);
+    check(looks.fresh[0] === looks.tokens[0] && looks.rotten[0] === looks.tokens[1] && looks.fresh[1] === looks.tokens[2] && looks.fresh[0] !== looks.rotten[0] && looks.fresh[2] === 'absolute',
+      'the two colours come from the tokens and sit on the picture', JSON.stringify(looks));
+
+    await page.click(wPanel + ' [data-grid] .poster[data-id="' + films.top[2].id + '"]');
+    await page.waitForSelector('.sheet [data-seen="me"], [data-seen="me"]');
+    const inSheet = await page.$eval('[data-seen="me"]', (b) => { const s = b.closest('.sheet') || document.body; const m = s.querySelector('.poster .wt-tm'); return m && [m.textContent, m.classList.contains('rotten')]; });
+    check(JSON.stringify(inSheet) === '["59%",true]', 'the film sheet’s poster has it too', JSON.stringify(inSheet));
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), 'nothing pushes the page sideways', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the Rotten Tomatoes badge (?demo=1)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const up = await page.$$eval(wPanel + ' .wt-tm', (n) => n.map((b) => b.textContent));
+    check(up.length > 3 && up.every((t) => /^\d{1,3}%$/.test(t)), 'Upcoming: badges, with no words on them', up.join(' '));
+    const onRail = await page.$$eval(wPanel + ' [data-slot="soon"] .poster', (n) => n.map((a) => !!a.querySelector('.wt-tm')));
+    check(onRail.some(Boolean), 'on the rail', JSON.stringify(onRail));
+    await page.click('#subnav [data-sides] button[data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid] .poster');
+    const list = await page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [Number(a.dataset.id), (a.querySelector('.wt-tm') || { dataset: {} }).dataset.tm, a.querySelector('.fresh') ? 1 : a.querySelector('.rotten') ? 0 : null]));
+    const want = new Map(d.films.top.map((f) => [f.id, f.tm]));
+    check(list.length > 3 && list.every(([id, tm, side]) => (want.get(id) === undefined ? tm === undefined : Number(tm) === want.get(id) && side === (want.get(id) >= 60 ? 1 : 0))), 'the list shows the file’s score on every title that has one', JSON.stringify(list.slice(0, 6)));
+    check(list.some((x) => x[2] === 1) && list.some((x) => x[2] === 0), 'both colours show', JSON.stringify(list.map((x) => x[1])));
+    const town = await page.$$eval(wPanel + ' [data-sec="town"] ~ .lrow, ' + wPanel + ' [data-slot="town"] .lrow', (n) => n.filter((r) => r.querySelector('.wt-tm')).length);
+    check(town > 0, 'the town’s ratings', String(town));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function theWatchTrailers(browser, base) {
   await group('Watch, the trailer card: first thing, in order, one video box (live)', async () => {
     const films = await watchFilms();
@@ -7147,9 +7451,7 @@ async function theWatchTrailers(browser, base) {
     const keys = await wWalk(page);
     check(new Set(keys).size === keys.length, 'nothing twice', JSON.stringify(keys));
     check(!keys.includes(films.top[3].yt), 'a key the file skips never shows', films.top[3].yt);
-    const topKeys = new Set(films.top.map((f) => f.yt));
-    check(keys.slice(2).slice(0, 8).filter((k, i) => (i + 1) % 4 === 0).every((k) => topKeys.has(k)), 'every fourth past the new ones comes from the top list', JSON.stringify(keys.slice(2)));
-    check(keys.includes('pastTrailr1') && keys.includes(films.soon[0].yt), 'the file’s past trailers and the shelves’ all feed it', JSON.stringify(keys));
+    check(!keys.includes('pastTrailr1') && keys.includes(films.soon[0].yt), 'it stays on what is in theaters or coming; older trailers are Past’s', JSON.stringify(keys));
     /* star and share */
     await page.reload();
     await page.waitForSelector(wPanel + ' .wt-drop');
@@ -7256,49 +7558,98 @@ async function theWatchTrailers(browser, base) {
     }
   });
 
-  await group('Watch, every trailer as a list: Recent, Past, genres, Surprise me (live)', async () => {
+  await group('Watch, every trailer as a list: Just dropped, In theaters, Coming soon, New at home, All (live)', async () => {
     const films = await watchFilms();
     const trailers = watchTrailers(films);
+    const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
     const back = (n, g) => ({ id: 881000 + n, t: 'Old Film ' + n, y: 1950 + n, d: (1950 + n) + '-05-01', g, rt: 100, p: '', yt: 'oldTrailr' + String(n).padStart(2, '0') });
-    trailers.past.push(back(1, ['Western']), back(2, ['Western', 'Drama']));
+    const home = (id, t, yt, d, h) => ({ id, t, y: 2026, d, h, g: ['Drama'], rt: 100, p: '', yt });
+    trailers.past[0].d = day(-20);
+    trailers.past.push(back(1, ['Western']), back(2, ['Western', 'Drama']), home(881101, 'Home Now', 'homeTrail01', day(-50), day(-10)), home(881102, 'Home Lately', 'homeTrail02', day(-90), day(-40)),
+      home(881103, 'Home Long Ago', 'homeTrail03', day(-130), day(-90)), home(881104, 'Home Next Month', 'homeTrail04', day(-20), day(20)));
     for (let i = 3; i < 60; i++) trailers.past.push(back(i, ['Musical']));
     const { ctx, page, errors } = await newPage(browser, base, { films, trailers });
+    await page.route(/youtube-nocookie\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
     await page.goto(base + '/all-day/#watch');
     await page.waitForSelector(wPanel + ' .wt-drop');
     await page.click(wPanel + ' [data-trailer-sheet]');
     await page.waitForSelector('.sheet-body [data-trailer-list] .wt-tl');
     const rows = () => page.$$eval('.sheet-body .wt-tl', (r) => r.map((x) => ({ key: x.dataset.trailer, t: x.querySelector('.t').textContent, s: (x.querySelector('.s') || {}).textContent || '' })));
     const side = (label) => page.click('.sheet-body [data-trailer-side] button:text-is("' + label + '")');
-    const words = await page.$eval('.sheet-card', (c) => c.innerText);
-    check(/Recent/.test(words) && /Past/.test(words) && /Surprise me/.test(words), 'the sheet has Recent, Past and Surprise me', words.slice(0, 80));
-    const recent = await rows();
-    check(recent[0].key === 'freshTrail2' && recent[1].key === 'freshTrail1', 'Recent opens newest first', JSON.stringify(recent.slice(0, 2)));
-    check(!recent.some((r) => /^Old Film|^Past One/.test(r.t)), 'nothing past on Recent', JSON.stringify(recent.map((r) => r.t)));
+    const sections = () => page.$$eval('.sheet-body [data-trailer-side] button', (b) => b.map((x) => x.textContent + (x.classList.contains('on') ? '*' : '')));
+    const iframeHas = (k) => page.waitForFunction((x) => document.querySelector('#vbox-frame iframe')?.src.includes(x), k);
+    check(JSON.stringify(await sections()) === '["Just dropped*","In theaters","Coming soon"]', 'Upcoming’s sheet: Just dropped, In theaters, Coming soon', JSON.stringify(await sections()));
+    check(/Surprise me/.test(await page.$eval('.sheet-card', (c) => c.innerText)) && await page.$eval('.sheet-body', (b) => b.scrollWidth <= b.clientWidth), 'Surprise me stays, and the head fits', '');
+    const dropped = await rows();
+    check(JSON.stringify(dropped.map((r) => r.key)) === '["freshTrail2","freshTrail1"]', 'Just dropped: this week’s uploads, newest first', JSON.stringify(dropped));
     /* a row plays in the one box, and Next walks the rows */
-    await page.click('.sheet-body .wt-tl[data-trailer="freshTrail1"]');
+    await page.click('.sheet-body .wt-tl[data-trailer="freshTrail2"]');
     await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
-    check(/freshTrail1/.test(await page.$eval('#vbox-frame iframe', (f) => f.src)) && (await page.$$('iframe')).length === 1, 'a row plays in the one video box', '');
+    check(/freshTrail2/.test(await page.$eval('#vbox-frame iframe', (f) => f.src)) && (await page.$$('iframe')).length === 1, 'a row plays in the one video box', '');
     await page.click('#vbox-next');
-    await page.waitForFunction((k) => document.querySelector('#vbox-frame iframe')?.src.includes(k), recent[2].key);
-    check(true, 'Next is the next row', recent[2].key);
+    await iframeHas(dropped[1].key);
+    check(true, 'Next is the next row', dropped[1].key);
     await page.click('#vbox-close');
     check(await page.$('.sheet-body [data-trailer-list]') !== null, 'closing the video goes back to the list', '');
-    /* Past: the channels' and the back catalogue, with a year for a line */
-    await side('Past');
-    const past = await rows();
-    check(past[0].key === 'pastTrailr1' && past.some((r) => r.t === 'Old Film 59' && r.s === '2009'), 'Past: the uploads first, then the back catalogue by date, its line the year', JSON.stringify(past.slice(0, 3)));
-    check(past.length === 40 && await page.$('.sheet-body [data-trailer-more]') !== null, 'a long list draws in pages', String(past.length));
+    await side('In theaters');
+    const showing = await rows();
+    check(JSON.stringify(showing.map((r) => r.t)) === JSON.stringify([films.now[0].t]), 'In theaters: what is showing, with a trailer', JSON.stringify(showing));
+    await side('Coming soon');
+    const coming = await rows();
+    check(JSON.stringify(coming.map((r) => r.t)) === '["Fresh Two","Harbor Lights","Plain Sight","Fresh One"]', 'Coming soon: what is ahead, soonest first', JSON.stringify(coming));
+    await pageRules(page, 'watch', 390);
+    await page.click('.sheet-card .iconbtn');
+    /* Upcoming’s card stays on what is current */
+    const walked = new Set();
+    for (let i = 0; i < 300; i++) {
+      const c = await wCard(page);
+      walked.add(c.key);
+      if (!c.next) break;
+      await wStep(page, 1);
+    }
+    check(!['pastTrailr1', 'oldTrailr01', 'oldTrailr02', 'oldTrailr59'].some((k) => walked.has(k)), 'Next on Upcoming’s card never reaches old trailers', String(walked.size));
+    /* Past: its own card, off its own list */
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-side="past"] .wt-drop');
+    const c1 = await wCard(page);
+    check(c1.t === 'Home Now' && /^\w{3} \d+ · at home$/.test(c1.s) && !c1.age && !c1.prev && c1.next, 'Past’s card opens on the newest home release, and has nothing behind it', JSON.stringify(c1));
+    await page.click(wPanel + ' .wt-drop-pic');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
+    await iframeHas('homeTrail01');
+    check(await page.$eval('#vbox-prev', (b) => !b.hidden && b.disabled) && !(await page.$eval('#vbox-next', (b) => b.hidden || b.disabled)), 'in the box: Next, and no Previous on the first', '');
+    await page.click('#vbox-next');
+    await iframeHas('homeTrail02');
+    check((await wCard(page)).t === 'Home Lately' && (await page.$$('iframe')).length === 1, 'the box’s Next walks Past’s list and the card follows', '');
+    await page.click('#vbox-prev');
+    await iframeHas('homeTrail01');
+    check((await wCard(page)).t === 'Home Now', 'and Previous walks back', '');
+    await page.click('#vbox-close');
+    await wStep(page, 1);
+    await wStep(page, -1);
+    check((await wCard(page)).t === 'Home Now', '‹ and › walk Past’s card', '');
+    const pastKeys = await wWalk(page);
+    check(JSON.stringify(pastKeys.slice(0, 3)) === '["homeTrail01","homeTrail02","homeTrail03"]' && pastKeys.includes('oldTrailr01'), 'newest home release first, down to the back catalogue', JSON.stringify(pastKeys.slice(0, 4)));
+    check(!['homeTrail04', 'freshTrail1', 'freshTrail2', 'pastTrailr1', films.now[0].yt].some((k) => pastKeys.includes(k)), 'nothing on it that has not reached home', JSON.stringify(pastKeys));
+    await page.click(wPanel + ' [data-trailer-sheet]');
+    await page.waitForSelector('.sheet-body [data-trailer-list] .wt-tl');
+    check(JSON.stringify(await sections()) === '["New at home*","All"]', 'Past’s sheet: New at home, All', JSON.stringify(await sections()));
+    const fresh = await rows();
+    check(JSON.stringify(fresh.map((r) => r.t)) === '["Home Now","Home Lately"]', 'New at home: home in the last 60 days, newest first', JSON.stringify(fresh));
+    await side('All');
+    const all = await rows();
+    check(all[0].t === 'Home Now' && all[2].t === 'Home Long Ago' && all.length === 40 && await page.$('.sheet-body [data-trailer-more]') !== null, 'All: the same order, drawn in pages', String(all.length));
     await page.click('.sheet-body [data-trailer-more]');
-    check((await rows()).length > 40, 'Show more adds to it', '');
+    const more = await rows();
+    check(more.length > 40 && more.some((r) => r.t === 'Old Film 59' && r.s === '2009'), 'Show more adds to it, an old film’s line its year', '');
     /* genres */
     await page.click('.sheet-body .chip[data-chip="Western"]');
     const west = (await rows()).map((r) => r.t).sort();
     check(JSON.stringify(west) === '["Old Film 1","Old Film 2"]', 'a genre chip narrows to that genre', JSON.stringify(west));
     check(await page.$('.sheet-body [data-trailer-more]') === null, 'no Show more on a short list', '');
-    await side('Recent');
-    check(await page.$eval('.sheet-body .chip[data-chip="all"]', (c) => c.classList.contains('on')) && !(await page.$('.sheet-body .chip[data-chip="Western"]')), 'a genre the other side lacks falls back to All', '');
+    await side('New at home');
+    check(await page.$eval('.sheet-body .chip[data-chip="all"]', (c) => c.classList.contains('on')) && !(await page.$('.sheet-body .chip[data-chip="Western"]')), 'a genre the other section lacks falls back to All', '');
     /* Surprise me */
-    await side('Past');
+    await side('All');
     const before = (await rows()).map((r) => r.key);
     await page.click('.sheet-body [data-trailer-surprise]');
     await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
@@ -7306,41 +7657,165 @@ async function theWatchTrailers(browser, base) {
     check(JSON.stringify(mixed) !== JSON.stringify(before), 'Surprise me reorders the list', '');
     check((await page.$eval('#vbox-frame iframe', (f) => f.src)).includes(mixed[0]), 'and plays the first of the new order', mixed[0]);
     await page.click('#vbox-next');
-    await page.waitForFunction((k) => document.querySelector('#vbox-frame iframe')?.src.includes(k), mixed[1]);
+    await iframeHas(mixed[1]);
     await page.click('#vbox-close');
     await pageRules(page, 'watch', 390);
-    await page.click('.sheet-card .iconbtn');
-    /* Next on the card reaches the past and the back catalogue */
-    const keys = new Set();
-    for (let i = 0; i < 300; i++) {
-      const c = await wCard(page);
-      keys.add(c.key);
-      if (!c.next) break;
-      await wStep(page, 1);
-    }
-    check(['pastTrailr1', 'oldTrailr01', 'oldTrailr02', 'oldTrailr59'].every((k) => keys.has(k)), 'Next on the card reaches past trailers', String(keys.size));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
-    /* one trailer: no list to open. No file: the list still opens. */
+    /* no file: the list still opens */
     const none = await newPage(browser, base, { films, trailers: null, trailersLocal: null });
     await none.page.goto(base + '/all-day/#watch');
     await none.page.waitForSelector(wPanel + ' [data-trailer-sheet]');
     await none.page.click(wPanel + ' [data-trailer-sheet]');
     await none.page.waitForSelector('.sheet-body .wt-tl');
-    check((await none.page.$$('.sheet-body [data-trailer-side] button')).length === 2, 'no file: the list runs off films.json', '');
+    check(JSON.stringify(await none.page.$$eval('.sheet-body [data-trailer-side] button', (b) => b.map((x) => x.textContent))) === '["In theaters","Coming soon"]', 'no file: no Just dropped, and the list runs off films.json', '');
     await none.ctx.close();
-    /* the demo */
+    /* the demo, both kinds, both sides */
     const demo = await newPage(browser, base, {});
     await demo.page.goto(base + '/all-day/?demo=1#watch');
     await demo.page.waitForSelector(wPanel + ' [data-trailer-sheet]');
-    await demo.page.click(wPanel + ' [data-trailer-sheet]');
-    await demo.page.waitForSelector('.sheet-body .wt-tl');
-    await demo.page.click('.sheet-body [data-trailer-side] button:text-is("Past")');
-    check((await demo.page.$$('.sheet-body .wt-tl')).length > 1 && (await demo.page.$$('.sheet-body .chip')).length > 1, 'the demo has Past rows and genres', '');
-    await demo.page.click('.sheet-body .wt-tl');
-    await demo.page.waitForSelector('#vbox:not([hidden])');
+    const demoSections = async () => {
+      await demo.page.click(wPanel + ' [data-trailer-sheet]');
+      await demo.page.waitForSelector('.sheet-body .wt-tl');
+      const got = await demo.page.$$eval('.sheet-body [data-trailer-side] button', (b) => b.map((x) => x.textContent));
+      const n = (await demo.page.$$('.sheet-body .wt-tl')).length;
+      await demo.page.click('.sheet-card .iconbtn');
+      return { got, n };
+    };
+    const upDemo = await demoSections();
+    await demo.page.click('#subnav [data-side="past"]');
+    await demo.page.waitForSelector(wPanel + ' [data-side="past"] [data-trailer-sheet]');
+    const pastDemo = await demoSections();
+    check(upDemo.got.length > 1 && pastDemo.n > 1 && pastDemo.got.every((x) => ['New at home', 'All'].includes(x)), 'the demo has the sections on both sides', JSON.stringify([upDemo, pastDemo]));
+    await demo.page.click(wPanel + ' [data-kind] button:text-is("TV")');
+    await demo.page.waitForSelector(wPanel + ' .wt-drop[data-k^="tr:5"]');
+    const pastTV = await demoSections();
+    await demo.page.click('#subnav [data-side="up"]');
+    await demo.page.waitForSelector(wPanel + ' [data-side="up"] [data-trailer-sheet]');
+    const upTV = await demoSections();
+    check(pastTV.got.every((x) => ['New on TV', 'All'].includes(x)) && pastTV.n > 0, 'TV on Past: New on TV, All', JSON.stringify(pastTV));
+    check(upTV.got.length > 0 && upTV.got.every((x) => ['Just dropped', 'On TV now', 'Coming soon'].includes(x)), 'TV on Upcoming: Just dropped, On TV now, Coming soon', JSON.stringify(upTV));
     check(!demo.errors.length, 'demo: no console errors', demo.errors.join(' | '));
     await demo.ctx.close();
+  });
+
+  await group('Watch, every trailer as a list: a section with nothing in it (live)', async () => {
+    const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
+    const opened = async (films, trailers, past) => {
+      const { ctx, page, errors } = await newPage(browser, base, { films, trailers });
+      await page.goto(base + '/all-day/#watch');
+      await page.waitForSelector(wPanel + ' .wt-drop');
+      if (past) { await page.click('#subnav [data-side="past"]'); await page.waitForSelector(wPanel + ' [data-side="past"]'); }
+      const open = await page.$(wPanel + ' [data-trailer-sheet]');
+      let got = null;
+      if (open) {
+        await open.click();
+        await page.waitForSelector('.sheet-body .wt-tl');
+        got = await page.evaluate(() => ({ on: [...document.querySelectorAll('.sheet-body [data-trailer-side] button')].map((b) => b.textContent + (b.classList.contains('on') ? '*' : '')),
+          n: document.querySelectorAll('.sheet-body .wt-tl').length, surprise: !!document.querySelector('.sheet-body [data-trailer-surprise]') }));
+      }
+      const card = !!(await page.$(wPanel + ' .wt-drop'));
+      await ctx.close();
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      return { got, card };
+    };
+    const noTrailers = { v: 1, fresh: [], past: [], skip: [] };
+    const base1 = await watchFilms();
+    /* nothing uploaded this week */
+    let r = await opened(base1, noTrailers);
+    check(JSON.stringify(r.got.on) === '["In theaters*","Coming soon"]', 'no new upload: no Just dropped, and the sheet opens on In theaters', JSON.stringify(r));
+    /* nothing in theaters with a trailer */
+    r = await opened({ ...base1, now: base1.now.map((f) => ({ ...f, yt: '' })) }, noTrailers);
+    check(JSON.stringify(r.got.on) === '[]' && r.got.n > 0 && r.got.surprise, 'one section left: no switch, its rows and Surprise me', JSON.stringify(r));
+    /* nothing ahead */
+    r = await opened({ ...base1, soon: [] }, noTrailers);
+    check(JSON.stringify(r.got.on) === '[]' && r.got.n === 1, 'nothing coming: In theaters alone', JSON.stringify(r));
+    /* nothing current at all: the card still walks the top list, and there is no list to open */
+    r = await opened({ ...base1, soon: [], now: [] }, noTrailers);
+    check(r.card && r.got === null, 'Upcoming with no section: the card, and no See as a list', JSON.stringify(r));
+    /* Past with nothing new at home */
+    r = await opened(base1, noTrailers, true);
+    check(JSON.stringify(r.got.on) === '[]' && r.got.n > 0 && r.got.surprise, 'nothing new at home: All alone, with no switch', JSON.stringify(r));
+    /* a home date either side of the 60 days */
+    const films = { ...base1, stream: [{ ...base1.top[0], id: 882001, t: 'In The Window', d: day(-58), where: 'streaming', on: 'Hulu' }, { ...base1.top[1], id: 882002, t: 'Past The Window', d: day(-63), where: 'streaming', on: 'Hulu' }] };
+    r = await opened(films, noTrailers, true);
+    check(JSON.stringify(r.got.on) === '["New at home*","All"]' && r.got.n === 1, 'New at home ends at 60 days', JSON.stringify(r));
+    /* no film out at home has a trailer: no card on Past, and no gap */
+    const dark = { ...base1, top: base1.top.map((f) => ({ ...f, yt: '' })) };
+    const p = await newPage(browser, base, { films: dark, trailers: noTrailers });
+    await p.page.goto(base + '/all-day/#watch/past');
+    await p.page.waitForSelector(wPanel + ' [data-side="past"] [data-slot="drop"]', { state: 'attached' });
+    check(!(await p.page.$(wPanel + ' .wt-drop')) && await p.page.$eval(wPanel + ' [data-slot="drop"]', (s) => !s.children.length && s.getBoundingClientRect().height === 0), 'nothing at home to play: no card and no empty box', '');
+    check(!p.errors.length, 'no console errors', p.errors.join(' | '));
+    await p.ctx.close();
+  });
+
+  await group('Watch, Past is what can be watched at home; Upcoming as a list runs by date (live)', async () => {
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    const key = (n) => new Date((wDayNum(wToday()) + n) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+    const row = (i, id, t, d, extra) => ({ ...seed.top[i], id, t, y: Number(d.slice(0, 4)), d, yt: ('homeRow' + id).slice(-11).padStart(11, 'x'), ...extra });
+    const big = row(30, 991001, 'Big Odyssey', key(-100), { h: key(18) });       // a date ahead: home on that day, no rebuild
+    const out = row(31, 991002, 'Out Today', key(-90), { h: key(0) });
+    const dated = row(32, 991003, 'Out Last Month', key(-120), { h: key(-30) });
+    const quiet = row(33, 991004, 'No Date New', key(-60));                      // no home date, inside 120 days
+    const aged = row(34, 991005, 'No Date Old', key(-200));                      // no home date, past 120 days
+    const beast = row(35, 991006, 'Beast', key(-30), { where: 'theaters' });     // in theaters, its digital date ahead
+    const films = await watchFilms();
+    films.trend = [quiet];
+    films.stream = [{ ...beast, d: key(11), where: 'streaming', on: '' }];
+    films.top = [...films.top, big, out, dated, quiet, aged];
+    films.now = [{ ...films.now[0], d: key(-10) }, beast];
+    const tm = { titles: Object.fromEntries([big, seed.top[0]].map((f) => ['m' + f.id, f])), months: [{ m: key(-100).slice(0, 7), src: 'rt', theaters: ['m' + big.id, 'm' + seed.top[0].id], streaming: [], tv: [] }] };
+    const { ctx, page, errors } = await newPage(browser, base, { films, tm });
+    await page.goto(base + '/all-day/#watch/past');
+    await page.waitForSelector(wPanel + ' [data-grid] [data-k]');
+    const grid = async () => (await wTiles(page)).map((k) => Number(k.slice(1)));
+    const titles = await grid();
+    check(titles.includes(out.id) && titles.includes(dated.id) && titles.includes(aged.id), 'the list: out at home, on its day, and an older film with no date', JSON.stringify(titles.slice(-5)));
+    check(!titles.includes(big.id) && !titles.includes(quiet.id) && !titles.includes(beast.id), 'the list: nothing still only in theaters', JSON.stringify(titles.slice(-5)));
+    await page.waitForSelector(wPanel + ' [data-back] [data-id]');
+    check(JSON.stringify(await page.$$eval(wPanel + ' [data-back] [data-id]', (n) => n.map((a) => Number(a.dataset.id)))) === JSON.stringify([seed.top[0].id]), 'Back then: the same rule', '');
+    check((await wCard(page)).t === out.t && (await wCard(page)).s.endsWith(' · at home'), 'the card leads with the newest home release, and says at home', JSON.stringify(await wCard(page)));
+    await page.click(wPanel + ' [data-sort] [data-chip="new"]');
+    await page.waitForFunction((id) => document.querySelector('#panel-watch [data-grid] [data-k]')?.dataset.k === 'f' + id, out.id, { timeout: 4000 }).catch(() => {});
+    check((await grid())[0] === out.id, 'Newest runs by home date: the film out today leads', JSON.stringify((await grid()).slice(0, 3)));
+    await page.click(wPanel + ' [data-sort] [data-chip="top"]');
+    /* the sheet on Past: nothing in theaters */
+    await page.click(wPanel + ' [data-trailer-sheet]');
+    await page.waitForSelector('.sheet-body [data-trailer-list] .wt-tl');
+    await page.click('.sheet-body [data-trailer-side] button:text-is("All")');
+    const sheet = () => page.$$eval('.sheet-body .wt-tl .t', (n) => n.map((x) => x.textContent));
+    const past = await sheet();
+    check(past[0] === out.t && past.indexOf(out.t) < past.indexOf(dated.t) && !past.includes(big.t) && !past.includes('Beast') && !past.includes(quiet.t), 'the sheet on Past: newest home date first, nothing in theaters', JSON.stringify(past.slice(0, 6)));
+    await page.click('.sheet-card .iconbtn');
+    /* the rail on Upcoming: its own order as a row, by date with one line as a list */
+    await page.click('#subnav [data-side="up"]');
+    const rail = wPanel + ' [data-rail="watch-soon"]';
+    await page.waitForSelector(rail);
+    const cells = () => page.$$eval(rail + ' > *', (n) => n.map((x) => (x.dataset.soonLine ? '|' + x.textContent : x.dataset.k)));
+    const asRow = await cells();
+    check(!asRow.some((x) => x[0] === '|'), 'a row has no line', JSON.stringify(asRow));
+    await page.click(wPanel + ' [data-railmode="watch-soon"]');
+    const asList = await cells();
+    const at = asList.indexOf('|Coming soon');
+    check(at > 0 && asList.filter((x) => x[0] === '|').length === 1 && asList.length === asRow.length + 1, 'See as a list: one line, the app’s short label', JSON.stringify(asList));
+    const days = new Map([...films.now, ...films.soon].map((f) => ['soon:' + f.id, f.d]));
+    const above = asList.slice(0, at), below = asList.slice(at + 1);
+    check(above.every((k) => days.get(k) <= wToday()) && below.every((k) => days.get(k) > wToday()) && [...above, ...below].every((k, i, a) => !i || days.get(a[i - 1]) <= days.get(k)), 'by date, what is out above the line', JSON.stringify([...above, ...below].map((k) => days.get(k))));
+    check(await page.$eval(rail + ' [data-soon-line]', (d) => d.getBoundingClientRect().width > 300), 'the line runs the width of the list', '');
+    await page.click(wPanel + ' [data-slot="soon"] [data-collapse]');
+    check(JSON.stringify(await cells()) === JSON.stringify(asRow), 'Collapse: the row’s order again, no line', JSON.stringify(await cells()));
+    /* the day comes: no new file, and it leads even with its trailer already shown here */
+    await page.evaluate((yt) => localStorage.setItem('allday-watch', JSON.stringify({ tr: [yt] })), big.yt);
+    await page.addInitScript((ms) => { const R = Date; window.Date = class extends R { constructor(...a) { super(...(a.length ? a : [R.now() + ms])); } static now() { return R.now() + ms; } }; }, 18 * W_DAY);
+    await page.goto(base + '/all-day/#watch/past');
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-side="past"] .wt-drop');
+    check((await wCard(page)).t === big.t, 'on its home date a film moves to Past, and leads', JSON.stringify(await wCard(page)));
+    await page.waitForSelector(wPanel + ' [data-grid] [data-k]');
+    check((await grid()).includes(big.id), 'and it is on the list', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('Watch, the trailer card: a sideways swipe (live, touch)', async () => {
@@ -7458,7 +7933,7 @@ async function theWatchTrailers(browser, base) {
       const c = await wCard(page);
       check(c.t === 'The Last Ferry' && /^New · /.test(c.age), scheme + ': the card opens on the demo’s new trailer', JSON.stringify(c));
       const keys = await wWalk(page);
-      check(keys.length > 40 && new Set(keys).size === keys.length && !keys.includes('demoTrail99'), scheme + ': › walks the new ones, then everything else', keys.length);
+      check(keys.length > 3 && new Set(keys).size === keys.length && !keys.includes('demoTrail99'), scheme + ': › walks the new ones, then the rest of what is current', keys.length);
       check(await page.$(wPanel + ' [data-next]') !== null, scheme + ': the demo has Next up', '');
       await page.reload();
       await page.waitForSelector(wPanel + ' .wt-drop');
@@ -7485,7 +7960,7 @@ async function theWatchTrailers(browser, base) {
 
   /* every app's shell has its own copy of the box and shares app.js */
   await group('The video box in the other apps’ shells', async () => {
-    for (const shell of ['body', 'eat', 'out', 'paper', 'people', 'play', 'town']) {
+    for (const shell of ['body', 'town']) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.gotoRaw(base + '/' + shell + '/?demo=1');
       await page.waitForFunction(() => document.getElementById('vbox-prev'), null, { timeout: 8000 }).catch(() => {});
@@ -12756,7 +13231,10 @@ async function weatherBrief(browser, base) {
    demo mode: anything that scrolls sideways is either a chip row (filters, a
    table of contents) in the subnav or band, which are exempt, or a content
    rail with its "See as a list" button just above it and its Collapse bar
-   after it. A new shelf that forgets the button fails here. */
+   after it. A new shelf that forgets the button fails here, on any app's
+   tab, on Watch's Past side and TV, on On Air's other sides. A rail too
+   short to scroll on the demo's data would pass that walk, so no module but
+   ui.js may import the bare rail() at all. */
 async function railsHaveList(browser, base) {
   await group('sideways rows: every content rail can be a list', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
@@ -12779,9 +13257,8 @@ async function railsHaveList(browser, base) {
           const wrap = n.closest('.rail-wrap');
           const pre = wrap && wrap.previousElementSibling;
           const post = wrap && wrap.nextElementSibling;
-          const own = n.dataset.out && !!document.querySelector('.panel:not([hidden]) ' + n.dataset.out);   // a row whose own head already opens it as a list
-          const toggle = !!(pre && pre.matches('.railmode') && /^See as a list$/.test((pre.querySelector('button') || {}).textContent || '')) && !!(post && post.matches('.collapsebar'));
-          if (!toggle && !own) out.push(n.className + (n.dataset.rail ? ' [' + n.dataset.rail + ']' : ''));
+          const toggle = !!(pre && pre.matches('.railmode') && pre.offsetHeight > 0 && /^See as a list$/.test((pre.querySelector('button') || {}).textContent || '')) && !!(post && post.matches('.collapsebar'));
+          if (!toggle) out.push(n.className + (n.dataset.rail ? ' [' + n.dataset.rail + ']' : ''));
         });
         return out;
       });
@@ -12792,9 +13269,11 @@ async function railsHaveList(browser, base) {
          puts it back */
       const n = await page.$$eval('.panel:not([hidden]) .railmode:not(.foot) button', (bs) => bs.length);
       const bad = [];
+      let shown = 0;
       for (let i = 0; i < n; i++) {
         const b = (await page.$$('.panel:not([hidden]) .railmode:not(.foot) button'))[i];
-        if (!b || !/^See as a list$/.test(await b.textContent())) continue;
+        if (!b || !(await b.isVisible()) || !/^See as a list$/.test(await b.textContent())) continue;   // On Air's other sides keep the TV side's rows, hidden
+        shown++;
         const name = await b.getAttribute('data-railmode');
         await b.evaluate((x) => x.scrollIntoView({ block: 'center' }));
         await b.evaluate((x) => x.click());
@@ -12811,7 +13290,7 @@ async function railsHaveList(browser, base) {
         await page.waitForTimeout(120);
         if (await page.evaluate((nm) => !!document.querySelector('.panel:not([hidden]) .rail.aslist[data-rail="' + nm + '"]'), name)) bad.push(name + ': Collapse left it a list');
       }
-      if (n) check(!bad.length, tab + ': every See as a list (' + n + ') opens downward with the sticky Collapse bar, and Collapse puts it back', bad.join(' | '));
+      if (shown) check(!bad.length, tab + ': every See as a list (' + shown + ') opens downward with the sticky Collapse bar, and Collapse puts it back', bad.join(' | '));
     };
     for (const tab of TABS) {
       if (tab !== 'wire') await goTab(page, tab);
@@ -12824,6 +13303,44 @@ async function railsHaveList(browser, base) {
       await page.waitForTimeout(400);
       await scan('wire ' + view);
     }
+    /* Watch's other faces: Past (Stephen, 2026-10-30: Back then scrolled
+       sideways with no list), and both sides on TV */
+    const flip = async (sel, text) => { await page.click(sel + ' button:has-text("' + text + '")'); await settle(page); await page.waitForTimeout(300); };
+    await page.goto(base + '/all-day/?demo=1#watch/past');
+    await settle(page);
+    await page.waitForSelector('#panel-watch [data-sec="back"]', { timeout: 15000 });
+    await scan('watch past, movies');
+    await flip('.wt-kind', 'TV');
+    await scan('watch past, tv');
+    await flip('.wt-sideswitch', 'Upcoming');
+    await scan('watch upcoming, tv');
+    await flip('.wt-kind', 'Movies');
+    /* On Air's other sides */
+    await goTab(page, 'onair');
+    for (const side of ['Podcasts', 'Playlists', 'Sports']) {
+      await flip('.oa-sideswitch', side);
+      await scan('onair ' + side);
+    }
+    /* every tab of the other two apps */
+    for (const cfg of APP_CFGS.filter((a) => a.id !== 'all-day')) {
+      for (const t of cfg.tabs) {
+        const key = t.mode || t.key;
+        await page.gotoRaw(base + '/' + cfg.id + '/?demo=1#' + key);
+        await settle(page);
+        await page.waitForTimeout(250);
+        await scan(cfg.id + ' ' + key);
+      }
+    }
+    /* the source: rail() is ui.js's own, every row goes through listRail() */
+    const JS = path.join(HERE, '..', 'js');
+    const bare = [];
+    for (const dir of [JS, path.join(JS, 'modes'), path.join(JS, 'apps')]) {
+      for (const f of (await readdir(dir)).filter((x) => x.endsWith('.js') && x !== 'ui.js')) {
+        const src = await readFile(path.join(dir, f), 'utf8');
+        if ([...src.matchAll(/import\s*\{([^}]*)\}\s*from\s*'[^']*ui\.js'/g)].some((m) => /(^|[\s,])rail([\s,]|$)/.test(m[1]))) bare.push(f);
+      }
+    }
+    check(!bare.length, 'no module imports the bare rail(): every sideways row is a listRail()', bare.join(', '));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -12852,7 +13369,7 @@ async function railsHaveList(browser, base) {
         opened++;
       }
     }
-    /* Food's lists left with All Day's Food tab (Eat's Open now has no All button), so the Games arcade carries this */
+    /* the Games arcade carries this */
     check(opened >= 1, 'at least one long list was there to open (' + opened + ')', opened);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -13028,7 +13545,7 @@ async function sectionPills(browser, base) {
     await page.click('#subnav .secpill .chip[data-chip="tonight"]');
     await page.waitForTimeout(900);
     const tw = await water(page);
-    check((await onKey(page)) === 'tonight' && tw.alpha[2] > 200 && /#whatnow\/tonight$/.test(await page.evaluate(() => location.hash)), 'Tonight is its own view, poured', JSON.stringify(tw));
+    check((await onKey(page)) === 'tonight' && tw.alpha[tw.on] > 200 && /#whatnow\/tonight$/.test(await page.evaluate(() => location.hash)), 'Tonight is its own view, poured', JSON.stringify(tw));
     /* Habits: a view switch */
     await goTab(page, 'habits');
     await page.click('#subnav .secpill .chip[data-chip="forests"]');
@@ -13745,15 +14262,14 @@ async function theWidget(browser, base) {
   });
 }
 
-/* ------------------------------------------------------------ the eight apps */
-/* Wave 0 (2026-10-29): one shell, eight app folders, each with its own config
-   (all-day/js/apps/), bar, mast colour, manifest and icons. These groups read
-   the configs and the folders, then open every app at 390 and 1280, light and
-   dark, live and ?demo=1, and walk the shell rules the apps add: the shelf a
-   tab gets until its mode is built, the top tabs (sticky, scroll-spy,
-   freshest first, new dots), Real life / Online, the switcher, the
-   home-screen card, and the <base> every app but All Day shares. */
-const APP_IDS = ['all-day', 'out', 'eat', 'people', 'body', 'town', 'play', 'paper'];
+/* ------------------------------------------------------------ the three apps */
+/* One shell, three app folders, each with its own config (all-day/js/apps/),
+   bar, mast colour, manifest and icons. These groups read the configs and the
+   folders, then open every app at 390 and 1280, light and dark, live and
+   ?demo=1, and walk the shell rules the apps add: the top tabs (sticky,
+   scroll-spy, freshest first), the switcher, the home-screen card, and the
+   <base> every app but All Day shares. */
+const APP_IDS = ['all-day', 'body', 'town'];
 const appsIndex = () => import('../js/apps/index.js');
 const demoApp = async (id) => JSON.parse(await readFile(path.join(APP, 'data/demo/apps/' + id + '.json'), 'utf8'));
 const pngSize = (buf) => [buf.readUInt32BE(16), buf.readUInt32BE(20)];
@@ -13761,8 +14277,6 @@ const COMBOS4 = [
   { viewport: { width: 390, height: 844 }, scheme: 'light' }, { viewport: { width: 390, height: 844 }, scheme: 'dark' },
   { viewport: { width: 1280, height: 800 }, scheme: 'light' }, { viewport: { width: 1280, height: 800 }, scheme: 'dark' },
 ];
-/* the first tab of an app that is a shelf, or its first tab */
-const firstShelf = (cfg) => { const t = cfg.tabs.find((x) => !x.mode) || cfg.tabs[0]; return t.mode || t.key; };
 
 async function theApps(browser, base) {
   const { APPS, problems, keyOf } = await appsIndex();
@@ -13771,12 +14285,12 @@ async function theApps(browser, base) {
   const tok = (name) => (tokens.match(new RegExp('--' + name + ':\\s*(#[0-9A-Fa-f]{6})')) || [])[1];
 
   await group('apps: the config loader', async () => {
-    check(JSON.stringify(APPS.map((a) => a.id)) === JSON.stringify(APP_IDS), 'eight apps, in the map’s order', APPS.map((a) => a.id).join(', '));
+    check(JSON.stringify(APPS.map((a) => a.id)) === JSON.stringify(APP_IDS), 'three apps, in order', APPS.map((a) => a.id).join(', '));
     for (const a of APPS) {
       const bad = problems(a);
       check(!bad.length, a.id + ': its config is sound', bad.join('; '));
       const n = a.tabs.length;
-      check(a.id === 'all-day' ? n === 9 && a.nine === true : n >= 5 && n <= 7 && !a.nine, a.id + ': ' + (a.id === 'all-day' ? 'nine tabs, the one exception until wave 1' : 'five to seven bottom tabs'), n);
+      check(a.id === 'all-day' ? n === 9 && a.nine === true : n >= 5 && n <= 7 && !a.nine, a.id + ': ' + (a.id === 'all-day' ? 'nine tabs, the one exception' : 'five to seven bottom tabs'), n);
       for (const t of a.tabs) {
         if (t.mode) {
           const exists = await readFile(path.join(APP, 'js/modes/' + t.mode + '.js'), 'utf8').then(() => true, () => false);
@@ -13793,33 +14307,28 @@ async function theApps(browser, base) {
     check(ad.tabs.every((t) => t.mode && !t.label && !t.icon), 'All Day’s tabs keep their own words and icons', '');
     check(JSON.stringify(ad.hosted) === '{"reddit":"social"}', 'All Day hosts Reddit under Social, and Habits and The Build live in Body', JSON.stringify(ad.hosted));
     check(JSON.stringify(Object.keys(ad.full)) === JSON.stringify(['wire', 'food', 'people', 'whatnow', 'games']), 'the five Full page links stay', Object.keys(ad.full).join(', '));
-    /* the map's bottom tabs, word for word */
+    /* the bottom tabs, word for word */
     const MAP = {
-      out: ['Now', 'Events', 'Nightlife', 'Sports', 'Explore'],
-      eat: ['Open now', 'Deals', 'New', 'Bites', 'Market', 'Dinner Club'],
-      people: ['You', 'Plans', 'Clubs', 'Dating', 'Neighbors', 'Pets', 'Talk'],
-      body: ['Today', 'Habits', 'Train', 'Leagues', 'Recover', 'Fuel'],
+      body: ['Today', 'Habits', 'Train', 'Leagues', 'Recover', 'Mind', 'Fuel'],
       town: ['Now', 'Alerts', 'City Hall', 'Streets', 'Square', 'Guides', 'Jobs'],
-      play: ['Arcade', 'Daily', 'City', 'Draw', 'Party', 'Boards'],
-      paper: ['Front', 'Editions', 'Picks', 'Gossip', 'Everything', 'Story'],
     };
     for (const [id, labels] of Object.entries(MAP)) {
       const a = APPS.find((x) => x.id === id);
-      check(JSON.stringify(a.tabs.map((t) => t.label)) === JSON.stringify(labels), id + ': the map’s bottom tabs', a.tabs.map((t) => t.label).join(', '));
+      check(JSON.stringify(a.tabs.map((t) => t.label)) === JSON.stringify(labels), id + ': its bottom tabs', a.tabs.map((t) => t.label).join(', '));
     }
     /* a mode is hosted once per app and its route is its own key */
     check(APPS.every((a) => new Set(a.tabs.filter((t) => t.mode).map((t) => t.mode)).size === a.tabs.filter((t) => t.mode).length), 'no app hosts a mode twice', '');
     const hosts = APPS.flatMap((a) => a.tabs.filter((t) => t.mode).map((t) => a.id + ':' + t.mode).concat(Object.keys(a.hosted || {}).map((m) => a.id + ':' + m)));
-    check(['out:whatnow', 'eat:food', 'people:people', 'body:habits', 'play:games'].every((h) => hosts.includes(h)), 'the built modes are hosted where the map puts them', hosts.join(', '));
+    check(['all-day:whatnow', 'all-day:food', 'all-day:people', 'all-day:games', 'body:habits', 'town:feed'].every((h) => hosts.includes(h)), 'the shared modes are hosted in the three apps', hosts.join(', '));
     /* problems() says what is wrong, in words */
-    const broken = { ...APPS[1], id: 'x', tabs: APPS[1].tabs.slice(0, 4).concat([{ key: 'events', label: 'Again', icon: 'calendar', promise: 'p' }, { key: 'Bad-Key' }]) };
+    const broken = { ...APPS[1], id: 'x', tabs: APPS[1].tabs.slice(0, 4).concat([{ key: 'train', label: 'Again', icon: 'calendar', promise: 'p' }, { key: 'Bad-Key' }]) };
     const said = problems(broken).join(' | ');
     check(/twice/.test(said) && /lowercase key/.test(said) && /needs a label, an icon and a promise/.test(said), 'a broken config is named in plain words', said);
     check(/4 bottom tabs/.test(problems({ ...APPS[1], tabs: APPS[1].tabs.slice(0, 4) }).join(' ')), 'four tabs is too few', '');
     check(/hosted by/.test(problems({ ...APPS[0], hosted: { habits: 'nowhere' } }).join(' ')), 'a hosted tab needs a host', '');
   });
 
-  await group('apps: eight folders, each its own installable app', async () => {
+  await group('apps: three folders, each its own installable app', async () => {
     for (const a of APPS) {
       const dir = path.join(REPO, a.id);
       const html = await readFile(path.join(dir, 'index.html'), 'utf8').catch(() => '');
@@ -13847,15 +14356,6 @@ async function theApps(browser, base) {
         const buf = await readFile(path.join(dir, 'apple-touch-icon.png')).catch(() => null);
         check(buf && pngSize(buf).join('x') === '180x180', a.id + ': the iPhone icon is 180 square', buf ? pngSize(buf).join('x') : 'missing');
         check(/<script type="module" src="js\/main\.js\?v=[\w]+"><\/script>/.test(html) && /href="css\/app\.css\?v=/.test(html), a.id + ': loads the shared JS and CSS', '');
-        /* the demo of every tab that is a shelf */
-        const d = await demoApp(a.id).catch(() => null);
-        const shelves = a.tabs.filter((t) => !t.mode);
-        check(d && shelves.every((t) => d.tabs[t.key] && d.tabs[t.key].sections.length >= 2), a.id + ': ?demo=1 has every shelf tab', shelves.filter((t) => !(d && d.tabs[t.key])).map((t) => t.key).join(', '));
-        if (d) for (const t of shelves) {
-          const secs = (d.tabs[t.key] || { sections: [] }).sections;
-          check(secs.every((s) => t.top.includes(s.label) && s.items.length >= 1), a.id + '/' + t.key + ': each demo section is one of its top tabs', secs.map((s) => s.label).filter((l) => !t.top.includes(l)).join(', '));
-          check(secs.some((s) => s.world) === !!t.mixed, a.id + '/' + t.key + ': sections say real life or online only on a tab that mixes them', '');
-        }
       }
     }
   });
@@ -13902,22 +14402,13 @@ async function theApps(browser, base) {
             const hostedHere = (a.hosted || {})[st.id.replace(/^panel-/, '')] === key;
             check((st.id === 'panel-' + key || hostedHere) && !st.err, key + ': its panel shows, no error box', JSON.stringify(st));
             if (a.id !== 'all-day') check(st.title === t.label, key + ': the mast names it ' + t.label, st.title);
-            if (!t.mode && !demo) {
-              check(st.promise && st.h2 === t.label && st.line === t.promise && JSON.stringify(st.tops) === JSON.stringify(t.top), key + ': live, its promise and the top tabs to come', JSON.stringify(st));
-              check(!st.world, key + ': no Real life / Online over a promise', '');
-            } else if (!t.mode) {
-              const d = await demoApp(a.id);
-              check(!st.promise && st.secs.length === d.tabs[key].sections.length && st.cards > 0, key + ': the demo draws every top tab', JSON.stringify(st.secs));
-              check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows' : 'stays away'), '');
-            } else {
-              check(!st.promise && (st.cards > 0 || key === 'day'), key + ': the hosted mode draws its screen', JSON.stringify(st));   // Today's tiles aren't cards
-              check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
-            }
+            check(!st.promise && (st.cards > 0 || key === 'day'), key + ': the hosted mode draws its screen', JSON.stringify(st));   // Today's tiles aren't cards
+            check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
             if (a.id !== 'all-day') check(st.doc === (key === keys[0] && !hostedHere ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
             await pageRules(page, key, combo.viewport.width);
           }
-          /* the screenshot: the first shelf tab, at its top */
-          const shot = firstShelf(a);
+          /* the screenshot: the first tab, at its top */
+          const shot = keys[0];
           await goTab(page, shot);
           await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
           await page.waitForTimeout(300);
@@ -13931,50 +14422,35 @@ async function theApps(browser, base) {
     }
   }
 
-  await group('apps: top tabs stay, follow the scroll, lead with the freshest, and dot what is new', async () => {
-    const d = await demoApp('out');
-    const secs = d.tabs.events.sections.filter((s) => s.world !== 'online');
-    const byFresh = secs.map((s, i) => [s, i]).sort((x, y) => x[0].hours - y[0].hours || x[1] - y[1]).map((x) => x[0].key);
+  await group('apps: top tabs stay, follow the scroll, and lead with the freshest', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/out/?demo=1#events');
+    await page.goto(base + '/town/?demo=1#alerts');
     await settle(page);
     await page.waitForTimeout(300);
     const read = () => page.evaluate(() => ({ chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip),
       on: (document.querySelector('#subnav .secpill .chip.on') || {}).dataset?.chip || null,
-      dots: [...document.querySelectorAll('#subnav .secpill .chip[data-new] .nd')].map((n) => n.closest('.chip').dataset.chip),
-      page: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec) }));
+      page: [...document.querySelectorAll('#panel-alerts .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec) }));
     let r = await read();
-    check(JSON.stringify(r.chips) === JSON.stringify(byFresh), 'the top tabs run freshest first', JSON.stringify(r.chips) + ' vs ' + JSON.stringify(byFresh));
-    check(JSON.stringify(r.page) === JSON.stringify(byFresh), 'and the page’s sections follow the same order', JSON.stringify(r.page));
-    check(byFresh[0] !== d.tabs.events.sections[0].key, 'which is not the config’s order', byFresh[0]);
-    const fresh = secs.filter((s) => s.hours < 4).map((s) => s.key).sort();
-    check(JSON.stringify([...r.dots].sort()) === JSON.stringify(fresh) && fresh.length > 0, 'a dot on each top tab with something new since the last visit', JSON.stringify(r.dots));
-    check(r.on === byFresh[0], 'the first top tab is on at the top', r.on);
+    check(r.chips.length >= 4 && JSON.stringify([...r.chips].sort()) === JSON.stringify([...r.page].sort()), 'a top tab for each section on the page', JSON.stringify(r));
+    check(r.on === r.chips[0], 'the first top tab is on at the top', r.on);
     /* sticky: scroll down, the mast's top line steps away, the top tabs stay */
-    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.evaluate(() => document.querySelector('#panel-alerts').scrollBy(0, 400));
     await page.waitForTimeout(120);
-    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.evaluate(() => document.querySelector('#panel-alerts').scrollBy(0, 400));
     await page.waitForTimeout(500);
     const stay = await page.evaluate(() => ({ away: document.body.classList.contains('chrome-away'), keep: document.body.classList.contains('keep-subnav'),
       top: document.querySelector('#subnav .secpill').getBoundingClientRect().top, mastRow: document.querySelector('.mast-row').getBoundingClientRect().bottom }));
     check(stay.away && stay.keep && stay.top >= 0 && stay.top < 60 && stay.mastRow <= 1, 'scrolled down, the mast steps away and the top tabs stay under it', JSON.stringify(stay));
     /* scroll-spy: a tap lands its section under the pill and lights it; scrolling on lights the next */
-    const third = byFresh[2];
+    const third = r.chips[2];
     await page.click('#subnav .secpill .chip[data-chip="' + third + '"]');
     await page.waitForTimeout(1200);
     r = await read();
-    const landed = await page.evaluate((k) => { const s = document.querySelector('#panel-events .shelf-sec[data-sec="' + k + '"]').getBoundingClientRect().top; const p = document.querySelector('#subnav .secpill').getBoundingClientRect().bottom; return [Math.round(s), Math.round(p)]; }, third);
+    const landed = await page.evaluate((k) => { const s = document.querySelector('#panel-alerts .shelf-sec[data-sec="' + k + '"]').getBoundingClientRect().top; const p = document.querySelector('#subnav .secpill').getBoundingClientRect().bottom; return [Math.round(s), Math.round(p)]; }, third);
     check(r.on === third && landed[0] >= landed[1] - 8 && landed[0] < landed[1] + 90, 'a tapped top tab lands its section just under the pill and lights', JSON.stringify([r.on, landed]));
-    const fourth = byFresh[3];
-    await page.evaluate((k) => { const p = document.querySelector('#panel-events'); const s = p.querySelector('.shelf-sec[data-sec="' + k + '"]'); p.scrollTo(0, s.offsetTop - 60); }, fourth);
-    await page.waitForTimeout(900);
-    r = await read();
-    check(r.on === fourth, 'scrolling to the next section lights its top tab', r.on + ' vs ' + fourth);
-    /* the bottom bar: its order never moves; a dot on each tab with something new */
-    const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, !!b.querySelector('.nd')]));
-    check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(['whatnow', 'events', 'nightlife', 'sports', 'explore']), 'the bottom bar keeps its order', JSON.stringify(bar));
-    const wantDot = (k) => k !== 'events' && k !== 'whatnow' && d.tabs[k].sections.some((s) => s.hours < 4);
-    check(bar.filter((b) => b[0] !== 'whatnow').every(([k, dot]) => dot === wantDot(k)), 'a dot on every other tab with something new, none on the one you are on', JSON.stringify(bar));
+    /* the bottom bar: its order never moves */
+    const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => b.dataset.tab));
+    check(JSON.stringify(bar) === JSON.stringify(APPS.find((a) => a.id === 'town').tabs.map(keyOf)), 'the bottom bar keeps its order', JSON.stringify(bar));
     /* the rule itself, for any mode: dated first, newest first, the rest in order */
     const order = await page.evaluate(() => import('/all-day/js/sections.js').then((m) => m.freshOrder([{ key: 'a' }, { key: 'b', newest: 10 }, { key: 'c' }, { key: 'd', newest: 30 }, { key: 'e', newest: 10 }]).map((x) => x.key).join('')));
     check(order === 'dbeac', 'freshOrder: newest first, ties and undated keep their order', order);
@@ -13988,60 +14464,6 @@ async function theApps(browser, base) {
     await ad.ctx.close();
   });
 
-  await group('apps: Real life / Online on a tab that mixes them, and nowhere else', async () => {
-    const d = await demoApp('out');
-    const side = (w) => d.tabs.events.sections.filter((s) => s.world === w).map((s) => s.key).sort();
-    const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/out/?demo=1#events');
-    await settle(page);
-    const look = () => page.evaluate(() => ({ world: document.body.dataset.world || null,
-      on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')),
-      shown: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec).sort(),
-      chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip).sort(),
-      row: !!document.querySelector('#subnav .secbar .secrow .worldsw + .secpill') }));
-    let s = await look();
-    check(s.world === 'irl' && JSON.stringify(s.on) === '[true,false]' && s.row, 'it starts on Real life, beside the top tabs', JSON.stringify(s));
-    check(JSON.stringify(s.shown) === JSON.stringify(side('irl')) && JSON.stringify(s.chips) === JSON.stringify(side('irl')), 'Real life shows the real-life sections, and only their top tabs', JSON.stringify(s));
-    await page.click('#subnav .worldsw [data-world="online"]');
-    await page.waitForTimeout(300);
-    s = await look();
-    check(s.world === 'online' && JSON.stringify(s.on) === '[false,true]' && JSON.stringify(s.shown) === JSON.stringify(side('online')) && JSON.stringify(s.chips) === JSON.stringify(side('online')),
-      'Online shows the online sections, and only their top tabs', JSON.stringify(s));
-    await goTab(page, 'nightlife');
-    const night = await page.evaluate(() => ({ world: document.body.dataset.world, on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')) }));
-    check(night.world === 'online' && JSON.stringify(night.on) === '[false,true]', 'one setting: Nightlife opens on Online too', JSON.stringify(night));
-    await goTab(page, 'sports');
-    check(!(await page.$('#subnav .worldsw')) && !(await page.evaluate(() => document.body.dataset.world)), 'Sports does not mix: no switch, nothing hidden', '');
-    await goTab(page, 'whatnow');
-    check(!(await page.$('#subnav .worldsw')), 'nor does What Now', '');
-    check(!errors.length, 'no console errors', errors.join(' | '));
-    await ctx.close();
-    /* the reader's choice stays on the phone (a fresh page in the same context keeps it) */
-    const { ctx: c2, page: p2 } = await newPage(browser, base, { motion: 'reduce' });
-    await p2.goto(base + '/people/?demo=1#dating');
-    await settle(p2);
-    const still = await p2.evaluate(() => ({ sw: !!document.querySelector('#subnav .worldsw'), canvas: !!document.querySelector('#subnav .worldsw canvas') }));
-    check(still.sw && !still.canvas, 'People’s Dating has it too; under reduced motion it is a plain fill', JSON.stringify(still));
-    await c2.close();
-    /* live, the reader's choice stays on this phone (the demo saves nothing) */
-    const { ctx: c3, page: p3 } = await newPage(browser, base);
-    await p3.goto(base + '/out/#events');
-    await settle(p3);
-    await p3.evaluate(() => import('/all-day/js/ui.js').then((m) => m.setWorld('online')));
-    await p3.reload();
-    await settle(p3);
-    check(await p3.evaluate(() => import('/all-day/js/ui.js').then((m) => m.world())) === 'online', 'live, the choice is remembered on this phone', '');
-    await c3.close();
-    /* All Day: no tab mixes yet, so nothing changes there */
-    const ad = await newPage(browser, base);
-    await ad.page.goto(base + '/all-day/');
-    await settle(ad.page);
-    let any = false;
-    for (const t of TABS) { if (t !== 'wire') await goTab(ad.page, t); if (await ad.page.$('#subnav .worldsw')) any = true; }
-    check(!any && !(await ad.page.evaluate(() => document.body.dataset.world)), 'All Day: no Real life / Online on any of its nine tabs', '');
-    await ad.ctx.close();
-  });
-
   await group('apps: hold the pill’s centre to switch apps (a ring, then the bubble)', async () => {
     const SW = await readFile(path.join(APP, 'js/switcher.js'), 'utf8');
     const HOLD = Number((SW.match(/export const HOLD_MS = (\d+);/) || [])[1]);
@@ -14052,7 +14474,7 @@ async function theApps(browser, base) {
     await page.goto(base + '/town/?demo=1#alerts');
     await settle(page);
     const cell = await page.$eval('#tabbar .holdcell', (b) => { const r = b.getBoundingClientRect(); return { id: b.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
-    check(cell.id === 'tab-streets', 'the centre cell of Town’s six is Streets, the fourth', cell.id);
+    check(cell.id === 'tab-streets', 'the centre cell of Town’s seven is Streets, the fourth', cell.id);
     const cm = await page.evaluate(() => { const e = new MouseEvent('contextmenu', { bubbles: true, cancelable: true }); document.querySelector('#tabbar .holdcell').dispatchEvent(e); return e.defaultPrevented; });
     check(cm, 'the browser’s long-press menu is kept off the centre cell', '');
     /* a plain tap opens its tab, with no ring and no bubble */
@@ -14127,20 +14549,20 @@ async function theApps(browser, base) {
       new URL(r.href).pathname + new URL(r.href).search, r.getAttribute('aria-current'), !!r.dataset.new]), buzz: window.__buzz,
       tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab,
       above: document.querySelector('.appbubble').getBoundingClientRect().bottom <= document.getElementById('tabbar').getBoundingClientRect().top }));
-    check(JSON.stringify(b.rows.map((r) => r[0])) === '["all-day","body","town"]', 'the bubble: All Day, Town and Body, the apps that have earned a place', JSON.stringify(b.rows.map((r) => r[0])));
-    check(b.rows.every((r) => r[1] === APPS.find((a) => a.id === r[0]).name && r[2] === APPS.find((a) => a.id === r[0]).line && r[2].length > 0), 'each with its name and its line from the map', JSON.stringify(b.rows.map((r) => r.slice(1, 3))));
+    check(JSON.stringify(b.rows.map((r) => r[0])) === '["all-day","body","town"]', 'the bubble: All Day, Body and Town', JSON.stringify(b.rows.map((r) => r[0])));
+    check(b.rows.every((r) => r[1] === APPS.find((a) => a.id === r[0]).name && r[2] === APPS.find((a) => a.id === r[0]).line && r[2].length > 0), 'each with its name and its line', JSON.stringify(b.rows.map((r) => r.slice(1, 3))));
     check(b.rows.every((r) => r[3] === '/' + r[0] + '/?demo=1'), 'each opens its own folder (the demo stays a demo)', JSON.stringify(b.rows.map((r) => r[3])));
     check(b.rows.filter((r) => r[4] === 'page').map((r) => r[0]).join() === 'town', 'this app is marked', '');
     check(JSON.stringify(b.buzz) === '[12]' && b.above && b.tab === 'alerts', 'a light buzz as it opens, above the pill, and the tab stays put', JSON.stringify([b.buzz, b.above, b.tab]));
     await page.screenshot({ path: path.join(SHOTS, 'app-switch-bubble-390.png') });
     await page.keyboard.press('Escape');
     check(!(await page.$('.appbubble')), 'Escape closes it', '');
-    await page.goto(base + '/eat/?demo=1');
+    await page.goto(base + '/body/?demo=1');
     await settle(page);
     /* a tile opens that app */
-    const eatCell = await page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { id: x.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
-    check(eatCell.id === 'tab-bites', 'Eat’s centre cell of six is Bites, the fourth', eatCell.id);
-    await page.mouse.move(eatCell.x, eatCell.y); await page.mouse.down(); await page.waitForTimeout(GRACE + HOLD + 250); await page.mouse.up();
+    const bodyCell = await page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { id: x.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    check(bodyCell.id === 'tab-leagues', 'Body’s centre cell of seven is Leagues, the fourth', bodyCell.id);
+    await page.mouse.move(bodyCell.x, bodyCell.y); await page.mouse.down(); await page.waitForTimeout(GRACE + HOLD + 250); await page.mouse.up();
     await page.waitForSelector('.appbubble');
     await Promise.all([page.waitForURL(/\/town\/\?demo=1$/), page.click('.appbubble .ab-row[data-app="town"]')]);
     await settle(page);
@@ -14366,7 +14788,7 @@ async function theApps(browser, base) {
       keys.push(await n.page.evaluate(() => localStorage.getItem('allday-coach-apps')));
     }
     check(keys.join() === '1,2,3', 'it plays on opens 1, 2 and 3, across all the apps', keys.join());
-    await n.page.goto(base + '/eat/?demo=1');
+    await n.page.goto(base + '/all-day/?demo=1');
     await settle(n.page);
     await n.page.waitForTimeout(WAIT);
     check(await steps(n.page) === '', 'and not on the fourth', await steps(n.page));
@@ -14479,18 +14901,18 @@ async function theApps(browser, base) {
     const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
     const ANDROID = 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36';
     const { ctx, page, errors } = await newPage(browser, base, { ua: IPHONE, asks: true });
-    await page.goto(base + '/out/');
+    await page.goto(base + '/town/');
     await settle(page);
     check(!!(await page.$('#mast #install-btn:not([hidden])')) && !(await page.$('#mast .appsbtn')), 'the mast carries Add to home screen, and no switcher', '');
     await page.click('#install-btn');
     await page.waitForSelector('.sheet-card .installcard');
     const sw = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, card: document.querySelector('.installcard').innerText, how: document.querySelector('.installcard .ask-how')?.innerText || '' }));
-    check(sw.title === 'On your home screen' && /Put Out on your home screen/.test(sw.card) && /Share/.test(sw.how) && /Add to Home Screen/.test(sw.how) && /How to bookmark this/.test(sw.card),
+    check(sw.title === 'On your home screen' && /Put Town on your home screen/.test(sw.card) && /Share/.test(sw.how) && /Add to Home Screen/.test(sw.how) && /How to bookmark this/.test(sw.card),
       'the card: an iPhone gets Share, then Add to Home Screen, and How to bookmark this', JSON.stringify(sw));
     await page.click('.installcard [data-howto]');
     await page.waitForSelector('.howto-sheet');
     const how = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, order: [...document.querySelectorAll('.howto')].map((h) => h.dataset.platform), text: document.querySelector('.howto-sheet').innerText }));
-    check(how.title === 'Keep Out handy' && JSON.stringify(how.order) === '["iphone","android","computer"]' && /Add to Home Screen/.test(how.text) && /Add to Home screen/.test(how.text),
+    check(how.title === 'Keep Town handy' && JSON.stringify(how.order) === '["iphone","android","computer"]' && /Add to Home Screen/.test(how.text) && /Add to Home screen/.test(how.text),
       'How to bookmark this: iPhone first, then Android, then a computer', JSON.stringify(how));
     await page.screenshot({ path: path.join(SHOTS, 'app-install-howto-390.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -14524,33 +14946,33 @@ async function theApps(browser, base) {
     }
   });
 
-  await group('apps: one shell, eight doors (the shared <base>)', async () => {
+  await group('apps: one shell, three doors (the shared <base>)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.addInitScript(() => { navigator.share = (o) => { window.__shared = o; return Promise.resolve(); }; });
-    await page.goto(base + '/out/');
+    await page.goto(base + '/town/');
     await settle(page);
-    const now = await page.evaluate(() => document.querySelectorAll('#panel-whatnow [data-k], #panel-whatnow .sec').length);
-    check(now > 0, 'What Now draws in Out from the shared data/ (the <base> at work)', now);
+    const now = await page.evaluate(() => document.querySelectorAll('#panel-feed [data-k], #panel-feed .sec').length);
+    check(now > 0, 'Now draws in Town from the shared data/ (the <base> at work)', now);
     /* a #fragment link stays in this app */
-    await page.evaluate(() => { const a = document.createElement('a'); a.href = '#sports'; a.id = 'frag'; a.textContent = 'x'; document.querySelector('#panel-whatnow .panel-body').prepend(a); });
+    await page.evaluate(() => { const a = document.createElement('a'); a.href = '#streets'; a.id = 'frag'; a.textContent = 'x'; document.querySelector('#panel-feed').prepend(a); });
     await page.click('#frag');
-    await page.waitForFunction(() => document.querySelector('#tab-sports').getAttribute('aria-selected') === 'true');
-    check(new URL(page.url()).pathname === '/out/' && /#sports$/.test(page.url()), 'a #link stays in Out', page.url());
-    /* a mode's relative history call keeps Out's path */
-    await page.evaluate(() => history.replaceState(null, '', location.search + '#whatnow'));
-    check(new URL(page.url()).pathname === '/out/', 'a relative replaceState keeps Out’s path', page.url());
-    /* shares carry Out's address */
-    await page.evaluate(() => import('/all-day/js/app.js').then((m) => m.share('events', 'k1', 'A thing')));
-    check(await page.evaluate(() => window.__shared && window.__shared.url) === 'https://guide.btownbrief.com/out/#events/k1', 'a share link is Out’s', await page.evaluate(() => JSON.stringify(window.__shared)));
-    /* the visit is Out's own; All Day's is untouched */
-    const keys = await page.evaluate(() => [localStorage.getItem('allday-visit-out') ? 1 : 0, localStorage.getItem('allday-visit') ? 1 : 0]);
+    await page.waitForFunction(() => document.querySelector('#tab-streets').getAttribute('aria-selected') === 'true');
+    check(new URL(page.url()).pathname === '/town/' && /#streets$/.test(page.url()), 'a #link stays in Town', page.url());
+    /* a mode's relative history call keeps Town's path */
+    await page.evaluate(() => history.replaceState(null, '', location.search + '#feed'));
+    check(new URL(page.url()).pathname === '/town/', 'a relative replaceState keeps Town’s path', page.url());
+    /* shares carry Town's address */
+    await page.evaluate(() => import('/all-day/js/app.js').then((m) => m.share('alerts', 'k1', 'A thing')));
+    check(await page.evaluate(() => window.__shared && window.__shared.url) === 'https://guide.btownbrief.com/town/#alerts/k1', 'a share link is Town’s', await page.evaluate(() => JSON.stringify(window.__shared)));
+    /* the visit is Town's own; All Day's is untouched */
+    const keys = await page.evaluate(() => [localStorage.getItem('allday-visit-town') ? 1 : 0, localStorage.getItem('allday-visit') ? 1 : 0]);
     check(JSON.stringify(keys) === '[1,0]', '“new since you last looked” is per app', JSON.stringify(keys));
-    /* a tab no app has opens Out's first */
+    /* a tab no app has opens Town's first */
     await page.evaluate(() => { location.hash = 'nowhere'; });
     await page.waitForTimeout(400);
-    check(await page.evaluate(() => document.querySelector('#tab-whatnow').getAttribute('aria-selected')) === 'true' && /\/out\/#nowhere$/.test(await page.evaluate(() => location.href)), 'a tab no app has opens Out’s first', '');
-    /* a card's link to a tab reaches an app the switcher offers: All Day for its nine, Body and Town for theirs, never a parts-bin app */
-    for (const [from, h, where] of [['out', 'food/some-place', '/all-day/'], ['out', 'people/plan-1', '/all-day/'], ['out', 'games/btown-wordle', '/all-day/'], ['town', 'wire', '/all-day/'], ['town', 'food/some-place', '/all-day/'], ['body', 'alerts', '/town/'], ['town', 'leagues', '/body/'], ['all-day', 'build', '/body/']]) {
+    check(await page.evaluate(() => document.querySelector('#tab-feed').getAttribute('aria-selected')) === 'true' && /\/town\/#nowhere$/.test(await page.evaluate(() => location.href)), 'a tab no app has opens Town’s first', '');
+    /* a card's link to a tab reaches the app that has it: All Day for its nine, Body and Town for theirs */
+    for (const [from, h, where] of [['body', 'food/some-place', '/all-day/'], ['body', 'people/plan-1', '/all-day/'], ['body', 'games/btown-wordle', '/all-day/'], ['town', 'wire', '/all-day/'], ['town', 'food/some-place', '/all-day/'], ['body', 'alerts', '/town/'], ['town', 'leagues', '/body/'], ['all-day', 'build', '/body/']]) {
       await page.gotoRaw(base + '/' + from + '/');
       await settle(page);
       await Promise.all([page.waitForURL((u) => u.pathname === where), page.evaluate((x) => { location.hash = x; }, h)]);
@@ -14559,7 +14981,7 @@ async function theApps(browser, base) {
       const cell = cellOf(where.replace(/\//g, ''), h.split('/')[0]);
       check(got.path === where && got.hash === '#' + h && got.on === cell, '#' + h + ' from ' + from + ' opens in ' + where, JSON.stringify(got));
     }
-    /* a key only a parts-bin app has, or none has, stays here on the first tab */
+    /* a key no app has, an old link's or a made-up one, stays here on the first tab */
     for (const h of ['plans', 'plans/b-1', 'deals', 'nowhere']) {
       await page.gotoRaw(base + '/town/');
       await settle(page);
@@ -14575,12 +14997,12 @@ async function theApps(browser, base) {
     await ctx.close();
     /* a mode that fails to load becomes a shelf, and the rest of the app runs */
     const br = await newPage(browser, base);
-    await br.page.route(/\/all-day\/js\/modes\/whatnow\.js/, (r) => r.fulfill({ status: 404, body: '' }));
-    await br.page.goto(base + '/out/');
+    await br.page.route(/\/all-day\/js\/modes\/feed\.js/, (r) => r.fulfill({ status: 404, body: '' }));
+    await br.page.goto(base + '/town/');
     await settle(br.page);
-    const fell = await br.page.evaluate(() => ({ promise: document.querySelector('#panel-whatnow .promise h2')?.textContent || '', bar: document.querySelectorAll('#tabbar button[data-tab]').length }));
-    check(fell.promise === 'Now' && fell.bar === 5, 'a mode that fails to load leaves its promise, and the bar is whole', JSON.stringify(fell));
-    check(br.errors.some((e) => /mode whatnow did not load/.test(e)), 'and the failure is logged', br.errors.join(' | '));
+    const fell = await br.page.evaluate(() => ({ promise: document.querySelector('#panel-feed .promise h2')?.textContent || '', bar: document.querySelectorAll('#tabbar button[data-tab]').length }));
+    check(fell.promise === 'Now' && fell.bar === 7, 'a mode that fails to load leaves its promise, and the bar is whole', JSON.stringify(fell));
+    check(br.errors.some((e) => /mode feed did not load/.test(e)), 'and the failure is logged', br.errors.join(' | '));
     await br.ctx.close();
   });
 }
@@ -14604,13 +15026,13 @@ async function accountData(browser, base) {
         return /_delete_me$/.test(fn) ? {} : undefined;
       },
     });
-    await page.goto(base + '/eat/');
+    await page.goto(base + '/town/');
     await settle(page);
     await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
     await page.reload();
     await settle(page);
     const here = await page.evaluate(() => import('/all-day/js/account-data.js').then((m) => m.handledHere()));
-    check(JSON.stringify(here) === JSON.stringify(['sz_delete_me', 'bd_delete_me']), 'Eat loads neither mode, so both deletions are handled here', JSON.stringify(here));
+    check(JSON.stringify(here) === JSON.stringify(['sz_delete_me', 'bd_delete_me']), 'Town loads neither mode, so both deletions are handled here', JSON.stringify(here));
     await settingsText(page);
     await page.click('.sheet-body button:has-text("Delete my account and posts")');
     await page.click('#confirm [data-yes]');
@@ -14670,7 +15092,7 @@ async function theSocial(browser, base) {
       { u: 'https://x.com/Reuters/status/4', d: now - 200, from: '@Reuters', name: 'Reuters', summary: 'A desk post', ch: 'x', local: false }] },
     facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/123/permalink/4/', d: now - 1200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] },
     recaps: { paused: true, items: [] } } };
-  await group('Social: one block per account, the freshest on top', async () => {
+  await group('Social: a section per platform, the freshest on top', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(pulse), contentType: 'application/json' }));
     await page.goto(base + '/all-day/#social');
@@ -14688,14 +15110,55 @@ async function theSocial(browser, base) {
     await page.waitForTimeout(300);
     const every = await names();
     check(every.indexOf('BNO News') >= 0 && every.indexOf('BNO News') < every.indexOf('Channel 3 News') && !every.includes('Reuters'), 'Everything brings them in, the last to post goes first, and the fifty-a-day desks stay out', every.join());
-    await page.click('#subnav .secpill .chip:has-text("Facebook"), #subnav button:has-text("Facebook")');
-    await page.waitForTimeout(300);
-    check((await names()).join() === 'Burlington Group', 'a platform pill leaves only that platform', (await names()).join());
-    await page.click('#subnav button:has-text("Reddit")');
+    const heads = () => page.$$eval(panel + ' .so-sec-head h2', (a) => a.map((n) => n.textContent));
+    const pills = () => page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent.trim()));
+    const order = await heads();
+    check(order[0] === 'X' && order.indexOf('Facebook') < order.indexOf('Reddit') && order.includes('Reddit'), 'the platform with the newest post leads', order.join());
+    check((await pills()).join() === order.join(), 'the pill lists the sections in the same order', (await pills()).join());
+    const head = await page.$eval(panel + ' .so-sec-head', (n) => n.textContent);
+    check(/^X5m$/.test(head), 'a head is the platform and its newest age', head);
+    check((await page.$$eval(panel + ' .so-sec[data-plat="reddit"] .so-block', (a) => a.length)) <= 5, 'a section shows five blocks at most', '');
+    const last = order[order.length - 1];
+    await page.click('#subnav .secpill .chip:has-text("' + last + '")');
+    await page.waitForFunction((k) => { const t = document.querySelector('[data-plat="' + k + '"]').getBoundingClientRect().top; return t > 0 && t < innerHeight; }, last.toLowerCase());
+    check(await page.$eval('#subnav .secpill .chip.on', (c) => c.textContent.trim()) === last, 'a tap jumps to the section', last);
+    await page.waitForTimeout(3000);
+    await page.$eval(panel, (p) => p.scrollTo(0, 0));
+    await page.waitForFunction((k) => document.querySelector('#subnav .secpill .chip.on')?.textContent.trim() === k, order[0], { timeout: 3000 });
+    check(true, 'the pill follows the scroll', '');
+    await page.click(panel + ' .so-sec[data-plat="reddit"] .so-all');
     await page.waitForSelector('#panel-reddit .rd-tile');
-    check(await page.$eval('#subnav', (n) => /Fresh/.test(n.textContent) && /Latest/.test(n.textContent)), 'Reddit opens under Social, with Fresh and Questions', '');
+    check(await page.$eval('#subnav', (n) => /Fresh/.test(n.textContent) && /Questions/.test(n.textContent)), 'Reddit’s All opens Fresh and Questions', '');
+    await page.click('#subnav .secpill .chip:has-text("Social")');
+    await page.waitForFunction((p) => !document.querySelector(p).hidden, panel);
+    check((await pills()).join() === order.join(), 'and the hosted tab keeps a way back', (await pills()).join());
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Social: each Reddit thread with three or more comments is its own block', async () => {
+    const fresh = redditFresh(Date.now());
+    const r1 = fresh.posts[0];
+    const posts = [
+      { ...r1, id: 't1', url: redditUrl('t1'), title: 'Ten replies', comments: 10, score: 5 },
+      { ...r1, id: 't2', url: redditUrl('t2'), title: 'Three replies', comments: 3, score: 5 },
+      { ...r1, id: 't3', url: redditUrl('t3'), title: 'Two replies', comments: 2, score: 5 },
+      { ...r1, id: 't4', url: redditUrl('t4'), title: 'No replies', comments: 0, score: 5 },
+    ];
+    const { ctx, page, errors } = await newPage(browser, base, { reddit: { ...fresh, posts } });
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox: { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] } } }), contentType: 'application/json' }));
+    await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector(panel + ' .so-reddit');
+    await page.waitForTimeout(500);
+    const blocks = await page.$$eval(panel + ' .so-block', (a) => a.map((c) => ({ reddit: c.classList.contains('so-reddit'), name: c.querySelector('.so-name').textContent, home: c.querySelector('.so-name').href,
+      title: c.querySelector('.so-text').textContent, href: c.querySelector('.so-text').href, rows: c.querySelectorAll('.so-row').length })));
+    check(blocks.map((b) => b.title).sort().join() === 'Ten replies,Three replies', 'three comments or more makes a block, two does not', JSON.stringify(blocks.map((b) => b.title)));
+    check(blocks.every((b) => b.reddit && b.name === 'r/burlington' && b.home === 'https://www.reddit.com/r/burlington/'), 'two threads of one subreddit are two blocks, each named for it and linking to it', JSON.stringify(blocks));
+    check(blocks.every((b) => /\/comments\/t[12]\b/.test(b.href)), 'a block opens its own thread', JSON.stringify(blocks.map((b) => b.href)));
+    check(blocks.every((b) => b.rows === 0), 'a thread has no rows of earlier posts', JSON.stringify(blocks.map((b) => b.rows)));
+    const real = errors.filter((e) => !/Failed to load resource/.test(e));
+    check(!real.length, 'no console errors but the failed file', real.join(' | '));
     await ctx.close();
   });
   await group('Social: voices, X pictures and a paused source', async () => {
@@ -14710,6 +15173,7 @@ async function theSocial(browser, base) {
       recaps: { paused: true, items: [] } } };
     const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(voices), contentType: 'application/json' }));
+    await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ posts: [], fetched_at: now }), contentType: 'application/json' }));
     await page.route(/pbs\.twimg\.com\/media\/WIDE/, (r) => r.fulfill({ status: 200, body: wide, contentType: 'image/jpeg' }));
     await page.route(/pbs\.twimg\.com\/media\/GONE/, (r) => r.fulfill({ status: 404, body: '' }));
     await page.goto(base + '/all-day/#social');
@@ -14730,9 +15194,8 @@ async function theSocial(browser, base) {
     await page.click('.localsw-half:has-text("Everything")');
     await page.waitForSelector(panel + ' .so-name:has-text("Terrible Maps")');
     check((await names())[0] === 'Terrible Maps', 'Everything brings the national voice in, under X', (await names()).join());
-    await page.click('#subnav button:has-text("X")');
-    await page.waitForTimeout(300);
-    check((await names()).length === 3, 'the X pill holds the voices and the held posts', (await names()).join());
+    const xs = await page.$$eval(panel + ' [data-plat="x"] .so-name', (a) => a.map((n) => n.textContent));
+    check(xs.length === 3, 'the X section holds the voices and the held posts', xs.join());
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
     const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 404/.test(e));
     check(!real.length, 'no console errors but the picture that was gone', real.join(' | '));
@@ -14754,6 +15217,7 @@ async function theSocial(browser, base) {
     await page.goto(base + '/all-day/#social');
     await page.waitForFunction((p) => /Nothing here yet/.test(document.querySelector(p + ' .rd-empty')?.textContent || ''), panel, { timeout: 15000 });
     check(!(await page.$(panel + ' .so-block')), 'all down: one plain line and no blocks', '');
+    check(!!(await page.$('#subnav .localsw')) && !(await page.$('#subnav .secpill')), 'no sections, no pill, and the switch stays', '');
     const real = errors.filter((e) => !/Failed to load resource/.test(e));
     check(!real.length, 'no console errors but the failed files', real.join(' | '));
     await ctx.close();
@@ -14785,6 +15249,30 @@ async function theSocial(browser, base) {
     check(!(await page.$(panel + ' .so-block')), 'the last block going leaves the plain line, not a blank tab', '');
     await ctx.close();
   });
+  await group('Social: All opens in steps, and an empty platform has no section', async () => {
+    const many = [...Array(17)].map((_, n) => ({ u: 'https://x.com/a' + n + '/status/' + n, d: now - 100 * (n + 1), from: '@a' + n, name: 'Account ' + n, summary: 'Post ' + n, ch: 'x', local: !!(n % 2) || n < 12 }));
+    const inbox = { x: { paused: false, items: many }, facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/1/permalink/2/', d: now - 10, from: 'Group', name: 'Newest group', summary: 'Newest of all', ch: 'facebook', local: true }] }, recaps: { paused: true, items: [] } };
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.addInitScript(() => localStorage.setItem('allday-settings', JSON.stringify({ localOnly: false, nationalOnly: false })));
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox }), contentType: 'application/json' }));
+    for (const re of [/data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector(panel + ' [data-plat="x"] .so-all');
+    const sec = panel + ' [data-plat="x"]';
+    const shown = () => page.$$eval(sec + ' .so-block', (a) => a.length);
+    check((await page.$$eval(panel + ' .so-sec', (a) => a.map((n) => n.dataset.plat))).join() === 'facebook,x', 'Facebook leads when it posted last, and the empty platforms have no section', '');
+    check(!(await page.$(panel + ' [data-plat="facebook"] .so-all')), 'a section with nothing more has no All', '');
+    check((await shown()) === 5, 'five blocks to begin', await shown());
+    await page.click(sec + ' .so-all');
+    check((await shown()) === 15, 'All opens the next ten in place', await shown());
+    await page.click(sec + ' .so-all');
+    check((await shown()) === 17 && !(await page.$(sec + ' .so-all')), 'then the rest, and All goes', await shown());
+    await page.click('.localsw-half:has-text("National")');
+    await page.waitForFunction((p) => !document.querySelector(p + ' [data-plat="facebook"]'), panel);
+    check(!!(await page.$(sec)) && (await page.$$eval('#subnav .secpill .chip', (c) => c.length)) === 1, 'National has no Facebook section, in the page or the pill', '');
+    check(!errors.filter((e) => !/Failed to load resource/.test(e)).length, 'no console errors but the failed files', errors.join(' | '));
+    await ctx.close();
+  });
   await group('Social: a wide X picture beside a taller block has no band under it', async () => {
     const now = Math.round(Date.now() / 1000);
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200"><rect width="800" height="200" fill="#369"/></svg>';
@@ -14807,9 +15295,10 @@ async function theSocial(browser, base) {
     await page.waitForSelector(panel + ' .so-x .so-pic img');
     await page.click('.localsw-half:has-text("Everything")');
     await page.waitForTimeout(300);
-    const look = await page.$eval(panel, (p) => ({ names: [...p.querySelectorAll('.so-name')].map((n) => n.textContent), plats: [...new Set([...p.querySelectorAll('.so-plat')].map((n) => n.textContent))], pics: p.querySelectorAll('.so-x .so-pic img').length }));
+    const look = await page.$eval(panel, (p) => ({ names: [...p.querySelectorAll('.so-name')].map((n) => n.textContent), plats: [...p.querySelectorAll('.so-sec-head h2')].map((n) => n.textContent), pics: p.querySelectorAll('.so-x .so-pic img').length, threads: p.querySelectorAll('.so-reddit').length }));
     check(look.names.includes('The Lantern Diner') && look.names.includes('Queen City Parks') && look.names.includes('Maps of Nothing') && look.pics === 2, 'a paused source’s held posts, a local voice and a national voice with pictures', JSON.stringify(look));
-    check(['X', 'Facebook', 'Instagram', 'Reddit'].every((n) => look.plats.includes(n)), 'every platform has a block', look.plats.join());
+    check(['X', 'Facebook', 'Instagram', 'Reddit'].every((n) => look.plats.includes(n)), 'every platform has a section', look.plats.join());
+    check(look.threads === 2, 'the two demo threads with replies are two blocks, the third stays out', look.threads);
     await page.click(panel + ' .so-x .so-text');
     await page.waitForSelector('.toast, #toast', { timeout: 3000 }).catch(() => {});
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -14858,8 +15347,8 @@ async function theReddit(browser, base) {
     await page.waitForSelector('#tab-social .nd.num', { timeout: 6000 });
     check((await page.$eval('#tab-social .nd', (n) => n.textContent)) === '2', 'the Social cell shows the number of new threads', await page.$eval('#tab-social .nd', (n) => n.textContent));
     await page.click('#tab-social');
-    await page.waitForSelector('#subnav button:has-text("Reddit")');
-    await page.click('#subnav button:has-text("Reddit")');
+    await page.waitForSelector('#panel-social [data-plat="reddit"] .so-all');
+    await page.click('#panel-social [data-plat="reddit"] .so-all');
     await page.waitForSelector(panel + ' .rd-tile');
     check(!(await page.$('#tab-social .nd')), 'landing clears the count', '');
     const marks = await page.$$eval(panel + ' .rd-tile', (a) => a.map((c) => !!c.querySelector('.rd-new')));
@@ -14956,6 +15445,7 @@ try {
   if (!ONLY.length || ONLY.includes('theWire') || ONLY.includes('wirePass2')) await wirePass2(browser, base);
   await run(thePhotos);
   await run(theWhatNow);
+  await run(theTalk);
   await run(theFood);
   await run(theReddit);
   await run(theSocial);
@@ -14967,6 +15457,7 @@ try {
   await run(theGames);
   await run(theWatch);
   await run(theWatchTrailers);
+  await run(theTomatoes);
   await run(interactions);
   await run(shellFixes);
   await run(accounts);

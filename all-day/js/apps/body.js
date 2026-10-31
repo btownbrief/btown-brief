@@ -1,6 +1,6 @@
 /* Body: the day as tiles you tap (modes/day.js), then the tools behind them:
    Habits with the season, the template and The Build (modes/template.js holds
-   that switch), Train, Leagues, Recover and Fuel. */
+   that switch), Train, Leagues, Recover, Mind and Fuel. */
 export default {
   id: 'body',
   name: 'Body',
@@ -18,6 +18,7 @@ export default {
     { mode: 'leagues', label: 'Leagues', icon: 'ball' },
     { mode: 'recover', label: 'Recover', icon: 'leaf',
       top: ['Stretch', 'Yoga', 'Roll', 'Sauna & cold', 'Breathe', 'Sleep'] },
+    { mode: 'mind', label: 'Mind', icon: 'mind' },
     { mode: 'fuel', label: 'Fuel', icon: 'drop',
       top: ['Water', 'Protein', 'Calories', 'Basics', 'Supplements', 'Less of'] },
   ],

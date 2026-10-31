@@ -1,10 +1,10 @@
-/* switcher.js — the eight apps, from the bottom pill, and the home-screen
+/* switcher.js — the apps, from the bottom pill, and the home-screen
    card in the mast (wave 0, 2026-10-29).
 
    The switcher (Stephen, 2026-10-29 evening: not in the mast; on the
    floating pill). Hold the pill's centre cell and a ring fills under the
-   finger; when it closes a bubble opens above the pill with the eight
-   apps: each one's icon, name and one line from the map, a dot when it has
+   finger; when it closes a bubble opens above the pill with the three
+   apps: each one's icon, name and one line, a dot when it has
    something new since the reader last looked there, and this one marked.
    A short grace (GRACE_MS) passes before the ring shows, so a quick tap
    never flashes it. Any lift before the bubble opens is a tap and opens
@@ -34,7 +34,7 @@
    goes on the home screen as its own app. */
 
 import { el, esc, ICON, button } from './ui.js';
-import { APPS, SWITCH_APPS } from './apps/index.js';
+import { APPS } from './apps/index.js';
 import * as asks from './asks.js';
 
 export const HOLD_MS = 300;        // the ring's fill (Stephen, 2026-10-30: 1500, then 750, were too long)
@@ -181,7 +181,7 @@ export function open({ quiet = false } = {}) {
   b.setAttribute('role', 'dialog');
   b.setAttribute('aria-label', 'Btown apps');
   const list = el('div', 'ab-list');
-  SWITCH_APPS.forEach((a) => {
+  APPS.forEach((a) => {
     const here = a.id === me.id;
     const fresh = !here && !!S.newIn(a);
     const row = el('a', 'ab-row' + (here ? ' on' : ''), tile(a, 'sm') +

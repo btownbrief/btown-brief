@@ -40,8 +40,11 @@ apart (see watch.js, TV_BASE).
 A film is { id, t (title), y (year), d (US release date, YYYY-MM-DD), g
 (genre names), o (overview, trimmed), rt (minutes), p (poster PATH), yt
 (YouTube trailer key) }, plus `where` and `d` on the soon, now and stream
-shelves, and `on` on the stream shelves.
-Only the poster's path is kept, never a picture: the page builds the URL
+shelves, and `on` on the stream shelves. A film TMDB gives a US home release
+also carries `h`: the first digital or physical date (release types 4 and 5),
+past or ahead, so the tab can move it to Past on that day without a rebuild.
+A title with a Rotten Tomatoes score carries `tm`, the percent (`rt` is the
+runtime). Only the poster's path is kept, never a picture: the page builds the URL
 from `images` + a size + the path, so TMDB serves its own images. A film
 with no YouTube trailer on TMDB has yt "" and the tab says so; a key is
 never guessed.
@@ -53,6 +56,14 @@ JustWatch is credited wherever they show: the file carries `stream_source`
 and the tab credits JustWatch under the streaming row. TMDB's API is free
 for non-commercial use with that attribution; its terms allow cached data
 for six months, and this file is rebuilt weekly.
+
+The score: OMDb's copy of the Rotten Tomatoes rating, asked by IMDb id (from
+TMDB's external_ids), with OMDB_API_KEY in the environment. OMDb's free key
+allows 1,000 requests a day: this file takes up to OMDB_MAX of them and
+build_trailers.py up to 100. Answers, a "no score" included, are held for a
+week in tomatoes.json beside the output, carried forward with --tomatoes-prev.
+With no key it asks nothing, writes no score and no cache. Any OMDb trouble
+stops the asking for that run and never fails the build.
 
 The key: TMDB_API_KEY in the environment, either the short "API Key" (32
 characters, sent as ?api_key=) or the long "API Read Access Token" (sent as
@@ -67,6 +78,7 @@ run is seen instead of the list quietly going stale.
 
 CLI:
   --out PATH   where to write (default data/films.json)
+  --tomatoes-prev PATH   the last score cache (default tomatoes.json beside --out)
   --selftest   run the offline checks on fixtures and exit
 """
 
@@ -87,6 +99,7 @@ API = "https://api.themoviedb.org/3"
 IMAGES = "https://image.tmdb.org/t/p/"
 UA = "btown-all-day-films/1.0"
 NOTICE = "This product uses the TMDB API but is not endorsed or certified by TMDB."
+OMDB = "https://www.omdbapi.com/"
 
 TOP_COUNT = 300          # 15 pages of 20
 MIN_TOP = 200            # fewer than this back is a broken run, not a list
@@ -115,14 +128,18 @@ STREAMERS = {213: "Netflix", 1024: "Prime Video", 2739: "Disney+", 2552: "Apple 
 OVERVIEW_MAX = 420
 PAUSE = 0.06             # TMDB allows about 40 requests a second; we use ~15
 ATTEMPTS = 3
+OMDB_MAX = 800           # asks a day; build_trailers.py has 100 of the free 1,000
+SCORE_DAYS = 7           # a score is asked again once it is this old
 
 YT_KEY = re.compile(r"^[A-Za-z0-9_-]{11}$")
 POSTER = re.compile(r"^/[A-Za-z0-9_-]+\.(jpg|png)$")
 DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+IMDB = re.compile(r"^tt\d{7,10}$")
 
-# TMDB's US release types: 2 theatrical (limited), 3 theatrical, 4 digital.
+# TMDB's US release types: 2 theatrical (limited), 3 theatrical, 4 digital, 5 physical.
 THEATER_TYPES = {2, 3}
 DIGITAL_TYPES = {4}
+HOME_TYPES = {4, 5}
 
 
 def log(msg):
@@ -193,7 +210,91 @@ class Tmdb:
         raise RuntimeError(f"{path}: gave up after {ATTEMPTS} attempts")
 
 
+class Omdb:
+    """One try per title: anything but an answer raises, and score() stops."""
+
+    def __init__(self, key, opener=None):
+        self.key = key.strip()
+        self.opener = opener or self._open
+
+    def _open(self, url):
+        request = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return json.load(response)
+
+    def score(self, imdb):
+        got = self.opener(OMDB + "?" + urllib.parse.urlencode({"i": imdb, "apikey": self.key}))
+        if str((got or {}).get("Response")) == "False" and re.search(r"limit|api key", str(got.get("Error")), re.I):
+            raise RuntimeError("OMDb turned the request down")
+        time.sleep(PAUSE)
+        return tomato(got)
+
+
 # ------------------------------------------------------------- the shapes
+def tomato(answer):
+    """The Rotten Tomatoes percent in an OMDb answer, or None."""
+    for row in (answer or {}).get("Ratings") or []:
+        hit = re.fullmatch(r"(\d{1,3})%", str(row.get("Value"))) if row.get("Source") == "Rotten Tomatoes" else None
+        if hit and int(hit[1]) <= 100:
+            return int(hit[1])
+    return None
+
+
+def imdb_of(detail):
+    return str(((detail or {}).get("external_ids") or {}).get("imdb_id") or "")
+
+
+def clean_scores(cache):
+    """The cache as it is safe to use: {day, used, titles: {key: {i, at, tm?}}}."""
+    cache = cache if isinstance(cache, dict) else {}
+    titles = cache.get("titles") if isinstance(cache.get("titles"), dict) else {}
+    keep = {k: v for k, v in titles.items() if isinstance(v, dict) and IMDB.match(str(v.get("i"))) and DAY.match(str(v.get("at")))
+            and (v.get("tm") is None or (isinstance(v["tm"], int) and 0 <= v["tm"] <= 100))}
+    used = cache.get("used")
+    return {"day": str(cache.get("day") or ""), "used": used if isinstance(used, int) else 0, "titles": keep}
+
+
+def asks_left(cache, today, limit):
+    if cache["day"] != today:
+        cache.update(day=today, used=0)
+    return limit - cache["used"]
+
+
+def score(rows, cache, omdb, today, limit):
+    """rows are (key, IMDb id, title). Asks OMDb for what has no answer or one
+    SCORE_DAYS old, oldest first, within the day's limit, then puts `tm` on each
+    title. A title OMDb was not asked about keeps what it has. The cache ends
+    up holding this run's titles only. Returns the number of asks."""
+    titles = cache["titles"]
+    ids = {}
+    for key, imdb, _ in rows:
+        ids[key] = ids.get(key) or imdb or (titles.get(key) or {}).get("i", "")
+    now = date.fromisoformat(today).toordinal()
+    asked = 0
+    for key in sorted(ids, key=lambda k: (titles.get(k) or {}).get("at", "")):
+        hit = titles.get(key)
+        if not IMDB.match(ids[key]) or (hit and now - date.fromisoformat(hit["at"]).toordinal() < SCORE_DAYS):
+            continue
+        if asks_left(cache, today, limit) <= 0:
+            break
+        cache["used"] += 1
+        asked += 1
+        try:
+            tm = omdb.score(ids[key])
+        except Exception as e:  # noqa: BLE001 — a score is never worth the build
+            log(f"OMDb stopped ({type(e).__name__}); what it has answered stands")
+            break
+        titles[key] = {"i": ids[key], "at": today, **({} if tm is None else {"tm": tm})}
+    cache["titles"] = {k: titles[k] for k in ids if k in titles}
+    for key, _, f in rows:
+        hit = cache["titles"].get(key)
+        if hit and hit.get("tm") is not None:
+            f["tm"] = hit["tm"]
+        elif hit:
+            f.pop("tm", None)
+    return asked
+
+
 def pick_trailer(videos):
     """The YouTube key a reader should see: an official English trailer,
     newest first; then any trailer; then a teaser. "" when there is none."""
@@ -245,6 +346,24 @@ def us_digital(detail, lo, hi):
             if r.get("type") in DIGITAL_TYPES and DAY.match(day) and lo <= day <= hi:
                 rows.append((day, str(r.get("note") or "")))
     return min(rows) if rows else ("", "")
+
+
+def us_home(detail):
+    """The first US digital or physical date, or "". An old film's only date
+    is often its arrival on a new streamer, not its home release, so a date
+    more than STREAM_NEW_DAYS after the film first came out does not count."""
+    days = []
+    for country in ((detail.get("release_dates") or {}).get("results") or []):
+        if country.get("iso_3166_1") != "US":
+            continue
+        for r in country.get("release_dates") or []:
+            day = str(r.get("release_date") or "")[:10]
+            if r.get("type") in HOME_TYPES and DAY.match(day):
+                days.append(day)
+    if not days:
+        return ""
+    first, out = min(days), str(detail.get("release_date") or "")
+    return "" if DAY.match(out) and first > today_minus(out, -STREAM_NEW_DAYS) else first
 
 
 # a service's name as readers know it, from a release note or a JustWatch
@@ -329,7 +448,7 @@ def film(detail, genres_by_id=None):
         names = [genres_by_id[i] for i in detail.get("genre_ids") or [] if i in genres_by_id]
     poster = str(detail.get("poster_path") or "")
     runtime = detail.get("runtime")
-    return {
+    out = {
         "id": detail["id"],
         "t": title,
         "y": int(day[:4]) if DAY.match(day) else None,
@@ -340,6 +459,10 @@ def film(detail, genres_by_id=None):
         "p": poster if POSTER.match(poster) else "",
         "yt": pick_trailer((detail.get("videos") or {}).get("results")),
     }
+    home = us_home(detail)
+    if home:
+        out["h"] = home
+    return out
 
 
 def show(detail, genres_by_id=None):
@@ -410,7 +533,7 @@ def details(api, ids, cache):
     out = []
     for i in ids:
         if i not in cache:
-            cache[i] = api.get(f"/movie/{i}", language="en-US", append_to_response="videos,release_dates,watch/providers")
+            cache[i] = api.get(f"/movie/{i}", language="en-US", append_to_response="videos,release_dates,watch/providers,external_ids")
         f = film(cache[i])
         if f:
             f["_raw"] = cache[i]
@@ -423,7 +546,7 @@ def show_details(api, ids, cache):
     for i in ids:
         key = "tv", i
         if key not in cache:
-            cache[key] = api.get(f"/tv/{i}", language="en-US", append_to_response="videos")
+            cache[key] = api.get(f"/tv/{i}", language="en-US", append_to_response="videos,external_ids")
         f = show(cache[key])
         if f:
             f["_raw"] = cache[key]
@@ -527,7 +650,25 @@ def build_payload(top, soon, now, built, trend=(), tv_top=(), tv_trend=(), tv_ai
     }
 
 
-def run(args, api=None):
+def add_tomatoes(args, omdb, films, shows):
+    """Best effort, once the list is known good: films are asked before shows."""
+    path = os.path.join(os.path.dirname(args.out) or ".", "tomatoes.json")
+    try:
+        try:
+            with open(getattr(args, "tomatoes_prev", "") or path, encoding="utf-8") as src:
+                cache = clean_scores(json.load(src))
+        except (OSError, ValueError):
+            cache = clean_scores(None)
+        rows = [(f"m{f['id']}", imdb_of(f.get("_raw")), f) for shelf in films for f in shelf]
+        rows += [(f"t{f['id']}", imdb_of(f.get("_raw")), f) for shelf in shows for f in shelf]
+        asked = score(rows, cache, omdb, utcnow().date().isoformat(), OMDB_MAX)
+        write_json(path, cache)
+        log(f"{sum(1 for _, _, f in rows if 'tm' in f)} of {len(rows)} shelf rows have a score, {asked} OMDb asks")
+    except Exception as e:  # noqa: BLE001 — a score is never worth the build
+        log(f"no scores this run ({type(e).__name__})")
+
+
+def run(args, api=None, omdb=None):
     key = os.environ.get("TMDB_API_KEY", "").strip()
     if not key and api is None:
         log("no TMDB_API_KEY; keeping the last file")
@@ -564,6 +705,10 @@ def run(args, api=None):
     if len(tv_top) < MIN_TV_TOP:
         log(f"only {len(tv_top)} top shows came back; keeping the last file")
         return 1
+    omdb_key = os.environ.get("OMDB_API_KEY", "").strip()
+    omdb = omdb or (Omdb(omdb_key) if omdb_key else None)
+    if omdb:
+        add_tomatoes(args, omdb, (top, trend, now, soon, stream), (tv_top, tv_trend, tv_air, tv_stream))
     write_json(args.out, build_payload(top, soon, now, utcnow(), trend, tv_top, tv_trend, tv_air, stream, tv_stream))
     log(f"wrote {args.out}: {len(top)} top, {len(trend)} trending, {len(soon)} soon, {len(now)} now, "
         f"{len(stream)} to streaming, {len(tv_stream)} shows to streaming, "
@@ -585,10 +730,12 @@ def fixture_detail(i, title, day, **o):
         "videos": {"results": o.get("videos", [])},
         "release_dates": {"results": o.get("releases", [])},
         "watch/providers": {"results": o.get("providers", {})},
+        "external_ids": {"imdb_id": f"tt{i:07d}"},
     }
 
 
 def selftest():
+    os.environ.pop("OMDB_API_KEY", None)
     # the trailer: official English trailer beats a teaser, a clip and a
     # non-YouTube video; a malformed key never survives
     vids = [
@@ -627,6 +774,17 @@ def selftest():
     assert us_release(rel([{"release_date": "2026-12-10T00:00:00.000Z", "type": 4}])) == ("2026-12-10", "streaming")
     assert us_release({}) == ("", "")
     print("build_films: release labels ok (US only; theaters before streaming)")
+
+    # the home date: first US digital or physical date, never a theatrical one
+    home = lambda rows, out="2026-07-15": us_home({"release_date": out, **rel(rows)})
+    assert home([{"release_date": "2026-07-17T00:00:00.000Z", "type": 3}, {"release_date": "2026-11-17T00:00:00.000Z", "type": 5},
+                 {"release_date": "2026-11-17T00:00:00.000Z", "type": 4}]) == "2026-11-17"
+    assert home([{"release_date": "2026-12-01T00:00:00.000Z", "type": 5}, {"release_date": "2026-11-03T00:00:00.000Z", "type": 4}]) == "2026-11-03", "the first of the two"
+    assert home([{"release_date": "2026-09-01T00:00:00.000Z", "type": 3}]) == "" and us_home({}) == ""
+    assert home([{"release_date": "2026-11-20T00:00:00.000Z", "type": 4}], "2015-06-12") == "", "an old film reaching a streamer is not its home release"
+    assert "h" not in film(fixture_detail(8, "No Home Yet", "2026-07-15"))
+    assert film(fixture_detail(8, "Home", "2026-07-15", releases=rel([{"release_date": "2026-11-17T00:00:00.000Z", "type": 4}])["release_dates"]["results"]))["h"] == "2026-11-17"
+    print("build_films: home dates ok (US digital or physical, first one, ahead too)")
 
     # coming to streaming: the US digital date in the window, and where
     digi = rel([{"release_date": "2026-10-01T00:00:00.000Z", "type": 4}, {"release_date": "2026-10-30T00:00:00.000Z", "type": 4},
@@ -761,7 +919,7 @@ def selftest():
         assert written["v"] == 1 and written["notice"] == NOTICE and written["source"] == "TMDB"
         assert written["images"] == IMAGES
         assert set(written["top"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt"}
-        assert set(written["soon"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "where"}
+        assert set(written["soon"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "where"}, "no home date, no field"
         assert not any("_raw" in f or "http" in json.dumps(f) for f in written["top"] + written["soon"] + written["now"]), \
             "no full image URL and no raw TMDB payload in the file"
     finally:
@@ -814,12 +972,118 @@ def selftest():
     assert [f["id"] for f in whole["tv_trend"]] == [501, 600]
     assert [(f["id"], f.get("ns")) for f in whole["tv_air"]] == [(601, 2), (600, None)], whole["tv_air"]
     assert [(f["id"], f["on"]) for f in whole["stream"]] == [(403, "Rent or buy"), (401, "Netflix")], whole["stream"]
-    assert set(whole["stream"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "where", "on"} and whole["stream_source"] == "JustWatch"
+    assert set(whole["stream"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "where", "on", "h"} and whole["stream_source"] == "JustWatch"
     assert [(f["id"], f["ns"], f["on"]) for f in whole["tv_stream"]] == [(700, 3, "Netflix")], whole["tv_stream"]
     discover = [u for u, _ in asked if "/discover/" in u]
     assert any("with_release_type=4" in u and "region=US" in u and "release_date.gte=" in u for u in discover), discover
     assert any("with_networks=213%7C1024" in u and "air_date.lte=" in u for u in discover), discover
     print("build_films: a whole run writes films, trending, the three TV shelves and both streaming shelves ok")
+
+    # Rotten Tomatoes, through a fake OMDb
+    ratings = lambda *rows: {"Response": "True", "Ratings": [{"Source": s, "Value": v} for s, v in rows]}
+    assert tomato(ratings(("Internet Movie Database", "8.1/10"), ("Rotten Tomatoes", "92%"))) == 92
+    assert tomato(ratings(("Rotten Tomatoes", "0%"))) == 0, "zero is a score"
+    assert all(tomato(a) is None for a in (ratings(("Metacritic", "92/100")), ratings(("Rotten Tomatoes", "N/A")), ratings(("Rotten Tomatoes", "101%")), {}, None))
+    pause, PAUSE = PAUSE, 0
+    questions = []
+
+    def fake_omdb(url):
+        q = dict(urllib.parse.parse_qsl(urllib.parse.urlparse(url).query))
+        questions.append(q["i"])
+        assert url.startswith(OMDB) and q["apikey"] == "omdbsecret"
+        return {"tt0000001": ratings(("Rotten Tomatoes", "92%")), "tt0000002": ratings(("Rotten Tomatoes", "59%"))}.get(q["i"], {"Response": "True", "Ratings": []})
+
+    omdb = Omdb(" omdbsecret ", fake_omdb)
+    fresh, rotten, unrated, no_id = {"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}
+    twice = dict(fresh)
+    rows = [("m1", "tt0000001", fresh), ("m1", "tt0000001", twice), ("m2", "tt0000002", rotten), ("m3", "tt0000003", unrated), ("m4", "", no_id)]
+    cache = clean_scores(None)
+    assert score(rows, cache, omdb, "2026-10-30", 10) == 3 and questions == ["tt0000001", "tt0000002", "tt0000003"], questions
+    assert (fresh["tm"], twice["tm"], rotten["tm"]) == (92, 92, 59) and "tm" not in unrated and "tm" not in no_id
+    assert cache["used"] == 3 and cache["titles"]["m3"] == {"i": "tt0000003", "at": "2026-10-30"} and "m4" not in cache["titles"]
+
+    # six days on nothing is asked; on the seventh every one is, a score OMDb
+    # has dropped goes, and the id comes from the cache when the row has none
+    del questions[:]
+    assert score(rows, cache, omdb, "2026-11-05", 10) == 0 and not questions and cache["used"] == 3 and cache["day"] == "2026-10-30"
+    held = {"id": 1}
+    assert score([("m1", "", held)], clean_scores(json.loads(json.dumps(cache))), omdb, "2026-11-05", 10) == 0 and held["tm"] == 92
+    stale = {"id": 9, "tm": 40}
+    cache["titles"]["m9"] = {"i": "tt0000009", "at": "2026-10-20", "tm": 40}
+    assert score([("m9", "", stale)], cache, omdb, "2026-11-06", 10) == 1 and "tm" not in stale and questions == ["tt0000009"]
+    assert list(cache["titles"]) == ["m9"], "the cache holds this run's titles only"
+
+    # the day's limit: never over it, the oldest answers first, and a new day starts again
+    del questions[:]
+    aged = {"day": "2026-11-06", "used": 8, "titles": {f"m{i}": {"i": f"tt000000{i}", "at": f"2026-10-0{i}"} for i in (3, 1, 2)}}
+    rows = [(k, "", {}) for k in aged["titles"]]
+    assert score(rows, aged, omdb, "2026-11-06", 10) == 2 and questions == ["tt0000001", "tt0000002"] and aged["used"] == 10
+    assert score(rows, aged, omdb, "2026-11-06", 10) == 0 and "m3" in aged["titles"], "a title past the limit stays in the cache"
+    assert score(rows, aged, omdb, "2026-11-07", 10) == 1 and aged["used"] == 1 and questions[-1] == "tt0000003"
+
+    # a spent day, a refused key or a dead line stops the asking and keeps what it had
+    def refusing(answer):
+        def ask(url):
+            questions.append(url)
+            if isinstance(answer, Exception):
+                raise answer
+            return answer
+        return ask
+
+    for trouble in ({"Response": "False", "Error": "Request limit reached!"}, {"Response": "False", "Error": "Invalid API key!"},
+                    urllib.error.HTTPError(OMDB, 401, "Unauthorized", {}, None), urllib.error.URLError("down"), "not a dict"):
+        del questions[:]
+        kept = {"id": 9, "tm": 71}
+        cache = clean_scores({"titles": {"m9": {"i": "tt0000009", "at": "2026-01-01", "tm": 71}, "m8": {"i": "tt0000008", "at": "2026-01-02", "tm": 12}}})
+        score([("m9", "", kept), ("m8", "", {})], cache, Omdb("k", refusing(trouble)), "2026-11-06", 10)
+        assert len(questions) == 1 and kept["tm"] == 71 and cache["titles"]["m9"]["at"] == "2026-01-01", trouble
+    answer = {"Response": "False", "Error": "Incorrect IMDb ID."}
+    assert Omdb("k", lambda url: answer).score("tt0000001") is None, "a title OMDb lacks is an answer, not trouble"
+    assert clean_scores({"titles": {"a": {"i": "nope", "at": "2026-01-01"}, "b": {"i": "tt0000001", "at": "x"}, "c": {"i": "tt0000001", "at": "2026-01-01", "tm": "9"}, "d": 1}})["titles"] == {}
+    assert clean_scores("garbage") == {"day": "", "used": 0, "titles": {}}
+
+    # a whole run: scores in the file, the cache beside it, carried to the next run
+    del questions[:]
+    prev = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".selftest-tomatoes-prev.json")
+    side = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tomatoes.json")
+    floors, (MIN_TOP, MIN_TV_TOP) = (MIN_TOP, MIN_TV_TOP), (20, 20)
+    assert not os.path.exists(side), side + " is in the way"
+    try:
+        assert run(argparse.Namespace(out=out), Tmdb("k", opener), omdb) == 0
+        with open(out, encoding="utf-8") as src:
+            whole = json.load(src)
+        with open(side, encoding="utf-8") as src:
+            carried = src.read()
+        assert whole["top"][0]["tm"] == 92 and whole["top"][1]["tm"] == 59 and "tm" not in whole["top"][2]
+        assert not any("_raw" in f for f in whole["top"])
+        assert "omdbsecret" not in carried and "omdbsecret" not in json.dumps(whole), "the key is in no file"
+        assert len(questions) == len(set(questions)), "a film on two shelves is asked once"
+        os.replace(side, prev)
+        n = len(questions)
+        assert run(argparse.Namespace(out=out, tomatoes_prev=prev), Tmdb("k", opener), omdb) == 0
+        assert len(questions) == n and os.path.exists(side), "the carried cache means no new asks"
+        with open(out, encoding="utf-8") as src:
+            assert json.load(src)["top"][0]["tm"] == 92
+
+        # OMDb down: the film list is written all the same, with no score
+        os.remove(side)
+        down = Omdb("k", refusing(urllib.error.URLError("down")))
+        assert run(argparse.Namespace(out=out), Tmdb("k", opener), down) == 0
+        with open(out, encoding="utf-8") as src:
+            assert "tm" not in json.load(src)["top"][0]
+
+        # no key: not one score, and no cache
+        os.remove(side)
+        assert run(argparse.Namespace(out=out), Tmdb("k", opener)) == 0 and not os.path.exists(side)
+        with open(out, encoding="utf-8") as src:
+            assert '"tm"' not in src.read()
+    finally:
+        MIN_TOP, MIN_TV_TOP = floors
+        PAUSE = pause
+        for path in (out, prev, side):
+            if os.path.exists(path):
+                os.remove(path)
+    print("build_films: Rotten Tomatoes ok (fake OMDb: weekly, within the day's limit, carried forward, never fails the build, nothing without a key)")
 
     # the baked starter list the tab falls back to keeps the same shape
     seed_path = os.path.join(ROOT, "all-day", "data", "films-seed.json")
@@ -839,6 +1103,7 @@ def selftest():
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", default=OUT)
+    parser.add_argument("--tomatoes-prev", default="")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:

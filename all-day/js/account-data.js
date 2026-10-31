@@ -4,9 +4,8 @@
    Settings' "Delete my account and posts" (boards.deleteMe) runs the hooks
    other modules register with boards.onDeleteMe. Habits (sz_delete_me) and
    The Build (bd_delete_me) register theirs when their modes load, which was
-   fine while every reader was in All Day. Since wave 0 a reader can delete
-   the account from Out, Eat, People, Town, Play or The Paper, where neither
-   mode is loaded, and their habits, taps, thing, hours and builder would
+   fine while every reader was in All Day. A reader can also delete the
+   account from Town, where neither mode is loaded, and their habits, taps, thing, hours and builder would
    stay behind on the server, keyed to an account that no longer exists.
 
    So this module, loaded by main.js in every app, registers the server side

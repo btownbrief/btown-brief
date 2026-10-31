@@ -29,6 +29,7 @@ const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND2.sql');
 const ROUND4_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND4.sql');
 const PLAYLISTS_PATH = path.join(ROOT, 'all-day/supabase/nn-PLAYLISTS.sql');
 const APPS_PATH = path.join(ROOT, 'all-day/supabase/nn-APPS.sql');
+const ROUND5_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND5.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
@@ -38,7 +39,9 @@ if (process.argv.includes('--write-sql')) {
   writeFileSync(PLAYLISTS_PATH, pl.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
   const ap = readFileSync(APPS_PATH, 'utf8');
   writeFileSync(APPS_PATH, ap.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
-  console.log('nn_rules() in nn-ROUND4.sql, nn-PLAYLISTS.sql and nn-APPS.sql now matches boards-core.js RULES');
+  const r5 = readFileSync(ROUND5_PATH, 'utf8');
+  writeFileSync(ROUND5_PATH, r5.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
+  console.log('nn_rules() in nn-ROUND4.sql, nn-PLAYLISTS.sql, nn-APPS.sql and nn-ROUND5.sql now matches boards-core.js RULES');
   process.exit(0);
 }
 const SETUP = readFileSync(SETUP_PATH, 'utf8');
@@ -86,6 +89,19 @@ test('nn-PLAYLISTS.sql replaces only nn_rules(), with exactly RULES', () => {
 /* the eight apps' boards (2026-10-29) are pasted on their own too: one
    function, the same JSON, nothing dropped or deleted, and the twelve kinds
    the map names, each on its board */
+/* Body · Mind's board (2026-10-30) is one function too, and its notes wait for a person */
+test('nn-ROUND5.sql replaces only nn_rules(), with exactly RULES, and a sit waits for Stephen', () => {
+  const sql = readFileSync(ROUND5_PATH, 'utf8');
+  const m = sql.match(RULES_RE);
+  assert.ok(m, 'nn-ROUND5.sql has a $json$ block');
+  assert.deepEqual(JSON.parse(m[1]), core.RULES, 'run: node scripts/test-boards-core.mjs --write-sql');
+  const code = sql.replace(/--[^\n]*/g, '');
+  assert.deepEqual([...code.matchAll(/create or replace function public\.(\w+)/g)].map((x) => x[1]), ['nn_rules']);
+  assert.ok(!/\b(drop|delete|truncate|alter|grant|revoke|insert|update)\b/i.test(code.replace(RULES_RE, '')), 'nothing but the one function');
+  const b = core.RULES.boards.mind;
+  assert.ok(b && b.premod === true && b.kinds.sit.photo === 'none' && b.kinds.sit.days === 30, 'a note, no photo, read first');
+});
+
 test('nn-APPS.sql replaces only nn_rules(), with exactly RULES, and adds the twelve kinds', () => {
   const sql = readFileSync(APPS_PATH, 'utf8');
   const m = sql.match(RULES_RE);

@@ -18,8 +18,8 @@
        keepSubnav: true,         optional: the row under the mast stays while the mast steps away
      });
 
-   Since 2026-10-29 (wave 0 of the eight apps) the shell runs any of eight
-   apps. Which tabs it shows, in what order, under what names, is the app's
+   The shell runs three apps: All Day, Body and Town. Which tabs it shows,
+   in what order, under what names, is the app's
    config (js/apps/<id>.js, read through js/apps/index.js); a mode registers
    once under its own key and any app can host it. A tab whose mode is not
    built yet is a shelf (js/shelf.js): its promise live, a demo on ?demo=1.
@@ -41,7 +41,7 @@ import { bindGestures } from './gestures.js';
 import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump, worldSwitch, world } from './ui.js';
 import { bindShell, spy as spySections } from './sections.js';
 import * as asks from './asks.js';
-import { APPS, SWITCH_APPS, current as currentApp, keyOf, problems } from './apps/index.js';
+import { APPS, current as currentApp, keyOf, problems } from './apps/index.js';
 import * as switcher from './switcher.js';
 
 const $ = (id) => document.getElementById(id);
@@ -1135,13 +1135,13 @@ function legacy(h) {
 
 /* A link to a tab this app has not got, that an app the switcher offers has
    (a restaurant card's #food/<key> read in Town), opens in that app, All Day
-   first since SWITCH_APPS starts there. A key none of them has falls through
+   first since APPS starts there. A key none of them has falls through
    to this app's first tab. True when the page is on its way there. */
 const hostsTab = (a, k) => a.tabs.some((t) => keyOf(t) === k) || Object.prototype.hasOwnProperty.call(a.hosted || {}, k);
 function elsewhere(h) {
   const k = (h.match(/^([a-z]+)(\/|$)/) || [])[1];
   if (!k || known(k)) return false;
-  const there = SWITCH_APPS.find((a) => a.id !== APP.id && hostsTab(a, k));
+  const there = APPS.find((a) => a.id !== APP.id && hostsTab(a, k));
   if (!there) return false;
   location.replace(new URL(there.href, document.baseURI).pathname + (demo ? '?demo=1' : '') + '#' + h);
   return true;
@@ -1304,7 +1304,7 @@ export function start() {
     bar.appendChild(b);
   });
 
-  /* the eight apps: hold the bar's centre cell (switcher.js) */
+  /* the apps: hold the bar's centre cell (switcher.js) */
   const cells = bar.querySelectorAll('button[data-tab]');
   if (cells.length) switcher.bindHold(cells[switcher.centreIndex(cells.length)]);
 
@@ -1370,7 +1370,7 @@ switcher.bind({ sheet, toast, app: APP, demo, newIn });
 
 /* Whether another app has something new since the reader last looked
    there, for the dot in the switcher. Honest and cheap: a tab of that app
-   whose mode is loaded here too (All Day's Food is Eat's Open now) answers
+   whose mode is loaded here too answers
    newSince() against that app's own last visit; on ?demo=1 the shelves'
    demo files say (the demo pretends the last look was four hours ago).
    Anything else is unknown, and unknown is no dot. */
@@ -1389,17 +1389,17 @@ function newIn(a) {
 }
 if (demo) setTimeout(() => APPS.forEach((a) => { if (a.id !== 'all-day') demoJSON('data/demo/apps/' + a.id + '.json').then((j) => { otherDemo[a.id] = j; }, () => {}); }), 1200);
 
-/* -------------------------------------------------- one shell, eight doors */
+/* -------------------------------------------------- one shell, three doors */
 /* Every app but All Day has <base href="../all-day/">, so the shared code's
    relative paths (data/…, css/…, ../pulse.html) mean the same thing from
-   /out/ as from /all-day/. Two things a <base> would also move are put
+   /town/ as from /all-day/. Two things a <base> would also move are put
    back here: a link that is only a #fragment (a card's #food/<key>) stays
    in this app instead of opening All Day, and a mode's history.replaceState
    with a relative address ('?demo=1#whatnow/spin') keeps this app's path. */
 const based = !!document.querySelector('base[href]');
 if (based) {
   /* a #link's real address is this app's, so a long-press, a middle click,
-     "open in new tab" or a copied link carry /out/#sports, not /all-day/#sports */
+     "open in new tab" or a copied link carry /town/#streets, not /all-day/#streets */
   const own = (e) => {
     const a = e.target.closest && e.target.closest('a[href^="#"]');
     if (a) a.setAttribute('href', location.pathname + location.search + a.getAttribute('href'));

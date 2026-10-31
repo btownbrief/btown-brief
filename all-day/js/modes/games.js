@@ -67,7 +67,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES, HANDLE_LABELS, NEIGHBORHOOD_LABELS } from '../boards-core.js';
 import { sectionBar } from '../sections.js';
-import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards, agoShort, rail as railOf } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards, agoShort, listRail } from '../ui.js';
 
 const KEY = 'games';
 const BOARD = 'games';
@@ -128,6 +128,13 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const num = (n) => Number(n || 0).toLocaleString('en-US');
 const playUrl = (slug) => (SLUG.test(slug) ? ARCADE + slug + '/' : ARCADE);
+/* Where a game's Play goes. Stay Awhile's questions now deal in What Now's
+   Talk, so in All Day that is where its Play leads; the game itself stays up. */
+function playLink(a, slug) {
+  if (slug === 'stay-awhile' && app.TABS.includes('whatnow')) { a.href = '#whatnow/talk'; return a; }
+  a.href = playUrl(slug); a.target = '_blank'; a.rel = 'noopener';
+  return a;
+}
 const norm = (s) => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
 /* One row per player name on a board: the first one, since get_leaderboard
    answers best first (and "best" is the arcade's to define; some games score
@@ -381,8 +388,7 @@ function extLink(label, href, cls) {
   return a;
 }
 function playPill(g) {
-  const a = el('a', 'pillbtn on', 'Play ' + ICON.ext);
-  a.href = playUrl(g.slug); a.target = '_blank'; a.rel = 'noopener';
+  const a = playLink(el('a', 'pillbtn on', 'Play ' + ICON.ext), g.slug);
   a.setAttribute('aria-label', 'Play ' + g.name + ' on the arcade');
   return a;
 }
@@ -724,7 +730,7 @@ function screen(slug, emoji, extra) {
     ? '<img src="assets/games/' + esc(slug) + '.webp" alt="" width="480" height="360" loading="lazy" decoding="async">' : emo) + (extra || ''));
   const img = a.querySelector('img');
   if (img) img.addEventListener('error', () => { a.classList.remove('shot'); img.insertAdjacentHTML('beforebegin', emo); img.remove(); }, { once: true });
-  a.href = playUrl(slug); a.target = '_blank'; a.rel = 'noopener';
+  playLink(a, slug);
   a.style.setProperty('--mk', 'var(--mark-' + hue(slug) + ')');
   return a;
 }
@@ -741,8 +747,7 @@ function cabinet(g, feat) {
     (g.pitch ? '<p class="gm-pitch">' + esc(g.pitch) + '</p>' : '') +
     (ch ? '<p class="gm-champ">' + ICON.trophy + '<span><b>' + esc(ch.champ) + '</b> · ' + esc(num(ch.score)) + '</span></p>' : ''));
   const acts = el('div', 'gm-acts');
-  const play = el('a', 'pillbtn on', 'Play');
-  play.href = playUrl(g.slug); play.target = '_blank'; play.rel = 'noopener';
+  const play = playLink(el('a', 'pillbtn on', 'Play'), g.slug);
   play.setAttribute('aria-label', 'Play ' + g.name + ' on the arcade');
   acts.append(play, inviteLink('Invite', 'Play ' + g.name + ' with me?', playUrl(g.slug), 'pillbtn', 'Invite by text to ' + g.name));
   body.appendChild(acts);
@@ -870,8 +875,7 @@ function drawWeb(host) {
     host.appendChild(wrap);
     return true;
   }
-  const rail = railOf(host);
-  rail.dataset.out = '[data-web-all]';   // See all opens the list, with the Collapse bar
+  const rail = listRail(host, { name: 'games-picks', label: 'Daily picks', cells: 160 });
   rail.dataset.webToday = G.webDay;
   dailyPicks(G.web, G.webDay).forEach((g) => rail.appendChild(webTile(g)));
   const more = button('See all ' + total, 'ghost more', () => {

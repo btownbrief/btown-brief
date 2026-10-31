@@ -364,6 +364,19 @@ export const RULES = {
         portions: { type: 'int', min: 1, max: 100 },
       },
     },
+    /* Body · Mind (nn-ROUND5.sql): a short note about a sit. About how
+       someone is doing, so a person reads each one first, as the Lake
+       Breath wall did (premod). */
+    mind: {
+      premod: true,
+      gallery: false,
+      kinds: {
+        sit: { days: 30, photo: 'none', needs: [] },
+      },
+      meta: {
+        minutes: { type: 'int', min: 1, max: 120 },
+      },
+    },
   },
 };
 
@@ -379,10 +392,10 @@ export const INTEREST_LABELS = { sports: 'Pickup sports', running: 'Running', ou
   dance: 'Dancing', books: 'Books', making: 'Making things', languages: 'Languages', food: 'Food and drink' };
 export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings',
   playlists: 'Playlists', nightlife: 'Open tonight', sports: 'Pickup', stage: 'Been there', neighbors: 'Neighbors', shifts: 'Shifts',
-  clubs: 'Start something', streets: 'Street reports', rescue: 'Food rescue' };
+  clubs: 'Start something', streets: 'Street reports', rescue: 'Food rescue', mind: 'Mind' };
 /* the kinds' words, for a compose sheet and the boards desk */
 export const KIND_LABELS = { open_tonight: 'Open tonight', session: 'A game or a session', logged: 'Been there', borrow: 'Borrow', free: 'Free',
-  favor: 'A favor', lost: 'Lost', found: 'Found', shift: 'A shift', idea: 'Start something', report: 'Report', rescue: 'Food to rescue' };
+  favor: 'A favor', lost: 'Lost', found: 'Found', shift: 'A shift', idea: 'Start something', report: 'Report', rescue: 'Food to rescue', sit: 'A sit' };
 export const HANDLE_LABELS = {
   instagram: 'Instagram', spotify: 'Spotify', strava: 'Strava', letterboxd: 'Letterboxd', goodreads: 'Goodreads', beli: 'Beli',
   untappd: 'Untappd', psn: 'PlayStation', xbox: 'Xbox', steam: 'Steam', switch: 'Switch', discord: 'Discord', epic: 'Epic',

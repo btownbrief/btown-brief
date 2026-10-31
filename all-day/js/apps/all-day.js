@@ -1,9 +1,7 @@
 /* All Day: the feed. Its nine tabs are the ones the live app has had since
    2026-10-21, in the same order, so /all-day/ is unchanged by the move to
-   per-app configs (wave 0, 2026-10-29). The map gives All Day five tabs
-   (Today, Wire, Watch, On Air, Vintage); the others move to their apps in
-   wave 1, and this list shrinks then. Until that day it is the one app
-   allowed more than seven (`nine: true`). */
+   per-app configs (wave 0, 2026-10-29). It is the one app allowed more than
+   seven (`nine: true`). */
 export default {
   id: 'all-day',
   name: 'All Day',

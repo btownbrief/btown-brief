@@ -1,4 +1,4 @@
-// Body's tabs (wave 1 of the eight apps, 2026-10-29): Today (Habits beside
+// Body's tabs (2026-10-29): Today (Habits beside
 // Stephen's template), Train, Recover and Fuel. Run from
 // allday.spec.mjs as the group theBody (ONLY=theBody while iterating); the
 // shell's helpers come in as `h` so this file adds no second harness.
@@ -8,8 +8,8 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const TABS = ['day', 'template', 'train', 'leagues', 'recover', 'fuel'];
-const LABELS = ['Today', 'Habits', 'Train', 'Leagues', 'Recover', 'Fuel'];
+const TABS = ['day', 'template', 'train', 'leagues', 'recover', 'mind', 'fuel'];
+const LABELS = ['Today', 'Habits', 'Train', 'Leagues', 'Recover', 'Mind', 'Fuel'];
 const COMBOS = [
   { viewport: { width: 390, height: 844 }, scheme: 'light' }, { viewport: { width: 390, height: 844 }, scheme: 'dark' },
   { viewport: { width: 1280, height: 800 }, scheme: 'light' }, { viewport: { width: 1280, height: 800 }, scheme: 'dark' },
@@ -30,6 +30,7 @@ export async function bodyTests(browser, base, h) {
   const ready = (page, k) => page.waitForSelector(panel(k) + ' [data-body="' + k + '"]', { timeout: 10000 });
   const text = (page, sel) => page.$eval(sel, (n) => n.innerText.replace(/\s+/g, ' ').trim()).catch(() => '');
   const toast = async (page) => { await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {}); return page.$eval('#toast', (t) => t.textContent).catch(() => ''); };
+  const today = () => nyDay();
   const nyDay = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
   const daysBack = (n) => { const d = new Date(nyDay() + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - n); return d.toISOString().slice(0, 10); };
   const scores = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('allday-body-day-score') || '{}'));
@@ -143,7 +144,7 @@ export async function bodyTests(browser, base, h) {
     const best = new Date(Math.floor(Date.now() / 3600000) * 3600000 + 2 * 3600000).toLocaleTimeString('en-US', { hour: 'numeric', timeZone: 'America/New_York' });
     check(chips[3] === 'Best hour ' + best, 'the best hour is the driest, calmest one left', chips[3] + ' vs ' + best);
     const moves = await all.page.$$eval('.dy-moves li:not([hidden]) .n', (n) => n.map((x) => x.firstChild.textContent));
-    check(moves[0] === 'Open Gym' && moves.includes('Sample Run Club') && !moves.includes('Gone Already') && moves.length === 8, 'clubs and classes together, nothing that has started, eight rows', moves.join());
+    check(moves.includes('Open Gym') && moves.includes('Sample Run Club') && !moves.includes('Gone Already') && moves.length === 8, 'clubs and classes together, nothing that has started, eight rows', moves.join());
     check(/Moving this week/.test(await all.page.$eval('.dy-moves h3', (n) => n.textContent)), 'its title', '');
     await all.page.waitForSelector('.dy-scene .tf-pic.on');
     const scene = await all.page.$eval('.dy-scene', (n) => n.innerText);
@@ -478,9 +479,9 @@ export async function bodyTests(browser, base, h) {
     await ctx.close();
     /* from another app, #build and #habits open in Body */
     const p2 = await newPage(browser, base);
-    await p2.page.goto(base + '/out/?demo=1#habits');
+    await p2.page.goto(base + '/town/?demo=1#habits');
     await p2.page.waitForURL(/\/body\/\?demo=1#habits/, { timeout: 8000 }).catch(() => {});
-    check(/\/body\/\?demo=1#habits/.test(p2.page.url()), 'a #habits link from Out opens in Body', p2.page.url());
+    check(/\/body\/\?demo=1#habits/.test(p2.page.url()), 'a #habits link from Town opens in Body', p2.page.url());
     await p2.ctx.close();
   });
 
@@ -749,6 +750,272 @@ export async function bodyTests(browser, base, h) {
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
     await page.goto(base + '/body/#train');
     await ready(page, 'train');
+    check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  /* Mind: Lake Breath, the headlines, and readers' notes */
+  const PULSE = (rows) => ({ sources: [{ id: 'wcax', short: 'WCAX', topic: 'local' }, { id: 'sci', short: 'Science Quickly', topic: 'science' }, { id: 'espn', short: 'ESPN', topic: 'sports' }, { id: 'r-vermont', short: 'r/vermont', topic: 'local' }],
+    items: rows.map(([t, s, ch, h = 2]) => ({ t, u: 'https://example.com/' + encodeURIComponent(t), d: Math.floor(Date.now() / 1000) - h * 3600, s, ch })) });
+  const WIRE = (rows) => ({ date: nyDay(), updated: 'x', updates: [{ key: 'evening', items: rows.map(([title, name, thumb, topic]) => ({ id: title, title, name, ch: 'world', topic, url: 'https://example.com/w/' + encodeURIComponent(title), posted_at: inHours(-1), thumb })) }] });
+  async function mindPage({ pulse, wire, rules, viewport } = {}) {
+    const p = await newPage(browser, base, viewport ? { viewport } : {});
+    await p.page.route(/data\/pulse\.json/, (r) => (pulse ? r.fulfill({ json: pulse }) : r.fulfill({ status: 404, body: 'no' })));
+    await p.page.route(/wire-today\.json/, (r) => (wire ? r.fulfill({ json: wire }) : r.fulfill({ status: 404, body: 'no' })));
+    await p.page.route(/rpc\/nn_rules/, (r) => r.fulfill({ json: rules || { version: 3, boards: {} } }));
+    await p.page.route(/rpc\/nn_posts_list/, (r) => r.fulfill({ json: [] }));
+    await p.page.goto(base + '/body/#mind');
+    await ready(p.page, 'mind');
+    await sleep(500);
+    return p;
+  }
+  const titles = (page) => page.$$eval('#panel-mind .tf-title', (n) => n.map((x) => x.textContent));
+  const dayDone = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('allday-body-day') || '{}'));
+  const endAfter = (page, s) => page.evaluate((n) => import('/all-day/js/modes/mind.js').then((m) => m._end(n)), s);
+  const sitOn = (page) => page.evaluate(() => import('/all-day/js/modes/mind.js').then((m) => m._sit()));
+
+  await group('Body, Mind: the topic rule keeps the mind and leaves out tragedy, crime, politics and sport', async () => {
+    const { ctx, page, errors } = await mindPage({
+      pulse: PULSE([
+        ['UVM researchers say time change can disrupt sleep, health', 'wcax', 'local', 1], ['Walk-in urgent care for mental health planned in Rutland', 'wcax', 'local', 3],
+        ['How exposing yourself to your fears can tame your anxiety', 'sci', 'world', 5], ['A daily meditation habit, and what it does', 'sci', 'world', 6], ['Why your brain hates uncertainty', 'sci', 'world', 7],
+        ['Burlington man dies by suicide after mental health crisis', 'wcax', 'local'], ['Police arrest man after stress call', 'wcax', 'local'], ['Mental health funding cuts pass the Senate', 'wcax', 'local'],
+        ['As midterms loom, anxiety rises', 'sci', 'world'], ['Silk Therapy treatment is 72% off today', 'sci', 'world'], ['Don’t sleep on Illinois this season', 'espn', 'world'],
+        ['Mindfulness for point guards', 'espn', 'world'], ['Im lonely', 'r-vermont', 'reddit'], ['UVM Health layoffs, school district uncertainty', 'wcax', 'local'], ['Sleep', 'wcax', 'local'],
+        ['Mental health story from long ago', 'wcax', 'local', 24 * 70],
+      ]),
+      wire: WIRE([['Sleep study finds naps help memory', 'NBC News', ''], ['Wildfire kills three amid mental health gap', 'NBC News', ''], ['UVM researchers say time change can disrupt sleep, health', 'WCAX', '']]),
+    });
+    const t = await titles(page);
+    check(JSON.stringify(t) === JSON.stringify(['Sleep study finds naps help memory', 'UVM researchers say time change can disrupt sleep, health', 'Walk-in urgent care for mental health planned in Rutland', 'How exposing yourself to your fears can tame your anxiety', 'A daily meditation habit, and what it does', 'Why your brain hates uncertainty']),
+      'newest first, on topic, one story once, both files', t.join(' | '));
+    const pure = await page.evaluate(() => import('/all-day/js/modes/mind.js').then((m) => ({ a: m.onTopic('New breathing exercises for stress'), b: m.onTopic('Teen’s suicide prompts mental health review'), c: m.onTopic('Why therapists are burning out'), d: m.onTopic('Stress fracture sidelines star') })));
+    check(pure.a && !pure.b && pure.c && !pure.d, 'the rule on its own', JSON.stringify(pure));
+    const rule = (list) => page.evaluate((l) => import('/all-day/js/modes/mind.js').then((m) => l.map((x) => m.onTopic(x))), list);
+    const OUT = [
+      'Moretown psychotherapist sentenced for Medicaid fraud',
+      'Mamdani highlights the resilience and unity of New York City on 9/11 anniversary',
+      'Mental health groups have \'failed to acknowledge\' risk of violence, says Mind chief',
+      'Selena Gomez asks judge to dismiss \'absurd\' fraud claims over mental health',
+      'Canada to indefinitely bar assisted dying for people whose sole condition is mental illness',
+      'Veteran with PTSD took his own life, family says',
+      'Student hanged himself after burnout at school, inquest hears',
+      'Gunman had history of mental illness, officials say',
+      'Teen drowned at reservoir; school offers mental health counselors',
+      'Massacre survivors describe PTSD a year later',
+      'Researchers Demonstrate OpenBSD Root Exploit Chaining 37-Year-Old Shared-Memory Bug',
+      'EU\'s Cyber Resilience Act starts the 24-hour vulnerability clock',
+      'Why this El Niño will be the largest in living memory',
+      'Investigating a Rare Burnout 3 Beta Disc',
+      'Genetic snapshot of North Carolina black bears could improve population resilience',
+      'Disney Snuck in and Overhauled the Millennium Falcon While You Were Sleeping. Here\'s Why',
+      'Mental health call turns into standoff on Pine Street',
+      'Scientists find an “earthquake gate” as California fault stress hits a 1,000-year high',
+      'Tiny magnetic vortices could help computers work more like your brain',
+      'On new album \'Second Song,\' Neil Young meditates on the passage of time',
+      'Kickoff time change for Saturday\'s game',
+    ];
+    const outs = await rule(OUT);
+    OUT.forEach((x, i) => check(!outs[i], 'stays out: ' + x, 'passed'));
+    const IN_ = ['Nurse burnout and stress rise again', 'How stress changes the brain', 'How meditation changed my sleep habits', 'Loneliness may steal nearly 6 years of good health', 'Seven-minute virtual reality intervention helps students tackle stress and exam anxiety'];
+    const ins = await rule(IN_);
+    IN_.forEach((x, i) => check(ins[i], 'still in: ' + x, 'dropped'));
+    const links = await page.evaluate(() => import('/all-day/js/modes/mind.js').then((m) => { const row = (url) => ({ k: url, title: url, url, src: 'a', ts: Date.now() }); return m.pick(['https://traffic.megaphone.fm/SAM1787700797.mp3', 'https://x.example/a.M4A?t=1', 'https://x.example/page'].map(row), Date.now()).map((r) => r.url); }));
+    check(links.join() === 'https://x.example/page', 'a tile never opens a raw audio file', links.join());
+    check((await page.$$eval('#panel-mind .tf-mind .tf-tag', (n) => n.map((x) => x.textContent))).join().startsWith('NBC News,WCAX,WCAX,Science Quickly'), 'a tile names its source', '');
+    check(!/reddit/i.test(await page.$eval('#panel-mind', (n) => n.innerText)), 'no Reddit in the feed: the intake carries no meditation subreddit', '');
+    check(!!(await page.$('#panel-mind .tf-mind [data-act="share"]')) && !!(await page.$('#panel-mind .tf-mind [data-act="save"]')) && !(await page.$('#panel-mind [data-act="comment"], #panel-mind [data-act="up"]')), 'share and star, no comments, no votes', '');
+    check(await page.$eval('.mi-tools', (n) => n.hidden) && !(await page.$('.mi-post')), 'before nn-ROUND5.sql: no People button, no Post button', '');
+    check(!errors.filter((e) => !/404|Failed to load/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+    const wired = await mindPage({
+      pulse: PULSE([['Mindfulness for a subreddit with no channel', 'r-vermont', undefined]]),
+      wire: WIRE(['sports', 'courts', 'public-safety', 'markets', 'economy', 'national-politics', 'state-politics'].map((topic) => ['Sleep study from the ' + topic + ' desk', 'NBC News', '', topic]).concat([['Sleep study from the health desk', 'NBC News', '', 'health']])),
+    });
+    const wt = await titles(wired.page);
+    check(wt.join() === 'Sleep study from the health desk', 'the Wire’s topic counts too, and a subreddit stays out without a channel', wt.join(' | '));
+    await wired.ctx.close();
+    const none = await mindPage({});
+    check((await none.page.$eval('.mi-empty', (n) => n.textContent)) === 'Nothing new' && !!(await none.page.$('[data-start]')), 'no files: the sit still works', '');
+    await none.ctx.close();
+  });
+
+  await group('Body, Mind: the sit', async () => {
+    const { ctx, page, errors } = await mindPage({ pulse: PULSE([]) });
+    check((await page.$$eval('.mi-lengths button', (n) => n.map((b) => b.textContent))).join() === '3 min,5 min,10 min', 'three lengths', '');
+    check((await page.$eval('[data-minutes="5"]', (n) => n.getAttribute('aria-pressed'))) === 'true', 'five to start with', '');
+    check(!(await page.$('.mi-count')), 'no count before the first sit', '');
+    await page.click('[data-minutes="3"]');
+    await page.click('[data-sound]');
+    await page.reload();
+    await ready(page, 'mind');
+    check((await page.$eval('[data-minutes="3"]', (n) => n.getAttribute('aria-pressed'))) === 'true' && (await page.$eval('[data-sound]', (n) => n.getAttribute('aria-pressed'))) === 'false', 'the length and the sound stay as they were left', '');
+    await page.click('[data-start]');
+    await page.waitForSelector('.mi-sit');
+    check(!!(await page.$('.mi-sit .mi-flower')) && /Settle/.test(await text(page, '.mi-word')), 'full screen, the circle first', '');
+    check(await page.evaluate(() => { const r = document.querySelector('.mi-sit').getBoundingClientRect(); return r.top === 0 && r.left === 0 && r.width === innerWidth && r.height === innerHeight; }), 'it covers the page', '');
+    await page.waitForFunction(() => document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    check(/^In$/.test(await text(page, '.mi-word')), 'in', await text(page, '.mi-word'));
+    await sleep(4300);
+    check(/^Out$/.test(await text(page, '.mi-word')) && /^2:5\d$/.test(await text(page, '.mi-left')), 'then out, four seconds later, with the time left', await text(page, '.mi-left'));
+    await page.evaluate(() => { document.querySelector('[data-end]').click(); });
+    check(!(await page.$('.mi-sit')) && !(await page.evaluate(() => localStorage.getItem('allday-body-mind-sits'))), 'End inside thirty seconds counts nothing', '');
+    await page.click('[data-start]');
+    await page.waitForFunction(() => document.querySelector('.mi-sit') && document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    await endAfter(page, 180);
+    await sleep(200);
+    check(/^(Listen\.|Choose again\.|Devote\.)$/.test(await text(page, '.mi-word')) && (await text(page, '.mi-sat')) === '3 min', 'the end: the day’s phrase and the minutes', await text(page, '.mi-word'));
+    check(!(await page.$('.mi-write')), 'no note to write before the board is live', '');
+    await page.click('.mi-after .mi-start');
+    check(!(await page.$('.mi-sit')) && (await text(page, '.mi-count')) === '1 sit · 3 min', 'counted on the phone', await text(page, '.mi-count'));
+    const key = today();
+    check((await dayDone(page))[key].includes('breathe'), 'a finished sit ticks Today’s Breathe', JSON.stringify(await dayDone(page)));
+    await page.click('[data-start]');
+    await page.waitForFunction(() => document.querySelector('.mi-sit') && document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    await endAfter(page, 60);
+    await page.click('.mi-after .mi-start');
+    check((await text(page, '.mi-count')) === '2 sits · 4 min', 'a second sit adds up', await text(page, '.mi-count'));
+    check((await dayDone(page))[key].filter((x) => x === 'breathe').length === 1, 'and the tick stays one tick', '');
+    await page.click('#tab-day');
+    await page.waitForSelector('.dy-wrap');
+    await sleep(200);
+    check(!!(await page.$('.dy-breathe.is-done')) && /^1\/6$/.test(await page.$eval('.dy-ring b', (n) => n.textContent)), 'Today shows it: one of six, by the same rule as a tap', await page.$eval('.dy-ring b', (n) => n.textContent));
+    await page.click('[data-tick="breathe"]');
+    check((await page.$eval('.dy-ring b', (n) => n.textContent)) === '0/6', 'and a tap still undoes it', '');
+    await page.click('#tab-mind');
+    await ready(page, 'mind');
+    await page.click('[data-start]');
+    await page.waitForFunction(() => document.querySelector('.mi-sit') && document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); delete document.hidden; });
+    check(!(await sitOn(page)) && !(await page.$('.mi-sit')), 'leaving the page ends the sit, and time away is never counted', '');
+    check(!errors.filter((e) => !/404|Failed to load/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  await group('Body, Mind: the sit holds the keyboard', async () => {
+    const { ctx, page, errors } = await mindPage({ pulse: PULSE([['A daily meditation habit, and what it does', 'sci', 'world']]) });
+    await page.focus('[data-start]');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('.mi-sit');
+    check((await page.$eval('.mi-sit', (n) => n.getAttribute('aria-modal'))) === 'true', 'a modal', '');
+    check(await page.evaluate(() => document.activeElement.hasAttribute('data-end')), 'focus lands on End', '');
+    check(await page.evaluate(() => ['app', 'mast', 'tabbar'].every((id) => document.getElementById(id).inert)), 'the page behind is out of reach', '');
+    for (let i = 0; i < 6; i += 1) await page.keyboard.press('Tab');
+    check(await page.evaluate(() => !document.activeElement || document.activeElement === document.body || !!document.activeElement.closest('.mi-sit')), 'Tab stays out of the feed', await page.evaluate(() => document.activeElement.className));
+    await page.waitForFunction(() => document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    await endAfter(page, 60);
+    check(await page.evaluate(() => document.activeElement.classList.contains('mi-start') && !!document.activeElement.closest('.mi-sit')), 'the end moves focus to Done', '');
+    check(await page.evaluate(() => document.getElementById('app').inert), 'the page stays held behind the end screen', '');
+    await page.evaluate(() => { document.querySelector('[data-start]').click(); });
+    check((await page.$$('.mi-sit')).length === 1, 'no second sit over the end screen', '');
+    await page.keyboard.press('Enter');
+    check(!(await page.$('.mi-sit')) && !(await page.evaluate(() => document.getElementById('app').inert)) && await page.evaluate(() => document.activeElement.hasAttribute('data-start')), 'Done lets go and returns to Start', '');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('.mi-sit');
+    await page.click('[data-end]');
+    check(!(await page.$('.mi-sit')) && !(await page.evaluate(() => document.getElementById('app').inert)), 'End lets go too', '');
+    check(!errors.filter((e) => !/404|Failed to load/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  await group('Body, Mind: a dead link says so, a live one lands', async () => {
+    const title = 'A daily meditation habit, and what it does';
+    const { ctx, page } = await mindPage({ pulse: PULSE([[title, 'sci', 'world']]) });
+    await page.evaluate(() => { location.hash = 'mind/mi-nope'; });
+    check(/That’s not in Mind any more\./.test(await toast(page)), 'a key that’s gone toasts', await toast(page));
+    const key = await page.$eval('#panel-mind .tf-mind', (n) => n.dataset.k);
+    await ctx.close();
+    const fresh = await newPage(browser, base);
+    await fresh.page.route(/data\/pulse\.json/, (r) => r.fulfill({ json: PULSE([[title, 'sci', 'world']]) }));
+    await fresh.page.route(/wire-today\.json/, (r) => r.fulfill({ status: 404, body: 'no' }));
+    await fresh.page.route(/rpc\/nn_rules/, (r) => r.fulfill({ json: { version: 3, boards: {} } }));
+    await fresh.page.route(/rpc\/nn_posts_list/, (r) => r.fulfill({ json: [] }));
+    await fresh.page.goto(base + '/body/#mind/' + key);
+    await ready(fresh.page, 'mind');
+    await fresh.page.waitForSelector('.tf-mind');
+    await sleep(400);
+    check(await fresh.page.$eval('#toast', (t) => t.hidden || !/any more/.test(t.textContent)), 'a live key doesn’t toast, even with the Wire’s file missing', await fresh.page.$eval('#toast', (t) => t.textContent));
+    await fresh.ctx.close();
+    const gone = await newPage(browser, base);
+    await gone.page.route(/data\/pulse\.json/, (r) => r.fulfill({ json: PULSE([[title, 'sci', 'world']]) }));
+    await gone.page.route(/wire-today\.json/, (r) => r.fulfill({ status: 404, body: 'no' }));
+    await gone.page.route(/rpc\/nn_rules/, (r) => r.fulfill({ json: { version: 3, boards: {} } }));
+    await gone.page.route(/rpc\/nn_posts_list/, (r) => r.fulfill({ json: [] }));
+    await gone.page.goto(base + '/body/#mind/mi-nope');
+    check(/That’s not in Mind any more\./.test(await toast(gone.page)), 'a cold open of a dead link toasts', await toast(gone.page));
+    await gone.ctx.close();
+  });
+
+  await group('Body, Mind: the sound', async () => {
+    const { ctx, page, errors } = await mindPage({ pulse: PULSE([]) });
+    await page.evaluate(() => {
+      const Real = window.AudioContext;
+      window.__au = { ctx: null, stops: 0, oscs: 0 };
+      window.AudioContext = class extends Real {
+        constructor(...a) { super(...a); window.__au.ctx = this; }
+        createOscillator() { window.__au.oscs += 1; return super.createOscillator(); }
+      };
+      const stop = AudioScheduledSourceNode.prototype.stop;
+      AudioScheduledSourceNode.prototype.stop = function (...a) { window.__au.stops += 1; return stop.apply(this, a); };
+    });
+    const lake = (fn, ...a) => page.evaluate(([f, args]) => import('/all-day/js/lake-sound.js').then((m) => m[f](...args)), [fn, a]);
+    const au = () => page.evaluate(() => ({ stops: window.__au.stops, oscs: window.__au.oscs, state: window.__au.ctx && window.__au.ctx.state }));
+    const running = () => page.evaluate(() => window.__au.ctx.resume());
+    await lake('start', 12);
+    await running();
+    await lake('stop', 800);
+    await lake('start', 12);
+    await running();
+    const before = await au();
+    await sleep(1100);
+    const after = await au();
+    check(before.state === 'running' && after.stops === before.stops, 'End then Start: the old timer leaves the new lake alone', JSON.stringify([before, after]));
+    await lake('loon');
+    check((await au()).oscs === after.oscs, 'no loon on the first breath', '');
+    await page.evaluate(() => window.__au.ctx.suspend());
+    await lake('bowl');
+    await sleep(2800);
+    check((await au()).stops > after.stops, 'a sit ended while the sound is suspended still stops the lake', JSON.stringify(await au()));
+    check(!errors.filter((e) => !/404|Failed to load/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  await group('Body, Mind: readers’ notes (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/body/?demo=1#mind');
+    await page.waitForSelector('.tf-note', { timeout: 10000 });
+    const all = await titles(page);
+    check((await page.$$('.tf-note')).length === 3 && (await page.$$('.tf-mind')).length === 4, 'notes and headlines together', all.join(' | '));
+    check((await text(page, '.mi-count')) === '12 sits · 63 min', 'the demo’s count', await text(page, '.mi-count'));
+    await page.click('.mi-tools .pills button:nth-child(2)');
+    check((await page.$$('.tf-note')).length === 3 && !(await page.$('.tf-mind')), 'People: only people', '');
+    check(/5 min/.test(await text(page, '.tf-note .tf-when')) && !!(await page.$('.tf-note [data-act="breport"]')) && !(await page.$('.tf-note [data-act="bvote"]')), 'a note: its length, report, no vote', '');
+    await page.click('.mi-post');
+    await page.waitForSelector('.sheet');
+    check(/Sign in to post/.test(await text(page, '.sheet')), 'posting needs the sign-in', await text(page, '.sheet'));
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await sleep(200);
+    await page.click('[data-start]');
+    await page.waitForFunction(() => document.querySelector('.mi-sit') && document.querySelector('.mi-sit').dataset.breath === 'in', null, { timeout: 5000 });
+    await endAfter(page, 300);
+    await page.click('.mi-write');
+    await page.waitForSelector('.sheet [name="title"]');
+    if (await page.$('.sheet [name="display_name"]')) await page.fill('.sheet [name="display_name"]', 'Sam');
+    await page.fill('.sheet [name="title"]', 'Five good minutes');
+    await page.click('.sheet button[type="submit"]');
+    check(/once approved/.test(await toast(page)), 'a note waits for Stephen', await toast(page));
+    await sleep(200);
+    check(!(await titles(page)).includes('Five good minutes'), 'and is not on the feed until he passes it', '');
+    const mine = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.mine()));
+    check(mine.posts[0].board === 'mind' && mine.posts[0].status === 'pending' && mine.posts[0].meta.minutes === 5, 'on the boards desk’s queue, with its five minutes', JSON.stringify(mine.posts[0]));
+    await page.evaluate((id) => import('/all-day/js/boards.js').then((b) => b._fake().nn_mod_act({ p_secret: 'demo', p_post: id, p_action: 'approve' })), mine.posts[0].id);
+    await page.evaluate(() => { location.hash = 'day'; });
+    await page.waitForSelector('.dy-wrap');
+    await page.evaluate(() => { window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'mind' } })); });
+    await page.evaluate(() => { location.hash = 'mind'; });
+    await page.waitForSelector('.tf-note [data-act="bdelete"]', { timeout: 5000 });
+    check((await titles(page)).includes('Five good minutes'), 'passed, it shows', '');
     check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
     await ctx.close();
   });

@@ -97,6 +97,8 @@ function toggle(id) {
   Object.keys(all).forEach((x) => { if (x < cut) delete all[x]; });
   put(DONE, all);
 }
+/* Mind: a finished sit gives a tile the tick a tap would, once */
+export function markDone(id) { if (!ticks(today()).includes(id)) toggle(id); }
 const metersDone = (k) => { const f = fuelDay(k); return (f.water >= S.goals.water ? 1 : 0) + (f.protein >= S.goals.protein ? 1 : 0); };
 const count = (k) => ticks(k).length + metersDone(k);
 const scoreOf = (k) => (k === today() ? count(k) : Math.max(Number(obj(keep(SCORE, {}))[k]) || 0, ticks(k).length));
@@ -141,7 +143,7 @@ function list() {
         '<div class="dy-btns">' + COPY.levels.map(([k, l]) => '<a class="dy-add" href="#train/' + k + '">' + esc(l) + '</a>').join('') + '</div>' },
     tool('sprints', COPY.sprints, '', '#train/sprints', 'sprints'),
     tool('stretch', COPY.stretch, COPY.stretchSub, '#recover/stretch', 'stretch'),
-    tool('breathe', COPY.breathe, '', '#recover/breathe', 'breathe'),
+    tool('breathe', COPY.breathe, '', '#mind', 'breathe'),
     { id: 'habits', title: COPY.habits, cls: 'habits', link: true, done: false,
       html: () => '<div class="dy-top"><h3>' + esc(COPY.habits) + '</h3></div>' + go('#habits', COPY.open) },
     { id: 'build', title: COPY.build, cls: 'build', link: true, wide: true, done: false,

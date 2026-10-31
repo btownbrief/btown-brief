@@ -4,8 +4,9 @@
    upcoming … and then you have past", like Build | Habits): a liquid switch
    floating at the top, Upcoming first because it changes most. Upcoming is
    what is ahead: today's showtimes, coming to theaters, coming to
-   streaming, the screening vote. Past is what is already out: the time
-   machine, the town's ratings, the list. The chat closes both. The side is
+   streaming, the screening vote. Past is what can be watched
+   at home: the time machine, the town's ratings, the list, without a film
+   still only in theaters (atHome). The chat closes both. The side is
    not remembered: every visit opens on Upcoming. Top to bottom:
 
    - The trailer card: one 16:9 card, first thing on the page. This week's
@@ -16,10 +17,12 @@
      The card opens on the first one this phone has not been shown; ‹ › and a
      sideways swipe walk the rest. A tap plays it in the one video box, whose
      own Previous and Next walk the same list. On TV it is new shows and
-     seasons with a trailer. See as a list, under the card, opens them all in
-     a sheet: Recent (uploaded in the last 30 days, or on a current shelf) and
-     Past, newest first, a chip per genre, and Surprise me, which shuffles what
-     is showing and plays the first; Previous and Next walk the rows.
+     seasons with a trailer. Past has the same card, walking its own list:
+     out at home, newest home release first. See as a list, under the card,
+     opens the side's sections in a sheet, a chip per genre, and Surprise me,
+     which shuffles what is showing and plays the first; Previous and Next
+     walk the rows. Upcoming: Just dropped, In theaters (TV: On TV now),
+     Coming soon. Past: New at home (TV: New on TV), All.
    - Next up (Movies): the next three screenings across the three theaters,
      read off the same showtimes and the clock. A tap opens that theater.
    - Movies | TV: one switch, in colour so the eye finds it first (Stephen,
@@ -46,8 +49,8 @@
      theater's own page (scripts/build_showtimes.py, every morning), or the
      next day it has shows, or "Back Oct 30" while it is closed. Partizanfilm
      is picked first (Stephen, 2026-10-18: the local one). Every theater
-     keeps its Showtimes button to its own page. Back then's Show all, and
-     the list once "Show more" has grown it, carry a Collapse bar that
+     keeps its Showtimes button to its own page. Back then opened as a list,
+     and the list once "Show more" has grown it, carry a Collapse bar that
      stays in reach while the list is on screen.
    - Back then: the time machine. ‹ October 2021 › and a row of years; the
      month's big titles (scripts/build_time_machine.py, monthly: what Rotten
@@ -55,8 +58,8 @@
      Machine, matched to TMDB; or TMDB's own most popular releases of a
      month the archive missed). Titles only ever come from there; every
      picture and word is TMDB's. The section says where the titles come
-     from (a TMDB month says so on its dateline), and "Show all" swaps the
-     rail for a wrapping grid.
+     from (a TMDB month says so on its dateline), and See as a list opens the
+     rail as a wrapping grid.
    - The list: the ranking is chosen, and the chosen chip says what it is:
      Top rated (TMDB's 300 best films or 200 best shows, in its order),
      Trending (TMDB's this week), Town favorites (the town's ratings, three
@@ -98,6 +101,10 @@
    by title and year, or the title alone when the year has drifted and the
    title is unique.
 
+   Rotten Tomatoes: `tm` on a title is its percent, from OMDb (build_films.py,
+   build_trailers.py; `rt` is the runtime). tomato() is the one badge, on every
+   title that has a score, and nothing on one that does not.
+
    ?demo=1 runs exactly this file on data/demo/watch.json: invented films
    and shows, re-dated to the reader's clock, with their ratings and picks
    seeded into the boards' in-memory demo backend, so the counting below is
@@ -110,7 +117,7 @@ import { fetchJSON } from '../wire.js';
 import { sectionBar } from '../sections.js';
 import { liquify } from '../liquid.js';
 import { RULES, expiresAt } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider, listRail } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, chips, pills, button, put, dateline, divider, listRail } from '../ui.js';
 
 const KEY = 'watch';
 const DATA = 'https://raw.githubusercontent.com/btownbrief/btown-brief/films-data/data/';
@@ -143,13 +150,16 @@ const SEEN_MAX = 300;       // trailers this phone remembers being shown
 const TOP_EVERY = 4;        // every fourth card past the new ones is from the top list
 const NEXT_UP = 3;          // screenings on the Next up strip
 const SWIPE = 40;           // sideways travel that moves the card
-const RECENT = 30 * DAY;    // an upload this new is on the list's Recent side
+const HOME_WAIT = 120;      // days after release a film with no home date counts as out at home
+const NEW_HOME = 60;        // days a film or show stays New at home
+const NEW_SHOW = 14;        // days a new show or season is Just dropped
 const ROWS = 40;            // trailer rows drawn at a time
 /* the words on the card, the strip and the rail */
 const WORDS = {
+  dropped: 'Just dropped', inTheaters: 'In theaters', onTv: 'On TV now', comingSoon: 'Coming soon', newHome: 'New at home', newTv: 'New on TV', everything: 'All',
   play: 'Play the trailer for ', prev: 'Previous trailer', next: 'Next trailer', save: 'Save', share: 'Share', fresh: 'New', trailer: ' trailer',
-  list: 'See as a list', listOf: 'Trailers', recent: 'Recent', past: 'Past', allGenres: 'All', surprise: 'Surprise me', more: 'Show more',
-  nextUp: 'Next up', week: 'Out this week', weekChip: 'This week', theaters: 'Coming to theaters', soonChip: 'Coming soon',
+  list: 'See as a list', listOf: 'Trailers', allGenres: 'All', surprise: 'Surprise me', more: 'Show more',
+  nextUp: 'Next up', week: 'Out this week', weekChip: 'This week', theaters: 'Coming to theaters', soonChip: 'Coming soon', home: 'at home',
 };
 const YT = /^[A-Za-z0-9_-]{11}$/;
 const POSTER = /^\/[A-Za-z0-9_-]+\.(jpg|png)$/;
@@ -203,12 +213,13 @@ let T = null;               // trailers.json: { fresh, past, skip }, or null
 let trailersIn = false;     // trailers.json has answered, one way or the other
 let awayFromTab = false;
 const TRAILER_SEED = (Date.now() ^ (Math.random() * 4294967296)) >>> 0;   // a new order on each load
-const Q = { movie: null, tv: null };   // the card's walk per kind: { list, at, moved }
+const Q = {};                // the card's walk per side and kind: { list, at, moved }
 const byId = new Map();     // id -> title (films and shows; a show's id is TV_BASE + its TMDB id)
 const byKey = new Map();    // "title|year" -> title
 const byTitle = new Map();  // "title" -> title, or null when two share it
+const HOME = new Map();     // film id -> its US home release date
 const slots = Object.create(null);
-const V = { side: 'up', kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false, backAll: false };
+const V = { side: 'up', kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false };
 const P = { state: 'loading', ratings: [], picks: [], agg: new Map() };
 let L = null;               // this device's dots, partner, want list, own ratings
 
@@ -220,9 +231,10 @@ function film(raw, extra, kind) {
   const y = Number.isInteger(raw.y) ? raw.y : d ? Number(d.slice(0, 4)) : null;
   return {
     id: tv ? TV_BASE + raw.id : raw.id, tmdb: raw.id, kind: tv ? 'tv' : 'movie', k: (tv ? 'tv' : 'f') + raw.id,
-    t: String(raw.t), y, d: d || (y ? y + '-07-01' : ''),
+    t: String(raw.t), y, d: d || (y ? y + '-07-01' : ''), undated: !d, h: ISO_DAY.test(String(raw.h || '')) ? raw.h : '',
     g: arr(raw.g).filter((x) => typeof x === 'string').slice(0, 4), o: String(raw.o || ''),
     rt: Number.isInteger(raw.rt) && raw.rt > 0 ? raw.rt : null,
+    tm: Number.isInteger(raw.tm) && raw.tm >= 0 && raw.tm <= 100 ? raw.tm : null,
     sn: tv && Number.isInteger(raw.sn) && raw.sn > 0 ? raw.sn : null,
     ns: tv && Number.isInteger(raw.ns) && raw.ns > 0 ? raw.ns : null,
     p: POSTER.test(String(raw.p || '')) ? raw.p : '', yt: YT.test(String(raw.yt || '')) ? raw.yt : '',
@@ -235,6 +247,7 @@ const fkey = (t, y) => norm(t) + '|' + (y || '');
 const uniq = (list) => { const seen = new Set(); return list.filter((f) => f && !seen.has(f.id) && seen.add(f.id)); };
 
 function know(f) {
+  if (f.h) HOME.set(f.id, f.h);
   if (!byId.has(f.id)) byId.set(f.id, f);
   const k = byId.get(f.id);
   if (!byKey.has(fkey(f.t, f.y))) byKey.set(fkey(f.t, f.y), k);
@@ -255,14 +268,30 @@ function setFilms(j) {
   F.tvAir = list('tv_air', 'tv', { shelf: 'air' });
   F.stream = list('stream', 'movie', { shelf: 'stream' });
   F.tvStream = list('tv_stream', 'tv', { shelf: 'stream' });
-  byId.clear(); byKey.clear(); byTitle.clear();
+  byId.clear(); byKey.clear(); byTitle.clear(); HOME.clear();
   [...F.top, ...F.trend, ...F.now, ...F.soon, ...F.tvTop, ...F.tvTrend, ...F.tvAir, ...F.stream, ...F.tvStream].forEach(know);
+  /* a file built before `h`: the streaming shelf's date is that film's home date */
+  [...F.soon, ...F.stream].forEach((f) => { if (f.where === 'streaming' && f.d && !HOME.has(f.id)) HOME.set(f.id, f.d); });
 }
+/* Past is what a person can watch at home (Stephen, 2026-10-30): a film is
+   there from its digital or disc date, whenever it comes. With no date, a
+   film out for HOME_WAIT days counts as home; a newer one is still in
+   theaters. Shows are always home. */
+const homeDay = (f) => f.h || HOME.get(f.id) || (f.where === 'streaming' ? f.d : '');
+function atHome(f) {
+  if (f.kind === 'tv') return true;
+  const h = homeDay(f), today = todayKey();
+  if (h) return h <= today;
+  return f.undated ? !!f.y && f.y < Number(today.slice(0, 4)) : dayNum(today) - dayNum(f.d) > HOME_WAIT;
+}
+/* newest home date first; on a shared date the film most people are watching leads */
+const fame = (f) => { const i = F.trend.findIndex((x) => x.id === f.id); return i < 0 ? F.trend.length : i; };
+const homeFirst = (a, b) => (homeDay(b) || b.d).localeCompare(homeDay(a) || a.d) || fame(a) - fame(b) || a.t.localeCompare(b.t);
 const hasTV = () => F.tvTop.length > 0;
-const tops = () => (V.kind === 'tv' ? F.tvTop : F.top);
-const trends = () => (V.kind === 'tv' ? F.tvTrend : F.trend);
+const tops = () => (V.kind === 'tv' ? F.tvTop : F.top.filter(atHome));
+const trends = () => (V.kind === 'tv' ? F.tvTrend : F.trend.filter(atHome));
 /* everything of this kind the list can rank: the top list, then what is trending or showing that is not on it */
-const pool = () => uniq(V.kind === 'tv' ? [...F.tvTop, ...F.tvTrend, ...F.tvAir] : [...F.top, ...F.trend, ...F.now]);
+const pool = () => uniq(V.kind === 'tv' ? [...F.tvTop, ...F.tvTrend, ...F.tvAir] : [...F.top, ...F.trend, ...F.now].filter(atHome));
 
 /* a board post's title: its id; else title and year, else the title alone when it is unique */
 const filmOf = (p) => {
@@ -279,6 +308,15 @@ function filmMeta(f, two) {
 
 const posterUrl = (f, size) => (app.demo ? f.art : f.p ? F.images + size + f.p : '');
 const picture = (f, size) => { const u = posterUrl(f, size); return u ? art(u) : ''; };
+/* a title's score, or that of the same title on another shelf */
+const tmOf = (f) => { const n = f ? (Number.isInteger(f.tm) ? f.tm : (byId.get(f.id) || {}).tm) : null; return Number.isInteger(n) ? n : null; };
+const tmSay = (f) => (tmOf(f) === null ? '' : ', Rotten Tomatoes ' + tmOf(f) + '%');
+const TOMATO = '<svg class="wt-tm-i" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 5.2c3.4 0 6 1.9 6 5 0 3-2.7 4.8-6 4.8s-6-1.8-6-4.8c0-3.1 2.6-5 6-5Z"/><path d="M8 1.2 9.1 3l2.1-.5L10.3 4.3l1.6 1.4-2.8-.2L8 7 6.9 5.5l-2.8.2 1.6-1.4-.9-1.8 2.1.5Z"/></svg>';
+/* 60 is the line between fresh and rotten */
+function tomato(f) {
+  const n = tmOf(f);
+  return n === null ? '' : '<span class="wt-tm ' + (n >= 60 ? 'fresh' : 'rotten') + '" data-tm="' + n + '" role="img" aria-label="Rotten Tomatoes ' + n + '%">' + TOMATO + n + '%</span>';
+}
 const tmdbHref = (f) => TMDB_URL + (f.kind === 'tv' ? 'tv/' : 'movie/') + f.tmdb;
 const trailer = (f) => ({ k: 'tr:' + f.id, kind: 'video', yt: f.yt, title: f.t + ' · trailer', src: 'Trailer', media: posterUrl(f, 'w342') || 'paper',
   dur: f.dur || '', href: f.yt ? 'https://www.youtube.com/watch?v=' + f.yt : '#watch/' + f.k });
@@ -308,7 +346,8 @@ function setTM(j) {
     .sort((a, b) => b.m.localeCompare(a.m));
   if (months.length) TM = { months };
 }
-const tmMonths = () => (TM ? TM.months.filter((m) => m[V.kind].length) : []);
+const tmList = (m) => m[V.kind].filter(atHome);
+const tmMonths = () => (TM ? TM.months.filter((m) => tmList(m).length) : []);
 /* a year back from this month, or the closest month there is */
 function defaultMonth() {
   const list = tmMonths();
@@ -336,7 +375,7 @@ function fetchTrailers() {
 function gotTrailers(j) {
   trailersIn = true;
   setTrailers(j);
-  if (!Q.movie || !Q.movie.moved) Q.movie = null;
+  Object.keys(Q).forEach((k) => { if (!Q[k].moved) delete Q[k]; });
 }
 
 /* ----------------------------------------------------------- showtimes */
@@ -395,7 +434,7 @@ function redate(d) {
   const move = (f) => {
     if (!f || !ISO_DAY.test(String(f.d || ''))) return f;
     const nd = moveDay(f.d);
-    return { ...f, d: nd, y: Number(nd.slice(0, 4)) };
+    return { ...f, d: nd, y: Number(nd.slice(0, 4)), ...(ISO_DAY.test(String(f.h || '')) ? { h: moveDay(f.h) } : {}) };
   };
   const films = d.films || {};
   const out = { ...films };
@@ -635,7 +674,7 @@ const sec = (host, title, sub, key, right) => { const s = section(host, title, s
    on Past, the time machine, the town's ratings, then the long list */
 const SIDES = {
   up: ['drop', 'next', 'kind', 'theaters', 'soon', 'cta', 'stream', 'vote', 'chat'],
-  past: ['kind', 'back', 'town', 'list', 'chat'],
+  past: ['drop', 'kind', 'back', 'town', 'list', 'chat'],
 };
 const SIDE_OF = { drop: 'up', next: 'up', theaters: 'up', soon: 'up', cta: 'up', stream: 'up', vote: 'up', back: 'past', town: 'past', list: 'past' };
 const SECTIONS = [...new Set([...SIDES.up, ...SIDES.past])];
@@ -724,29 +763,29 @@ function oneTrailerEach(list) {
   return list.filter((f) => { const k = keyOfTrailer(f); return !seen.has(k) && seen.add(k); });
 }
 /* Movies: this week's new trailers in the file's order, or what is coming
-   soon when there is no file. Then everything else shuffled, every fourth
-   from the top list. TV: new shows and seasons, then what is airing. */
+   soon when there is no file, then the rest of what's in theaters or on its
+   way, shuffled. TV: new shows and seasons, then what is airing. */
+const plays = (f) => hasTrailer(f) && !(T && T.skip.has(f.yt));
 function trailerList(kind) {
-  const plays = (f) => hasTrailer(f) && !(T && T.skip.has(f.yt));
   if (kind === 'tv') return oneTrailerEach(uniq([...F.tvStream, ...F.tvAir]).filter(plays));
   const first = (T ? T.fresh.filter(isFresh) : F.soon).filter(plays);
-  /* a back-catalogue row (no at) comes last so a shelf's own copy and label win, and leaves the top list's films to the top list */
-  const rest = T ? [...T.fresh.filter((f) => !isFresh(f)), ...T.past.filter((f) => f.at)] : [];
-  const onTop = new Set(F.top.map((f) => f.id));
-  const back = T ? T.past.filter((f) => !f.at && !onTop.has(f.id)) : [];
-  const pool = shuffled(uniq([...rest, ...F.now, ...F.soon, ...F.trend, ...F.stream, ...back]).filter(plays), TRAILER_SEED);
-  const top = shuffled(F.top.filter(plays), TRAILER_SEED + 1);
-  const mixed = [];
-  while (pool.length || top.length) {
-    const fromTop = (mixed.length + 1) % TOP_EVERY === 0 ? top : pool;
-    mixed.push((fromTop.length ? fromTop : pool.length ? pool : top).shift());
-  }
-  return oneTrailerEach(uniq([...first, ...mixed]));
+  /* then what is in theaters or on its way; the older films are Past's now */
+  const current = [...(T ? T.fresh.filter((f) => !isFresh(f)) : []), ...F.now, ...F.soon].filter(plays);
+  const list = oneTrailerEach(uniq([...first, ...shuffled(current, TRAILER_SEED)]));
+  return list.length ? list : oneTrailerEach(shuffled(F.top.filter(plays), TRAILER_SEED + 1));
+}
+/* Past's walk: out at home, the newest home release first */
+function pastTrailers(kind) {
+  const today = todayKey();
+  if (kind === 'tv') return oneTrailerEach(uniq([...F.tvStream, ...F.tvAir, ...F.tvTrend, ...F.tvTop]).filter((f) => plays(f) && f.d && f.d <= today).sort(homeFirst));
+  /* the streaming shelf first, for the service's name */
+  return oneTrailerEach(uniq([...F.stream, ...(T ? [...T.fresh, ...T.past] : []), ...F.now, ...F.soon, ...F.trend, ...F.top]).filter((f) => plays(f) && atHome(f)).sort(homeFirst));
 }
 const firstUnseen = (list) => Math.max(0, list.findIndex((f) => !L.tr.includes(keyOfTrailer(f))));
 function walk() {
-  if (!Q[V.kind]) { const list = trailerList(V.kind); Q[V.kind] = { list, at: firstUnseen(list), moved: false }; }
-  return Q[V.kind];
+  const key = V.side + V.kind;
+  if (!Q[key]) { const list = V.side === 'past' ? pastTrailers(V.kind) : trailerList(V.kind); Q[key] = { list, at: V.side === 'past' ? 0 : firstUnseen(list), moved: false }; }
+  return Q[key];
 }
 function shownTrailer(f) {
   const k = keyOfTrailer(f);
@@ -758,8 +797,19 @@ const thumbOf = (f) => 'https://i.ytimg.com/vi/' + f.yt + '/maxresdefault.jpg';
 /* the card as the shell's video, saved and shared: the picture is the thumbnail */
 const trailerItem = (f) => ({ ...trailer(f), media: !app.demo && f.yt ? thumbOf(f) : posterUrl(f, 'w342') || 'paper' });
 /* "Dec 16 · theaters", "Nov 5 · Netflix"; a title from the other shelves says what its rail says */
-const trailerLine = (f) => (f.shelf === 'drop' && f.dated && f.at ? dateLabel(f.dated) + ' · ' + (f.on || f.where || 'theaters') : f.shelf === 'drop' ? f.on || String(f.y || '')
-  : f.shelf ? railLabel(f) : String(f.y || ''));
+function trailerLine(f) {
+  if (f.kind === 'movie' && (V.side === 'past' || !f.shelf || f.shelf === 'drop')) {
+    if (atHome(f)) return homeLine(f);
+    if (!f.shelf || !f.at) return railLabel(f);
+  }
+  return f.shelf === 'drop' && f.dated && f.at ? dateLabel(f.dated) + ' · ' + (f.on || f.where || 'theaters') : f.shelf === 'drop' ? f.on || String(f.y || '')
+    : f.shelf ? railLabel(f) : String(f.y || '');
+}
+/* "Nov 17 · at home", "Nov 17 · Netflix", while the release is new; else the year */
+function homeLine(f) {
+  const h = homeDay(f);
+  return h && dayNum(todayKey()) - dayNum(h) <= HOME_WAIT ? dateLabel(h) + ' · ' + (f.on || WORDS.home) : String(f.y || '');
+}
 function ageTag(f) {
   if (!isFresh(f)) return '';
   const h = Math.max(1, Math.floor((Date.now() - f.at * 1000) / 3600000));
@@ -788,11 +838,11 @@ function drawDrop(host) {
   const c = el('article', 'wt-drop');
   c.dataset.k = it.k;
   c.dataset.trailer = keyOfTrailer(f);
-  const age = ageTag(f);
+  const age = V.side === 'up' ? ageTag(f) : '';
   const saved = store.isSaved(it.k);
   c.innerHTML = '<div class="wt-drop-media"><a class="wt-drop-pic" href="' + esc(safeHref(it.href)) + '" aria-label="' + esc(WORDS.play + f.t) + '">' +
       (app.demo || !f.yt ? art(f.art || 'paper') : '<img class="wt-drop-img" src="' + esc(it.media) + '" alt="" decoding="async" referrerpolicy="no-referrer">') + '<span class="play">' + ICON.play + '</span></a>' +
-      (age ? '<span class="wt-drop-age">' + esc(age) + '</span>' : '') +
+      (age ? '<span class="wt-drop-age">' + esc(age) + '</span>' : '') + tomato(f) +
       '<button type="button" class="wt-drop-step" data-step="-1" aria-label="' + esc(WORDS.prev) + '"' + (q.at > 0 ? '' : ' disabled') + '>' + ICON.left + '</button>' +
       '<button type="button" class="wt-drop-step" data-step="1" aria-label="' + esc(WORDS.next) + '"' + (q.at < q.list.length - 1 ? '' : ' disabled') + '>' + ICON.right + '</button></div>' +
     '<div class="wt-drop-foot"><div class="wt-drop-text"><div class="t">' + esc(f.t) + '</div><div class="s">' + esc(trailerLine(f)) + '</div></div>' +
@@ -820,7 +870,7 @@ function drawDrop(host) {
   c.querySelector('.act.star').addEventListener('click', () => app.toggleSave(it));
   swipeable(c.querySelector('.wt-drop-media'));
   host.appendChild(c);
-  if (q.list.length < 2) return;
+  if (!trailerSections().length) return;
   const top = el('div', 'wt-tl-open');
   const b = button(esc(WORDS.list), 'sm ghost', trailerSheet);
   b.type = 'button';
@@ -831,13 +881,30 @@ function drawDrop(host) {
 }
 
 /* ---------------------------------------------------- every trailer, as a list */
-const isRecent = (f) => (f.kind === 'tv' ? f.shelf === 'stream' || f.shelf === 'air'
-  : (!!f.at && Date.now() - f.at * 1000 <= RECENT) || f.shelf === 'now' || f.shelf === 'soon' || f.shelf === 'stream' || (f.dated && f.dated >= todayKey()));
 const newestFirst = (a, b) => (b.at || 0) - (a.at || 0) || b.d.localeCompare(a.d) || a.t.localeCompare(b.t);
-/* the card's own walk, sorted and split in two. TV's Past is the shows the card does not walk. */
-function trailerSides() {
-  const all = oneTrailerEach(uniq([...trailerList(V.kind), ...(V.kind === 'tv' ? [...F.tvTrend, ...F.tvTop].filter((f) => hasTrailer(f) && !(T && T.skip.has(f.yt))) : [])]));
-  return { recent: all.filter(isRecent).sort(newestFirst), past: all.filter((f) => !isRecent(f)).sort(newestFirst) };
+/* Upcoming as a list reads by date: what is out, then what is coming. The
+   first film still ahead is where the line goes; none above it, no line. */
+const byDate = (list) => list.slice().sort((a, b) => a.d.localeCompare(b.d) || a.t.localeCompare(b.t));
+const firstAhead = (rows) => { const today = todayKey(); return rows.findIndex((f) => f.d > today); };
+function soonLine(host) {
+  const d = divider(host, WORDS.soonChip);
+  d.dataset.soonLine = '1';
+  return d;
+}
+const daysAgo = (key) => dayNum(todayKey()) - dayNum(key);
+/* a film with no home date reached home when atHome took it in */
+const newHome = (f) => { const h = f.kind === 'tv' ? f.d : homeDay(f); return (h ? daysAgo(h) : daysAgo(f.d) - HOME_WAIT) <= NEW_HOME; };
+const newShow = (f) => (f.shelf === 'stream' || !!f.ns) && f.d <= todayKey() && daysAgo(f.d) <= NEW_SHOW;
+/* the sheet's sections with something in them */
+function trailerSections() {
+  const tv = V.kind === 'tv', today = todayKey(), all = walk().list;
+  const showing = tv ? all.filter((f) => f.shelf === 'air' && f.d <= today).sort(newestFirst)
+    : byDate(oneTrailerEach(uniq([...F.now, ...F.soon.filter((f) => f.d <= today)]).filter(plays)));
+  const sections = V.side === 'past'
+    ? [['new', tv ? WORDS.newTv : WORDS.newHome, all.filter(newHome)], ['all', WORDS.everything, all]]
+    : [['drop', WORDS.dropped, all.filter(tv ? newShow : isFresh).sort(newestFirst)], ['now', tv ? WORDS.onTv : WORDS.inTheaters, showing],
+      ['soon', WORDS.comingSoon, byDate(all.filter((f) => f.d > today))]];
+  return sections.filter(([, , rows]) => rows.length);
 }
 /* a row's Previous and Next walk the rows on show */
 function playRow(rows, i) {
@@ -847,21 +914,22 @@ function playRow(rows, i) {
 function trailerRow(rows, i) {
   const f = rows[i];
   const b = el('button', 'wt-tl', '<span class="wt-tl-pic">' + (app.demo || !f.yt ? art(f.art || 'paper')
-    : '<img src="https://i.ytimg.com/vi/' + esc(f.yt) + '/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">') + '<span class="play">' + ICON.play + '</span></span>' +
+    : '<img src="https://i.ytimg.com/vi/' + esc(f.yt) + '/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">') + '<span class="play">' + ICON.play + '</span>' + tomato(f) + '</span>' +
     '<span class="wt-tl-text"><span class="t">' + esc(f.t) + '</span>' + (trailerLine(f) ? '<span class="s">' + esc(trailerLine(f)) + '</span>' : '') + '</span>');
   b.type = 'button';
   b.dataset.trailer = keyOfTrailer(f);
-  b.setAttribute('aria-label', WORDS.play + f.t);
+  b.setAttribute('aria-label', WORDS.play + f.t + tmSay(f));
   const img = b.querySelector('img');
   if (img) img.addEventListener('error', () => img.remove());
   b.addEventListener('click', () => playRow(rows, i));
   return b;
 }
 function trailerSheet() {
-  const sides = trailerSides();
-  const S = { side: sides.recent.length ? 'recent' : 'past', genre: 'all', mixed: 0, shown: ROWS };
+  const sections = trailerSections();
+  if (!sections.length) return;
+  const S = { side: sections[0][0], genre: 'all', mixed: 0, shown: ROWS };
   app.sheet(WORDS.listOf, (body) => {
-    const shelf = () => sides[S.side];
+    const shelf = () => sections.find(([key]) => key === S.side)[2];
     const showing = () => {
       const rows = shelf().filter((f) => S.genre === 'all' || f.g.includes(S.genre));
       return S.mixed ? shuffled(rows, S.mixed) : rows;
@@ -891,8 +959,8 @@ function trailerSheet() {
         S.genre = g; S.mixed = 0; S.shown = ROWS; paintGenres(); paintRows(); body.scrollTop = 0;
       }));
     };
-    if (sides.recent.length && sides.past.length) {
-      const side = pills([['recent', WORDS.recent], ['past', WORDS.past]], S.side, (v) => { S.side = v; S.mixed = 0; S.shown = ROWS; paintGenres(); paintRows(); body.scrollTop = 0; });
+    if (sections.length > 1) {
+      const side = pills(sections.map(([key, label]) => [key, label]), S.side, (v) => { S.side = v; S.mixed = 0; S.shown = ROWS; paintGenres(); paintRows(); body.scrollTop = 0; });
       side.dataset.trailerSide = '1';
       head.appendChild(side);
     }
@@ -931,7 +999,7 @@ function nextShows() {
   const rows = [];
   theaters().filter((t) => t.ok).forEach((t) => {
     Object.keys(t.days).filter((day) => day >= today && (!t.closed || (t.back && day >= t.back))).forEach((day) => {
-      t.days[day].forEach((x) => x.times.filter((h) => day > today || h >= hm).forEach((h) => rows.push({ day, h, t: (x.id && byId.has(x.id) && byId.get(x.id).t) || x.t, th: t })));
+      t.days[day].forEach((x) => x.times.filter((h) => day > today || h >= hm).forEach((h) => rows.push({ day, h, t: (x.id && byId.has(x.id) && byId.get(x.id).t) || x.t, th: t, f: (x.id && byId.get(x.id)) || byTitle.get(norm(x.t)) })));
     });
   });
   return rows.sort((a, b) => a.day.localeCompare(b.day) || a.h.localeCompare(b.h) || a.t.localeCompare(b.t)).slice(0, NEXT_UP);
@@ -948,7 +1016,7 @@ function drawNext(host) {
   const row = el('div', 'wt-next-row');
   rows.forEach((x) => {
     const when = (x.day === todayKey() ? '' : dayName.format(new Date(x.day + 'T12:00:00Z')).slice(0, 3) + ' ') + timesLabel([x.h]);
-    const b = el('button', 'wt-next-i', '<span class="h">' + esc(when) + '</span><span class="t">' + esc(x.t) + '</span><span class="s">' + esc(x.th.name) + '</span>');
+    const b = el('button', 'wt-next-i', '<span class="h">' + esc(when) + '</span><span class="t">' + esc(x.t) + '</span><span class="s">' + esc(x.th.name) + '</span>' + tomato(x.f));
     b.type = 'button';
     b.dataset.nextTheater = x.th.id;
     b.addEventListener('click', () => {
@@ -996,8 +1064,8 @@ function railPoster(f, key, label = railLabel(f)) {
   const a = el('a', 'poster');
   a.href = '#watch/' + key;
   a.dataset.k = key;
-  a.setAttribute('aria-label', (hasTrailer(f) ? WORDS.play : '') + f.t + ', ' + label);
-  a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
+  a.setAttribute('aria-label', (hasTrailer(f) ? WORDS.play : '') + f.t + ', ' + label + tmSay(f));
+  a.innerHTML = '<span class="c-media">' + picture(f, 'w342') + tomato(f) +
     (hasTrailer(f) ? '<span class="play">' + ICON.play + '</span>' + (f.dur ? '<span class="dur">' + esc(f.dur) + '</span>' : '') : '') + '</span>' +
     '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(label) + '</span>';
   a.addEventListener('click', (e) => { e.preventDefault(); if (hasTrailer(f)) playTrailer(f); else filmSheet(f); });
@@ -1022,8 +1090,14 @@ function drawSoon(host) {
   if (!list.length) return;
   const title = V.kind === 'tv' ? 'On TV now' : week.length ? WORDS.week : WORDS.theaters;
   sec(host, title, null, 'soon');
-  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: title, cells: 104 });
-  list.forEach((f) => r.appendChild(week.length ? railPoster(f, 'soon:' + f.id, weekLabel(f)) : railPoster(f, 'soon:' + f.id)));
+  const cells = new Map(list.map((f) => [f, week.length ? railPoster(f, 'soon:' + f.id, weekLabel(f)) : railPoster(f, 'soon:' + f.id)]));
+  /* the row keeps its order; opened as a list on Movies it reads by date */
+  const rows = V.kind === 'movie' ? byDate(list) : list;
+  const dated = rows.map((f) => cells.get(f));
+  const ahead = V.kind === 'movie' ? firstAhead(rows) : -1;
+  if (ahead > 0) dated.splice(ahead, 0, soonLine(el('div')));
+  listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: title, cells: 104,
+    onMode: (r, on) => r.replaceChildren(...(on ? dated : cells.values())) });
 }
 
 /* what is still ahead, or out this past week: a file a few days old never
@@ -1112,7 +1186,7 @@ function drawTheaters(host) {
       const r = el('div', 'lrow');
       r.dataset.film = x.t;
       const pic = known ? picture(known, 'w185') : app.demo ? (x.art ? art(x.art) : '') : x.p ? art(F.images + 'w185' + x.p) : '';
-      r.innerHTML = '<span class="th">' + pic + '</span><div><div class="t">' + esc(known ? known.t : x.t) + '</div>' +
+      r.innerHTML = '<span class="th">' + pic + '</span><div><div class="t">' + esc(known ? known.t : x.t) + '</div>' + tomato(known) +
         '<div class="s" data-times>' + esc(timesLabel(x.times)) + '</div></div>';
       if (known) {
         const b = el('button', 'pillbtn', hasTrailer(known) ? ICON.play : 'More');
@@ -1142,18 +1216,8 @@ function drawBack(host) {
   if (!months.some((m) => m.m === V.month)) V.month = defaultMonth();
   const at = months.findIndex((m) => m.m === V.month);
   const cur = months[at];
-  const list = cur[V.kind];
-  /* the rail, or every title in a wrapping grid, with a Collapse bar that
-     stays in reach while the grid is on screen */
-  const all = list.length > 3 ? button(V.backAll ? 'Show less' : 'Show all ' + list.length, 'ghost sm', () => {
-    V.backAll = !V.backAll;
-    draw('back');
-    const h = root.querySelector('[data-sec="back"]');
-    if (!V.backAll && h && h.getBoundingClientRect().top < 0) app.jumpTo(h);
-    backToggle();
-  }) : null;
-  if (all) { all.dataset.backAll = V.backAll ? 'open' : 'closed'; all.setAttribute('aria-expanded', V.backAll ? 'true' : 'false'); }
-  sec(host, 'Back then', esc('Rotten Tomatoes’ front page, month by month'), 'back', all);
+  const list = tmList(cur);
+  sec(host, 'Back then', esc('Rotten Tomatoes’ front page, month by month'), 'back');
   const go = (m) => { V.month = m; draw('back'); };
   /* months are newest first: ‹ is older, › is newer. A month the archive
      missed is TMDB's most popular, and its dateline says so. */
@@ -1171,28 +1235,9 @@ function drawBack(host) {
     yr.dataset.years = '1';
     host.appendChild(yr);
   }
-  let r;
-  if (V.backAll && all) {
-    const wrap = el('div', 'expwrap');
-    r = el('div', 'grid3 wgrid');
-    wrap.append(r, collapseBar('Back then', () => {
-      V.backAll = false;
-      draw('back');
-      app.jumpTo(root.querySelector('[data-sec="back"]'));
-      backToggle();
-    }));
-    host.appendChild(wrap);
-  } else {
-    r = rail(host);
-    r.dataset.out = '[data-back-all]';   // its own head offers Show all, and the grid it opens has the Collapse bar
-  }
+  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-back' : 'watch-back', label: 'Back then', cells: 104 });
   r.dataset.back = cur.m;
-  list.forEach((f) => { const t = tile(f, 'back:' + cur.m + ':' + f.id); if (r.classList.contains('wgrid')) t.style.width = 'auto'; r.appendChild(t); });
-}
-/* the redraw took the pressed button away: keep the keyboard on its toggle */
-function backToggle() {
-  const t = root.querySelector('[data-back-all]');
-  if (t) t.focus({ preventScroll: true });
+  list.forEach((f) => r.appendChild(tile(f, 'back:' + cur.m + ':' + f.id)));
 }
 /* the bar under an opened list: it rides the bottom of the screen while the
    list is in view, so a long list folds back up from anywhere in it */
@@ -1232,7 +1277,7 @@ function shuffled(list, seed) {
 function ranked(sort) {
   const top = tops();
   if (sort === 'trend') return trends();
-  if (sort === 'new') { const today = todayKey(); return pool().filter((f) => f.d && f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)); }
+  if (sort === 'new') { const today = todayKey(); return pool().filter((f) => f.d && f.d <= today).sort(homeFirst); }
   if (sort === 'shuffle') return shuffled(pool().filter((f) => !seenEnough(f)), V.seed);
   if (sort === 'town') {
     const all = pool();
@@ -1260,8 +1305,8 @@ function tile(f, key) {
   const s = seenOf(f), t = town(f);
   const who = us() ? [s[0] ? 'you have seen it' : 'you have not seen it', s[1] ? L.partner + ' has' : L.partner + ' has not']
     : [s[0] ? 'seen' : 'not seen'];
-  a.setAttribute('aria-label', f.t + (f.y ? ', ' + f.y : '') + ', ' + who.join(', ') + (t ? ', town rating ' + avg(t.sum, t.n).toFixed(1) : ''));
-  a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
+  a.setAttribute('aria-label', f.t + (f.y ? ', ' + f.y : '') + ', ' + who.join(', ') + (t ? ', town rating ' + avg(t.sum, t.n).toFixed(1) : '') + tmSay(f));
+  a.innerHTML = '<span class="c-media">' + picture(f, 'w342') + tomato(f) +
     '<span class="seen" aria-hidden="true"><i class="' + (s[0] ? 'on' : '') + '" data-dot="me"></i>' + (us() ? '<i class="' + (s[1] ? 'on' : '') + '" data-dot="them"></i>' : '') + '</span>' +
     (t ? '<span class="rate" data-rate="' + esc(avg(t.sum, t.n).toFixed(2)) + '">' + esc(avg(t.sum, t.n).toFixed(1)) + '</span>' : '') + '</span>' +
     '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc([f.y, f.g[0]].filter(Boolean).join(' · ')) + '</span>';
@@ -1446,7 +1491,7 @@ function filmSheet(f) {
     const pic = el('span', 'poster');
     pic.style.width = '104px';
     pic.style.flex = '0 0 auto';
-    pic.innerHTML = '<span class="c-media">' + picture(f, 'w342') + '</span>';
+    pic.innerHTML = '<span class="c-media">' + picture(f, 'w342') + tomato(f) + '</span>';
     const facts = el('div');
     const t = town(f);
     const len = f.kind === 'tv' ? [f.sn ? plural(f.sn, 'season', 'seasons') : '', f.rt ? runtime(f.rt) + ' episodes' : ''] : [f.rt ? runtime(f.rt) : ''];
@@ -1651,7 +1696,7 @@ function drawTown(host) {
   if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
   if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
   if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
-  const rows = [...P.agg.values()].filter((a) => a.wn >= MIN_RATINGS)
+  const rows = [...P.agg.values()].filter((a) => a.wn >= MIN_RATINGS && (!a.f || atHome(a.f)))
     .sort((a, b) => b.wn - a.wn || avg(b.wsum, b.wn) - avg(a.wsum, a.wn)).slice(0, TOWN_ROWS);
   if (!rows.length) {
     host.appendChild(el('p', 'note pad', 'No ratings this week yet.'));
@@ -1662,7 +1707,7 @@ function drawTown(host) {
     const r = el('div', 'lrow');
     r.dataset.k = 'town:' + (a.f ? a.f.id : norm(a.title));
     r.dataset.n = String(a.wn);
-    r.innerHTML = '<span class="th">' + (a.f ? picture(f, 'w185') : '') + '</span><div><div class="t">' + esc(f.t) + (f.y ? ' <span class="note">' + esc(f.y) + '</span>' : '') + '</div>' +
+    r.innerHTML = '<span class="th">' + (a.f ? picture(f, 'w185') : '') + '</span><div><div class="t">' + esc(f.t) + (f.y ? ' <span class="note">' + esc(f.y) + '</span>' : '') + '</div>' + tomato(f) +
       '<div class="s"><b>' + esc(avg(a.wsum, a.wn).toFixed(1)) + ' ★</b> · ' + esc(plural(a.wn, 'rating', 'ratings')) + ' this week</div></div>';
     if (a.f) {
       const b = el('button', 'pillbtn', 'Rate');
@@ -1710,7 +1755,7 @@ function drawVote(host) {
     c.dataset.k = 'pick:' + s.id;
     c.dataset.screening = '1';
     const when = new Date(Date.parse(s.created_at) || Date.now());
-    c.innerHTML = '<span class="eyebrow">Screening</span><h3 class="serif">' + esc(s.title) + '</h3>' +
+    c.innerHTML = '<span class="eyebrow">Screening</span><h3 class="serif">' + esc(s.title) + tomato(filmOf(s)) + '</h3>' +
       '<p>' + esc([s.meta.where, 'posted ' + shortDate.format(when)].join(' · ')) + '</p>' + (s.body ? '<p>' + esc(s.body) + '</p>' : '');
     host.appendChild(c);
   }
@@ -1725,7 +1770,7 @@ function voteOpt(p) {
     o.classList.toggle('on', p.voted);
     o.setAttribute('aria-pressed', p.voted ? 'true' : 'false');
     const label = p.votes >= GOAL ? p.votes + ' · going on Meetup' : p.votes + ' of ' + GOAL;
-    o.innerHTML = '<div class="l">' + esc(p.title) + (p.film && p.film.y ? ' (' + esc(p.film.y) + ')' : '') + '<span>' + esc(label) + '</span></div>' +
+    o.innerHTML = '<div class="l">' + esc(p.title) + (p.film && p.film.y ? ' (' + esc(p.film.y) + ')' : '') + '<span>' + esc(label) + '</span>' + tomato(p.film) + '</div>' +
       '<div class="bar"><i style="width:' + Math.round(Math.min(p.votes, GOAL) / GOAL * 100) + '%"></i></div>' +
       (p.body ? '<p class="fine">' + esc(p.author + ': ' + p.body) + '</p>' : '<p class="fine">' + esc('Suggested by ' + p.author) + '</p>');
   };
@@ -1792,7 +1837,7 @@ function suggestSheet() {
       const hits = [...F.top, ...F.trend, ...F.now].filter((f, i, all) => all.findIndex((x) => x.id === f.id) === i && (!s || norm(f.t).includes(s))).slice(0, 30);
       if (!hits.length) box.appendChild(el('p', 'sheet-note', 'Nothing on the list by that name.'));
       hits.forEach((f) => {
-        const r = el('div', 'sheet-row', '<div class="t">' + esc(f.t) + '<div class="d">' + esc([f.y, f.g[0]].filter(Boolean).join(' · ')) + '</div></div>');
+        const r = el('div', 'sheet-row', '<div class="t">' + esc(f.t) + tomato(f) + '<div class="d">' + esc([f.y, f.g[0]].filter(Boolean).join(' · ')) + '</div></div>');
         r.dataset.film = String(f.id);
         r.appendChild(button('Suggest', 'ghost sm', () => suggest(f, body, close)));
         box.appendChild(r);
@@ -1901,7 +1946,7 @@ function land() {
     const f = byId.get(id);
     if (f && f.kind !== V.kind) setKind(f.kind);
     /* a title on the list is on Past; one only coming is on Upcoming */
-    const ahead = !pool().some((x) => x.id === id) && [...F.now, ...F.soon, ...F.tvAir, ...streamList()].some((x) => x.id === id);
+    const ahead = !pool().some((x) => x.id === id) && ((f && !atHome(f)) || [...F.now, ...F.soon, ...F.tvAir, ...streamList()].some((x) => x.id === id));
     setSide(ahead ? 'up' : 'past', true);
     let at = filtered().findIndex((x) => x.id === id);
     if (at < 0 && pool().some((x) => x.id === id)) { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; if (V.sort === 'genre' || V.sort === 'shuffle') V.sort = 'top'; at = filtered().findIndex((x) => x.id === id); }
@@ -1944,7 +1989,7 @@ app.register(KEY, {
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
-      if (trailers && !trailersIn) trailers.then((j) => { gotTrailers(j); if (V.side === 'up') draw('drop'); land(); });
+      if (trailers && !trailersIn) trailers.then((j) => { gotTrailers(j); draw('drop'); land(); });
       loadExtras(got).then(() => {
         extras = true;
         V.month = defaultMonth();

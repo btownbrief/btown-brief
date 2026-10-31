@@ -3,8 +3,8 @@
    is not built yet its shelf, then starts the router.
 
    Which modes load is the app's config (js/apps/<id>.js, through
-   app.modes()): All Day's nine and Habits, Out's What Now, Eat's Food, and
-   so on. They load side by side, and start() waits for all of them, so
+   app.modes()): All Day's nine, Town's seven, Body's six and the modes it
+   hosts. They load side by side, and start() waits for all of them, so
    every register() has run before the first route. A mode that fails to
    load is logged and its tab becomes a shelf with its promise, so one
    broken file can never take the whole app down. The tab bar's order is

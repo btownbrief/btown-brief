@@ -89,13 +89,11 @@ export const ICON = {
   more: svg('<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>'),
   down: svg('<path d="m6 9.5 6 6 6-6"/>'),
   trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
-  /* the eight apps (2026-10-29): All Day is the Wire's pulse, Eat is Food's
-     fork and knife, People and Play are People's and Games' own */
-  out: svg('<path d="M18.5 14.6A7.3 7.3 0 0 1 9.4 5.5a7.3 7.3 0 1 0 9.1 9.1z"/><path d="M17 3.5v3M15.5 5h3M20.5 8.5v2M19.5 9.5h2"/>'),
+  /* the apps' own: All Day is the Wire's pulse */
   body: svg('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/><path d="M7.5 12.5h2.6l1.2-2.2 1.8 3.6 1.2-1.4h2.2"/>'),
   town: svg('<path d="M3.5 20.5h17M5 20.5V10l4-3 4 3v10.5M13 20.5V6.5l3.5-3 3.5 3v14"/><path d="M8 13.5h2M8 16.5h2M16 9.5h1M16 12.5h1M16 15.5h1"/>'),
   paper: svg('<path d="M5 4.5h12v14a2 2 0 0 0 2 2H6.5A1.5 1.5 0 0 1 5 19z"/><path d="M17 8.5h2.5V18.5a2 2 0 0 1-2 2M8 8h6M8 11.5h6M8 15h4"/>'),
-  /* the bottom tabs the map adds */
+  /* the apps' bottom tabs */
   calendar: svg('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
   calcheck: svg('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4.5"/>'),
   ball: svg('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5v17M6 6a9 9 0 0 1 0 12M18 6a9 9 0 0 0 0 12"/>'),
@@ -110,6 +108,9 @@ export const ICON = {
   paw: svg('<circle cx="7" cy="10" r="1.8"/><circle cx="10.5" cy="6.2" r="1.8"/><circle cx="14.5" cy="6.2" r="1.8"/><circle cx="18" cy="10" r="1.8"/><path d="M12.5 11.5c-2.6 0-5.5 4-5.5 6.3 0 1.6 1.3 2.4 2.7 2.4 1.2 0 1.8-.6 2.8-.6s1.6.6 2.8.6c1.4 0 2.7-.8 2.7-2.4 0-2.3-2.9-6.3-5.5-6.3z"/>'),
   dumbbell: svg('<path d="M3 12h18M6 8v8M3.5 9.5v5M18 8v8M20.5 9.5v5M8 12h8"/>'),
   leaf: svg('<path d="M5 19c0-8 5.5-13.5 15-14-.4 9.5-6 15-14 15M5 19l7-7"/>'),
+  mind: svg('<circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9.4"/>'),
+  soundOn: svg('<path d="M4.5 9.5v5h3.5l4.5 4v-13l-4.5 4zM16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a7.8 7.8 0 0 1 0 11"/>'),
+  soundOff: svg('<path d="M4.5 9.5v5h3.5l4.5 4v-13l-4.5 4zM16.5 9.5l4 5M20.5 9.5l-4 5"/>'),
   drop: svg('<path d="M12 3.5s-6.5 7-6.5 11.2a6.5 6.5 0 0 0 13 0C18.5 10.5 12 3.5 12 3.5z"/>'),
   bell: svg('<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0"/>'),
   columns: svg('<path d="M3.5 9 12 4l8.5 5zM4.5 20.5h15M6.5 11v7M10 11v7M14 11v7M17.5 11v7"/>'),
@@ -243,7 +244,8 @@ export function rail(host, cls) {
      name   the saved key and data-rail
      label  what the button and Collapse say they act on
      cls    extra classes for the row
-     cells  open as a grid of cards at least this many px wide, not one column */
+     cells  open as a grid of cards at least this many px wide, not one column
+     onMode (rail, isList) on each change of mode, for a row whose list reads in another order */
 const LIST_KEYS = ['allday-rail-lists', 'allday-onair-lists'];   // the second is On Air's first home for it
 let listMem = null;
 function listed() {
@@ -305,6 +307,7 @@ export function listRail(host, o) {
     btn.setAttribute('aria-label', btn.textContent + ': ' + what);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     foot.hidden = !on;
+    if (o.onMode) o.onMode(r, on);
   }
   btn.addEventListener('click', (e) => {
     e.preventDefault();

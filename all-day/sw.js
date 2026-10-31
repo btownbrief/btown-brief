@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v113';   // account-data.js: Habits' and The Build's data go with the account in every app
+const VERSION = 'all-day-v115';   // the five unapproved apps' configs left the shell
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -21,16 +21,18 @@ const SHELL_URLS = [
   './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/liquid.js', './js/sections.js', './js/gestures.js', './js/auth.js', './js/asks.js',
-  /* the eight apps (2026-10-29): their configs, the shelf a tab gets until
-     its mode is built, the switcher, and the shelves' demo */
-  './js/apps/index.js', './js/apps/all-day.js', './js/apps/out.js', './js/apps/eat.js', './js/apps/people.js', './js/apps/body.js',
-  './js/apps/town.js', './js/apps/play.js', './js/apps/paper.js', './js/shelf.js', './js/switcher.js',
+  /* the three apps: their configs, the shelf a tab gets until its mode is
+     built, and the switcher */
+  './js/apps/index.js', './js/apps/all-day.js', './js/apps/body.js',
+  './js/apps/town.js', './js/shelf.js', './js/switcher.js',
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
   /* The Build: the tab, its API (live, this phone, the demo) and the site */
   './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js', './js/build-site-shared.js', './js/build-site-art.js', './js/build-site-world.js', './js/build-site-building.js', './js/build-site-crew.js', './js/build-site-director.js',
   './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
+  /* Talk, What Now's card deck, and its deck, so it deals offline */
+  './js/modes/talk.js', './js/talk-core.js', '../data/talk-deck.json',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
   /* Habits' rules, its demo server, the signed-out phone's copy and its trees, imported by modes/habits.js */
@@ -56,7 +58,7 @@ const SHELL_URLS = [
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
   /* Town (wave 1) */
-  './js/modes/reddit.js', './js/modes/social.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/square.js', './js/modes/guides.js', './js/modes/work.js',
+  './js/modes/reddit.js', './js/modes/social.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/mind.js', './js/lake-sound.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/square.js', './js/modes/guides.js', './js/modes/work.js',
 ];
 
 self.addEventListener('install', (e) => {

@@ -1,0 +1,284 @@
+{
+ "_": "Talk's fake day. Every item is invented. x1 to x7 are what the dinner guard must leave out.",
+ "deck": {
+  "cards": [
+   {
+    "id": "d1",
+    "q": "What’s a meal you still think about?",
+    "b": "ice"
+   },
+   {
+    "id": "d2",
+    "q": "Who taught you to drive?",
+    "b": "ice"
+   },
+   {
+    "id": "d3",
+    "q": "What’s the last thing you made with your hands?",
+    "b": "ice"
+   },
+   {
+    "id": "d4",
+    "q": "What did your family do every summer?",
+    "b": "ice",
+    "local": 1
+   },
+   {
+    "id": "d5",
+    "q": "Who at this table would last longest in the woods?",
+    "b": "ice"
+   },
+   {
+    "id": "d6",
+    "q": "When did you know it was time to leave?",
+    "b": "deep"
+   },
+   {
+    "id": "d7",
+    "q": "Who came through for you when it counted?",
+    "b": "deep"
+   },
+   {
+    "id": "d8",
+    "q": "What’s the hardest thing you’ve said out loud?",
+    "b": "deep",
+    "heavy": 1
+   },
+   {
+    "id": "d9",
+    "q": "Best breakfast in the county?",
+    "b": "debate",
+    "local": 1
+   },
+   {
+    "id": "d10",
+    "q": "Mountains or lake?",
+    "b": "debate"
+   },
+   {
+    "id": "d11",
+    "q": "Sled, ski or stay in?",
+    "b": "debate"
+   },
+   {
+    "id": "d12",
+    "q": "Best sunset spot in town?",
+    "b": "debate",
+    "local": 1
+   },
+   {
+    "id": "d13",
+    "q": "Where do you take a visitor first?",
+    "b": "ice",
+    "local": 1
+   }
+  ]
+ },
+ "today": {
+  "date": "2026-10-16",
+  "updated": "2026-10-16T18:00:00+00:00",
+  "picks": [
+   {
+    "id": "t1",
+    "ch": "local",
+    "local": true,
+    "src": "seven-days",
+    "name": "Seven Days",
+    "title": "The Main Street rebuild gets a real schedule",
+    "url": "https://example.org/talk/t1",
+    "posted_at": "2026-10-16T17:39:00+00:00",
+    "topic": "city-government",
+    "why": "Not shown on a card.",
+    "rank": 1
+   }
+  ],
+  "updates": [
+   {
+    "key": "afternoon",
+    "label": "Afternoon",
+    "items": [
+     {
+      "id": "t1",
+      "ch": "local",
+      "local": true,
+      "src": "seven-days",
+      "name": "Seven Days",
+      "title": "The Main Street rebuild gets a real schedule",
+      "url": "https://example.org/talk/t1",
+      "posted_at": "2026-10-16T17:39:00+00:00",
+      "topic": "city-government"
+     },
+     {
+      "id": "t2",
+      "ch": "world",
+      "local": false,
+      "src": "ap",
+      "name": "AP",
+      "title": "Scientists map a galaxy older than anyone expected",
+      "url": "https://example.org/talk/t2",
+      "posted_at": "2026-10-16T17:14:00+00:00",
+      "topic": "science"
+     },
+     {
+      "id": "t3",
+      "ch": "local",
+      "local": true,
+      "src": "vtdigger",
+      "name": "VTDigger",
+      "title": "Church Street keeps outdoor dining through Halloween",
+      "url": "https://example.org/talk/t3",
+      "posted_at": "2026-10-16T16:39:00+00:00",
+      "topic": "community"
+     },
+     {
+      "id": "t4",
+      "ch": "world",
+      "local": false,
+      "src": "npr",
+      "name": "NPR",
+      "title": "Why every town suddenly wants a pickleball court",
+      "url": "https://example.org/talk/t4",
+      "posted_at": "2026-10-16T15:59:00+00:00",
+      "topic": "arts-culture"
+     },
+     {
+      "id": "t5",
+      "ch": "world",
+      "local": false,
+      "src": "bbc",
+      "name": "BBC",
+      "title": "A four-day week goes nationwide in one more country",
+      "url": "https://example.org/talk/t5",
+      "posted_at": "2026-10-16T15:29:00+00:00",
+      "topic": "economy"
+     },
+     {
+      "id": "t6",
+      "ch": "local",
+      "local": true,
+      "src": "wcax",
+      "name": "WCAX",
+      "title": "Burlington's new ferry schedule adds a late boat",
+      "url": "https://example.org/talk/t6",
+      "posted_at": "2026-10-16T14:49:00+00:00",
+      "topic": "transportation"
+     },
+     {
+      "id": "x1",
+      "ch": "local",
+      "local": true,
+      "src": "wcax",
+      "name": "WCAX",
+      "title": "Two arrested after a downtown stabbing",
+      "url": "https://example.org/talk/x1",
+      "posted_at": "2026-10-16T17:29:00+00:00",
+      "topic": "public-safety"
+     },
+     {
+      "id": "x2",
+      "ch": "world",
+      "local": false,
+      "src": "ap",
+      "name": "AP",
+      "title": "Earthquake kills dozens overnight",
+      "url": "https://example.org/talk/x2",
+      "posted_at": "2026-10-16T16:59:00+00:00"
+     },
+     {
+      "id": "x3",
+      "ch": "local",
+      "local": true,
+      "src": "seven-days",
+      "name": "Seven Days",
+      "title": "Jennifer Whitlock opens up about her neighbor",
+      "url": "https://example.org/talk/x3",
+      "posted_at": "2026-10-16T16:49:00+00:00"
+     },
+     {
+      "id": "x4",
+      "ch": "world",
+      "local": false,
+      "src": "reuters",
+      "name": "Reuters",
+      "title": "Wildfire forces thousands to evacuate",
+      "url": "https://example.org/talk/x4",
+      "posted_at": "2026-10-16T16:29:00+00:00"
+     },
+     {
+      "id": "x5",
+      "ch": "local",
+      "local": true,
+      "src": "wcax",
+      "name": "WCAX",
+      "title": "Man dies in Route 7 crash",
+      "url": "https://example.org/talk/x5",
+      "posted_at": "2026-10-16T16:19:00+00:00"
+     },
+     {
+      "id": "x6",
+      "ch": "facebook",
+      "local": true,
+      "src": "facebook:old-north-end",
+      "name": "Old North End",
+      "title": "Anyone want to split a winter CSA share?",
+      "url": "https://example.org/talk/x6",
+      "posted_at": "2026-10-16T16:00:00+00:00"
+     }
+    ]
+   }
+  ],
+  "sports": {
+   "local": [
+    {
+     "id": "p1",
+     "ch": "local",
+     "local": true,
+     "src": "wcax",
+     "name": "WCAX",
+     "title": "Catamounts open the season with a home win",
+     "url": "https://example.org/talk/p1",
+     "posted_at": "2026-10-16T17:24:00+00:00",
+     "topic": "sports"
+    }
+   ],
+   "nfl": [
+    {
+     "id": "p2",
+     "ch": "world",
+     "local": false,
+     "src": "espn",
+     "name": "ESPN",
+     "title": "Patriots trade for a new left tackle before the deadline",
+     "url": "https://example.org/talk/p2",
+     "posted_at": "2026-10-16T17:04:00+00:00",
+     "topic": "sports"
+    }
+   ],
+   "nba": [
+    {
+     "id": "p3",
+     "ch": "world",
+     "local": false,
+     "src": "espn",
+     "name": "ESPN",
+     "title": "Celtics add a veteran guard for the playoff run",
+     "url": "https://example.org/talk/p3",
+     "posted_at": "2026-10-16T16:24:00+00:00",
+     "topic": "sports"
+    },
+    {
+     "id": "x7",
+     "ch": "world",
+     "local": false,
+     "src": "espn",
+     "name": "ESPN",
+     "title": "Star forward arrested after a bar fight",
+     "url": "https://example.org/talk/x7",
+     "posted_at": "2026-10-16T16:54:00+00:00",
+     "topic": "sports"
+    }
+   ]
+  },
+  "sources": {}
+ }
+}

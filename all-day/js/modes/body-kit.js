@@ -1,5 +1,5 @@
 /* body-kit.js — what the Body app's five built tabs share (wave 1 of the
-   eight apps, 2026-10-29). Not a mode itself: Train, Recover, Fuel, Coach
+   apps, 2026-10-29). Not a mode itself: Train, Recover, Fuel, Coach
    and Together import it.
 
    - page(): a mode whose top tabs are sections of one scrolling page, the
