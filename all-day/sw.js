@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v112';   // account-data.js: Habits' and The Build's data go with the account in every app
+const VERSION = 'all-day-v113';   // account-data.js: Habits' and The Build's data go with the account in every app
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

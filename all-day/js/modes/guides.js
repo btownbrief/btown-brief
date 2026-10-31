@@ -2,7 +2,7 @@
    5, 11, 14, 19, 20, 21, 29, 33 and 35). Top to bottom:
 
    - All guides. The City Guide's guide pages as rows that open the pages
-     (beaches, hobbies, contractors, housing, history, volunteer, gifts),
+     (beaches, hobbies, housing, history, volunteer, gifts),
      and a first-30-days checklist.
    - New here. A first-30-days checklist, seeded from the staged November
      orientation kit (advisor/data/staged/2026-10-04/community-kits/
@@ -23,7 +23,6 @@ const DONE_KEY = 'town-newhere';
 /* the pages, in the order a new neighbor would want them */
 const PAGES = [
   { id: 'housing', href: '../housing.html', icon: 'home', title: 'Find an apartment' },
-  { id: 'contractors', href: '../contractors.html', icon: 'hand', title: 'Contractors and trades' },
   { id: 'volunteer', href: '../volunteer.html', icon: 'heart', title: 'Volunteer' },
   { id: 'beaches', href: '../beaches.html', icon: 'drop', title: 'Lake and beaches' },
   { id: 'hobbies', href: '../hobbies.html', icon: 'leaf', title: 'Vermont hobbies' },
