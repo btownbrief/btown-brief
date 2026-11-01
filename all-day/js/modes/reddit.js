@@ -69,7 +69,7 @@ function fetchAll() {
 }
 function take({ intake, bestOf }) {
   const now = Date.now();
-  S.failed = !intake && !bestOf;
+  S.failed = !intake;
   if (intake) S.fresh = freshFrom(intake, now).filter((p) => !store.muted()[p.sub]);
   if (bestOf) S.cards = questionsFrom(bestOf, intake, now);
   S.loaded = true;

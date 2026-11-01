@@ -42,9 +42,9 @@ newsletter repo. In short:
     build_sports.py ("a custom one gets 403'd at their edge").
   * Reddit: reddit_client.py (the shared door: User-Agent, rate limits,
     token) and reddit_intake.py's parsers. OAuth (top of the day, with
-    scores) when REDDIT_CLIENT_ID/SECRET exist, else the public top RSS.
-    Reddit ends RSS on 2026-11-13; without OAuth after that the block is
-    empty and On Air leaves it out.
+    scores) when REDDIT_CLIENT_ID/SECRET exist, else the public top RSS until
+    it ends on 2026-11-13, else the copy Stephen's Mac pushes to the
+    reddit-data branch. When every route fails the last list stays.
 
 Every source fails on its own and the file keeps what it had. Exits 0. $0.
 
@@ -359,7 +359,8 @@ def shape_reddit(posts):
             flair = m.group(1)
         title = p["title"][m.end():] if m and finds.clean(flair, 24).lower() == m.group(1).lower() else p["title"]
         out.append({"id": p["id"], "t": finds.clean(title, 200), "url": p["url"], "out": p.get("out") or "",
-                    "flair": finds.clean(flair, 24) if flair else "", "score": p.get("score"), "comments": p.get("comments")})
+                    "flair": finds.clean(flair, 24) if flair else "", "score": p.get("score"), "comments": p.get("comments"),
+                    "at": int(p["created"].timestamp()) if p.get("created") else 0})
         if len(out) >= REDDIT_N:
             break
     return out
@@ -581,11 +582,11 @@ def run(args, env=None):
             g.pop("hl", None)
         clips = link_games(sorted(clips, key=lambda c: -int(c["d"]))[:MAX_CLIPS], games)
         # reddit_at is when the list last CHANGED, so a quiet run commits
-        # nothing; a dead route keeps the last list for a day and a half
+        # nothing; a dead route keeps the last good list
         posts = finds.safe(key + "-reddit", lambda: reddit_top(key, rc), report)
         at = old.get("reddit_at", 0)
-        if posts is None:
-            posts = old.get("reddit", []) if at > now - 36 * 3600 else []
+        if not posts:
+            posts = old.get("reddit", [])
         elif posts != old.get("reddit"):
             at = now
         leagues[key] = {"name": LEAGUES[key]["name"], "games": games, "clips": clips, "reddit": posts, "reddit_at": at}

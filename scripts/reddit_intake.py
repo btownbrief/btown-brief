@@ -6,6 +6,7 @@ March 2027 (r/redditdev, 2026-09-30). Until a long-term route exists, this
 script collects the newest r/burlington and r/vermont posts from every route
 that still answers, side by side, so a dying route shows up in the daily
 comparison (scripts/reddit_report.py) instead of as a silently stale page.
+From Nov 13 the two feed routes stop being asked (reddit_client.live_routes).
 
 Routes. Each one is optional, bounded, and fails on its own:
 
@@ -515,10 +516,15 @@ def merge(store, removed, results, now):
     return receipt
 
 
-def prune(store, removed, runs, now):
+def prune(store, removed, runs, now, delivered=None):
+    """delivered: the subs a route answered for this run. A post ages out only
+    when its sub's new ones are arriving, so a reader that is down for longer
+    than the window leaves the last good posts up instead of an empty file."""
     cutoff = now - timedelta(days=WINDOW_DAYS)
     for pid, held in list(store.items()):
         when = held.get("created") or held.get("first_seen")
+        if delivered is not None and held["sub"] not in delivered:
+            continue
         if when is None or when < cutoff:
             del store[pid]
     for pid, when in list(removed.items()):
@@ -588,7 +594,9 @@ def refresh(previous, fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, now=
     results = collect(fetch, env, subs, routes, sleep, client=client, shreddit_listings=shreddit_listings)
     receipt = merge(store, removed, results, now)
     runs.append({"ts": iso(now), "routes": receipt})
-    runs = prune(store, removed, runs, now)
+    delivered = {sub for by_sub in receipt.values() for sub, entry in by_sub.items()
+                 if entry["status"] == "ok"}
+    runs = prune(store, removed, runs, now, delivered)
     return serialize(store, removed, runs, receipt, subs, now, last_delivery, by=by)
 
 
@@ -612,15 +620,17 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--store", help="previous intake payload (default: --out)")
     parser.add_argument("--out", default=OUT)
-    parser.add_argument("--routes", default=",".join(ROUTES),
-                        help="comma list from: " + ", ".join(ROUTES))
+    parser.add_argument("--routes", default=None,
+                        help="comma list from: " + ", ".join(ROUTES)
+                             + " (default: all of them, minus the feeds from Nov 13)")
     parser.add_argument("--subs", default=",".join(SUBS),
                         help="comma list of subreddits (default: the two local subs)")
     parser.add_argument("--by", choices=("mac", "actions", "local"), help="who ran this (default: detected)")
     parser.add_argument("--fixtures", metavar="DIR", help="answer every fetch from DIR (no network)")
     parser.add_argument("--dry-run", action="store_true", help="print instead of writing")
     args = parser.parse_args(argv)
-    routes = tuple(r for r in (x.strip() for x in args.routes.split(",")) if r)
+    routes = (tuple(r for r in (x.strip() for x in args.routes.split(",")) if r) if args.routes
+              else reddit_client.live_routes(ROUTES))
     unknown = sorted(set(routes) - set(ROUTES))
     if unknown:
         parser.error("unknown route(s): " + ", ".join(unknown))

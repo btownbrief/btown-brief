@@ -45,6 +45,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import reddit_client  # noqa: E402
+from town.title_guard import held  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 TEMPLATE = os.path.join(os.path.dirname(__file__), "topic_page_template.html")
@@ -410,15 +411,51 @@ def youtube(query):
 
 
 ATOM = "{http://www.w3.org/2005/Atom}"
+REDDIT_INTAKE = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
+                 "reddit-data/data/reddit-intake.json")
+REDDIT_N = 8
+REDDIT_SKIP_WORDS = set("a an and are at be by for from has how in is it its of on or that "
+                        "the this to was what when where who why will with".split())
 
 
-def reddit(query, client=None):
+def intake_threads(query, intake):
+    """The ten-day Reddit intake's threads whose titles share the query's
+    words, most discussed first: at least two words, or the only one a
+    one-word query has. The search fallback, since RSS search has no
+    successor that answers GitHub's runners. These are local threads as well
+    as national ones, so the Reddit tab's title guard applies."""
+    words = set(re.findall(r"[a-z0-9]+", query.lower())) - REDDIT_SKIP_WORDS
+    need = min(2, len(words))
+    hits = []
+    for post in (intake or {}).get("posts") or []:
+        title, url = clean(post.get("title") or ""), post.get("url") or ""
+        if (not need or not title or post.get("nsfw") is not False or held(title, post.get("flair"))
+                or not url.startswith("https://www.reddit.com/r/")):
+            continue
+        if len(words & set(re.findall(r"[a-z0-9]+", title.lower()))) >= need:
+            hits.append((post.get("comments") or 0, title, url))
+    hits.sort(key=lambda hit: -hit[0])
+    return [{"title": title, "url": url} for _, title, url in hits[:REDDIT_N]]
+
+
+def reddit(query, client=None, intake=None):
     """Reddit search, through reddit_client.py: OAuth when REDDIT_CLIENT_ID/
-    SECRET are set, else the public search feed (cloud IPs are often
-    blocked, and it ends 2026-11-13 — that's fine, it's a nicety)."""
+    SECRET are set, else the public search feed until it ends 2026-11-13,
+    else the shared intake's titles (a nicety: any failure is no threads)."""
     client = client or reddit_client.Client()
+    threads = search_threads(query, client)
+    if threads:
+        return threads
     try:
-        route, raw = client.read("search", q=query, sort="top", t="month", limit=8)
+        return intake_threads(query, intake if intake is not None else fetch_json(REDDIT_INTAKE))
+    except Exception as exc:  # noqa: BLE001 — a nicety, never a blocker
+        print(f"  reddit intake skip: {exc}", file=sys.stderr)
+        return []
+
+
+def search_threads(query, client):
+    try:
+        route, raw = client.read("search", q=query, sort="top", t="month", limit=REDDIT_N)
     except reddit_client.RedditError as exc:  # 403/429 from a runner is expected
         print(f"  reddit skip: {exc}", file=sys.stderr)
         return []
@@ -586,6 +623,19 @@ def render(page, videos, threads, related, votes, date):
 # One topic, end to end
 # ----------------------------------------------------------------------
 
+def pick_threads(threads, picks):
+    """The model's picks among the threads it was given. No link check: Reddit
+    has just listed these, and it answers GitHub's runners with a 403 for any
+    thread, so link_ok would drop them all."""
+    by_url = {thread["url"]: thread for thread in threads}
+    picked = []
+    for pick in (picks or [])[:MAX_THREADS]:
+        thread = by_url.get(clean(pick.get("url")))
+        if thread is not None:
+            picked.append(dict(thread, why=pick.get("why", "")))
+    return picked
+
+
 def build_one(leader, payload):
     headline = clean(leader.get("title")) or clean(leader.get("url"))
     print(f"topics: working on {headline!r}")
@@ -641,14 +691,7 @@ def build_one(leader, payload):
         if link_ok(url):
             picked_videos.append(dict(video, url=url, why=pick.get("why", "")))
 
-    by_url = {thread["url"]: thread for thread in threads}
-    picked_threads = []
-    for pick in (page.get("thread_picks") or [])[:MAX_THREADS]:
-        thread = by_url.get(clean(pick.get("url")))
-        if thread is None:
-            continue
-        if link_ok(thread["url"]):
-            picked_threads.append(dict(thread, why=pick.get("why", "")))
+    picked_threads = pick_threads(threads, page.get("thread_picks"))
 
     wiki = [entry for entry in wiki if link_ok(entry["url"])]
     if not wiki:

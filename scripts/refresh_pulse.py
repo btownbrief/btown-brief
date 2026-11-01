@@ -1330,9 +1330,9 @@ def attach_discussions(sources, per_source):
 # ----------------------------------------------------------------------
 
 # Reddit stops serving RSS on 2026-11-13, and Inoreader's subreddit feeds stop
-# with it. scripts/reddit_intake.py collects r/burlington and r/vermont from
-# every route that still answers (Inoreader, direct RSS, OAuth); --reddit-intake
-# feeds those posts into the matching subreddit sources here. When no Reddit
+# with it. scripts/reddit_intake.py collects every roster subreddit from the
+# routes that still answer (Stephen's Mac reading logged out, OAuth with keys);
+# --reddit-intake feeds those posts into the matching sources here. When no Reddit
 # source has had a new item for this long, the payload says "paused" and the
 # Pulse and All Day's Reddit tab say so instead of quietly going stale.
 # Inoreader alone has gone 30h between Reddit batches, hence the margin.

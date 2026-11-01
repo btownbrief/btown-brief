@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { held, namesPerson, freshFrom, postsFromListings, newCount, questionsFrom, questionOfDay, search, askedAt, isAsk, catOf } from '../all-day/js/reddit-lib.js';
+import { held, namesPerson, freshFrom, ageClock, postsFromListings, newCount, questionsFrom, questionOfDay, search, askedAt, isAsk, catOf } from '../all-day/js/reddit-lib.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BEST = JSON.parse(readFileSync(path.join(ROOT, 'data/best-of-reddit.json'), 'utf8'));
@@ -63,6 +63,20 @@ test('Fresh: a hot thread, and the outlet of a link', () => {
 test('never a username or body in what Fresh hands on', () => {
   const [p] = freshFrom({ posts: [post({ author: 'somebody', body: 'words' })] }, NOW);
   assert.deepEqual(Object.keys(p).sort(), ['comments', 'flair', 'hot', 'id', 'outlet', 'score', 'seen', 'sub', 'title', 'ts', 'url']);
+});
+test('a stalled reader keeps the last good tab', () => {
+  const days = (n) => new Date(NOW - n * 86400000).toISOString();
+  const intake = { posts: [post({ id: 'n1', title: 'First thread', created: days(40) }), post({ id: 'n2', title: 'Second thread', created: days(50) }), post({ id: 'n3', title: 'Third thread', created: days(60) })] };
+  assert.deepEqual(freshFrom(intake, NOW).map((p) => p.id), ['n1', 'n2']);
+  assert.equal(ageClock([{ sub: 'r/burlington', created: new Date(NOW + 86400000).toISOString() }, { sub: 'r/burlington', created: 'junk' }, null], NOW)('r/burlington'), NOW);
+});
+test('a sub that stalls alone keeps its posts while the others run on', () => {
+  const days = (n) => new Date(NOW - n * 86400000).toISOString();
+  const intake = { posts: [post({ id: 'b1', title: 'First thread', created: days(20) }), post({ id: 'v1', sub: 'r/vermont', title: 'Second thread', created: days(1) }),
+    post({ id: 'n1', sub: 'r/news', title: 'Third thread', created: days(0) }), post({ id: 'v2', sub: 'r/vermont', title: 'Fourth thread', created: days(20) })] };
+  assert.deepEqual(freshFrom(intake, NOW).map((p) => p.id), ['v1', 'b1']);
+  const asks = { posts: [post({ id: 'q1', title: 'Best burger near downtown?', created: days(20) }), post({ id: 'n2', sub: 'r/news', title: 'Third thread', created: days(0) })] };
+  assert.deepEqual(questionsFrom(null, asks, NOW).map((c) => c.q), ['Best burger near downtown?']);
 });
 test('the bar count reads the listings', () => {
   const doc = { listings: { 'r/burlington/new': { data: { data: { children: [

@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import date, datetime, timedelta, timezone
 from unittest import mock
 
@@ -28,6 +29,7 @@ import reddit_mac_runner as runner  # noqa: E402
 
 FIXTURES = os.path.join(HERE, "fixtures", "reddit")
 NOW = datetime(2026, 10, 22, 17, 0, tzinfo=timezone.utc)
+AFTER = datetime(2026, 11, 14, 12, 0, tzinfo=timezone.utc)   # the day after Reddit RSS ends
 
 
 def page(name):
@@ -286,6 +288,172 @@ class OrderTests(Offline):
         self.assertEqual(fake.urls(".rss"), [])
 
 
+class RssEndsTests(Offline):
+    """Reddit hasn't said what the dead RSS URLs will answer, so each likely
+    answer has to reach the same listing."""
+
+    def reads_shreddit(self, fail=None, rss_body=None):
+        fake = FakeWeb(pages={("nba", "top"): page("nba-top-day")}, fail=fail)
+        if rss_body is not None:
+            serve = fake
+
+            def fake(url, headers=None, data=None):  # noqa: F811
+                return rss_body if ".rss" in url else serve(url, headers, data)
+        route, data = self.client(fake).read("r/nba/top", t="day", limit=30)
+        self.assertEqual(route, "shreddit")
+        self.assertEqual(len(data["data"]["children"]), 10)
+
+    def test_a_404_falls_through(self):
+        self.reads_shreddit(fail={".rss": http_error("x", 404)})
+
+    def test_a_410_falls_through(self):
+        self.reads_shreddit(fail={".rss": http_error("x", 410)})
+
+    def test_an_empty_feed_falls_through(self):
+        self.reads_shreddit(rss_body=b'<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"></feed>')
+
+    def test_a_web_page_falls_through(self):
+        self.reads_shreddit(rss_body=b"<html><body>RSS is no longer supported</body></html>")
+
+    def test_an_empty_reply_falls_through(self):
+        self.reads_shreddit(rss_body=b"")
+
+    def test_a_real_feed_still_reads(self):
+        with open(os.path.join(FIXTURES, "rss-burlington.xml"), "rb") as src:
+            body = src.read()
+        route, data = self.client(lambda *_a: body).read("r/burlington/new", limit=100)
+        self.assertEqual((route, data), ("rss", body))
+
+    def test_live_routes_drop_the_feeds_on_the_day(self):
+        self.assertEqual(rc.live_routes(ri.ROUTES, date(2026, 11, 12)), ri.ROUTES)
+        self.assertEqual(rc.live_routes(ri.ROUTES, date(2026, 11, 13)), ("oauth", "shreddit"))
+
+    def test_feeds_live_follows_the_clients_clock(self):
+        client = self.client(FakeWeb())
+        self.assertTrue(client.feeds_live)
+        self.now[0] = AFTER.timestamp()
+        self.assertFalse(client.feeds_live)
+
+
+class FrozenInoreaderTests(Offline):
+    """From Nov 13 Inoreader still answers with a list that never changes."""
+
+    FROZEN = ('<rss><channel><item><title>A frozen post</title>'
+              '<link>https://www.reddit.com/r/burlington/comments/zz9/frozen/</link>'
+              '<pubDate>Thu, 12 Nov 2026 18:00:00 GMT</pubDate></item></channel></rss>').encode()
+
+    def after(self, fake):
+        self.now[0] = AFTER.timestamp()
+        return self.client(fake)
+
+    def test_chatter_keeps_last_good_state_instead_of_the_frozen_list(self):
+        from scripts.changes.sources import chatter
+        client = self.after(FakeWeb(fail={"/svc/shreddit/": http_error("x", 403)}))
+        with mock.patch.object(chatter, "get", return_value=self.FROZEN) as ino:
+            with self.assertRaises(rc.RedditError):
+                chatter.snapshot(client=client)
+        ino.assert_not_called()
+
+    def test_goodburlington_strip_keeps_its_file(self):
+        import refresh_goodburlington as rg
+        with tempfile.TemporaryDirectory() as tmp:
+            out = os.path.join(tmp, "reddit.json")
+            with open(out, "w") as fh:
+                json.dump({"updated": "before", "posts": [{"title": "kept", "score": 9}]}, fh)
+            client = self.after(FakeWeb(fail={"/svc/shreddit/": http_error("x", 403)}))
+            with mock.patch.object(rg, "OUT", out), mock.patch.object(rg, "fetch_bytes", return_value=self.FROZEN) as ino, \
+                    mock.patch.object(rg.reddit_client, "Client", return_value=client), \
+                    redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                rg.run()
+            ino.assert_not_called()
+            with open(out) as fh:
+                self.assertEqual(json.load(fh)["updated"], "before")
+
+    def test_queue_reads_the_listing_alone(self):
+        import queue_goodburlington as qg
+        client = self.after(FakeWeb(pages={("burlington", "hot"): page("burlington-new"),
+                                           ("vermont", "hot"): page("vermont-new")}))
+        asked = []
+
+        def answer(url, _accept):
+            asked.append(url)
+            return self.FROZEN
+        with mock.patch.object(qg, "fetch", side_effect=answer), redirect_stderr(io.StringIO()):
+            posts = qg.load_candidates(client)
+        self.assertEqual(asked, [qg.INTAKE_URL])   # the frozen stream isn't read; the bad intake reply is survived
+        self.assertTrue(posts)
+        self.assertFalse(any(p["id"] == "zz9" for p in posts))
+        self.assertEqual({p["body"] for p in posts}, {""})
+
+    def test_queue_gets_what_scrolled_off_hot_from_the_intake(self):
+        import queue_goodburlington as qg
+        client = self.after(FakeWeb(fail={"/svc/shreddit/": http_error("x", 403)}))
+        intake = {"posts": [
+            {"id": "aa1", "sub": "r/burlington", "title": "Off the page", "url": "https://www.reddit.com/r/burlington/comments/aa1/x/",
+             "created": "2026-11-14T10:00:00+00:00", "score": 40, "nsfw": False},
+            {"id": "aa2", "sub": "r/burlington", "title": "Not confirmed", "url": "https://www.reddit.com/r/burlington/comments/aa2/x/",
+             "created": "2026-11-14T10:00:00+00:00", "score": 40, "nsfw": None},
+            {"id": "aa3", "sub": "r/news", "title": "Not local", "url": "https://www.reddit.com/r/news/comments/aa3/x/",
+             "created": "2026-11-14T10:00:00+00:00", "score": 40, "nsfw": False}]}
+        with mock.patch.object(qg, "fetch", return_value=json.dumps(intake).encode()), redirect_stderr(io.StringIO()):
+            posts = qg.load_candidates(client)
+        self.assertEqual([(p["id"], p["score"], p["sub"]) for p in posts], [("aa1", 40, "r/burlington")])
+
+    def test_queue_holds_back_what_the_title_guard_holds(self):
+        import queue_goodburlington as qg
+        now = datetime(2026, 11, 14, 12, tzinfo=timezone.utc)
+        row = {"sub": "r/burlington", "url": "https://www.reddit.com/r/burlington/comments/bb1/x/",
+               "created": "2026-11-14T10:00:00+00:00", "score": 40, "nsfw": False}
+        intake = {"posts": [dict(row, id="bb1", title="Karen Smith freaks out over a parking spot"),
+                            dict(row, id="bb2", title="Lovely sunset tonight", flair="Removed by mods"),
+                            dict(row, id="bb3", title="Lovely sunset tonight")]}
+        posts = qg.parse_intake(json.dumps(intake))
+        self.assertEqual([qg.screen(p, {}, (set(), set()), now=now) for p in posts], ["name-safety", "name-safety", None])
+
+
+class TopicPageTests(Offline):
+    INTAKE = {"posts": [
+        {"title": "Solar eclipse viewing in Burlington", "url": "https://www.reddit.com/r/burlington/comments/a1/x/",
+         "nsfw": False, "comments": 4},
+        {"title": "Why the solar eclipse track moved", "url": "https://www.reddit.com/r/science/comments/a2/x/",
+         "nsfw": False, "comments": 90},
+        {"title": "Eclipse glasses for sale", "url": "https://www.reddit.com/r/vermont/comments/a3/x/",
+         "nsfw": False, "comments": 300},
+        {"title": "Solar eclipse, nsfw copy", "url": "https://www.reddit.com/r/vermont/comments/a4/x/",
+         "nsfw": True, "comments": 500},
+        {"title": "Solar eclipse, not confirmed safe", "url": "https://www.reddit.com/r/vermont/comments/a5/x/",
+         "nsfw": None, "comments": 500},
+        {"title": "Solar eclipse with Karen Smith", "url": "https://www.reddit.com/r/vermont/comments/a6/x/",
+         "nsfw": False, "comments": 500},
+    ]}
+
+    def test_the_intake_answers_a_search_rss_can_no_longer(self):
+        import build_topic_page as tp
+        self.now[0] = AFTER.timestamp()
+        client = self.client(FakeWeb())
+        got = tp.reddit("the solar eclipse", client=client, intake=self.INTAKE)
+        self.assertEqual([t["title"] for t in got], ["Why the solar eclipse track moved",
+                                                     "Solar eclipse viewing in Burlington"])
+        self.assertEqual(client.fetch.urls(".rss"), [])
+
+    def test_a_thread_reaches_the_page_though_reddit_blocks_the_runner(self):
+        import build_topic_page as tp
+        self.now[0] = AFTER.timestamp()
+        threads = tp.reddit("the solar eclipse", client=self.client(FakeWeb()), intake=self.INTAKE)
+        picks = [{"url": threads[0]["url"], "why": "the main thread"}, {"url": "https://www.reddit.com/r/x/comments/made/up/"}]
+        with mock.patch.object(tp, "link_ok", side_effect=lambda url: "reddit.com" not in url):
+            markup = tp.render_lurk(tp.pick_threads(threads, picks))
+        self.assertIn("Why the solar eclipse track moved", markup)
+        self.assertIn("the main thread", markup)
+        self.assertNotIn("/made/up/", markup)
+
+    def test_no_intake_means_no_threads(self):
+        import build_topic_page as tp
+        self.now[0] = AFTER.timestamp()
+        with mock.patch.object(tp, "fetch_json", side_effect=OSError("down")), redirect_stderr(io.StringIO()):
+            self.assertEqual(tp.reddit("solar eclipse", client=self.client(FakeWeb())), [])
+
+
 class MirrorTests(Offline):
     def mirror(self, age_minutes=20, key="r/goodburlington/hot"):
         fetched = (NOW - timedelta(minutes=age_minutes)).isoformat()
@@ -426,6 +594,36 @@ class RunnerTests(Offline):
         listings = self.written("reddit-listings.json")["listings"]
         self.assertEqual(listings["r/vermont/new"]["fetched"], NOW.isoformat(timespec="seconds"))
         self.assertNotEqual(listings["r/burlington/new"]["fetched"], before["fetched"])
+
+    def test_rss_404_and_empty_inoreader_change_nothing_a_reader_sees(self):
+        code, _ = self.run_once(FakeWeb(pages=self.pages))
+        self.assertEqual(code, 0)
+        before = self.written("reddit-intake.json")["posts"]
+
+        class Dead(FakeWeb):
+            def __call__(self, url, headers=None, data=None):
+                if "inoreader.com" in url:
+                    self.calls.append({"url": url, "headers": {}})
+                    return b"<rss><channel></channel></rss>"
+                return super().__call__(url, headers, data)
+
+        os.makedirs(os.path.join(self.tmp.name, "out2"))
+        self.prev, self.out = self.out, os.path.join(self.tmp.name, "out2")
+        dead = Dead(pages=self.pages, fail={".rss": http_error("x", 404)})
+        code, text = self.run_once(dead, now=NOW + timedelta(minutes=30))
+        self.assertEqual(code, 0, text)
+        after = self.written("reddit-intake.json")
+        self.assertEqual({p["id"] for p in after["posts"]}, {p["id"] for p in before})
+        self.assertEqual(after["routes"]["rss"]["r/burlington"]["status"], "error")
+        self.assertEqual(after["routes"]["inoreader"]["r/burlington"]["status"], "empty")
+        self.assertEqual(after["routes"]["shreddit"]["r/burlington"]["status"], "ok")
+
+    def test_after_the_end_only_the_listing_route_is_asked(self):
+        fake = FakeWeb(pages=self.pages)
+        code, text = self.run_once(fake, now=AFTER)
+        self.assertEqual(code, 0, text)
+        self.assertEqual(fake.urls(".rss") + fake.urls("inoreader.com"), [])
+        self.assertEqual(set(self.written("reddit-intake.json")["routes"]), {"shreddit"})
 
     def test_blocked_run_writes_nothing(self):
         self.run_once(FakeWeb(pages=self.pages))

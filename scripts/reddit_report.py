@@ -19,7 +19,8 @@ Levels:
          the last 24h, while another route still works.
   green  everything that ever worked is still working. A route that never
          worked in the window (RSS from GitHub's servers, OAuth without
-         secrets) is listed, not alarmed.
+         secrets) is listed, not alarmed, and so are the two feed routes
+         from the day Reddit ends RSS (the intake stops asking them).
 
 CLI:
   python3 scripts/reddit_report.py [--intake PATH] [--json-out PATH] [--md-out PATH]
@@ -34,6 +35,7 @@ from collections import Counter
 from datetime import timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from reddit_client import live_routes  # noqa: E402
 from reddit_intake import ROUTES, iso, load_json, parse_iso, utcnow, write_json, OUT as INTAKE  # noqa: E402
 
 HOURS = 24
@@ -115,6 +117,7 @@ def build_report(intake, now=None, hours=HOURS):
         }
 
     alarms = []
+    expected = live_routes(ROUTES, now.date())
     if generated is None or now - generated > timedelta(hours=STALE_INTAKE_HOURS):
         alarms.append({"level": "red", "text": "the intake hasn't run since "
                        + (f"{fmt_day(generated)} {generated:%H:%M} UTC" if generated else "ever")
@@ -125,6 +128,8 @@ def build_report(intake, now=None, hours=HOURS):
                            "text": f"no route delivered a new {sub} post in {hours}h"})
             continue
         for route, stat in data["routes"].items():
+            if route not in expected:
+                continue
             if stat["new_24h"] == 0 and stat["new_prior_6d"] > 0:
                 alarms.append({"level": "amber", "sub": sub, "route": route,
                                "text": f"{LABEL[route]} dropped to zero for {sub} "

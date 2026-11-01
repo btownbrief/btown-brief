@@ -3,7 +3,9 @@
 Hot posts from r/burlington. Reddit's own listing (with scores) comes through
 scripts/reddit_client.py's listing routes: OAuth once REDDIT_CLIENT_ID/SECRET
 are set, the logged-out shreddit page, or the copy Stephen's Mac pushed to the
-reddit-data branch. Stephen's Inoreader stream is the scoreless fallback.
+reddit-data branch. Stephen's Inoreader stream is the scoreless fallback
+until Reddit RSS ends on 2026-11-13; after that a failed read raises, and
+update.py keeps the last good state.
 (The logged-out hot.json this used to try has 403'd since May 2026.)
 
 State shape:  {"posts": [{"id", "title", "url", "score", "comments", "created"}]}
@@ -67,6 +69,8 @@ def snapshot(client=None):
                 "created": iso(created),
             })
     except Exception:
+        if not client.feeds_live:
+            raise
         for item in parse_feed(get(RSS_URL)):
             if not item.get("title"):
                 continue

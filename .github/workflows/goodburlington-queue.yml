@@ -6,8 +6,8 @@ name: Curate GoodBurlington queue
 # job never signs in as him and never posts. If the optional
 # REDDIT_CLIENT_ID/SECRET secrets exist, it reads Reddit's listings with a
 # read-only app token (scripts/reddit_client.py); without them it reads
-# the Inoreader RSS streams only, including the r/GoodBurlington stream
-# that tells us what he already crossposted.
+# the copy Stephen's Mac pushes to reddit-data, plus the Inoreader RSS
+# streams until Reddit RSS ends on Nov 13.
 # Without OPENROUTER_API_KEY the script keeps the last good queue —
 # nothing unjudged is ever queued.
 
