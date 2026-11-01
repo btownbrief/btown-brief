@@ -31,7 +31,7 @@ import { isFoodAsk } from './food-asks.js';
 
 const HOUR = 3600000, DAY = 24 * HOUR;
 export const SUBS = ['r/burlington', 'r/vermont'];
-export const MAX_AGE_DAYS = 14;   // the store holds 10; past this, a stalled reader empties the tab instead of aging it
+export const MAX_AGE_DAYS = 14;   // the store holds 10; counted back from its newest post, so a stalled reader keeps the last good tab
 export const isHot = (p) => (p.comments || 0) >= 75 || (p.score || 0) >= 150;
 
 const OUTLETS = { 'sevendaysvt.com': 'Seven Days', 'vtdigger.org': 'VTDigger', 'wcax.com': 'WCAX', 'mynbc5.com': 'NBC5',
@@ -72,15 +72,22 @@ export const held = (title, flair) => namesPerson(title) || CRIME.test(String(ti
 
 /* ----------------------------------------------------------------- Fresh */
 const sameKey = (p) => String(p.out || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-function usable(p, nowMs) {
+/* The clock the age limit runs on: now, or the newest post when the store has stopped growing. */
+export const ageClock = (posts, nowMs) => Math.min(nowMs, Math.max(0, ...posts.map((p) => {
+  const t = Date.parse((p && p.created) || '');
+  return t <= nowMs ? t : 0;
+})));
+function usable(p, clock) {
   const ts = when(p.created);
   if (!ts || !SUBS.includes(p.sub) || p.nsfw !== false || (p.score || 0) < 0) return false;
-  return nowMs - ts <= MAX_AGE_DAYS * DAY && !held(p.title, p.flair);
+  return clock - ts <= MAX_AGE_DAYS * DAY && !held(p.title, p.flair);
 }
 export function freshFrom(intake, nowMs) {
   const best = new Map();
-  ((intake && intake.posts) || []).forEach((p) => {
-    if (!p || !usable(p, nowMs)) return;
+  const posts = (intake && intake.posts) || [];
+  const clock = ageClock(posts, nowMs);
+  posts.forEach((p) => {
+    if (!p || !usable(p, clock)) return;
     const young = nowMs - when(p.created) < 6 * HOUR;
     if (!young && (p.score || 0) < 2 && (p.comments || 0) < 3) return;
     const k = sameKey(p), had = best.get(k);
@@ -180,8 +187,10 @@ export function questionsFrom(bestOf, intake, nowMs) {
     });
   });
   const list = [...cards.values()].filter((c) => c.threads.length);
-  ((intake && intake.posts) || []).forEach((p) => {
-    if (!p || p.sub !== 'r/burlington' || !usable(p, nowMs) || p.out || !isAsk(p.title)) return;
+  const posts = (intake && intake.posts) || [];
+  const clock = ageClock(posts, nowMs);
+  posts.forEach((p) => {
+    if (!p || p.sub !== 'r/burlington' || !usable(p, clock) || p.out || !isAsk(p.title)) return;
     const have = new Set(words(p.title));
     let match = null;
     list.forEach((c) => { if (fits(c, have, p.title) && (!match || c.toks.length > match.toks.length)) match = c; });

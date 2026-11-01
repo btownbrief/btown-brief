@@ -3,8 +3,8 @@
 
 Stephen posts everything himself — this script never touches his Reddit
 account and needs no Reddit app or token (he declined the API route). It
-reads r/burlington + r/vermont (Reddit's own listing when the optional
-Reddit keys exist, Inoreader RSS always), screens candidates with
+reads r/burlington + r/vermont (Reddit's own listing, plus Inoreader RSS
+until Reddit RSS ends on Nov 13), screens candidates with
 the Pulse's deterministic filters, asks Claude which ones genuinely belong
 on r/GoodBurlington, and writes the survivors to
 data/goodburlington-queue.json. goodburlington-queue.html renders that as
@@ -23,7 +23,8 @@ routes: read-only OAuth once REDDIT_CLIENT_ID/SECRET are set (an app-only
 token: it never signs in as Stephen and cannot post), the logged-out
 shreddit page, or the copy Stephen's Mac pushed to the reddit-data branch.
 None of them carries a post body, so Inoreader's copy fills that in while
-it lasts (Nov 13).
+it lasts (Nov 13); after that the judge reads titles alone. A listing is one
+page, so the shared intake adds what has scrolled off "hot" inside the 48h.
 
 "Already on r/GoodBurlington" has to work without Reddit: since Sept 2026
 Reddit 403s every listing from Actions, so the check reads the sub's
@@ -63,6 +64,8 @@ MIN_SCORE = 15          # only enforced when a real score is known (Inoreader ha
 MAX_AGE_HOURS = 48
 QUEUE_CAP_PER_SUB = 6   # per source sub, so r/vermont never crowds out r/burlington
 REJECT_LOG_CAP = 400
+INTAKE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
+              "reddit-data/data/reddit-intake.json")
 TARGET_INOREADER = ("https://www.inoreader.com/stream/user/1003590800/tag/"
                     "Reddit%20%28r%2FGoodBurlington%29?n=100")
 
@@ -123,6 +126,20 @@ def parse_inoreader(raw, sub):
     return posts
 
 
+def parse_intake(raw):
+    """The shared intake's r/burlington and r/vermont posts Reddit has shown
+    as safe, in the candidate shape: titles and counts, no body."""
+    posts = []
+    wanted = {f"r/{sub}".lower() for sub in SOURCE_SUBS}
+    for row in json.loads(raw).get("posts") or []:
+        if str(row.get("sub")).lower() not in wanted or row.get("nsfw") is not False or not row.get("created"):
+            continue
+        posts.append({"id": row["id"], "sub": row["sub"], "title": row["title"], "body": "",
+                      "score": row.get("score"), "permalink": row["url"],
+                      "created_utc": datetime.fromisoformat(row["created"]).timestamp()})
+    return posts
+
+
 def load_candidates(client=None):
     merged = {}
     client = client or reddit_client.Client()
@@ -132,7 +149,12 @@ def load_candidates(client=None):
                 merged.setdefault(post["id"], post)
         except reddit_client.RedditError as exc:
             print(f"reddit {sub} failed: {exc}", file=sys.stderr)
-    for sub, url in chatter.INOREADER.items():
+    try:
+        for post in parse_intake(fetch(INTAKE_URL, "application/json")):
+            merged.setdefault(post["id"], post)
+    except Exception as exc:
+        print(f"reddit intake failed: {exc}", file=sys.stderr)
+    for sub, url in chatter.INOREADER.items() if client.feeds_live else ():
         try:
             raw = fetch(url, "application/rss+xml, application/xml")
             for post in parse_inoreader(raw, sub):

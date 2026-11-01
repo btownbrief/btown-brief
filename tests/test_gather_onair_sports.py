@@ -179,7 +179,7 @@ class Run(unittest.TestCase):
                     mock.patch.object(s, "espn_games", boom), mock.patch.object(s.reddit, "http_fetch", boom), \
                     mock.patch.object(s, "reddit_top", lambda *a, **k: boom()):
                 p = s.run(argparse.Namespace(out=out, dry_run=True), env={"ONAIR_SPORTS_NO_SLEEP": "1"})
-            self.assertEqual(p["leagues"]["nba"]["reddit"], [])     # a day and a half old: dropped
+            self.assertEqual(p["leagues"]["nba"]["reddit"], [{"id": "a"}])     # the last good list stays
             self.assertTrue(all(v.startswith("failed") or v == "ok" for v in p["stats"]["sources"].values()))
             self.assertIn("play", p["local"])
 

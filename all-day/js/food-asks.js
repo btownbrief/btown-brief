@@ -22,10 +22,10 @@
    a miss costs one thread, never a wrong claim, because every row is the
    thread's own title and links to it. */
 
-import { held } from './reddit-lib.js';
+import { held, ageClock } from './reddit-lib.js';
 
 const DAY = 86400000;
-export const MAX_AGE_DAYS = 14;   // the store holds 10; past this, a stalled bridge empties the list instead of aging it
+export const MAX_AGE_DAYS = 14;   // the store holds 10; counted back from its newest post, so a stalled bridge keeps the last good list
 
 /* a kind of food or drink, a dish, a cuisine or a place to eat or drink */
 const FOOD = new RegExp('\\b(' + [
@@ -104,12 +104,13 @@ export function asksFrom(intake, nowMs) {
   const gone = intake && intake.removed && typeof intake.removed === 'object' ? intake.removed : {};
   const seen = new Set();
   const out = [];
+  const clock = ageClock(posts, now);
   posts.forEach((p) => {
     if (!p || typeof p.title !== 'string' || typeof p.url !== 'string' || !REDDIT.test(p.url)) return;
     const sub = String(p.sub || '').toLowerCase();
     if (!SUB_IDS[sub] || gone[p.id] || p.nsfw === true) return;
     const ms = Date.parse(p.created || '');
-    if (!Number.isFinite(ms) || ms > now + 3600000 || now - ms > MAX_AGE_DAYS * DAY) return;
+    if (!Number.isFinite(ms) || ms > now + 3600000 || clock - ms > MAX_AGE_DAYS * DAY) return;
     const ask = isFoodAsk(p.title) && p.kind !== 'link';
     if (!ask && !isFoodTalk(p)) return;
     if (seen.has(p.url)) return;

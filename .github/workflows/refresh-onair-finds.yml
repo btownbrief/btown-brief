@@ -37,8 +37,8 @@
 # Sports (scripts/gather_onair_sports.py -> all-day/data/onair-sports.json)
 # rides along every three hours too: the NBA's and NFL's own full-game
 # highlights (YouTube uploads playlists, ~5 quota units), ESPN's scoreboard
-# by month (2-4 calls), r/nba and r/nfl's top of the day (Reddit RSS until it
-# ends 2026-11-13; OAuth once REDDIT_CLIENT_ID/SECRET exist), the NBA's
+# by month (2-4 calls), r/nba and r/nfl's top of the day (the copy Stephen's
+# Mac pushes to reddit-data; OAuth once REDDIT_CLIENT_ID/SECRET exist), the NBA's
 # Starting 5 newsletter from NBA.com, and Local hoops from data/sports.json,
 # data/clubs.json, data/groups.json and data/hoops-local.json. $0, no model.
 

@@ -141,9 +141,10 @@ def run(prev_dir, out_dir, state=None, env=None, now=None, fetch=None, sleep=Non
     if not fresh:
         return 3, "no Reddit listing could be read this run; nothing written\n" + "\n".join(lines)
 
-    today = now.date()
-    use_rss = today < reddit_client.RSS_END and client.cooldown("rss") == 0
-    routes = ("inoreader",) + (("rss",) if use_rss else ()) + ("shreddit",)
+    use_rss = client.cooldown("rss") == 0
+    routes = reddit_client.live_routes(("inoreader",) + (("rss",) if use_rss else ()) + ("shreddit",),
+                                       now.date())
+    use_rss = "rss" in routes
     # Inoreader (not Reddit) is read with the intake's own plain fetch.
     intake = reddit_intake.refresh(previous_intake, fetch=fetch or reddit_intake.http_fetch,
                                    env=env, subs=INTAKE_SUBS,

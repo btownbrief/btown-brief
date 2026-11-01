@@ -7,9 +7,10 @@ name: Refresh Reddit intake
 # (same pattern and reasons as pulse-data: a rolling store has no useful
 # history, and hourly commits would bury main).
 #
-# Routes: Inoreader tag streams (work from Actions), Reddit's own RSS
-# (usually 403s GitHub's servers, so expect "blocked" in the report), and
-# Reddit's OAuth API, which switches on by itself once the repo secrets
+# Routes: Inoreader tag streams (work from Actions) and Reddit's own RSS
+# (usually 403s GitHub's servers, so expect "blocked" in the report), both
+# dropped from Nov 13 when RSS ends, the logged-out page (expect 403 here),
+# and Reddit's OAuth API, which switches on by itself once the repo secrets
 # REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET exist. Hourly keeps OAuth at
 # about 72 requests a day (token + two listings), inside the 50-100/day the
 # access request names.
@@ -21,7 +22,8 @@ name: Refresh Reddit intake
 #
 # Failure posture: a dead route is data, not a failure. The intake only
 # exits non-zero on a bug, and then nothing is pushed and the last good
-# files stay up.
+# files stay up. A sub with no route answering keeps its posts past the
+# ten-day window, so a long outage never pushes an empty store.
 #
 # Stephen's Mac (scripts/reddit_mac_runner.sh, every 30 minutes while it's
 # awake) is the main writer since 2026-10-22: Reddit answers it logged out

@@ -246,14 +246,39 @@ class RefreshTests(OfflineTestCase):
         first = self.refresh(env={})
         much_later = NOW + timedelta(days=ri.WINDOW_DAYS + 1)
         payload = self.refresh(previous=first, env={}, fetch=failing_fetch, now=much_later)
-        self.assertEqual(payload["posts"], [])
+        self.assertEqual(len(payload["posts"]), len(first["posts"]))  # nothing delivered: posts stay (LongOutageTests)
         self.assertEqual(len(payload["runs"]), 1)  # the old receipt aged out
+        payload = self.refresh(previous=first, env={}, now=much_later)
+        self.assertEqual(payload["posts"], [])     # a route answered: past the window they go
 
     def test_routes_flag_limits_collection(self):
         fetch = Recorder()
         payload = self.refresh(fetch=fetch, routes=("inoreader",))
         self.assertEqual(set(payload["routes"]), {"inoreader"})
         self.assertTrue(all("inoreader.com" in url for url in fetch.urls))
+
+
+class LongOutageTests(OfflineTestCase):
+    def store(self):
+        good = ri.refresh({}, fetch=ri.fixture_fetch(FIXTURES), env={}, now=NOW, sleep=lambda _s: None)
+        self.assertTrue(good["posts"])
+        return good
+
+    @staticmethod
+    def down(url, headers=None, data=None):
+        raise OSError("down")
+
+    def test_a_reader_gone_past_the_window_leaves_the_last_good_posts(self):
+        good = self.store()
+        later = ri.refresh(good, fetch=self.down, env={}, now=NOW + timedelta(days=30), sleep=lambda _s: None)
+        self.assertEqual({p["id"] for p in later["posts"]}, {p["id"] for p in good["posts"]})
+        self.assertTrue(later["state"]["paused"])
+
+    def test_old_posts_still_age_out_once_a_route_delivers(self):
+        good = self.store()
+        later = ri.refresh(good, fetch=ri.fixture_fetch(FIXTURES), env={}, now=NOW + timedelta(days=30),
+                           sleep=lambda _s: None)
+        self.assertLess(len(later["posts"]), len(good["posts"]))
 
 
 class CliTests(OfflineTestCase):

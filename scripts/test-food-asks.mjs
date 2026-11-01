@@ -109,6 +109,8 @@ test('asksFrom: food asks and talked-about food threads, newest first', () => {
     { ...post('a10', 'r/burlington', 'Best pho?', 3), url: 'javascript:alert(1)' },
     post('a2', 'r/burlington', 'Best ramen', 2),
   ] };
+  const stalled = asksFrom({ posts: [post('s1', 'r/burlington', 'Best ramen', 40 * 24), post('s2', 'r/burlington', 'Best pho?', (40 + MAX_AGE_DAYS + 1) * 24)] }, NOW);
+  assert.deepEqual(stalled.map((a) => a.title), ['Best ramen']);   // a stalled bridge keeps the last good list
   const got = asksFrom(intake, NOW);
   assert.deepEqual(got.map((a) => a.title), ['Best ramen', 'Where to take her for Sunday brunch?', 'Where to get good dumplings in Winooski?', 'Sushi recs']);
   assert.deepEqual(got.map((a) => a.sid), ['r-burlington', 'r-vermont', 'r-vermont', 'r-burlington']);

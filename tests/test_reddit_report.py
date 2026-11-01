@@ -155,5 +155,23 @@ class ReportTests(unittest.TestCase):
         self.assertTrue(printed.getvalue().startswith("Reddit: RED: couldn't read the intake file"))
 
 
+class RssEndsTests(unittest.TestCase):
+    def test_the_feed_routes_going_quiet_on_the_day_is_no_alarm(self):
+        at = datetime(2026, 11, 20, 20, 0, tzinfo=timezone.utc)
+
+        def seen(hours_ago):
+            return ri.iso(at - timedelta(hours=hours_ago))
+        intake = {"generated": seen(0), "subs": ["r/burlington"], "state": {}, "runs": [], "posts": [
+            {"id": "a", "sub": "r/burlington", "title": "New", "created": seen(2), "routes": ["shreddit"],
+             "seen": {"shreddit": seen(2)}, "first_seen": seen(2)},
+            {"id": "b", "sub": "r/burlington", "title": "Old", "created": seen(100), "routes": ["inoreader", "rss", "shreddit"],
+             "seen": {"inoreader": seen(100), "rss": seen(100), "shreddit": seen(100)}, "first_seen": seen(100)}]}
+        self.assertEqual(rr.build_report(intake, now=at)["level"], "green")
+        intake["posts"][0]["seen"], intake["posts"][0]["routes"] = {"oauth": seen(2)}, ["oauth"]
+        report = rr.build_report(intake, now=at)   # the route that still matters does alarm
+        self.assertEqual(report["level"], "amber")
+        self.assertIn("Reddit web dropped to zero", report["brief_line"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { held, namesPerson, freshFrom, postsFromListings, newCount, questionsFrom, questionOfDay, search, askedAt, isAsk, catOf } from '../all-day/js/reddit-lib.js';
+import { held, namesPerson, freshFrom, ageClock, postsFromListings, newCount, questionsFrom, questionOfDay, search, askedAt, isAsk, catOf } from '../all-day/js/reddit-lib.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BEST = JSON.parse(readFileSync(path.join(ROOT, 'data/best-of-reddit.json'), 'utf8'));
@@ -63,6 +63,12 @@ test('Fresh: a hot thread, and the outlet of a link', () => {
 test('never a username or body in what Fresh hands on', () => {
   const [p] = freshFrom({ posts: [post({ author: 'somebody', body: 'words' })] }, NOW);
   assert.deepEqual(Object.keys(p).sort(), ['comments', 'flair', 'hot', 'id', 'outlet', 'score', 'seen', 'sub', 'title', 'ts', 'url']);
+});
+test('a stalled reader keeps the last good tab', () => {
+  const days = (n) => new Date(NOW - n * 86400000).toISOString();
+  const intake = { posts: [post({ id: 'n1', title: 'First thread', created: days(40) }), post({ id: 'n2', title: 'Second thread', created: days(50) }), post({ id: 'n3', title: 'Third thread', created: days(60) })] };
+  assert.deepEqual(freshFrom(intake, NOW).map((p) => p.id), ['n1', 'n2']);
+  assert.ok(ageClock([{ created: new Date(NOW + 86400000).toISOString() }, { created: 'junk' }, null], NOW) === 0);
 });
 test('the bar count reads the listings', () => {
   const doc = { listings: { 'r/burlington/new': { data: { data: { children: [

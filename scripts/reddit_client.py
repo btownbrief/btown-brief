@@ -12,7 +12,10 @@ Four routes, tried in order by read() (and by listing(), which skips rss):
             "client_credentials": no Reddit user, read-only). Used whenever
             REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are both set. Returns
             the listing JSON (the same shape the old .json endpoints served).
-  rss       Reddit's public .rss/Atom feed. Dies 2026-11-13.
+  rss       Reddit's public .rss/Atom feed. Dies 2026-11-13. A reply with no
+            <entry> counts as a failure (Reddit hasn't said what the dead URLs
+            will answer, and a 200 with an empty feed must not read as "no
+            posts"), so read() carries on to the next route.
   shreddit  The logged-out reddit.com page fragment a browser loads while a
             subreddit scrolls (/svc/shreddit/community-more-posts/<sort>/).
             No account, no cookies, ever. Parsed into the SAME listing dict
@@ -90,6 +93,7 @@ MIRROR_MAX_AGE = 6 * 3600   # an older mirror copy is a failure, not data
 ROUTE_NAMES = ("oauth", "rss", "shreddit", "mirror")
 RSS_END = date(2026, 11, 13)  # r/modnews 2026-09-30: Reddit stops serving RSS
 RSS_STREAK_LIMIT = 3          # failed runs in a row before shreddit goes first
+FEED_ROUTES = ("inoreader", "rss")  # the routes that end on RSS_END
 MIN_GAP = 4.0                 # seconds between two www.reddit.com requests
 COOLDOWN_FIRST = 30 * 60      # first strike after a 403/429
 COOLDOWN_MAX = 12 * 3600
@@ -190,6 +194,16 @@ def listing_key(path, **params):
     sub, sort = parts
     key = f"r/{sub.lower()}/{sort}"
     return key + (f"?t={str(params['t']).lower()}" if sort == "top" and params.get("t") else "")
+
+
+def live_routes(routes, today=None):
+    """routes without the feed routes from RSS_END on. Inoreader's Reddit tags
+    only re-publish Reddit's RSS, so after that day they are a frozen list:
+    still answering, never new, and worse than the last good data they would
+    replace (no scores, no removed posts dropped)."""
+    if (today or date.today()) < RSS_END:
+        return tuple(routes)
+    return tuple(r for r in routes if r not in FEED_ROUTES)
 
 
 def route_order(env, today=None, rss_streak=0):
@@ -421,6 +435,15 @@ class Client:
             del cool[route]
             self._save_state()
 
+    def today(self):
+        return datetime.fromtimestamp(self.clock(), timezone.utc).date()
+
+    @property
+    def feeds_live(self):
+        """False from RSS_END on: skip Inoreader's Reddit tags and keep the
+        last good data when the listing routes fail. See live_routes()."""
+        return self.today() < RSS_END
+
     @property
     def rss_streak(self):
         return int(self.state.get("rss_fail_streak") or 0)
@@ -432,7 +455,7 @@ class Client:
         self._save_state()
 
     def order(self, today=None):
-        today = today or datetime.fromtimestamp(self.clock(), timezone.utc).date()
+        today = today or self.today()
         streak = self.rss_streak + (RSS_STREAK_LIMIT if self._rss_fails >= 2 else 0)
         return route_order(self.env, today, streak)
 
@@ -563,6 +586,8 @@ class Client:
         try:
             body = self._request("rss", rss_url(path, **params),
                                  {"User-Agent": self.ua, "Accept": "application/atom+xml, application/xml"})
+            if b"<entry" not in (body or b""):
+                raise RedditError("rss reply held no posts")
         except RedditError:
             self._rss_fails += 1
             raise

@@ -61,9 +61,9 @@ jobs:
           fi
 
       - name: Pull the shared Reddit intake (optional)
-        # The Reddit bridge (refresh-reddit.yml). A bonus route for the
-        # r/burlington and r/vermont sources once Reddit RSS ends on Nov 13:
-        # if the branch or file is missing, the Pulse runs exactly as before.
+        # The Reddit bridge (refresh-reddit.yml). The only route for every
+        # subreddit source once Reddit RSS ends on Nov 13: if the branch or
+        # file is missing, the Pulse keeps the items it already holds.
         run: |
           if git fetch -q origin reddit-data --depth 1 2>/dev/null &&
              git show FETCH_HEAD:data/reddit-intake.json > /tmp/reddit-intake.json 2>/dev/null &&

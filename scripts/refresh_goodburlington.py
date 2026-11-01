@@ -12,11 +12,12 @@ scripts/reddit_client.py's listing routes: read-only OAuth once
 REDDIT_CLIENT_ID/SECRET are set, the logged-out shreddit page, or the copy
 Stephen's Mac pushed to the reddit-data branch (the logged-out .json 403s
 since May 2026), then Steve's
-public Inoreader stream is tried as a fallback/supplement (no auth, but
-Inoreader never carries a score — those posts get score 0 so the existing
-"▲ N" badge in js/app.js never renders blank). On any failure, or if too
-few posts come back, the last good data/reddit.json is kept untouched —
-the community block should never go blank because of a bad run.
+public Inoreader stream is tried as a fallback/supplement until Reddit RSS
+ends (no auth, but Inoreader never carries a score — those posts get score 0
+so the existing "▲ N" badge in js/app.js never renders blank). On any
+failure, or if too few posts come back, the last good data/reddit.json is
+kept untouched — the community block should never go blank because of a bad
+run, and from Nov 13 a frozen Inoreader list is not worth replacing it with.
 
 CLI flags mirror refresh_chatter.py: --fixtures DIR, --selftest, --dry-run.
 """
@@ -153,12 +154,13 @@ def load_posts(fixtures=None, client=None):
         print(f"reddit GoodBurlington via {route}", file=sys.stderr)
     except reddit_client.RedditError as exc:
         print(f"reddit GoodBurlington failed: {exc}", file=sys.stderr)
-    try:
-        raw = fetch_bytes(INOREADER_URL, "application/rss+xml, application/xml")
-        groups.append(parse_inoreader_xml(raw))
-        used_inoreader = True
-    except Exception as exc:
-        print(f"inoreader GoodBurlington failed: {exc}", file=sys.stderr)
+    if client.feeds_live:
+        try:
+            raw = fetch_bytes(INOREADER_URL, "application/rss+xml, application/xml")
+            groups.append(parse_inoreader_xml(raw))
+            used_inoreader = True
+        except Exception as exc:
+            print(f"inoreader GoodBurlington failed: {exc}", file=sys.stderr)
 
     mode = ("reddit+inoreader" if used_reddit and used_inoreader else
             "reddit-only" if used_reddit else
