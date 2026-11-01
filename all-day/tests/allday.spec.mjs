@@ -915,6 +915,7 @@ async function threeWay(browser, base) {
     const ev = await pmState(page);
     check(ev.list.length === loc.list.length + 2, 'Everything: local and national in one feed', '');
     check(/^Burlington and the world/.test(await page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'Everything says so', '');
+    check(!(await page.$(pmPanel + ' .pm-head p')), 'with no line under it', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1073,7 +1074,7 @@ async function theWire(browser, base) {
       const w1 = await wrapOf();
       const lab = await page.$eval(BAND + ' .wband-all', (b) => [b.textContent, b.getAttribute('aria-pressed')]);
       await all.click();
-      check(w0 === 'nowrap' && w1 === 'wrap' && lab[0] === 'Show less' && lab[1] === 'true' && await wrapOf() === 'nowrap', 'Show all lays the chips out in full, Show less puts them back in a row', JSON.stringify([w0, w1, lab]));
+      check(w0 === 'nowrap' && w1 === 'wrap' && lab[0] === 'Collapse' && lab[1] === 'true' && await wrapOf() === 'nowrap', 'Show all lays the chips out in full, Collapse puts them back in a row', JSON.stringify([w0, w1, lab]));
     } else check(w0 === 'nowrap', 'the chips sit in one row, and with nothing past the edge there is no Show all', w0);
     await closeFilters(page);
 
@@ -7965,7 +7966,7 @@ async function theWatchTrailers(browser, base) {
     for (const body of [grey, '']) {
       p = await newPage(browser, base, { films, trailers: local });
       await p.page.route(/maxresdefault/, (r) => r.fulfill({ status: 404, body, contentType: 'image/png' }));
-      await p.page.route(/hqdefault/, (r) => r.fulfill({ status: 200, body: grey, contentType: 'image/png' }));
+      await p.page.route(/hqdefault/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
       await p.page.goto(base + '/all-day/#watch');
       await p.page.waitForFunction(() => /hqdefault/.test(document.querySelector('#panel-watch .wt-drop img')?.src || ''));
       check(true, 'no 1280 picture: the 480 one' + (body ? ', from the grey 404' : ', from the empty 404'), '');
@@ -10463,10 +10464,9 @@ async function theHabits(browser, base) {
     const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), buttons: [...p.querySelectorAll('button')].map((b) => b.textContent.trim()),
       rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
     check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
-    check(JSON.stringify(out.buttons) === '["Got it","?","Walk outside","Read the Brief","Try a new Burlington place","Add habit","Sign up"]' && out.rows === 0 && JSON.stringify(out.notes) === '["Plant your first tree."]',
-      'signed out, a first visit: what the page does, the forest’s “?”, three starter habits, Add habit, then the season tile; no sign-in wall', JSON.stringify(out));
-    check(await page.$eval(hbPanel + ' .hb', (b) => b.firstElementChild.className) === 'hb-help' && /Grow a forest/.test(await page.$eval(hbPanel + ' .hb-help', (x) => x.innerText)),
-      'a first visit opens on what the page does, front and centre', '');
+    check(JSON.stringify(out.buttons) === '["?","Walk outside","Read the Brief","Try a new Burlington place","Add habit","Sign up"]' && out.rows === 0 && JSON.stringify(out.notes) === '["Plant your first tree."]',
+      'signed out, a first visit: the forest’s “?”, three starter habits, Add habit, then the season tile; no sign-in wall', JSON.stringify(out));
+    check(!(await page.$(hbPanel + ' .hb-help')), 'no help card on a first visit', '');
     check(!!(await page.$(hbPanel + ' .hb-forest .fr-tree.is-empty svg')) && !(await page.$(hbPanel + ' .hb-sharebtn')), 'an empty forest: a ghost sapling, and nothing to share yet', '');
     check(!(await page.$(hbPanel + ' .hb-today')) && !(await page.$(hbPanel + ' .hb-heat')), 'no habits, no numbers: no today line and no heat map', '');
     check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Forests"]', 'the chips: Today, Forests', '');
@@ -10538,8 +10538,8 @@ async function theHabits(browser, base) {
     await hbFake(page, `(f) => { const h = f.habits.find((x) => x.text === 'Morning walk'); for (let i = 22; i <= 30; i++) { const d = new Date(Date.UTC(2026, 9, 14 - i, 12)).toISOString().slice(0, 10); f.addTap(h.id, d); } return true; }`);
     await hbSignIn(page);
     const order = await page.$eval(hbPanel + ' .hb', (b) => [...b.children].map((c) => c.className.split(' ')[0]));
-    check(order[0] === 'hb-help' && order[1] === 'hb-today' && order[2] === 'hb-forest' && order[3] === 'hb-list' && order.indexOf('hb-heat') > order.indexOf('hb-add') && order[order.length - 1] === 'hb-tile',
-      'the first visit’s help, then today, the forest, the habits, the weeks behind them; the season tile last', JSON.stringify(order));
+    check(order[0] === 'hb-today' && order[1] === 'hb-forest' && order[2] === 'hb-list' && order.indexOf('hb-heat') > order.indexOf('hb-add') && order[order.length - 1] === 'hb-tile',
+      'today, the forest, the habits, the weeks behind them; the season tile last', JSON.stringify(order));
     const today = () => page.$eval(hbPanel + ' .hb-today', (t) => ({ text: [...t.querySelectorAll('.hb-stat')].map((x) => x.innerText.replace(/\s+/g, ' ').trim()),
       now: t.querySelector('.hb-bar').getAttribute('aria-valuenow'), max: t.querySelector('.hb-bar').getAttribute('aria-valuemax') }));
     let t = await today();
@@ -10591,8 +10591,7 @@ async function theHabits(browser, base) {
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
     await hbSignIn(page);
-    /* the help and the forest stand over the list: put the help away and bring the list into view */
-    await page.click(hbPanel + ' .hb-help .hb-go');
+    /* the forest stands over the list: bring the list into view */
     await page.$eval(hbPanel + ' .hb-list', (l) => l.scrollIntoView({ block: 'center' }));
     await page.waitForTimeout(100);
     /* swipe Gym to the left */
@@ -11084,7 +11083,7 @@ async function theHabits(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    await page.waitForSelector(hbPanel + ' .hb-help', { timeout: 6000 });
+    await page.waitForSelector(hbPanel + ' .hb-q', { timeout: 6000 });
     /* the "?" explains the page any time */
     await page.click(hbPanel + ' .hb-q');
     await page.waitForSelector('.sheet-card[aria-label="How Habits works"]', { timeout: 4000 }).catch(() => {});
@@ -11104,8 +11103,6 @@ async function theHabits(browser, base) {
       return { ms: performance.now() - t0, label: tr.getAttribute('aria-label'), fresh: !!tr.querySelector('.tr-new') };
     });
     check(t1.label === 'Walk outside: 1 leaf' && t1.fresh && t1.ms < 100, 'a tap grows a leaf, in the same click (' + Math.round(t1.ms) + ' ms)', JSON.stringify(t1));
-    await page.click(hbPanel + ' .hb-help .hb-go');
-    check(!(await page.$(hbPanel + ' .hb-help')), 'Got it puts the help away', '');
 
     /* signed in: the demo's three habits, three trees */
     await hbSignIn(page);
@@ -12213,7 +12210,7 @@ async function thePeople(browser, base) {
         bar: (l.parentElement.querySelector('.collapsebar [data-collapse]') || {}).ariaLabel || '' }; });
     check(list && list.n === ownN && !list.rail && list.down && list.left === 1 && list.wide && list.bar === 'Collapse Btown Brief IRL',
       'Show all stacks every one, full width, in a list that scrolls down, with a Collapse bar', JSON.stringify(list));
-    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await ownBtn()));
+    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Collapse', 'open', 'true']), 'and the button says Collapse', JSON.stringify(await ownBtn()));
     await page.click(peoplePanel + ' [data-sec="irl"] [data-collapse]');
     await page.waitForTimeout(700);
     const back = await page.evaluate(() => { const h = document.querySelector('#panel-people [data-sec="irl"] .irl').getBoundingClientRect().top;
@@ -16894,6 +16891,86 @@ async function theWalk(browser, base) {
     check((await page.$$eval('#panel-cityhall .cc-next', (n) => n.length)) === 1, 'only the newest summary says what’s next', '');
     await page.$eval('#panel-cityhall [data-sec="council"] [data-collapse]', (b) => b.click());
     check((await page.$$eval('#panel-cityhall .cc', (n) => n.filter((x) => !x.hidden).length)) === 3, 'Collapse folds the Council back to three', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: a trailer taken down steps Watch on to the next', async () => {
+    const films = await watchFilms();
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers: watchTrailers(films) });
+    await page.goto(base + '/all-day/data/build-config.json');
+    const png = (w, h) => page.evaluate(([a, b]) => { const c = document.createElement('canvas'); c.width = a; c.height = b; return c.toDataURL('image/png').split(',')[1]; }, [w, h]);
+    const grey = Buffer.from(await png(120, 90), 'base64'), real = Buffer.from(await png(480, 360), 'base64');
+    let dead = null;
+    await page.route(/i\.ytimg\.com\/vi\/([^/]+)\/(maxres|hq)default/, (r) => {
+      const id = r.request().url().match(/vi\/([^/]+)\//)[1];
+      if (!dead) dead = id;
+      return r.fulfill({ status: 200, contentType: 'image/png', body: id === dead ? grey : real });
+    });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    await page.waitForTimeout(600);
+    const c = await wCard(page);
+    check(!!dead && c.key !== dead, 'the hero is the next trailer', JSON.stringify([dead, c]));
+    check((await page.$$eval(wPanel + ' .wt-drop [data-step]', (b) => b.length)) === 2 && !!(await page.$(wPanel + ' .wt-drop .act.star')), 'with its arrows and star', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: a saved Talk card outlives the paper', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/example\.org\/talk\//, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Story</title>', contentType: 'text/html' }));
+    await page.goto(base + '/all-day/#people/talk');
+    await talkReady(page);
+    const seat = (await talkHand(page)).findIndex((c) => /^tq/.test(c.id) || /^tq/.test(c.id.replace(/^t-/, '')));
+    check(seat >= 0, 'a news card is dealt', JSON.stringify(await talkHand(page)));
+    await page.$eval(tk + ' .tk-card:nth-child(' + (seat + 1) + ') .star', (b) => b.click());
+    const item = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-saved'))[0]);
+    check(/^#people\/t-/.test(item.href) && /example\.org\/talk\//.test(item.url), 'it keeps its story', JSON.stringify(item));
+    await page.route(/wire-today\.json|talk-today\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await page.reload();
+    await page.waitForSelector('#saved-btn');
+    await page.$eval('#saved-btn', (b) => b.click());
+    await page.waitForSelector('#sheet a.t', { timeout: 4000 });
+    await page.$eval('#sheet a.t', (a) => a.click());
+    await page.waitForURL(/example\.org\/talk\//, { timeout: 15000 });
+    check(true, 'gone from the paper, Saved opens the story', '');
+    await page.goBack();
+    await page.waitForFunction(() => /#people\/talk$/.test(location.hash), null, { timeout: 8000 });
+    check(true, 'and Back lands on Talk, not on the story again', '');
+    await ctx.close();
+  });
+
+  await group('Walk: Body at 360, and an old habit link', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 360, height: 640 } });
+    await page.goto(base + '/body/#season');
+    await settle(page);
+    const gaps = await page.$$eval('#subnav .bd-sideswitch button', (bs) => { const r = document.createRange(); const box = bs.map((b) => { r.selectNodeContents(b); const x = r.getBoundingClientRect(); return [x.left, x.right]; }); return box.slice(1).map((x, i) => x[0] - box[i][1]); });
+    check(gaps.every((g) => g >= 6), 'the labels hold their gaps', gaps.join());
+    const go = await page.$eval('#panel-season .hb-tile a.hb-go', (a) => a.getAttribute('href'));
+    check(go === '#habits', 'no season: the tile starts a habit', go);
+    check((await page.$$eval('#panel-season .frrows .lrow:not([hidden])', (n) => n.length)) > 0, 'and the races coming up are under it', '');
+    await page.goto(base + '/body/#day');
+    await settle(page);
+    await page.evaluate(() => { location.hash = 'habits/goal'; });
+    await page.waitForFunction(() => location.hash === '#season/goal');
+    await page.goBack();
+    await page.waitForFunction(() => location.hash === '#day', null, { timeout: 4000 }).catch(() => {});
+    check(await page.evaluate(() => location.hash) === '#day', 'Back from an old habit link goes back', await page.evaluate(() => location.hash));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: Meetings and Rank', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/town/#cityhall/meetings');
+    await settle(page);
+    const shown = await page.$$eval('#panel-cityhall .plist > *', (n) => n.filter((x) => x.querySelector('a[href*="council-"]')).map((x) => x.hidden));
+    check(!shown.length || shown[0] === false, 'the newest meeting with a summary shows without Show all', JSON.stringify(shown));
+    await page.goto(base + '/all-day/?demo=1#food/rank');
+    await page.waitForSelector('.rb-place', { timeout: 15000 });
+    const hit = await page.$$eval('.rb-place', (n) => n.map((b) => b.getBoundingClientRect().height));
+    check(hit.every((h) => h >= 44), 'a place on a chart is a full tap tall', hit.join());
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

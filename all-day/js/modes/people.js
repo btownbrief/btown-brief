@@ -121,7 +121,7 @@ const EVENTS_PAGE = '../events.html';   // the guide's full events calendar
 const HOST_MAIL = 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('I’d like to host something with the crew') + '&body=' +
   encodeURIComponent('Hi Steve,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
 const HELP_HOST_MAIL = 'mailto:btownbrief@gmail.com';
-const WORDS = { irl: 'Btown Brief IRL', helpHost: 'Interested in helping host events?', more: 'See more', clubs: 'Run clubs', clubWeek: 'See the club week' };
+const WORDS = { irl: 'Btown Brief IRL', helpHost: 'Interested in helping host events?', more: 'See more', collapse: 'Collapse', clubs: 'Run clubs', clubWeek: 'See the club week' };
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 /* Dating and Pets: the ways to meet someone, dating news, the dog parks and their rules, checked by hand */
 const DP_URL = '../data/dating-pets.json';
@@ -1326,7 +1326,7 @@ function drawIrl() {
     const many = own.length > IRL_SHOWN;
     if (!many) S.ownAll = false;
     if (many) {
-      const t = button(S.ownAll ? 'Show less' : 'Show all ' + own.length, 'ghost sm', () => {
+      const t = button(S.ownAll ? WORDS.collapse : 'Show all ' + own.length, 'ghost sm', () => {
         S.ownAll = !S.ownAll;
         drawIrl();
         if (!S.ownAll) jumpBack();
@@ -2112,7 +2112,14 @@ function land() {
   if (/^t-/.test(k)) {
     pending = null;
     jump('talk');
-    talk.open(k.slice(2)).then((found) => { if (!found) app.toast('That one has passed.'); });
+    talk.open(k.slice(2)).then((found) => {
+      if (found) return;
+      /* a saved card that has left the paper: its story, and Back lands on Talk */
+      const url = (store.saved().find((s) => s.k === k) || {}).url;
+      if (!url) { app.toast('That one has passed.'); return; }
+      history.replaceState(null, '', '#' + KEY + '/talk');
+      location.href = safeHref(url);
+    });
     return;
   }
   /* a question's own link lands on its Board block */

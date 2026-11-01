@@ -145,7 +145,7 @@ export function know(items) {
 export const item = (k) => ITEMS.get(k) || null;
 export const sourceName = (sid) => NAMES[sid] || sid;
 const record = (it) => ({ k: it.k, kind: it.kind || 'wire', title: it.title || it.text || it.name || 'Untitled',
-  from: it.src || it.author || '', href: it.href || '', art: /^https?:/.test(it.thumb || it.media || '') ? (it.thumb || it.media) : '' });
+  from: it.src || it.author || '', href: it.href || '', ...(it.url ? { url: it.url } : {}), art: /^https?:/.test(it.thumb || it.media || '') ? (it.thumb || it.media) : '' });
 
 /* ------------------------------------------------------------- demo data */
 /* data/demo/<tab>.json, one file per tab, plus shell.json (the placeholder
@@ -1449,10 +1449,11 @@ document.addEventListener('error', (e) => {
 }, true);
 
 /* YouTube answers for a video taken down with a grey 120x90 picture, not an
-   error, and hqdefault is never that small: the video's card goes with it. */
+   error, and hqdefault is never that small: the video's card goes with it.
+   Watch's hero is the one exception: it steps on to the next trailer itself. */
 document.addEventListener('load', (e) => {
   const img = e.target;
-  if (!img || img.tagName !== 'IMG' || img.naturalWidth !== 120 || img.naturalHeight !== 90 || !/i\.ytimg\.com\/vi\/[^/]+\/hqdefault/.test(img.src)) return;
+  if (!img || img.tagName !== 'IMG' || img.naturalWidth !== 120 || img.naturalHeight !== 90 || !/i\.ytimg\.com\/vi\/[^/]+\/hqdefault/.test(img.src) || img.closest('.wt-drop')) return;
   const card = img.closest('[data-k]');
   if (card) card.remove();
 }, true);

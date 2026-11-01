@@ -530,14 +530,14 @@ function banner() {
     raw.setAttribute('aria-label', 'Every headline, unfiltered');
     foot.appendChild(raw);
   }
-  const all = el('button', 'wband-all', '<span>' + (W.fwrap ? 'Show less' : 'Show all') + '</span>' + ICON.down);
+  const all = el('button', 'wband-all', '<span>' + (W.fwrap ? 'Collapse' : 'Show all') + '</span>' + ICON.down);
   all.type = 'button';
   all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
   all.addEventListener('click', () => {
     W.fwrap = !W.fwrap;
     band.classList.toggle('wrap', W.fwrap);
     all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
-    all.firstChild.textContent = W.fwrap ? 'Show less' : 'Show all';
+    all.firstChild.textContent = W.fwrap ? 'Collapse' : 'Show all';
     fits(band);
     if (band.classList.contains('fits')) { const h = W.root && W.root.querySelector('.whead h2'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
   });

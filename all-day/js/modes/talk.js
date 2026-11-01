@@ -17,7 +17,8 @@
    Each card's Answer button opens the town's answers in a sheet (answers.js),
    in place in the Seen list so that list keeps its spot. With answers in, the
    button is a bubble and the count. Once you have answered, the sheet ends in
-   a link to the card's Board block. Saved, a card comes back to the card.
+   a link to the card's Board block. Saved, a card comes back to the card, or
+   to its story once it has left the paper.
    Every hand this phone is dealt is kept, the last 100: Back steps through
    them, Forward returns, Seen lists their cards by day. A past hand is only
    looked at; a swap on one carries it to the table and swaps there, as a new
@@ -72,7 +73,7 @@ const kindOf = (c) => (c.b === 'head' && c.local ? 'local' : c.b);
 const eyebrow = (c) => WORDS[kindOf(c)];
 const isUsed = (c) => !!usedBy(T)[c.id];
 const newsIn = () => paperIn && askedIn;
-const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: '#' + TAB + '/t-' + c.id });
+const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: '#' + TAB + '/t-' + c.id, url: c.url });
 
 /* the table as a hand kept; amend only fills in a seat that was still empty */
 function remember(amend) {

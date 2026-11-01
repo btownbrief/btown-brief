@@ -132,7 +132,9 @@ function drawMeetings(box, d) {
     divider(box, 'Recent meetings');
     const said = new Map(councilMeetings(d).map((m) => [m.date, m.id]));
     const summary = (m) => (/^city council meeting/i.test(m.title) && said.has(wallDay(m.start)) ? '#cityhall/council-' + said.get(wallDay(m.start)) : null);
-    list(box, past.map((m, i) => meetingRow(m, i, true, summary(m))), 4);
+    /* the newest meeting with a summary shows, however far down the week it is */
+    const first = past.findIndex(summary);
+    list(box, past.map((m, i) => meetingRow(m, i, true, summary(m))), first >= 4 ? 3 : 4, first);
   }
   box.appendChild(links([{ label: 'Civic calendar', href: '../civic.html' }, { label: 'City meeting portal', href: PORTAL }]));
 }

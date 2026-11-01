@@ -2107,7 +2107,6 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
    their layout work, so a long feed stays light. */
 .pm-head { max-width: 468px; margin: 0 auto; padding: var(--s3) var(--gutter) var(--s4); }
 .pm-head h2 { font-family: var(--serif); font-size: var(--fs-sec); font-weight: 500; line-height: var(--lh-tight); }
-.pm-head p { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); }
 .pm-head .btn.pm-post { width: 100%; justify-content: center; margin-top: var(--s3); }
 .pm-pets { max-width: 468px; margin: 0 auto var(--s4); }
 .pm-pets-h { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 0 var(--gutter) var(--s2); }
@@ -2291,6 +2290,7 @@ body.desk { overflow: auto; }
    the length and one Watch button). Existing tokens only. */
 .oa-sidesrow .oa-sideswitch { flex: 1 1 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-right: var(--gutter); }
 .oa-sideswitch button { padding: 0 var(--s2); min-height: var(--hit); font-size: var(--fs-button); font-weight: 600; }
+.oa-sideswitch.bd-sideswitch button { padding: 0; }
 .mast .oa-sideswitch button { color: var(--lake-muted); }
 .mast .oa-sideswitch button.on { background: var(--sunset); color: var(--sunset-ink); box-shadow: none; }
 /* On Air's sides and Feed | Topics, poured like the Wire's words */
@@ -3354,6 +3354,7 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 :root[data-app="body"] .body-page .hb-tile { margin: 4px 12px 0; padding: 18px 16px; border-radius: var(--r-tf); background: var(--tone); color: var(--tf-white); }
 :root[data-app="body"] .body-page .hb-tile * { color: inherit; }
 :root[data-app="body"] .body-page .hb-tile .hb-big { font: 600 var(--fs-tf-huge)/.95 var(--serif); letter-spacing: -.02em; }
+:root[data-app="body"] .body-page .hb-tile .btn.hb-go { background: var(--tf-white); border-color: var(--tf-white); color: var(--tone); }
 :root[data-app="body"] .body-page .btn:not(.ghost) { background: var(--tone); border-color: var(--tone); color: var(--tf-white); }
 :root[data-app="body"] .body-page .btn { height: 50px; padding: 0 20px; border-radius: var(--r-box); font-size: var(--fs-body); }
 :root[data-app="body"] .body-page .btn.sm { height: 44px; }
@@ -3555,6 +3556,10 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .rb-top li:first-child .n { color: var(--accent); }
 .rb-top .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rb-place { font-weight: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+/* a place's name is a link: the row is a full tap tall, all the way across */
+.rb-top:has(.rb-place) li { min-height: var(--hit); align-items: center; }
+.rb-top .rb-place { flex: 1 1 auto; min-height: var(--hit); text-align: left; }
+.rs-bar .rb-place { display: block; width: 100%; min-height: var(--hit); margin-block: calc((1.3em - var(--hit)) / 2); text-align: left; }
 .rb-need { font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
 .rb-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; }
 .rb-foot .rb-need { flex: 1; }
