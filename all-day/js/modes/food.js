@@ -128,7 +128,7 @@ const Q_FIRST = 12;                        // Best of r/burlington opens in plac
 
 const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['rank', 'Rank'], ['asks', 'Reddit'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
 const FRESH_ASK_DAYS = 3;                  // an ask this young is fresh enough to lead the tab
-Rank.bind({ paint: () => paint('rank'), jump: () => jump('rank'), slot: () => (slots ? slots.rank : null) });
+Rank.bind({ paint: () => paint('rank'), jump: () => jump('rank'), slot: () => (slots ? slots.rank : null), place: (name) => placeByName(name), openPlace: (r) => placeSheet(r) });
 
 /* ------------------------------------------------------------------ state */
 const S = {

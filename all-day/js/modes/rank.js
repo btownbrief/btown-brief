@@ -12,7 +12,8 @@
 
    Rank it opens a sheet: check the places you've been, put them in order
    (drag the handle, or the up and down buttons), Save. It answers with your
-   % match with Burlington and the whole community list. When the sheet
+   % match with Burlington and the whole community list; a name Food has a
+   card for opens that card. When the sheet
    closes, the block rises to the top, and the tab scrolls there. Your
    ballot stays on this phone (rwyk-ballot-<key>, the arcade's own key) and
    prefills the next time; Edit reopens it. #food/rank-<key> lands on a block
@@ -94,8 +95,8 @@ const S = {
   settled: false, down: false, at: 0, loading: null,
 };
 const memory = new Map();             // ballots while storage is blocked, and always in the demo
-let H = { paint() {}, jump() {}, slot: () => null };
-/* food.js hands over how to repaint its slot and jump to it */
+let H = { paint() {}, jump() {}, slot: () => null, place: () => null, openPlace() {} };
+/* food.js hands over how to repaint its slot, jump to it and open a place */
 export function bind(hooks) { H = { ...H, ...hooks }; }
 
 const blockKey = (l) => 'rank-' + l.key;
@@ -221,6 +222,16 @@ export function paint(host) {
   moreGrid(host, { name: 'food-rank', label: WORDS.label, head, cells: orderLists(S.lists, S.activity).map(block) }).classList.add('rankgrid');
 }
 
+/* a name on a chart: the place's own card, when Food has one */
+function placeName(host, name) {
+  const r = H.place(name);
+  if (!r) return;
+  const b = el('button', 't rb-place', esc(name));
+  b.type = 'button';
+  b.addEventListener('click', () => H.openPlace(r));
+  host.querySelector('.t').replaceWith(b);
+}
+
 const itemOf = (l) => ({ k: blockKey(l), kind: 'headline', href: '#' + KEY + '/' + blockKey(l), title: WORDS.shareTitle(l.title), src: WORDS.src });
 
 function block(l) {
@@ -250,7 +261,11 @@ function block(l) {
 
   if (chart.length) {
     const ol = el('ol', 'rb-top');
-    chart.slice(0, 3).forEach((r, i) => ol.appendChild(el('li', '', '<span class="n">' + (i + 1) + '</span><span class="t">' + esc(r.item) + '</span>')));
+    chart.slice(0, 3).forEach((r, i) => {
+      const li = el('li', '', '<span class="n">' + (i + 1) + '</span><span class="t">' + esc(r.item) + '</span>');
+      placeName(li, r.item);
+      ol.appendChild(li);
+    });
     c.appendChild(ol);
   }
 
@@ -436,6 +451,7 @@ async function drawResult(V) {
     const row = el('div', 'rs-bar', '<span class="rs-num">' + (i + 1) + '</span><span class="w"><span class="t">' + esc(r.item) + '</span>' +
       '<span class="track"><i style="width:' + Math.round(r.score * 100) + '%"></i></span></span>' +
       (at >= 0 ? '<span class="you">' + esc(WORDS.you(at + 1)) + '</span>' : ''));
+    placeName(row, r.item);
     V.body.appendChild(row);
   });
   if (wait.length) {

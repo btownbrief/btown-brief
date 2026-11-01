@@ -16,7 +16,8 @@
 
    Each card's Answer button opens the town's answers in a sheet (answers.js),
    in place in the Seen list so that list keeps its spot. With answers in, the
-   button is a bubble and the count.
+   button is a bubble and the count. Once you have answered, the sheet ends in
+   a link to the card's Board block. Saved, a card comes back to the card.
    Every hand this phone is dealt is kept, the last 100: Back steps through
    them, Forward returns, Seen lists their cards by day. A past hand is only
    looked at; a swap on one carries it to the table and swaps there, as a new
@@ -46,8 +47,8 @@ const WORDS = {
   title: 'Talk', ice: 'Icebreaker', deep: 'Deep', debate: 'Debate', head: 'Headline', sports: 'Sports', local: 'Local',
   everyone: 'Everyone', groups: 'Groups', newGroup: 'New group', name: 'Name', add: 'Add',
   used: 'Used', swap: 'Swap', deal: 'Deal three', star: 'Save', share: 'Share', startOver: 'Start over', remove: 'Remove',
-  back: 'Back', forward: 'Forward', seen: 'Seen', allCards: 'All cards', showMore: 'Show more', today: 'Today', yesterday: 'Yesterday',
-  headsUp: 'Heads Up, Btown', play: 'Play', nextCard: 'Next card',
+  back: 'Back', forward: 'Forward', seen: 'Seen', allCards: 'All cards', showMore: 'See more', today: 'Today', yesterday: 'Yesterday',
+  onBoard: 'See it on The Board', headsUp: 'Heads Up, Btown', play: 'Play', nextCard: 'Next card',
   allDone: 'That’s all of them.', noLoad: 'Couldn’t load.', tryAgain: 'Try again',
   overTitle: (n) => 'Start ' + n + ' over?', overBody: (c) => c + (c === 1 ? ' card comes' : ' cards come') + ' back.',
   removeTitle: (n) => 'Remove ' + n + '?', removeBody: 'Its used cards come back if you make it again.',
@@ -71,7 +72,7 @@ const kindOf = (c) => (c.b === 'head' && c.local ? 'local' : c.b);
 const eyebrow = (c) => WORDS[kindOf(c)];
 const isUsed = (c) => !!usedBy(T)[c.id];
 const newsIn = () => paperIn && askedIn;
-const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: c.url || '#' + TAB + '/t-' + c.id });
+const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: '#' + TAB + '/t-' + c.id });
 
 /* the table as a hand kept; amend only fills in a seat that was still empty */
 function remember(amend) {
@@ -197,7 +198,17 @@ function countOn(b) {
 const paintCounts = () => document.querySelectorAll('.tk-ans').forEach(countOn);
 
 function answerSheet(c) {
-  app.sheet(answers.WORDS.answers, (body) => { body.append(el('h3', 'tk-q ans-q', esc(c.q)), answers.panel(answers.qidOf(c))); });
+  const qid = answers.qidOf(c);
+  app.sheet(answers.WORDS.answers, (body, card, close) => {
+    body.append(el('h3', 'tk-q ans-q', esc(c.q)), answers.panel(qid));
+    /* a heavy card stays off the Board */
+    if (c.heavy) return;
+    const go = button(esc(WORDS.onBoard), 'ghost sm tk-onboard', () => { close(); app.go(TAB, qid); });
+    const show = () => { go.hidden = !answers.answered(qid); };
+    const off = answers.on(() => { if (go.isConnected) show(); else off(); });
+    show();
+    body.appendChild(go);
+  });
 }
 
 function cardNode(c, seat, turn, order) {

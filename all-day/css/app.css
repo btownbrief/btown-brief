@@ -3556,6 +3556,7 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .rb-top li:first-child { font-weight: 600; }
 .rb-top li:first-child .n { color: var(--accent); }
 .rb-top .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rb-place { font-weight: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .rb-need { font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
 .rb-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; }
 .rb-foot .rb-need { flex: 1; }
