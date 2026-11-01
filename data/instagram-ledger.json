@@ -1,8 +1,8 @@
 {
- "_comment": "Written by scripts/build_instagram.py; read back by it. spent = Scrape Creators credits this builder spent this Burlington month (one per request, failures included). last = when each account was last requested. Do not hand-edit spent downward.",
- "month": "2026-10",
- "budget": 5400,
- "spent": 3983,
+ "_comment": "Written by scripts/build_instagram.py; read back by it. spent = Scrape Creators credits this builder spent this Burlington month (one per request, failures included). last = when each account was last requested. names = each account's own profile name. Do not hand-edit spent downward.",
+ "month": "2026-11",
+ "budget": 6510,
+ "spent": 0,
  "runs": [
   {
    "at": "2026-10-17T19:45:00+00:00",
@@ -572,224 +572,49 @@
   "zerogravitybeer": 1793461914
  },
  "ai": {
-  "month": "2026-10",
-  "usd": 0.105919,
+  "month": "2026-11",
+  "usd": 0.467289,
   "runs": [
    {
-    "at": "2026-10-18T23:03:25+00:00",
+    "at": "2026-11-01T19:58:27+00:00",
+    "model": "claude-sonnet-5-5",
+    "asked": 39,
+    "in": 25595,
+    "out": 1297,
+    "usd": 0.06416
+   },
+   {
+    "at": "2026-11-01T20:14:31+00:00",
     "model": "claude-haiku-5-5",
-    "asked": 490,
+    "asked": 323,
     "looked": 60,
-    "in": 84891,
-    "out": 10111,
-    "usd": 0.013545
+    "in": 66827,
+    "out": 10745,
+    "usd": 0.012055
    },
    {
-    "at": "2026-10-19T17:09:38+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 291,
-    "looked": 60,
-    "in": 64973,
-    "out": 6381,
-    "usd": 0.009688
+    "at": "2026-11-01T20:14:31+00:00",
+    "model": "claude-sonnet-5-5",
+    "asked": 199,
+    "in": 133367,
+    "out": 6920,
+    "usd": 0.335934
    },
    {
-    "at": "2026-10-20T00:16:42+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 128,
-    "looked": 60,
-    "in": 46127,
-    "out": 3317,
-    "usd": 0.006271
+    "at": "2026-11-01T20:18:49+00:00",
+    "model": "claude-sonnet-5-5",
+    "asked": 17,
+    "in": 13659,
+    "out": 643,
+    "usd": 0.033748
    },
    {
-    "at": "2026-10-20T15:21:53+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 177,
-    "looked": 60,
-    "in": 53486,
-    "out": 4207,
-    "usd": 0.007452
-   },
-   {
-    "at": "2026-10-20T23:49:05+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 11,
-    "looked": 5,
-    "in": 5791,
-    "out": 301,
-    "usd": 0.00073
-   },
-   {
-    "at": "2026-10-21T15:36:14+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 119,
-    "looked": 51,
-    "in": 36276,
-    "out": 2957,
-    "usd": 0.005106
-   },
-   {
-    "at": "2026-10-21T23:58:54+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 11,
-    "looked": 5,
-    "in": 5649,
-    "out": 304,
-    "usd": 0.000717
-   },
-   {
-    "at": "2026-10-22T15:38:42+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 109,
-    "looked": 60,
-    "in": 44170,
-    "out": 2941,
-    "usd": 0.005888
-   },
-   {
-    "at": "2026-10-22T23:57:38+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 19,
-    "looked": 11,
-    "in": 9306,
-    "out": 547,
-    "usd": 0.001204
-   },
-   {
-    "at": "2026-10-23T15:27:11+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 101,
-    "looked": 46,
-    "in": 36398,
-    "out": 2572,
-    "usd": 0.004926
-   },
-   {
-    "at": "2026-10-23T23:50:22+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 22,
-    "looked": 18,
-    "in": 14068,
-    "out": 711,
-    "usd": 0.001762
-   },
-   {
-    "at": "2026-10-24T14:07:05+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 100,
-    "looked": 59,
-    "in": 42557,
-    "out": 2778,
-    "usd": 0.005645
-   },
-   {
-    "at": "2026-10-24T23:07:37+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 11,
-    "looked": 6,
-    "in": 6279,
-    "out": 320,
-    "usd": 0.000788
-   },
-   {
-    "at": "2026-10-25T14:34:01+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 114,
-    "looked": 48,
-    "in": 37031,
-    "out": 2855,
-    "usd": 0.005131
-   },
-   {
-    "at": "2026-10-25T23:11:15+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 14,
-    "looked": 7,
-    "in": 7060,
-    "out": 395,
-    "usd": 0.000904
-   },
-   {
-    "at": "2026-10-27T00:22:16+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 9,
-    "looked": 7,
-    "in": 6787,
-    "out": 295,
-    "usd": 0.000826
-   },
-   {
-    "at": "2026-10-27T16:00:36+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 174,
-    "looked": 60,
-    "in": 51669,
-    "out": 4157,
-    "usd": 0.007245
-   },
-   {
-    "at": "2026-10-28T00:27:39+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 25,
-    "looked": 12,
-    "in": 10550,
-    "out": 677,
-    "usd": 0.001393
-   },
-   {
-    "at": "2026-10-29T00:50:09+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 18,
-    "looked": 6,
-    "in": 7823,
-    "out": 460,
-    "usd": 0.001012
-   },
-   {
-    "at": "2026-10-30T00:51:41+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 13,
-    "looked": 5,
-    "in": 5756,
-    "out": 338,
-    "usd": 0.000745
-   },
-   {
-    "at": "2026-10-30T16:49:20+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 114,
-    "looked": 60,
-    "in": 46281,
-    "out": 3005,
-    "usd": 0.006131
-   },
-   {
-    "at": "2026-10-31T00:43:08+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 237,
-    "looked": 60,
-    "in": 58045,
-    "out": 5300,
-    "usd": 0.008455
-   },
-   {
-    "at": "2026-10-31T15:52:09+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 76,
-    "looked": 34,
-    "in": 27416,
-    "out": 1916,
-    "usd": 0.0037
-   },
-   {
-    "at": "2026-11-01T00:02:58+00:00",
-    "model": "claude-haiku-5-5",
-    "asked": 146,
-    "looked": 60,
-    "in": 48298,
-    "out": 3652,
-    "usd": 0.006656
+    "at": "2026-11-01T20:19:57+00:00",
+    "model": "claude-sonnet-5-5",
+    "asked": 3,
+    "in": 6591,
+    "out": 821,
+    "usd": 0.021392
    }
   ]
  }

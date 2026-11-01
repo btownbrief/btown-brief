@@ -61,7 +61,7 @@ const savedType = () => { try { const v = localStorage.getItem(TYPE_KEY); return
 
 /* the compose sheet for each kind of post */
 const KINDS = {
-  post: { word: 'Post', heading: 'Post to the Square', title: 'What’s up', ph: 'The maples on North Ave are peaking', body: 'More', bph: 'Go this weekend.' },
+  post: { word: 'Post', heading: 'Post to Town Square', title: 'What’s up', ph: 'The maples on North Ave are peaking', body: 'More', bph: 'Go this weekend.' },
   show: { word: 'Show and tell', heading: 'Show and tell', title: 'What is it', ph: 'Finished the porch bench', body: 'The story', bph: 'Two weekends and a lot of sanding.' },
   ask: { word: 'Ask', heading: 'Ask Burlington', title: 'Your question', ph: 'Best place to get a bike tuned before winter?', body: 'More', bph: 'Anything that helps people answer.' },
   free: { word: 'Free', heading: 'Give something away', title: 'What is it', ph: 'Kids’ bike, 16 inch, needs air', body: 'More', bph: 'Condition, how long it’s out.', place: 'Where to get it', pph: 'Old North End' },
@@ -231,7 +231,7 @@ export function compose(kind) {
 /* the way to post: five kinds, one tap each */
 function composer() {
   const box = el('div', 'sq-compose');
-  box.innerHTML = '<h2>The Square</h2>';
+  box.innerHTML = '<h2>Town Square</h2>';
   const row = el('div', 'sq-kinds');
   KIND_ORDER.forEach((kind) => {
     const b = button((kind === 'post' ? ICON.plus + ' ' : '') + esc(KINDS[kind].word === 'Pet' ? 'Your pet' : KINDS[kind].word), kind === 'post' ? 'sm' : 'ghost sm', () => compose(kind));
@@ -262,7 +262,7 @@ export function render(root, opts = {}) {
   if (post) root.appendChild(composer());
   if (!list.length) {
     const e = el('div', 'caught sq-empty');
-    e.innerHTML = '<h3>' + esc(S.failed ? 'The Square didn’t load.' : 'Nothing here yet.') + '</h3>';
+    e.innerHTML = '<h3>' + esc(S.failed ? 'Town Square didn’t load.' : 'Nothing here yet.') + '</h3>';
     root.appendChild(e);
     return;
   }
@@ -287,7 +287,7 @@ export function render(root, opts = {}) {
     if (run.i >= list.length) {
       run.sentinel.remove();
       stop();
-      feed.appendChild(cards.caught({ title: 'That’s the Square', check: false, buttons: post ? [button(ICON.plus + ' Post to the Square', '', () => compose('post'))] : [] }));
+      feed.appendChild(cards.caught({ title: 'That’s Town Square', check: false, buttons: post ? [button(ICON.plus + ' Post to Town Square', '', () => compose('post'))] : [] }));
       return;
     }
     requestAnimationFrame(() => { if (near()) step(CHUNK); });

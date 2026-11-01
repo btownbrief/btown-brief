@@ -88,6 +88,29 @@
   --so-instagram: #B5316F;
   --so-reddit: #C7400F;
   --so-ink: #FFFFFF;
+  --feed-dogs: #D8893B;             /* a beagle's tan */
+  --feed-dogs-ink: #2B1606;
+  --feed-home: #B98A5A;             /* oak */
+  --feed-home-ink: #2B1606;
+  --feed-plants: #5DA142;           /* fern */
+  --feed-plants-ink: #0E2410;
+  --feed-good: #F0C23C;             /* sun */
+  --feed-good-ink: #2B1606;
+  --feed-nosy: #C8466E;             /* gossip rose */
+  --feed-nosy-ink: #FFFFFF;
+  --feed-laughs: #9B4F96;           /* plum */
+  --feed-laughs-ink: #FFFFFF;
+  --feed-sports: #3872C2;           /* court blue */
+  --feed-sports-ink: #FFFFFF;
+  --feed-wild: #1D7F8A;             /* lake teal */
+  --feed-wild-ink: #FFFFFF;
+  --feed-tech: #7E8AA0;             /* slate */
+  --feed-tech-ink: #0E1420;
+  /* the four palest as an outline on cream, 3:1 at least; dark mode outlines in the fill */
+  --feed-good-line: #9C7A0E;
+  --feed-dogs-line: #B5691F;
+  --feed-home-line: #9A6F42;
+  --feed-plants-line: #4A8A33;
   --liq-news: #F2A93B;
   --liq-news-ink: #2B1606;
   --liq-photos: #D9644F;
@@ -333,6 +356,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --feed-good-line: var(--feed-good); --feed-dogs-line: var(--feed-dogs); --feed-home-line: var(--feed-home); --feed-plants-line: var(--feed-plants);
     --so-x: #3A4048;
     --cat-family: #E0B93F; --cat-film: #9BB0BC; --cat-film-on: var(--cat-pale-on);
     --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;
@@ -400,6 +424,7 @@
 }
 
 :root[data-theme="dark"] {
+  --feed-good-line: var(--feed-good); --feed-dogs-line: var(--feed-dogs); --feed-home-line: var(--feed-home); --feed-plants-line: var(--feed-plants);
   --so-x: #3A4048;
   --cat-family: #E0B93F; --cat-film: #9BB0BC; --cat-film-on: var(--cat-pale-on);
   --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;

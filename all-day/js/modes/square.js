@@ -11,7 +11,7 @@ import * as data from '../wire.js';
 import * as demo from './wire-demo.js';
 import * as square from './wire-square.js';
 
-const COPY = { label: 'Square', promise: 'What Burlington is posting.', gone: 'That post has moved on.', loading: 'Loading the Square…' };
+const COPY = { label: 'Square', promise: 'What Burlington is posting.', gone: 'That post has moved on.', loading: 'Loading Town Square…' };
 
 const SRC = app.demo ? demo.source : {
   now: () => Date.now(),

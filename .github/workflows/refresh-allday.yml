@@ -7,7 +7,11 @@
 #   all-day/data/instagram.json  — recent posts from the Burlington accounts
 #                                  in data/instagram-handles.json, each with a
 #                                  `category` for the Wire's Photos chips.
-#                                  ~500-750 KB.
+#                                  ~1.5 MB.
+#   all-day/data/interests.json  — free RSS for the Wire's Good news, Nosy and
+#                                  Tech feeds (scripts/build_interests.py)
+#   data/interests-judged.json   — the model's verdict on each of those
+#                                  headlines, so each is judged once
 #   data/instagram-ledger.json   — Scrape Creators credits spent this month
 #                                  and when each account was last fetched;
 #                                  the builder reads it back to keep inside
@@ -66,7 +70,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # The steps' own limits add up to 45. A slow free step runs out of its own
+    # time, never the Instagram step's.
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
 
@@ -86,6 +92,7 @@ jobs:
         id: reserve
         if: github.ref == 'refs/heads/main'
         continue-on-error: true
+        timeout-minutes: 2
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
@@ -105,15 +112,20 @@ jobs:
 
       - name: Build What Now
         if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
+        timeout-minutes: 3
         run: python3 scripts/build_whatnow.py
 
       - name: Build sports
         if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
+        timeout-minutes: 3
         run: python3 scripts/build_sports.py || echo "sports build skipped"
 
       # The model key gives each new post its `kind` (what the picture is) in
-      # one batched Claude Haiku 5.5 call; without it posts keep their
-      # account's category's kind and the build is otherwise unchanged.
+      # one batched Claude Haiku 5.5 call. Most posts' lines are their own
+      # cleaned captions (`cp`), for free; the gaps get a line (`hd`) from
+      # Claude Sonnet 5.5, which reads the caption and sees the thumbnail. Without
+      # it posts keep their account's category's kind,
+      # gaps go without a line, and the build is otherwise unchanged.
       - name: Build Instagram
         if: ${{ !cancelled() && steps.reserve.outputs.reserved == '1' }}
         timeout-minutes: 30
@@ -128,14 +140,36 @@ jobs:
           fi
           python3 scripts/build_instagram.py --execute || echo "instagram build skipped"
 
+      # Free RSS for the Wire's Good news, Nosy and Tech feeds. Good news and
+      # Nosy put each new headline to Claude Sonnet 5.5 on its own, Tech puts
+      # its list to Claude Haiku 5.5. After Instagram, so a
+      # hung feed or model call can never eat into credits already reserved,
+      # and it cannot fail the job: the deploy still goes out.
+      - name: Build interests
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY$OPENROUTER_API_KEY" ]; then
+            python3 -m pip install --quiet 'anthropic>=0.116,<1' || echo "no Anthropic SDK: only what a model already approved shows"
+          fi
+          python3 scripts/build_interests.py || echo "interests build skipped"
+
       # always(): a payload half-built before a timeout is still worth saving,
       # and the ledger's cleared reservation with it.
+      # One add per file: one missing path would stop git adding the rest.
       - name: Commit if changed
         if: always()
+        timeout-minutes: 2
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add all-day/data/whatnow.json all-day/data/calendar.json all-day/data/instagram.json data/instagram-ledger.json data/sports.json
+          for f in all-day/data/whatnow.json all-day/data/calendar.json all-day/data/instagram.json all-day/data/interests.json data/interests-judged.json data/instagram-ledger.json data/sports.json; do
+            if [ -e "$f" ]; then git add "$f"; else echo "$f is missing"; fi
+          done
           if git diff --cached --quiet; then
             echo "No hub changes."
           else

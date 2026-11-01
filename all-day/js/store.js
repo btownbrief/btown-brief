@@ -104,7 +104,7 @@ function capMap(map, cap) {
 /* ----------------------------------------------------------------- demo */
 
 let DEMO = null;   // { saved: [], voted: {}, read: {}, hidden: {} } while ?demo=1
-export function setDemo(on) { DEMO = on ? { saved: [], voted: {}, read: {}, hidden: {}, settings: {} } : null; }
+export function setDemo(on) { DEMO = on ? { saved: [], voted: {}, read: {}, hidden: {}, settings: {}, wall: {} } : null; }
 export const isDemo = () => !!DEMO;
 
 /* --------------------------------------------------------------- player */
@@ -186,6 +186,7 @@ const SETTING_DEFAULTS = {
   localOnly: true,
   layout: 'newest',  // 'newest' one stream, or 'sources' the by-outlet grid
   source: '',        // one outlet only, '' for all
+  explore: {},       // { tab: true }: the tabs this phone opens on their Explore wall
 };
 
 export function settings() {
@@ -198,6 +199,20 @@ export function setSetting(key, value) {
   s[key] = value;
   if (DEMO) DEMO.settings[key] = value; else write(SET_KEY, s);
   return s;
+}
+
+/* ------------------------------------------------------------ the walls */
+/* What the Explore walls have put on this phone's screen, { key: when }, so a
+   tile already shown sinks (explore.js). The walls share it, because one post
+   can feed two tabs. */
+const WALL_KEY = 'allday-wall-seen';
+const WALL_CAP = 1500;
+export function wallSeen() { return DEMO ? { ...DEMO.wall } : obj(read(WALL_KEY, {})); }
+export function markWallSeen(keys) {
+  const m = wallSeen();
+  const now = Date.now();
+  keys.forEach((k) => { m[k] = now; });
+  if (DEMO) DEMO.wall = m; else write(WALL_KEY, capMap(m, WALL_CAP));
 }
 
 /* ---------------------------------------------------------------- mutes */

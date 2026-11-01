@@ -494,6 +494,7 @@ def step_summary(text):
 # OpenRouter's GLM 5.3 Flash (2026-10-16; reasoning is billed as output).
 PRICES = {
     "claude-haiku-5-5": {"in": 0.10, "out": 0.50, "cache_read": 0.01, "cache_write": 0.125},
+    "claude-sonnet-5-5": {"in": 2.00, "out": 10.00, "cache_read": 0.20, "cache_write": 2.50},
     "claude-opus-5-5": {"in": 4.00, "out": 20.00, "cache_read": 0.20, "cache_write": 5.00},
     "z-ai/glm-5.3-flash": {"in": 0.014, "out": 0.90, "cache_read": 0.014, "cache_write": 0.014},
 }
@@ -509,8 +510,16 @@ MONTH_CAP_USD = 10.0
 
 
 def pick_engine(role):
-    """role is "tag" or "curate" -> {"provider", "model"[, "effort"]} or None
-    (no key)."""
+    """role is "tag", "curate", "title" or "judge" -> {"provider", "model"[,
+    "effort"]} or None (no key). Titles and the judge are Sonnet or nothing, and
+    both can wait for the next run. Titles: on the 475 gaps of 2026-11-01, read
+    against their pictures, Sonnet got under 2 in 100 wrong and Haiku about 6.
+    The judge, one headline a call: a bakeoff that day found it showed a third
+    of Haiku's bad headlines."""
+    if role in ("title", "judge"):
+        if os.environ.get("ANTHROPIC_API_KEY"):
+            return {"provider": "anthropic", "effort": "low", "model": "claude-sonnet-5-5"}
+        return None
     if os.environ.get("ANTHROPIC_API_KEY"):
         # Haiku 5.5 runs both prompts (2026-11-01; Opus 5.5 curated before, at
         # many times the cost). Curation gets effort medium, tagging low.
@@ -536,20 +545,24 @@ class ModelError(RuntimeError):
     pass
 
 
-def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="wire", effort="low"):
+def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="wire", effort="low", timeout=None):
     """One structured-output call, retried once. -> (parsed_json, usage).
 
     usage is summed over every attempt, failed ones included, because a
-    failed attempt is still billed. Raises ModelError with that usage
-    attached (exc.usage) when no attempt produced valid JSON."""
+    failed attempt is still billed; usage["calls"] counts the attempts that
+    got a response, so 0 means nobody answered. Raises ModelError with that
+    usage attached (exc.usage) when no attempt produced valid JSON. `timeout`
+    is seconds per attempt, with the SDK's own quiet retries off, so a caller
+    on a clock knows the worst case is attempts * timeout."""
     import anthropic
 
     usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
+    limit = {"timeout": timeout, "max_retries": 0} if timeout else {}
     if engine["provider"] == "anthropic":
-        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"], **limit)
     else:
         client = anthropic.Anthropic(api_key=os.environ["OPENROUTER_API_KEY"],
-                                     base_url=OPENROUTER_BASE_URL)
+                                     base_url=OPENROUTER_BASE_URL, **limit)
     last = None
     for attempt in range(1, attempts + 1):
         try:
@@ -649,12 +662,13 @@ def _create(client, engine, system, user, schema, max_tokens, attempt, effort="l
     # Claude Opus 5.5 (pick_engine no longer picks it; council_summaries.py asks
     # for it by name, at more effort: its accuracy outweighs the cost): thinking
     # cannot be disabled on this model (a 400 at every effort), so `thinking`
-    # is omitted and effort low keeps it short.
-    # The first attempt opts into the server-side refusal fallback; the retry
-    # goes without it, so a 400 on the beta can never block the run.
+    # is omitted and effort low keeps it short. Claude Sonnet 5.5 (the headline
+    # judge in build_interests.py) is the same, and it has no sampling parameters either.
+    # On Opus the first attempt opts into the server-side refusal fallback; the
+    # retry goes without it, so a 400 on the beta can never block the run.
     params = dict(model=model, max_tokens=max_tokens, system=system, messages=messages,
                   output_config={"effort": effort, "format": fmt})
-    if attempt == 1:
+    if attempt == 1 and model != "claude-sonnet-5-5":
         return client.beta.messages.create(
             betas=["server-side-fallback-2026-07-01"], fallbacks="default", **params)
     return client.messages.create(**params)

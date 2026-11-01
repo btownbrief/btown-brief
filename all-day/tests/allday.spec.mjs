@@ -763,7 +763,7 @@ async function deepLinks(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/#wire/' + far.id);
     check(await flashes(page, far.id), 'a shared national card far down today lands and flashes for a Local reader', far.id);
-    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly === false), 'and the switch moved to Everything to show it', '');
+    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly !== false), 'and the reader’s switch stays on Local', '');
     await page.goto(base + '/all-day/#wire/' + old.id);
     await page.reload();
     check(await flashes(page, old.id), 'a card from yesterday’s edition lands and flashes', old.id);
@@ -841,6 +841,8 @@ const BAND = '.panel:not([hidden]) .wband';
 async function openFilters(page) {
   await toTop(page);
   await page.waitForSelector(BAND + ' .wf', { timeout: 4000 });
+  const b = await page.$(BAND + ' .wf-open');
+  if (b && await b.getAttribute('aria-expanded') === 'false') { await b.click(); await page.waitForSelector(BAND + ' .wf-open[aria-expanded="true"]'); }
 }
 async function closeFilters() {}
 async function chipTo(page, k) {
@@ -908,7 +910,7 @@ async function threeWay(browser, base) {
     check(!loc.list.some((x) => /DemoPark11|DemoSky12/.test(x.k)), 'Local: no national Instagram', '');
     await flip(page, 'national');
     const nat = await pmState(page);
-    check(nat.list.length === 2 && nat.list.every((x) => !x.local && x.from === 'instagram'), 'National: only the national accounts', JSON.stringify(nat.list.map((x) => x.k)));
+    check(nat.list.length === 2 && nat.list.every((x) => !x.local && x.from === 'instagram'), 'National: only the national accounts, none of the feeds’ posts', JSON.stringify(nat.list.map((x) => x.k)));
     check(!nat.pets.length, 'national pets are not Pets of Burlington', '');
     check(await page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent) === 'The country in photos' && !(await page.$(pmPanel + ' .pm-head p, ' + pmPanel + ' .pm-post')), 'National: its own title, no line under it, no Burlington post button', '');
     await flip(page, 'everything');
@@ -923,7 +925,7 @@ async function threeWay(browser, base) {
     const { ctx, page } = await newPage(browser, base, {});
     await page.goto(base + '/all-day/?demo=1#wire/photos/ig:DemoPark11');
     await page.waitForSelector('.sheet-body', { timeout: 8000 }).catch(() => {});
-    check(await geoNow(page) === 'everything', 'a national post shared to a Local reader flips the switch', await geoNow(page));
+    check(await geoNow(page) === 'local', 'a national post shared to a Local reader leaves the switch alone', await geoNow(page));
     check(!!(await page.$('.sheet-body')), 'and opens', '');
     await ctx.close();
   });
@@ -1090,8 +1092,8 @@ async function theWire(browser, base) {
     const localPicks = today.picks.filter((x) => x.local).map((x) => x.id);
     const localEarlier = today.picks_earlier.filter((x) => x.local);
     const t0 = await topKeys(page);
-    check(t0.length === 5 && t0.every((x) => x.lead) && JSON.stringify(t0.map((x) => x.rank)) === '["1","2","3","4","5"]', 'five big cards to start, numbered 1 to 5', JSON.stringify(t0));
-    check(t0.filter((x) => !x.dek).length === 1, 'an empty why draws no reason line', JSON.stringify(t0.map((x) => x.dek)));
+    check(t0.length === 5 && t0[0].lead && !t0.slice(1).some((x) => x.lead) && JSON.stringify(t0.map((x) => x.rank)) === '["1","2","3","4","5"]', 'one big card, then four rows, numbered 1 to 5', JSON.stringify(t0));
+    check(!t0.slice(1).some((x) => x.dek), 'only the first says why', JSON.stringify(t0.map((x) => x.dek)));
     const moreLabel = await page.$eval('.panel:not([hidden]) .wmore-btn', (b) => b.textContent);
     const hiddenN = localPicks.length - 5 + localEarlier.length;
     check(moreLabel === 'More top stories · ' + hiddenN, 'the button counts the rest of the ranking and the earlier picks (' + hiddenN + ')', moreLabel);
@@ -1347,6 +1349,7 @@ async function theWire(browser, base) {
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await openFilters(page);
+    await openFilters(page);
     await page.click(BAND + ' .wf-raw');
     await page.waitForSelector('#subnav .chips.outlets', { timeout: 8000 });
     check(/Unfiltered/.test(await page.$eval('#subnav .dl', (d) => d.innerText)) && await page.evaluate(() => location.hash) === '#wire/unfiltered', 'Unfiltered opens inside the tab', '');
@@ -1460,7 +1463,7 @@ async function theWire(browser, base) {
         check(m.asideOn && m.aside.l >= m.body.r + 24 && m.aside.r <= w && m.chips === 'none' && m.top, w + ': the rail on the right holds the chips; the banner keeps the day and the switch', JSON.stringify(m));
         check(m.body.w >= 640 && m.body.w <= 720, w + ': the column is 640 to 720 wide', m.body.w);
       } else check(!m.asideOn && m.chips !== 'none' && m.top && m.body.w === 720, w + ': no rail; the banner holds the chips', JSON.stringify(m));
-      check(m.lead === 28 && m.second === 19 && m.row === 18 && m.thumb === 120, w + ': the first top story 28px, the next four 19px two-up, rows 18px with 120px pictures', JSON.stringify([m.lead, m.second, m.row, m.thumb]));
+      check(m.lead === 28 && m.second === 18 && m.row === 18 && m.thumb === 120, w + ': the first top story 28px, the next four rows 18px two-up, rows 18px with 120px pictures', JSON.stringify([m.lead, m.second, m.row, m.thumb]));
       /* the wheel scrolls the paper from over the tab list */
       const nb = await v.page.locator('#tabbar').boundingBox();
       await v.page.mouse.move(nb.x + 100, nb.y + nb.height - 40);
@@ -1646,7 +1649,7 @@ async function theWire(browser, base) {
         chips: [...t.querySelectorAll('.chip')].map((c) => [c.dataset.chip, c.querySelector('span').textContent, (c.querySelector('.n') || {}).textContent || '', c.classList.contains('on')]),
         pageW: document.documentElement.scrollWidth };
     });
-    check(row && row.below && row.head === 'kinds', 'the topics are the row under the kinds', JSON.stringify(row));
+    check(row && row.below && row.head === 'wf-ways', 'the topics are the row under Feed, Topics and Hide politics', JSON.stringify(row));
     const want = { 't:politics': 0, 't:safety': 0, 't:business': 0, 't:arts': 0, 't:weather': 0 };
     items.forEach((it) => { if (it.local && GROUP[it.topic]) want[GROUP[it.topic]]++; });
     const order = ['t:politics', 't:safety', 't:business', 't:arts', 't:weather'];
@@ -1654,6 +1657,7 @@ async function theWire(browser, base) {
       'All topics first and on, then only the topics this day has, in a fixed order', JSON.stringify(row && row.chips));
     check(row && row.chips.slice(1).every(([k, , n]) => Number(n) === want[k]), 'each topic counts what this reader sees (Local)', JSON.stringify([row && row.chips, want]));
     check(row && row.pageW <= 390, 'the row scrolls sideways; the page does not', JSON.stringify(row && row.pageW));
+    await openFilters(page);
     await page.click(BAND + ' .w-topics .chip[data-chip="t:politics"]');
     await page.waitForTimeout(200);
     await closeFilters(page);
@@ -1677,6 +1681,7 @@ async function theWire(browser, base) {
     check(await page.$eval(BAND + ' .w-topics .chip.on', (c) => c.dataset.chip) === 'all' && !!(await page.$('#panel-wire .wleads')), 'and back on All, the topic is All topics again', '');
     /* a topic with nothing under a source chip is left out, and a picked
        one goes back to All topics */
+    await openFilters(page);
     await page.click(BAND + ' .w-topics .chip[data-chip="t:politics"]');
     await page.waitForTimeout(150);
     const redditTopics = new Set(items.filter((it) => it.local && it.ch === 'reddit' && GROUP[it.topic]).map((it) => GROUP[it.topic]));
@@ -1701,7 +1706,7 @@ async function theWire(browser, base) {
     await page.waitForSelector('#panel-wire .sq-compose', { timeout: 8000 }).catch(() => {});
     check(page.url().endsWith('#wire/square') && await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'square', 'Square opens in the tab, in the address, and is kept', page.url());
     const head = await page.$eval('#panel-wire .sq-compose', (b) => ({ h2: b.querySelector('h2').textContent, kinds: [...b.querySelectorAll('[data-compose]')].map((x) => x.dataset.compose) }));
-    check(head.h2 === 'The Square' && JSON.stringify(head.kinds) === '["post","show","ask","free","pets"]', 'it opens with the five ways to post', JSON.stringify(head));
+    check(head.h2 === 'Town Square' && JSON.stringify(head.kinds) === '["post","show","ask","free","pets"]', 'it opens with the five ways to post', JSON.stringify(head));
     const st = await sqState(page);
     const cards = await page.$$eval('#panel-wire .sq-feed > .card', (cs) => cs.map((c) => ({ k: c.dataset.k, board: c.classList.contains('board'), out: c.classList.contains('sq-out'),
       chip: (c.querySelector('.sq-chip') || {}).textContent || '', img: !!c.querySelector('img, .ph'), link: (c.querySelector('a[data-open]') || {}).href || '', src: [...c.classList].find((x) => /^w-src-/.test(x)) || '' })));
@@ -1960,8 +1965,9 @@ async function wirePass2(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
     await everywhere(page);
     await page.goto(base + '/all-day/');
-    await page.waitForSelector('#panel-wire .whead .wnsw', { timeout: 15000 });
-    const sw = await page.$$eval('#panel-wire .whead .wnsw-b', (bs) => bs.map((b) => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]));
+    await openFilters(page);
+    await page.waitForSelector('#panel-wire .wband .wnsw', { timeout: 15000 });
+    const sw = await page.$$eval('#panel-wire .wband .wnsw-b', (bs) => bs.map((b) => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]));
     check(JSON.stringify(sw.map((b) => b[0] + ':' + b[1])) === '["Feed:true","Topics:false"]' && sw.every((b) => b[2] >= 32), 'Feed | Topics sits in the head, Feed on', JSON.stringify(sw));
     await page.click('#panel-wire .wnsw-b[data-news="topics"]');
     await page.waitForSelector('#panel-wire .wshelf', { timeout: 8000 });
@@ -1992,6 +1998,7 @@ async function wirePass2(browser, base) {
     await page.reload();
     await page.waitForSelector('#panel-wire .wshelf', { timeout: 15000 });
     check(true, 'a reload opens on Topics again', '');
+    await openFilters(page);
     await page.click('#panel-wire .wnsw-b[data-news="feed"]');
     await page.waitForSelector('#panel-wire .wleads', { timeout: 8000 });
     check(await page.evaluate(() => localStorage.getItem('allday-wire-news')) === null && !(await page.$('#panel-wire .wshelf')), 'Feed brings the paper back, and the phone forgets Topics', '');
@@ -2003,10 +2010,12 @@ async function wirePass2(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
     await everywhere(page);
     await page.goto(base + '/all-day/');
+    await openFilters(page);
     await page.waitForSelector('#panel-wire .wband .w-topics', { timeout: 15000 });
     const tops = await sheetChips(page, '.w-topics');
     const sp = tops.find((c) => c[0] === 't:sports'), mk = tops.find((c) => c[0] === 't:markets');
     check(!!sp && !!mk && Number(mk[1]) === 3, 'Sports and Markets are on the topic row; Markets counts its whole lane', JSON.stringify(tops));
+    await openFilters(page);
     await page.click(BAND + ' .w-topics .chip[data-chip="t:sports"]');
     await page.waitForSelector(BAND + ' .w-sports', { timeout: 4000 });
     const sub = await sheetChips(page, '.w-sports');
@@ -2023,6 +2032,7 @@ async function wirePass2(browser, base) {
     check(/Sports/.test(h.filt) && /NBA/.test(h.filt), 'the head says what it is showing', h.filt);
     await page.screenshot({ path: path.join(SHOTS, 'wirep2-sports-390.png') });
     await toTop(page);
+    await openFilters(page);
     await page.click(BAND + ' .w-topics .chip[data-chip="t:markets"]');
     await page.waitForTimeout(200);
     check(!(await page.$(BAND + ' .w-sports')), 'the sport row goes with the Sports chip', '');
@@ -2266,7 +2276,7 @@ async function thePhotos(browser, base) {
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
     const sw = await page.$$eval('#subnav .wbar > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed') }; }));
-    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Recaps","Square","Photos"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Recaps, Square, Photos in words, each a 44px target', JSON.stringify(sw));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Recaps","Town","Photos"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Recaps, Square, Photos in words, each a 44px target', JSON.stringify(sw));
     check(sw[0].p === 'true' && sw.slice(1).every((b) => b.p === 'false'), 'it opens on News, said by aria-pressed', JSON.stringify(sw));
     check(await page.$eval('#subnav > :first-child', (n) => n.classList.contains('wbar') && n.firstElementChild.classList.contains('wmodes')), 'and it leads the one row under the mast', '');
     check(!(await page.$('#subnav .viewsw, #subnav .viewsw-b')), 'the old list and photo icons are gone', '');
@@ -2456,7 +2466,7 @@ async function thePhotos(browser, base) {
     await page.waitForSelector('.sheet-card[aria-label="Aurora from the causeway"]', { timeout: 4000 }).catch(() => {});
     const sh = await page.$eval('.sheet-body', (b) => ({ media: !!b.querySelector('.c-media .ph'), text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), shirt: !!b.querySelector('[data-shirt]') }));
     check(sh.media && /by Ben S\. · Photo/.test(sh.text) && /Eleven at night/.test(sh.text), 'the sheet: the big picture, its maker and their line', sh.text);
-    check(JSON.stringify(sh.acts) === '["photovote","share","breport"]' && sh.shirt, 'vote, share, report, and the shirt the maker said yes to', JSON.stringify(sh));
+    check(JSON.stringify(sh.acts) === '["photovote","share","save","breport"]' && sh.shirt, 'vote, share, the star, report, and the shirt the maker said yes to', JSON.stringify(sh));
     await page.click('.sheet-body [data-act="photovote"]');
     await page.waitForTimeout(200);
     const after = await page.evaluate((k) => ({ sheet: document.querySelector('.sheet-body [data-act="photovote"] .vn').textContent, pressed: document.querySelector('.sheet-body [data-act="photovote"]').getAttribute('aria-pressed'),
@@ -2472,7 +2482,7 @@ async function thePhotos(browser, base) {
     await page.click(pmPanel + ' [data-k="ig:DemoLake1"] .pm-cap');
     await page.waitForSelector('.sheet-card', { timeout: 4000 }).catch(() => {});
     const ig = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), open: (b.querySelector('a[data-open]') || {}).textContent || '' }));
-    check(/@demo_lakelight/.test(ig.text) && /Open on Instagram/.test(ig.open) && JSON.stringify(ig.acts) === '["up","share"]', 'an Instagram post’s sheet: the account, vote, share and Open on Instagram', JSON.stringify(ig));
+    check(/@demo_lakelight/.test(ig.text) && /Open on Instagram/.test(ig.open) && JSON.stringify(ig.acts) === '["up","share","save"]', 'an Instagram post’s sheet: the account, vote, share, the star and Open on Instagram', JSON.stringify(ig));
     const igTitle = await page.$eval('.sheet-card', (c) => c.getAttribute('aria-label'));
     check(/^Glass-calm at the breakwater this morning\. Not a single ripple until the ferry came…$/.test(igTitle) && /until the ferry came through\./.test(ig.text),
       'titled by its caption, cut at a word, the whole caption under the picture', igTitle);
@@ -2651,13 +2661,13 @@ async function thePhotos(browser, base) {
     check(fl.on && fl.vis === 'visible' && fl.sw && !fl.day, 'scrolled down on Photos: Local / Everything floats under the pill', JSON.stringify(fl));
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
-    /* a shared world picture opens on a Local reader: the switch goes to Everything */
+    /* a shared world picture opens on a Local reader, and the switch stays */
     const d = await open({ ...base0, photos_world: world });
     await geoTo(d.page, 'local');
     await d.page.goto(base + '/all-day/#wire/' + encodeURIComponent('pw:example.org/world/page2'));
     await d.page.waitForSelector('.sheet-card[aria-label="Picture of the day 2"]', { timeout: 6000 }).catch(() => {});
-    check(!!(await d.page.$('.sheet-card[aria-label="Picture of the day 2"]')) && await d.page.$eval(BAND + ' .localsw', (x) => !x.classList.contains('is-on')),
-      'a shared world picture opens in its sheet, on Everything', d.page.url());
+    check(!!(await d.page.$('.sheet-card[aria-label="Picture of the day 2"]')) && await d.page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly !== false),
+      'a shared world picture opens in its sheet, and the reader is still on Local', d.page.url());
     check(!d.errors.length, 'no console errors', d.errors.join(' | '));
     await d.ctx.close();
     /* no world list yet: Everything is Local, with no error and no empty shelf */
@@ -8920,7 +8930,7 @@ async function theVintage(browser, base) {
     await page.click('#subnav .chip[data-chip="tees"]');
     /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
     await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
-    const teeTop = await page.$eval(vslot('tees'), (s) => Math.round(s.getBoundingClientRect().top));
+    const teeTop = await page.$eval(vslot('tees'), (s) => Math.floor(s.getBoundingClientRect().top));
     check(teeTop >= 0 && teeTop < 300, 'a chip scrolls its section up under the mast', teeTop);
     await page.click(vslot('spotted') + ' .sec [data-act=vfind]');
     await page.waitForSelector('.sheet-body .linkrow');
@@ -11676,7 +11686,7 @@ async function shellFixes(browser, base) {
       check(m.gap >= 16, tag + 'the logo stands a clear step away from All Day', String(m.gap));
       check(m.over <= 0 && m.doc <= 0 && !m.overlaps.length && m.wm <= 0, tag + 'the mast row fits: nothing overflows, nothing overlaps, All Day is whole', JSON.stringify(m));
       check(m.img.t >= m.row.t && m.img.b <= m.row.b, tag + 'the logo sits inside the 52px row', JSON.stringify([m.img, m.row]));
-      check(m.saved === 'Saved' && (width < 380 ? m.word === 'none' : m.word !== 'none'), tag + (width < 380 ? 'Saved is the star alone, still named Saved' : 'Saved keeps its word'), JSON.stringify(m));
+      check(m.saved === 'Saved', tag + 'Saved is still named Saved, with its word or as the star alone', JSON.stringify(m));
       check(!errors.length, tag + 'no console errors', errors.join(' | '));
       await ctx.close();
     }
@@ -13661,7 +13671,7 @@ async function railsHaveList(browser, base) {
         const out = [];
         document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
           if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
-          if (n.classList.contains('chips')) return;   // filters and tables of contents, not content
+          if (n.classList.contains('chips') || n.classList.contains('ifeeds')) return;   // filters and tables of contents, not content
           /* a section pill (sections.js): its own All button lists every section, so it must show */
           if (n.classList.contains('secpill-scroll')) { const all = n.parentElement.querySelector(':scope > .secpill-all'); if (all && getComputedStyle(all).display !== 'none') return; }
           const wrap = n.closest('.rail-wrap');
@@ -14425,14 +14435,14 @@ async function fullPagesAndAsks(browser, base) {
       for (const tab of TABS.concat('habits')) {
         if (tab !== 'wire') await goTab(page, tab);
         const r = await page.evaluate((t) => {
-          const p = document.querySelector('#panel-' + t), a = p.querySelector('.panel-top .fullpage a');
+          const p = document.querySelector('#panel-' + t), a = p.querySelector(t === 'wire' ? ':scope > .fullpage a' : '.panel-top .fullpage a');
           if (!a) return { none: true };
           const ar = a.getBoundingClientRect(), body = p.querySelector('.panel-body').getBoundingClientRect();
           return { href: a.getAttribute('href'), target: a.target, rel: a.rel, text: a.textContent.trim(), label: a.getAttribute('aria-label'), above: ar.bottom <= body.top + 1, onScreen: ar.top >= 0 && ar.bottom <= innerHeight, docW: document.documentElement.scrollWidth, vw: innerWidth };
         }, tab);
         if (WANT[tab]) {
           check(r.href === WANT[tab] && r.target === '_blank' && /noopener/.test(r.rel) && r.text === 'Full page' && /opens in a new tab/.test(r.label || ''), mode + ' ' + tab + ': "Full page" opens ' + WANT[tab] + ' in a new tab', JSON.stringify(r));
-          check(r.above && r.onScreen && r.docW <= r.vw, mode + ' ' + tab + ': at the top, above the tab’s own first section, on screen as it lands', JSON.stringify(r));
+          if (tab !== 'wire') check(r.above && r.onScreen && r.docW <= r.vw, mode + ' ' + tab + ': at the top, above the tab’s own first section, on screen as it lands', JSON.stringify(r));
         } else check(r.none, mode + ' ' + tab + ': no page of its own, so no link', JSON.stringify(r));
       }
       check(!errors.length, mode + ': no console errors', errors.join(' | '));
@@ -15334,7 +15344,7 @@ async function theApps(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { ua: IPHONE, asks: true });
     await page.goto(base + '/town/');
     await settle(page);
-    check(!!(await page.$('#mast #install-btn:not([hidden])')) && !(await page.$('#mast .appsbtn')), 'the mast carries Add to home screen, and no switcher', '');
+    check(!!(await page.$('#mast #install-btn:not([hidden])')) && !!(await page.$('#mast .appsbtn')), 'the mast carries Add to home screen, and the chevron to the apps', '');
     await page.click('#install-btn');
     await page.waitForSelector('.sheet-card .installcard');
     const sw = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, card: document.querySelector('.installcard').innerText, how: document.querySelector('.installcard .ask-how')?.innerText || '' }));
@@ -15371,7 +15381,7 @@ async function theApps(browser, base) {
         await p.page.waitForTimeout(100);
         const fit = await p.page.evaluate(() => { const w = document.getElementById('wordmark'); const row = document.querySelector('.mast-row');
           return { fits: w.scrollWidth <= w.clientWidth + 1, row: row.scrollWidth <= row.clientWidth + 1, tight: document.getElementById('mast').classList.contains('tight'), btn: !document.getElementById('install-btn').hidden }; });
-        check(fit.fits && fit.row && fit.btn === asks && (id === 'all-day' ? !fit.tight : true), id + ': its name fits the mast at 390, ' + (asks ? 'with' : 'without') + ' the home-screen button' + (id === 'all-day' ? ', Saved keeps its word' : ''), JSON.stringify(fit));
+        check(fit.fits && fit.row && fit.btn === asks, id + ': its name fits the mast at 390, ' + (asks ? 'with' : 'without') + ' the home-screen button', JSON.stringify(fit));
         await p.ctx.close();
       }
     }
@@ -15948,13 +15958,13 @@ async function theFree(browser, base) {
     offer(7, 7, 'Upright piano', 'Marketplace', true), offer(8, 8, 'Moving boxes', 'Buy Nothing', true), offer(9, 24 * 5 + 1, 'Too old', 'Gifting', true)];
   const titles = (page) => page.$$eval(vslot('free') + ' .froffer:not([hidden]) .c-title', (a) => a.map((n) => n.textContent));
 
-  await group('Free: newest first, five days, six and See more, filters, star and share (live)', async () => {
+  await group('Free: newest first, three days, six and See more, filters, star and share (live)', async () => {
     const { ctx, page, errors } = await open(eight.slice().reverse(), '#vintage');
     await page.waitForSelector(vslot('free') + ' .froffer');
     check(await page.$eval('#subnav .chip', (c) => c.dataset.chip) === 'free', 'Free is first in the row', '');
-    check(await page.$eval(vslot('free') + ' .sec h2', (h) => h.textContent) === 'Free this week', 'its head', '');
+    check(await page.$eval(vslot('free') + ' .sec h2', (h) => h.textContent) === 'Free right now', 'its head', '');
     const six = await titles(page);
-    check(six.join() === 'Oak dresser,Porch chairs,Canning jars,Kids bike,Wool blankets,Floor lamp', 'newest first, the first six, nothing past five days', six.join());
+    check(six.join() === 'Oak dresser,Porch chairs,Canning jars,Kids bike,Wool blankets,Floor lamp', 'newest first, the first six, nothing past three days', six.join());
     await page.click(vslot('free') + ' [data-more="free"]');
     const all = await titles(page);
     check(all.length === 8 && !all.includes('Too old'), 'See more shows the rest, and the old one never', all.join());
@@ -16030,7 +16040,7 @@ async function theFree(browser, base) {
     const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Buy Nothing', true)], '#social', { facebook });
     await page.waitForSelector('#panel-social .so-facebook');
     await page.evaluate(() => { navigator.share = (o) => { window.sharedUrl = o.url; return Promise.resolve(); }; });
-    const block = page.locator('#panel-social .so-facebook', { hasText: 'Free this week' });
+    const block = page.locator('#panel-social .so-facebook', { hasText: 'Free right now' });
     await block.locator('[data-act=share]').click();
     const url = await page.evaluate(() => window.sharedUrl);
     check(/#vintage\/fr-/.test(url || ''), 'its link lands on the offer in Vintage', String(url));
@@ -16084,7 +16094,7 @@ async function theFree(browser, base) {
     await page.waitForSelector('#panel-social .so-facebook');
     await page.waitForTimeout(500);
     const names = await page.$$eval('#panel-social .so-facebook .so-name', (a) => a.map((n) => n.textContent));
-    check(names.join() === 'Free this week,Burlington Group', 'one block, freshest first', names.join());
+    check(names.join() === 'Free right now,Burlington Group', 'one block, freshest first', names.join());
     const b = await page.$eval('#panel-social .so-facebook', (c) => ({ text: c.querySelector('.so-text').textContent, href: c.querySelector('.so-text').href, rows: c.querySelectorAll('.so-row').length, pic: !!c.querySelector('.so-pic img'), name: c.querySelector('.so-name').getAttribute('href'), target: c.querySelector('.so-name').target }));
     check(b.text === 'Oak dresser · Winooski' && b.href === fb + 'marketplace/item/1/' && b.rows === 1 && b.pic, 'its newest offer, with the one before it', JSON.stringify(b));
     check(b.name === '#vintage/free' && !b.target, 'its name stays in the app', JSON.stringify(b));
@@ -16869,6 +16879,1524 @@ async function theRank(browser, base) {
 /* What the walk of the whole product found (2026-10-31): a pill at the foot of
    a page, Season's tile, a saved Talk card, the Board and Council's Collapse,
    and the comment bubble with nothing behind it. */
+async function theFeeds(browser, base) {
+  await group('Feeds: somebody else’s feed, from the row under the pill', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    check(!(await page.$('#panel-wire .ifeeds')), 'the chips have left News', '');
+    await page.click('#subnav .xcell');
+    await page.waitForSelector('#panel-wire .ifeeds .ifeed[data-feed="dogs"]');
+    const pressed = () => page.$$eval('#panel-wire .ifeed.on', (b) => b.map((x) => x.dataset.feed));
+    check(!(await pressed()).length, 'nothing is on until the reader picks', '');
+    check(!(await page.$('#panel-wire .ifeed[data-feed="sports"]')), 'a feed with nothing in it has no chip', '');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .xt');
+    check((await pressed()).join() === 'dogs', 'the chip is lit', '');
+    check(!(await page.$('#panel-wire .wband')), 'the paper’s filters step aside', '');
+    check(!(await page.$('#subnav .wmode.on')), 'and no word on the pill is lit', '');
+    check(/#wire\/feed\/dogs$/.test(page.url()), 'the address holds it', page.url());
+    const breeds = await page.$$eval('#panel-wire .ibreeds .chip', (c) => c.map((x) => x.dataset.chip));
+    check(breeds.join() === 'all,beagle,lab', 'Dog people has Beagles and Labs', breeds.join());
+    const dogs = await page.$$eval('#panel-wire .xt', (t) => t.length);
+    await page.click('#panel-wire .ibreeds .chip[data-chip="beagle"]');
+    await page.waitForFunction((n) => document.querySelectorAll('#panel-wire .xt').length < n, dogs);
+    const labels = await page.$$eval('#panel-wire .xt', (t) => t.map((x) => x.getAttribute('aria-label')));
+    check(labels.length > 0 && labels.every((l) => /demo_beagles/.test(l)), 'Beagles are only beagles', labels.join(' | '));
+    await page.click('#panel-wire .ifeed[data-feed="good"]');
+    await page.waitForSelector('#panel-wire .ifeed-list .xt-head');
+    check((await pressed()).join() === 'dogs,good', 'a second feed blends in', '');
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-wire .xt');
+    check((await pressed()).join() === 'dogs,good', 'what is on stays on the phone', (await pressed()).join());
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForSelector('#panel-wire .wleads');
+    check(await page.evaluate(() => localStorage.getItem('allday-wire-feeds')) !== null, 'a word leaves the wall and the picks stay', '');
+    await page.click('#subnav .xcell');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    check((await pressed()).join() === 'dogs,good', 'and the cell brings them back', (await pressed()).join());
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-wire .ifeed.on').length === 1);
+    await page.click('#panel-wire .ifeed[data-feed="good"]');
+    await page.waitForSelector('#panel-wire .wband');
+    check(!(await pressed()).length, 'only tapping a chip again undoes it', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: News opens on one row, with the rest under Filters', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    check(!(await page.$(BAND + ' .w-topics')) && !(await page.$(BAND + ' .wf-raw')), 'topics and Unfiltered wait behind Filters', '');
+    const leads = await page.$eval('#panel-wire .wleads', (box) => [...box.children].map((x) => x.classList.contains('wlead')));
+    check(leads[0] === true && leads.slice(1).every((x) => !x), 'one big card, then rows', JSON.stringify(leads));
+    await page.click(BAND + ' .wf-open');
+    await page.waitForSelector(BAND + ' .wf-ways');
+    check(!!(await page.$(BAND + ' .wf-raw')) && !!(await page.$(BAND + ' .wnsw')), 'Filters opens them in place, with Feed and Topics', '');
+    await page.click(BAND + ' .wf-nopol');
+    await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
+    check(await page.$eval(BAND + ' .wf-nopol', (b) => b.getAttribute('aria-pressed')) === 'true', 'Hide politics stays pressed', '');
+    await page.reload();
+    await settle(page);
+    check(await page.$eval(BAND + ' .wf-open span', (s) => s.textContent) === 'Filters · 1', 'Hide politics is kept', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: the apps, from the name', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click('.appsbtn');
+    await page.waitForSelector('.appbubble');
+    const lines = await page.$$eval('.ab-line', (l) => l.map((x) => x.textContent));
+    check(lines.join('|') === 'Everything, one place, all day.|Workouts, habits and recovery.|Home sales, permits and city hall.', 'each app says what is in it', lines.join('|'));
+    const b = await page.$eval('.appbubble', (n) => n.getBoundingClientRect().top), m = await page.$eval('.appsbtn', (n) => n.getBoundingClientRect().bottom);
+    check(b >= m, 'the bubble opens under the name', b + ' ' + m);
+    await page.click('.appsbtn');
+    check(!(await page.$('.appbubble')), 'and the same button closes it', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the review of 2026-11-01: each of these failed before its fix */
+  const feedsOn = (keys, extra = {}) => async (ctx) => {
+    await ctx.addInitScript(([k, x]) => {
+      if (sessionStorage.getItem('seeded')) return;
+      sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('allday-wire-feeds', JSON.stringify(k));
+      Object.entries(x).forEach(([a, b]) => localStorage.setItem(a, b));
+    }, [keys, extra]);
+  };
+  const stored = (page) => page.evaluate(() => localStorage.getItem('allday-wire-feeds'));
+
+  await group('Feeds: every deep link works while a feed is on', async () => {
+    const links = [
+      ['w1', (p) => p.waitForSelector('#panel-wire .card[data-k="w1"].flash', { timeout: 5000 }).then(() => true, () => false), 'a story flashes its card'],
+      ['recaps', (p) => p.waitForSelector('#subnav .wmode.on[data-view="recaps"]', { timeout: 5000 }).then(() => true, () => false), 'Recaps opens'],
+      ['square', (p) => p.waitForSelector('#subnav .wmode.on[data-view="square"]', { timeout: 5000 }).then(() => true, () => false), 'Town Square opens'],
+      ['photos', (p) => p.waitForSelector('#panel-wire .card.pm', { timeout: 5000 }).then(() => true, () => false), 'Photos opens'],
+      ['reddit', (p) => p.waitForSelector(BAND + ' .chip.on[data-chip="reddit"]', { timeout: 5000 }).then(() => true, () => false), 'a kind opens'],
+      ['news', (p) => p.waitForSelector('#panel-wire .wleads', { timeout: 5000 }).then(() => true, () => false), 'News opens'],
+    ];
+    for (const [hash, ok, name] of links) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await feedsOn(['dogs'])(ctx);
+      await page.goto(base + '/all-day/?demo=1#wire/' + hash);
+      await settle(page);
+      check(await ok(page), '#wire/' + hash + ': ' + name, page.url());
+      check(!(await page.$('#panel-wire .ifeed-list')) && await stored(page) === '["dogs"]', '#wire/' + hash + ': the wall stepped aside, and the picks stay', String(await stored(page)));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('Feeds: a feed link wins over a kept Photos or a slow paper', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await ctx.addInitScript(() => localStorage.setItem('allday-wire-view', 'photos'));
+    await page.route(/data\/demo\/art\.json/, async (r) => { await new Promise((f) => setTimeout(f, 900)); await r.continue(); });
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs');
+    await page.waitForSelector('#panel-wire .ifeed-list .xt', { timeout: 8000 });
+    await page.waitForTimeout(1200);
+    check(!!(await page.$('#panel-wire .ifeed-list')) && !(await page.$('#panel-wire .pm-head')), 'Photos landing late does not draw over the feed', '');
+    check(/#wire\/feed\/dogs$/.test(page.url()), 'the address still says so', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: stale and crafted links, and the breed kept', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/constructor');
+    await settle(page);
+    check(await stored(page) === null && !(await page.$('#panel-wire .ifeed-list')), 'a key from Object’s prototype is no feed', String(await stored(page)));
+    await page.evaluate(() => { location.hash = 'wire/feed/dogs'; });
+    await page.waitForSelector('#panel-wire .xt');
+    await page.evaluate(() => { location.hash = 'wire/feed/nope'; });
+    await page.waitForFunction(() => /#wire\/feed\/dogs$/.test(location.hash));
+    check(await stored(page) === null && !!(await page.$('#panel-wire .ifeed-list')), 'a stale link leaves the feed on screen alone, and the address says what is on', page.url());
+    await page.click('#panel-wire .ibreeds .chip[data-chip="beagle"]');
+    await page.waitForFunction(() => /#wire\/feed\/dogs\.beagle$/.test(location.hash));
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-wire .ibreeds .chip.on');
+    check(await page.$eval('#panel-wire .ibreeds .chip.on', (c) => c.dataset.chip) === 'beagle', 'the breed comes back on reload', '');
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs.lab+good');
+    await page.waitForSelector('#panel-wire .ibreeds .chip.on[data-chip="lab"]');
+    check((await page.$$eval('#panel-wire .ifeed.on', (b) => b.map((x) => x.dataset.feed))).join() === 'dogs,good', 'a link can name the breed and a blend', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: Dog people is beagles and labs first, and only dogs', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs');
+    await page.waitForSelector('#panel-wire .xt');
+    const order = await page.evaluate(async () => (await import('./js/modes/wire-interests.js'))._state().order);
+    const labels = await page.$$eval('#panel-wire .xt', (t) => t.map((x) => x.getAttribute('aria-label')));
+    const firstOther = order.findIndex((l) => /demo_goodboys/.test(l));
+    const lastBreed = order.map((l) => /demo_beagles|demo_labs/.test(l)).lastIndexOf(true);
+    check(firstOther > lastBreed, 'Beagles and Labs lead, the other dogs after them', order.join(' | '));
+    check(!labels.some((l) => /Cleo the cat|this tee/.test(l)), 'no cats and no merch', labels.join(' | '));
+    const inv = await page.evaluate(async () => {
+      const m = await import('./js/modes/wire-interests.js');
+      return typeof m.drawn === 'function';
+    });
+    check(inv, 'the feed reports how far it is drawn', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: a wall has its own end', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs+plants+home');
+    await page.waitForSelector('#panel-wire .idone');
+    check(await page.$eval('#panel-wire .panel-foot', (n) => getComputedStyle(n).display) === 'none', 'the paper’s way out stays out of the feed’s end', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: the row keeps its place, with the lit chip in view', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await page.waitForSelector('#panel-wire .ifeeds .ifeed[data-feed="tech"]');
+    const row = await page.$eval('#panel-wire .ifeeds', (r) => { r.scrollLeft = 9999; return r.scrollLeft; });
+    check(row > 0, 'the row scrolls at 390', String(row));
+    await page.waitForTimeout(100);
+    await page.click('#panel-wire .ifeed[data-feed="tech"]');
+    await page.waitForSelector('#panel-wire .ifeed-list');
+    const st = () => page.$eval('#panel-wire .ifeeds', (r) => {
+      const b = r.getBoundingClientRect(), on = r.querySelector('[data-feed="tech"]').getBoundingClientRect();
+      return { left: r.scrollLeft, inView: on.left >= b.left - 1 && on.right <= b.right + 1 };
+    });
+    const a = await st();
+    check(a.left > 0 && a.inView, 'tapped far along, the row stays there and the chip is on screen', JSON.stringify(a));
+    await page.click('#panel-wire .ifeed[data-feed="tech"]');
+    await page.waitForFunction(() => !document.querySelector('#panel-wire .ifeed.on'));
+    const b = await st();
+    check(b.left > 0 && b.inView, 'and undoing it does not send the row home', JSON.stringify(b));
+    await page.goto(base + '/all-day/?demo=1#wire/feed/tech');
+    await page.reload();
+    await settle(page);
+    const c = await st();
+    check(c.inView, 'opening on a kept feed brings its chip into view', JSON.stringify(c));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: mute means mute', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/good');
+    await page.waitForSelector('#panel-wire .ifeed-list .xt');
+    const src = '#panel-wire .ifeed-list .xt-s';
+    const from = () => page.$$eval(src, (n) => n.filter((x) => x.textContent === 'Demo Good News').length);
+    check(await from() === 2, 'two tiles from the source', '');
+    const box = await page.$$eval('#panel-wire .ifeed-list .xt', (t) => { const r = t.find((x) => /Demo Good News/.test(x.textContent)).getBoundingClientRect(); return { x: r.right - 12, y: r.top + 30 }; });
+    await page.mouse.move(box.x, box.y);
+    await page.mouse.down();
+    for (const dx of [10, 30, 60, 90, 120]) await page.mouse.move(box.x - dx, box.y);
+    await page.mouse.up();
+    await page.waitForSelector('[data-yes]');
+    check(/Mute Demo Good News/.test(await page.$eval('.confirm-card', (b) => b.textContent)), 'a swipe names it', '');
+    await page.click('[data-yes]');
+    await page.waitForFunction(() => ![...document.querySelectorAll('#panel-wire .ifeed-list .xt-s')].some((x) => x.textContent === 'Demo Good News'));
+    check(true, 'muted, the source leaves the feed', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: star and share stay on, and share links land', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await ctx.addInitScript(() => {
+      window.__shared = [];
+      navigator.share = (d) => { window.__shared.push(d.url); return Promise.resolve(); };
+    });
+    await page.goto(base + '/all-day/?demo=1#wire/feed/good');
+    await page.waitForSelector('#panel-wire .ifeed-list .xt-head');
+    await page.click('#panel-wire .ifeed-list .xt-head');
+    await page.waitForSelector('.sheet-card [data-act="share"]');
+    const vis = await page.$eval('.sheet-card', (c) => ['[data-act="share"]', '.sheet-star'].map((s) => { const b = c.querySelector(s).getBoundingClientRect(); return b.height >= 36 && b.right <= innerWidth; }));
+    check(vis.every(Boolean), 'a headline’s sheet shows Share and the star', JSON.stringify(vis));
+    await page.click('.sheet-card [data-act="share"]');
+    await page.click('.sheet-card .sheet-star');
+    check(await page.$eval('.sheet-card .sheet-star', (b) => b.classList.contains('on')), 'the star takes', '');
+    const urls = await page.evaluate(() => window.__shared);
+    check(urls.length === 1 && urls[0] === 'https://example.com/turtle', 'Share sends the story’s own link', urls.join(' '));
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs');
+    await page.reload();
+    await page.waitForSelector('#panel-wire .xt');
+    await page.waitForSelector('#panel-wire .xt[data-k="ig:Demodemo_goodboys0"] .iplay', { state: 'attached' });
+    check(!(await page.$('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"] .iplay')), 'a reel whose video lapsed carries no play mark', '');
+    const disc = await page.$eval('#panel-wire .iplay', (n) => getComputedStyle(n).backgroundColor);
+    check(disc !== 'rgba(0, 0, 0, 0)', 'the mark sits on a disc, for white pictures', disc);
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys0"]', (t) => t.click());
+    await page.waitForSelector('#vbox:not([hidden]) .vbox-acts');
+    check(!!(await page.$('#vbox .vbox-acts .star')) && !!(await page.$('#vbox .vbox-acts .sh')), 'the player has the star and Share', '');
+    await page.click('#vbox .vbox-acts .star');
+    check(await page.$eval('#vbox .vbox-acts .star', (b) => b.classList.contains('on')), 'the star takes', '');
+    await page.click('#vbox .vbox-acts .sh');
+    const last = await page.evaluate(() => window.__shared.at(-1));
+    check(last === 'https://www.instagram.com/p/Demodemo_goodboys0/', 'and Share sends the post itself', last);
+    await page.click('#vbox-close');
+    check(!(await page.$('#vbox .vbox-acts')), 'closed, the player keeps nothing for the next video', '');
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card');
+    check(!!(await page.$('#vbox[hidden]')), 'a lapsed reel opens as a still, not an empty player', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: a hold peeks and opens nothing else', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs');
+    await page.waitForSelector('#panel-wire .xt');
+    const box = await (await page.$('#panel-wire .xt')).boundingBox();
+    await page.mouse.move(box.x + 20, box.y + 20);
+    await page.mouse.down();
+    await page.waitForSelector('.peek');
+    await page.waitForTimeout(800);
+    await page.mouse.up();
+    await page.waitForTimeout(200);
+    check(!!(await page.$('.peek')) && !(await page.$('.sheet-card')) && !!(await page.$('#vbox[hidden]')), 'the peek alone, even after a long hold', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: the phone’s back closes what is open, then leaves the feed', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await settle(page);
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]');
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card');
+    await page.goBack();
+    await page.waitForFunction(() => !document.querySelector('.sheet-card'));
+    check(/#wire\/feed\/dogs$/.test(page.url()) && !!(await page.$('#panel-wire .ifeed-list')), 'back closes the sheet and stays on the feed', page.url());
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys0"]', (t) => t.click());
+    await page.waitForSelector('#vbox:not([hidden])');
+    await page.goBack();
+    await page.waitForFunction(() => document.getElementById('vbox').hidden);
+    check(/#wire\/feed\/dogs$/.test(page.url()), 'and closes the player', page.url());
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card');
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForTimeout(150);
+    await page.goBack();
+    await page.waitForSelector('#panel-wire .wband');
+    check(/#wire\/explore$/.test(page.url()) && await stored(page) === null, 'a sheet closed by hand leaves no step behind: back leaves the feed, for the wall', page.url());
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .wband');
+    await page.waitForFunction(() => location.hash === '#wire/explore');
+    check(true, 'tapping the chip off is the same step back', '');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]');
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys1"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card');
+    await page.click('.sheet-head .iconbtn');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForFunction(() => location.hash === '#wire/explore');
+    await page.waitForTimeout(200);
+    check(!!(await page.$('#panel-wire .wband')) && await stored(page) === null, 'and it still is after a sheet was opened and closed on the feed', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: the address after undo says what is on screen', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await page.waitForSelector('#panel-wire .card.pm');
+    await page.click('#subnav .xcell');
+    await page.waitForSelector('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForFunction(() => /#wire\/explore$/.test(location.hash));
+    await page.click('#subnav .xcell');
+    await page.waitForFunction(() => /#wire\/photos$/.test(location.hash));
+    check(!!(await page.$('#subnav .wmode.on[data-view="photos"]')), 'off the wall the word underneath is still Photos, and the address says so', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: a failed first load comes back with a pull (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { touch: true });
+    let down = true;
+    await page.route(/\/all-day\/data\/(instagram|interests)\.json$/, (r) => (down ? r.abort() : r.fulfill({ status: 200, contentType: 'application/json',
+      body: /interests/.test(r.request().url()) ? JSON.stringify({ feeds: { good: [{ t: 'A turtle is back', u: 'https://example.com/t', s: 'Good Paper', ts: 1793542800, i: '' }] } }) : JSON.stringify({ posts: [] }) })));
+    await page.goto(base + '/all-day/#wire/feed/good');
+    await page.waitForSelector('#panel-wire .ifeed-list .rd-empty', { timeout: 15000 });
+    check(/Nothing here yet/.test(await page.$eval('#panel-wire .ifeed-list', (n) => n.textContent)), 'the file failed: the feed says so', '');
+    down = false;
+    await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire');
+      p.scrollTop = 0;
+      const t = (y) => new Touch({ identifier: 1, target: p, clientX: 100, clientY: y });
+      const ev = (type, y, list) => p.dispatchEvent(new TouchEvent(type, { bubbles: true, cancelable: true, touches: list ? [t(y)] : [], changedTouches: [t(y)] }));
+      ev('touchstart', 200, true);
+      [240, 300, 360, 420, 480].forEach((y) => ev('touchmove', y, true));
+      ev('touchend', 480, false);
+    });
+    await page.waitForSelector('#panel-wire .ifeed-list .xt-head', { timeout: 6000 }).catch(() => {});
+    check(!!(await page.$('#panel-wire .ifeed-list .xt-head')), 'a pull brings it back', '');
+    check(!errors.filter((e) => !/instagram|interests|ERR_FAILED/.test(e)).length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: a file another tab already read draws one row (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await ctx.addInitScript(() => localStorage.setItem('allday-wire-feeds', '["dogs"]'));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector('#panel-social .so-block', { timeout: 15000 });
+    await page.evaluate(() => { location.hash = 'wire/explore'; });
+    await page.waitForSelector('#panel-wire .ifeeds', { timeout: 15000 });
+    await page.waitForTimeout(400);
+    check(await page.$$eval('#panel-wire .ifeeds', (r) => r.length) === 1, 'one row of chips', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: a payload never costs the reader their place (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const now = Date.now();
+    const ok = '&oe=' + Math.floor(now / 1000 + 3 * 86400).toString(16);
+    const posts = [...Array(200)].map((_, i) => ({ h: 'pup' + (i % 40), ts: Math.round(now / 1000) - i * 60, i: 'https://scontent.example.com/' + i + '.jpg?x=1' + ok, u: 'https://www.instagram.com/p/Pup' + i + '/', c: 'Beagle ' + i, n: 1, t: 'dogs', br: 'beagle', l: 200 - i }));
+    await page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ posts }) }));
+    await page.route(/scontent\.example\.com/, (r) => r.fulfill({ status: 200, contentType: 'image/gif', body: Buffer.from('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', 'base64') }));
+    await page.goto(base + '/all-day/#wire/feed/dogs');
+    await page.waitForSelector('#panel-wire .xt', { timeout: 15000 });
+    const go = () => page.evaluate(() => { const p = document.querySelector('#panel-wire'); p.scrollTop = 2600; return p.scrollTop; });
+    await go();
+    await page.waitForTimeout(400);
+    await go();
+    await page.waitForTimeout(300);
+    const before = await page.evaluate(() => ({ y: document.querySelector('#panel-wire').scrollTop, n: document.querySelectorAll('#panel-wire .xt').length, first: document.querySelector('#panel-wire .xt').dataset.k }));
+    await page.route(/wire-today\.json/, async (r) => {
+      const res = await r.fetch();
+      const j = await res.json();
+      j.updated = new Date().toISOString();
+      await r.fulfill({ response: res, json: j });
+    });
+    await page.evaluate(async () => { const m = await import('./js/wire.js'); await m.check('today'); });
+    await page.waitForTimeout(400);
+    const after = await page.evaluate(() => ({ y: document.querySelector('#panel-wire').scrollTop, n: document.querySelectorAll('#panel-wire .xt').length, first: document.querySelector('#panel-wire .xt').dataset.k }));
+    check(after.y === before.y && after.n === before.n && after.first === before.first, 'a new paper lands without touching the feed', JSON.stringify([before, after]));
+    check(!(await page.$('#toast:not([hidden])')) || !/New stories/.test(await page.$eval('#toast', (t) => t.textContent)), 'and says nothing about stories', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Hide politics hides politics', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const keys = () => page.$$eval('#panel-wire .feed [data-k]', (c) => c.map((x) => x.dataset.k));
+    const strip = () => page.$eval('#panel-wire .rc-strip', (s) => s.textContent);
+    const before = await keys();
+    check(before.includes('w3') && before.includes('w22'), 'the paper holds a tagged story and an untagged one', before.join());
+    check(/midterms/.test(await strip()), 'and the strip a politics line', '');
+    await page.click(BAND + ' .wf-open');
+    await page.click(BAND + ' .wf-nopol');
+    await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
+    const after = await keys();
+    check(!after.includes('w3'), 'the story tagged politics is gone', after.join());
+    check(!after.includes('w22'), 'so is the untagged one that mentions it', after.join());
+    check(before.filter((k) => !after.includes(k)).length >= 2 && after.includes('w1'), 'and it removed those, not everything', '');
+    check(!/midterms/.test(await strip()), 'the Recaps strip drops the line', await strip());
+    check(/Morning briefing/.test(await strip()), 'and keeps the rest of the recap', '');
+    check(await page.evaluate(async () => {
+      const m = await import('./js/modes/wire-recaps.js');
+      const r = { kind: 'politics', intro: '', bullets: [{ text: 'x' }] };
+      return m.withoutPolitics(r, () => false) === null && m.withoutPolitics({ ...r, kind: 'morning' }, () => true) === null;
+    }), 'a politics recap, or one with nothing else in it, leaves the strip', '');
+    check(!(await page.$(BAND + ' .chip[data-chip="t:politics"]')), 'and there is no Politics chip to contradict it', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('A shared story never changes the reader’s settings', async () => {
+    for (const [hash, name, seed] of [['w8', 'a national story on Local', {}], ['w3', 'a politics story under Hide politics', { 'allday-wire-nopol': 'true' }]]) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await ctx.addInitScript((x) => Object.entries(x).forEach(([a, b]) => localStorage.setItem(a, b)), seed);
+      await page.goto(base + '/all-day/?demo=1#wire');
+      await settle(page);
+      const was = await page.evaluate(() => localStorage.getItem('allday-settings'));
+      await page.evaluate((h) => { location.hash = 'wire/' + h; }, hash);
+      await page.waitForSelector('#panel-wire [data-k="' + hash + '"].flash', { timeout: 5000 }).catch(() => {});
+      check(!!(await page.$('#panel-wire [data-k="' + hash + '"]')), name + ' opens', '');
+      check(await page.evaluate(() => localStorage.getItem('allday-settings')) === was && await page.$eval('#panel-wire .wband .localsw-half.on', (b) => b.dataset.geo) === 'local', 'and the reader is still on Local', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('Feeds: their posts stay in the feeds', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/everything');
+    await settle(page);
+    await page.evaluate(() => { location.hash = 'wire/photos'; });
+    await page.waitForSelector('#panel-wire .card.pm');
+    const fed = /demo_(beagles|labs|goodboys|monstera|rentermakeover)/;
+    check(!fed.test(await page.$eval('#panel-wire', (p) => p.textContent)), 'not in Photos, on Everything', '');
+    await page.evaluate(() => { location.hash = 'wire/instagram'; });
+    await page.waitForSelector(BAND + ' .chip.on[data-chip="instagram"]');
+    await page.waitForTimeout(300);
+    check(!fed.test(await page.$eval('#panel-wire', (p) => p.textContent)), 'not on the News Instagram chip', '');
+    await page.evaluate(() => { location.hash = 'social'; });
+    await page.waitForSelector('#panel-social .so-block');
+    check(!fed.test(await page.$eval('#panel-social', (p) => p.textContent)), 'not in Social', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: Filters only offers what works, and Show all lets go', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click(BAND + ' .wf-open');
+    await page.waitForSelector(BAND + ' .wband-all');
+    await page.$eval(BAND + ' .wband-all', (b) => b.click());
+    await page.click(BAND + ' .wf-open');
+    await page.waitForFunction(() => !document.querySelector('.wband-foot'));
+    check(!(await page.$(BAND + '.wrap')), 'closing Filters closes Show all', '');
+    await page.click(BAND + ' .chip[data-chip="instagram"]');
+    await page.waitForSelector(BAND + ' .chip.on[data-chip="instagram"]');
+    await page.click(BAND + ' .wf-open');
+    await page.waitForTimeout(200);
+    check(!(await page.$(BAND + ' .wf-ways')), 'the Instagram list offers no Topics or Hide politics', '');
+    check(await page.$eval(BAND + ' .wf-open span', (s) => s.textContent) === 'Filters', 'and counts neither', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: wide screens keep every control', async () => {
+    for (const width of [1024, 1280, 1440]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 900 } });
+      await page.goto(base + '/all-day/?demo=1#wire');
+      await settle(page);
+      await page.waitForSelector('#panel-wire .wleads .wrow');
+      const r = await page.$$eval('#panel-wire .wleads > .wrow', (rows) => rows.map((c) => {
+        const box = c.getBoundingClientRect(), st = c.querySelector('.act.star');
+        st.scrollIntoView({ block: 'center' });
+        const s = st.getBoundingClientRect();
+        return { in: s.right <= box.right + 13, hit: document.elementFromPoint(s.left + s.width / 2, s.top + s.height / 2)?.closest('.act') === st, title: c.querySelector('.c-title').getBoundingClientRect().width };
+      }));
+      check(r.length && r.every((x) => x.in && x.hit && x.title > 200), width + ': top-story rows hold their star, in reach, with room for the headline', JSON.stringify(r));
+      if (width >= 1280) {
+        const vis = (s) => page.$$eval(s, (n) => n.some((x) => x.offsetParent));
+        check(await vis('#aside .wnsw') && await vis('#aside .wf-nopol'), width + ': Feed/Topics and Hide politics are in the rail', '');
+        await page.click('#aside .wf-nopol');
+        await page.waitForSelector('#aside .wf-nopol.on');
+        check(await page.evaluate(() => document.activeElement.classList.contains('wf-nopol')), width + ': focus stays on it', '');
+        await page.click('#aside .wf-nopol');
+        await page.click('#subnav .xcell');
+        await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+        await page.waitForSelector('#panel-wire .ifeed-list');
+        const rail = await page.$eval('#aside', (a) => a.textContent);
+        check(/Saved/.test(rail) && !/Filters|Source/.test(rail), width + ': a feed leaves only Saved in the rail', rail);
+      }
+      if (width < 1280) await page.click('#subnav .xcell');
+      const wrap = await page.$eval('#panel-wire .ifeeds', (r) => getComputedStyle(r).flexWrap);
+      check(wrap === 'wrap', width + ': the row wraps, so a mouse reaches every chip', wrap);
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('Feeds: the mast and the pill fit a small phone', async () => {
+    for (const width of [320, 360, 390]) {
+      for (const app of ['all-day', 'body', 'town']) {
+        const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 800 } });
+        await page.goto(base + '/' + app + '/?demo=1');
+        await settle(page);
+        await page.waitForTimeout(250);
+        const m = await page.evaluate(() => {
+          const w = document.getElementById('wordmark'), r = document.createRange();
+          r.selectNodeContents(w);
+          return { text: r.getBoundingClientRect().width, box: w.getBoundingClientRect().width, doc: document.documentElement.scrollWidth, row: document.querySelector('.mast-row').scrollWidth - document.querySelector('.mast-row').clientWidth };
+        });
+        check(m.text <= m.box + .2, app + ' at ' + width + ': the name reads whole', JSON.stringify(m));
+        check(m.doc <= width && m.row <= 0, app + ' at ' + width + ': nothing runs off', JSON.stringify(m));
+        const hit = await page.$eval('.appsbtn', (b) => {
+          const r = b.getBoundingClientRect(), y = r.top + r.height / 2;
+          return [r.left - 7, r.right + 7].map((x) => !!document.elementFromPoint(x, y)?.closest('.appsbtn'));
+        });
+        check(hit.every(Boolean), app + ' at ' + width + ': the chevron answers 44px across', JSON.stringify(hit));
+        check(!errors.length, 'no console errors', errors.join(' | '));
+        await ctx.close();
+      }
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 800 } });
+      await page.goto(base + '/all-day/?demo=1#wire');
+      await settle(page);
+      const pill = await page.$eval('.wbar .wmodes', (p) => {
+        const end = p.getBoundingClientRect().right;
+        return { over: p.scrollWidth - p.clientWidth, words: [...p.querySelectorAll('.wmode')].map((b) => ({ fit: b.getBoundingClientRect().right <= end, w: b.scrollWidth <= b.clientWidth + 1 })) };
+      });
+      check(pill.over <= 0 && pill.words.every((x) => x.fit && x.w), width + ': the four words fit the pill', JSON.stringify(pill));
+      await page.mouse.click((await page.$eval('.appsbtn', (b) => b.getBoundingClientRect().right)) + 6, 30);
+      await page.waitForSelector('.appbubble');
+      check(page.url().includes('/all-day/'), width + ': a thumb a little wide still opens the bubble', page.url());
+      await page.keyboard.press('Escape');
+      const thumb = await page.evaluate(() => [...document.querySelectorAll('#panel-wire .wrow.has-thumb .act.star')].every((s) => s.getBoundingClientRect().right <= innerWidth + 1));
+      check(thumb, width + ': a row with a picture keeps its star on screen', '');
+      const src = await page.$$eval('#panel-wire .wrow.has-thumb .c-src', (n) => n.map((x) => [x.clientWidth, x.scrollWidth]));
+      check(src.length && src.every(([c, w]) => w <= c + 1 || (width < 390 && c >= 48)), width + ': and its source reads', JSON.stringify(src));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('Feeds: targets, focus and contrast', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click(BAND + ' .wf-open');
+    await page.waitForSelector(BAND + ' .wf-nopol');
+    /* what answers a tap, not what the stylesheet says: from the middle of the
+       target, how far up and down the control is still the one under the finger */
+    const reach = (sel) => page.$eval(sel, (n) => {
+      n.scrollIntoView({ block: 'center', inline: 'center' });
+      const r = n.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+      const hits = (d) => { const e = document.elementFromPoint(x, y + d); return !!e && n.contains(e); };
+      let up = 0, down = 0;
+      while (up < 30 && hits(-up - 0.5)) up += 0.5;
+      while (down < 30 && hits(down + 0.5)) down += 0.5;
+      return Math.round(up + down);
+    });
+    const heights = [await reach('#panel-wire .wf-open'), await reach('#panel-wire .wf-nopol')];
+    check(await page.evaluate(() => document.activeElement.classList.contains('wf-open')), 'Filters keeps focus', '');
+    await page.click('#subnav .xcell');
+    await page.waitForSelector('#panel-wire .ifeed[data-feed="dogs"]');
+    heights.push(await reach('#panel-wire .ifeed'));
+    check(heights.every((h) => h >= 44), 'each answers 44px, the way .wf .chip does', JSON.stringify(heights));
+    await page.focus('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    check(await page.evaluate(() => document.activeElement.dataset.feed) === 'dogs', 'a chip keeps focus', '');
+    const breed = await reach('#panel-wire .ibreeds .chip');
+    check(breed >= 44, 'and so does a breed answer 44px', String(breed));
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => !document.querySelector('#panel-wire .ifeed.on'));
+    await page.waitForFunction(() => document.activeElement.dataset.feed === 'dogs');
+    check(true, 'and on the way back', '');
+    await page.focus('.appsbtn');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('.appbubble');
+    check(await page.$eval('.appsbtn', (b) => b.getAttribute('aria-expanded')) === 'true', 'the chevron says it is open', '');
+    await page.waitForTimeout(120);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(120);
+    check(await page.evaluate(() => document.activeElement.classList.contains('appsbtn')) && await page.$eval('.appsbtn', (b) => b.getAttribute('aria-expanded')) === 'false', 'Escape comes back to it', await page.evaluate(() => document.activeElement.outerHTML.slice(0, 120) + ' ' + !!document.querySelector('.appbubble')));
+    const css = await readFile(new URL('../css/tokens.css', import.meta.url), 'utf8');
+    const lum = (hex) => { const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+    const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + .05) / (y + .05); };
+    const tok = (n) => (css.match(new RegExp('--' + n + ':\\s*(#[0-9A-Fa-f]{6})')) || [])[1];
+    const feeds = ['dogs', 'home', 'plants', 'good', 'nosy', 'laughs', 'sports', 'wild', 'tech'];
+    check(feeds.every((k) => ratio(tok('feed-' + k), tok('feed-' + k + '-ink')) >= 4.5), 'every lit chip reads at 4.5:1', '');
+    check(['dogs', 'home', 'plants', 'good'].every((k) => ratio(tok('feed-' + k + '-line'), '#F7F4EE') >= 3), 'and every outline at 3:1 on cream', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Town Square, by name', async () => {
+    const src = await readFile(new URL('../js/modes/wire-square.js', import.meta.url), 'utf8');
+    check(!/Post to the Square/.test(src) && /Post to Town Square/.test(src), 'no button says the Square', '');
+  });
+}
+
+/* Explore, phase one (2026-11-01): the cell, the rule, the memory, the tiles */
+async function theExplore(browser, base) {
+  const CELL = '#subnav .xcell';
+  const wallOn = (page) => page.waitForSelector('#panel-wire .ifeed-list .xt');
+  const order = (page) => page.evaluate(async () => (await import('./js/modes/wire-interests.js'))._state().order);
+  const kept = (page) => page.evaluate(() => (JSON.parse(localStorage.getItem('allday-settings') || '{}').explore || {}));
+  const pressed = (page) => page.$eval(CELL, (b) => b.getAttribute('aria-pressed'));
+  const hide = (page) => page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+    delete document.visibilityState;
+  });
+  /* the demo's Instagram posts, swapped for a group's own */
+  const artFile = JSON.parse(await readFile(path.join(APP, 'data/demo/art.json'), 'utf8'));
+  const withIg = (page, posts, keep) => page.route(/data\/demo\/art\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json',
+    body: JSON.stringify({ ...artFile, instagram: (keep ? artFile.instagram : []).concat(posts) }) }));
+  const post = (h, x) => ({ h, hours: 1, palette: 'lake', u: 'https://www.instagram.com/p/Demo' + h + '/', s: 'see', ...x });
+
+  await group('Explore: the cell, on the tabs that have one', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const c = await page.$eval(CELL, (b) => {
+      const r = b.getBoundingClientRect(), pill = b.parentElement;
+      return { w: r.width, h: r.height, label: b.getAttribute('aria-label'), text: b.textContent, last: pill.lastElementChild === b, seg: pill.classList.contains('wmodes'), svg: b.querySelector('svg').innerHTML };
+    });
+    check(c.w >= 44 && c.h >= 44 && c.label === 'Explore' && c.text === '' && c.last && c.seg, 'a 44px cell, no word, the last segment of the pill', JSON.stringify(c));
+    check(await pressed(page) === 'false', 'off for everyone by default', '');
+    for (const v of ['recaps', 'square', 'photos', 'news']) {
+      await page.click('#subnav .wmode[data-view="' + v + '"]');
+      check(!!(await page.$(CELL)), 'it stays on ' + v, '');
+    }
+    await page.click(CELL);
+    await wallOn(page);
+    const on = await page.$eval(CELL, (b) => ({ p: b.getAttribute('aria-pressed'), svg: b.querySelector('svg').innerHTML, on: b.classList.contains('on') }));
+    check(on.p === 'true' && on.on && on.svg === c.svg, 'on, it is pressed and lit, the same glyph', JSON.stringify(on));
+    check(!(await page.$('#subnav .wmode.on')) && await page.$$eval('#subnav .wmode', (b) => b.every((x) => x.getAttribute('aria-pressed') === 'false')), 'and no word is on the wall', '');
+    await page.waitForFunction(() => document.activeElement.classList.contains('xcell'));
+    check(true, 'the keyboard stays on the cell', '');
+    for (const tab of ['watch', 'food', 'people', 'whatnow', 'social', 'onair', 'games']) {
+      await page.evaluate((t) => { location.hash = t; }, tab);
+      await page.waitForFunction((t) => location.hash === '#' + t, tab);
+      await page.waitForTimeout(250);
+      check(!(await page.$(CELL)), tab + ' has no cell yet', '');
+    }
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.waitForSelector(CELL);
+    const v = await page.$eval(CELL, (b) => {
+      const r = b.getBoundingClientRect();
+      return { w: r.width, h: r.height, scroller: !!b.closest('.secpill-scroll'), last: b.parentElement.lastElementChild === b };
+    });
+    check(v.w >= 44 && v.h >= 44 && !v.scroller && v.last, 'Vintage: the right end of its pill, outside the scroller', JSON.stringify(v));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    for (const app of ['town', 'body']) {
+      const o = await newPage(browser, base);
+      await o.page.goto(base + '/' + app + '/?demo=1');
+      await settle(o.page);
+      check(!(await o.page.$(CELL)), app + ' has no cell', '');
+      await o.ctx.close();
+    }
+  });
+
+  await group('Explore: the cell chooses the layout and nothing else', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    check(await pressed(page) === 'true', '#wire/explore opens the wall', '');
+    await page.click('#subnav .wmode[data-view="recaps"]');
+    await page.waitForSelector('#subnav .wmode.on[data-view="recaps"]');
+    check(await pressed(page) === 'false' && !(await page.$('#panel-wire .ifeed-list')), 'any word leaves it and goes there', '');
+    await page.click(CELL);
+    await wallOn(page);
+    await page.click('#subnav .wmode[data-view="recaps"]');
+    await page.waitForSelector('#subnav .wmode.on[data-view="recaps"]');
+    check(true, 'even the word it came from', '');
+    await page.click(CELL);
+    await wallOn(page);
+    const local = await order(page);
+    check(local.includes('w1') && !local.includes('w8'), 'Local keeps the national story off the wall', local.join());
+    await page.click('#panel-wire .wband .localsw-half[data-geo="everything"]');
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    check(await pressed(page) === 'true', 'Everything keeps working on the wall', '');
+    await page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    const drained = await page.evaluate(async () => ({ on: document.querySelectorAll('#subnav .chip.on').length, canvas: !!document.querySelector('#subnav .secpill-track canvas'), s: (await import('./js/sections.js'))._state('sec-vintage') }));
+    check(drained.on === 0 && !drained.canvas && drained.s.drained, 'Vintage: the words are drained, with no water', JSON.stringify(drained));
+    check(await page.$eval('#panel-vintage > .panel-body, #panel-vintage .panel-body', (b) => b.hidden), 'and the regular view is not under it', '');
+    await page.click('#subnav .chip[data-chip="fit"]');
+    await page.waitForSelector('#subnav .chip.on[data-chip="fit"]');
+    check(await pressed(page) === 'false' && !(await page.$eval('#panel-vintage .panel-body', (b) => b.hidden)) && await page.$eval('#panel-vintage .xwall', (b) => b.hidden), 'a section leaves it and goes there', '');
+    check(/#vintage$/.test(page.url()), 'and the address says so', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: memory, per tab and per phone (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.addInitScript(() => {
+      new MutationObserver(() => { if (document.querySelector('#panel-wire .wf-open, #panel-wire .wleads, #panel-vintage .panel-body:not([hidden]) .slot')) window.__flash = 1; }).observe(document, { subtree: true, childList: true });
+    });
+    await page.goto(base + '/all-day/#wire');
+    await page.waitForSelector(CELL, { timeout: 15000 });
+    await page.waitForSelector('#panel-wire .wf-open', { timeout: 15000 });
+    check(!(await kept(page)).wire, 'nothing is kept before a tap', '');
+    await page.click(CELL);
+    check((await kept(page)).wire === true, 'a flip is written', JSON.stringify(await kept(page)));
+    await page.click('#subnav .wmode[data-view="news"]');
+    check(!(await kept(page)).wire, 'flip on, leave by a word in the same sitting: undone', JSON.stringify(await kept(page)));
+    await page.click(CELL);
+    await hide(page);
+    await page.click('#subnav .wmode[data-view="news"]');
+    check((await kept(page)).wire === true, 'the app went away: the flip counts', JSON.stringify(await kept(page)));
+    await page.reload();
+    await page.waitForSelector('#panel-wire .ifeed-list', { timeout: 15000 });
+    await page.waitForTimeout(600);
+    check(await pressed(page) === 'true' && !(await page.evaluate(() => window.__flash)), 'launch paints the wall, with no flash of the regular view', '');
+    await page.click('#subnav .wmode[data-view="photos"]');
+    check((await kept(page)).wire === true, 'a word on a later sitting is a visit', '');
+    await page.click(CELL);
+    await page.click(CELL);
+    check(!(await kept(page)).wire, 'and the cell turns it off', '');
+    await page.click(CELL);
+    await page.evaluate(() => { location.hash = 'vintage'; });
+    await page.waitForSelector(CELL + '[aria-pressed="false"]', { timeout: 15000 });
+    check(!(await kept(page)).vintage, 'one tab’s wall is not another’s', JSON.stringify(await kept(page)));
+    await page.evaluate(() => { location.hash = 'wire'; });
+    await page.waitForFunction(() => location.hash === '#wire/explore');
+    await page.click('#subnav .wmode[data-view="news"]');
+    check((await kept(page)).wire === true, 'a tab change ends the sitting too', JSON.stringify(await kept(page)));
+    await page.evaluate(() => { location.hash = 'wire/photos'; });
+    await page.waitForSelector('#panel-wire .card.pm', { timeout: 15000 });
+    check((await kept(page)).wire === true, 'a deep link is a visit', '');
+    await page.goto(base + '/all-day/#wire/photos');
+    await page.reload();
+    await page.waitForSelector('#panel-wire .card.pm', { timeout: 15000 });
+    check(await pressed(page) === 'false', 'a link opens where it says, on a phone that keeps the wall', '');
+    await page.evaluate(() => { const s = JSON.parse(localStorage.getItem('allday-settings')); s.explore = { vintage: true }; localStorage.setItem('allday-settings', JSON.stringify(s)); window.__flash = 0; });
+    await page.goto(base + '/all-day/#vintage');
+    await page.reload();
+    await page.waitForSelector('#panel-vintage .xwall .xt', { timeout: 15000 });
+    check(await pressed(page) === 'true' && !(await page.evaluate(() => window.__flash)), 'Vintage launches on its wall, with no flash', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: the chips live on the wall and survive everything but a tap', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await ctx.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-wire-feeds', '["dogs"]'); } });
+    const chips = () => page.evaluate(() => localStorage.getItem('allday-wire-feeds'));
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    check(!(await page.$('#panel-wire .ifeeds')) && !!(await page.$('#panel-wire .wleads')), 'a kept chip does not touch News', '');
+    await page.click(CELL);
+    await page.waitForSelector('#panel-wire .ifeed.on[data-feed="dogs"]');
+    check(/#wire\/feed\/dogs$/.test(page.url()), 'the cell opens the wall with the picks on', page.url());
+    await page.click(CELL);
+    await page.waitForSelector('#panel-wire .wleads');
+    check(await chips() === '["dogs"]', 'the cell never clears them', '');
+    await page.click(CELL);
+    await page.click('#subnav .wmode[data-view="photos"]');
+    await page.waitForSelector('#panel-wire .card.pm');
+    check(await chips() === '["dogs"]', 'nor does a word', '');
+    await page.evaluate(() => { location.hash = 'wire/feed/plants'; });
+    await page.waitForSelector('#panel-wire .ifeed.on[data-feed="plants"]');
+    check(await pressed(page) === 'true', '#wire/feed/plants opens the wall with those chips', '');
+    check(await page.evaluate(async () => (await import('./js/explore.js')).kept('wire')) === false, 'and writes no memory', '');
+    check(!(await page.$('#panel-wire .wband')), 'an interest has no Local', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: what a tile says', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [
+      post('hdone', { hd: 'A title from the model', cp: 'Not this line', c: 'Nor this one at all' }),
+      post('cpone', { cp: 'The first sentence of it', c: 'Not this raw caption' }),
+      post('cone', { c: 'Sunrise over the breakwater 🌅 #btv @someone\nMore on the second line.' }),
+      post('nmone', { nm: 'The Flynn', hd: 'Doors at seven on Friday' }),
+      post('holeone', { c: 'We had a blast at @theproject with everyone' }),
+      post('posterone', { kind: 'poster', hd: 'Show on Friday at the Flynn' }),
+      post('adone', { ad: 1, hd: 'Twenty percent off everything' }),
+      post('longone', { hd: 'Word '.repeat(60).trim() }),
+      post('dogad', { t: 'dogs', ad: 1, c: 'A dog bed, on sale' }),
+      post('dogok', { t: 'dogs', c: 'A very good dog' }),
+    ]);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const tile = (h) => page.$eval('#panel-wire .xt[data-k="ig:Demo' + h + '"]', (a) => ({ h: (a.querySelector('.xt-h') || {}).textContent || '', s: a.querySelector('.xt-s').textContent,
+      ratio: (() => { const r = a.querySelector('.xt-p').getBoundingClientRect(); return r.height / r.width; })(), tall: a.querySelector('.xt-h') ? [a.querySelector('.xt-h').scrollHeight, a.querySelector('.xt-h').clientHeight] : [] }));
+    check((await tile('hdone')).h === 'A title from the model', 'post.hd first', '');
+    check((await tile('cpone')).h === 'The first sentence of it', 'then post.cp', '');
+    check((await tile('cone')).h === '', 'a post with neither has no line, its raw caption never stands in', (await tile('cone')).h);
+    check((await tile('holeone')).h === '', 'a handle that leaves a hole leaves no line', (await tile('holeone')).h);
+    check((await tile('hdone')).s === '@hdone' && (await tile('nmone')).s === 'The Flynn', 'the source: the name, else the handle', '');
+    check(Math.abs((await tile('posterone')).ratio - 1) < 0.02, 'a poster is never cropped tall', String((await tile('posterone')).ratio));
+    const long = await tile('longone');
+    check(long.h.endsWith('Word…') && long.tall[0] <= long.tall[1] + 1, 'a long line stops on a whole word, inside three lines', JSON.stringify(long));
+    const ratios = await page.$$eval('#panel-wire .xt-p', (p) => [...new Set(p.map((x) => { const r = x.getBoundingClientRect(); return (r.height / r.width).toFixed(1); }))]);
+    check(ratios.length >= 2, 'the columns are staggered', ratios.join());
+    check(!(await order(page)).includes('ig:Demoadone'), 'an ad never reaches a wall', '');
+    await page.evaluate(() => { location.hash = 'wire/feed/dogs'; });
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    const fed = await order(page);
+    check(fed.includes('ig:Demodogok') && !fed.includes('ig:Demodogad'), 'nor a feed', fed.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: News on the wall', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [post('polone', { c: 'The governor spoke at the rally today' })], true);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const heads = await page.$$eval('#panel-wire .xt-head', (t) => t.map((a) => {
+      const s = getComputedStyle(a), b = a.querySelector('.xt-t');
+      return { cls: a.className, bg: s.backgroundColor, ink: s.color, font: getComputedStyle(b).fontFamily, src: a.querySelector('.xt-s').textContent, over: b.scrollWidth - b.clientWidth };
+    }));
+    check(heads.length > 0 && heads.every((h) => h.src && /Lora/.test(h.font) && h.over <= 0), 'a story with no picture is a headline tile, in Lora, its source small', JSON.stringify(heads[0]));
+    const css = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
+    const rgb = (n) => { const m = css.match(new RegExp('--' + n + ':\\s*#([0-9A-Fa-f]{6})'))[1]; return 'rgb(' + [0, 2, 4].map((i) => parseInt(m.slice(i, i + 2), 16)).join(', ') + ')'; };
+    const of = (k) => heads.find((h) => h.cls.split(' ').includes('xt-' + k));
+    check(!!of('news') && of('news').bg === rgb('liq-people'), 'news is teal', JSON.stringify(of('news')));
+    check(!!of('reddit') && of('reddit').bg === rgb('liq-reddit') && of('reddit').ink === rgb('liq-reddit-ink'), 'Reddit is its orange', JSON.stringify(of('reddit')));
+    /* however the two files raced, a draw with both in */
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.some((k) => /^ig:/.test(k)));
+    await page.click('#panel-wire .wband .localsw-half[data-geo="everything"]');
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    await page.click('#panel-wire .wband .localsw-half[data-geo="local"]');
+    await page.waitForFunction(async () => !(await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    const mixed = await order(page);
+    check(mixed.slice(0, 3).every((k) => /^ig:/.test(k)) && !/^ig:/.test(mixed[3]) && !/^ig:/.test(mixed[7]), 'pictures and stories, mixed, a story after every three pictures', mixed.slice(0, 8).join());
+    await page.click('#panel-wire .xt-head');
+    await page.waitForSelector('.sheet-card .sheet-star');
+    const sheet = await page.$eval('.sheet-card', (c) => ({ pic: !!c.querySelector('.c-media'), share: !!c.querySelector('[data-act="share"]'), up: !!c.querySelector('[data-act="up"]'), open: !!c.querySelector('[data-open]') }));
+    check(!sheet.pic && sheet.share && sheet.up && sheet.open, 'a tap opens the story, with star and share in reach', JSON.stringify(sheet));
+    await page.click('.sheet-head .iconbtn');
+    check(mixed.includes('w3') && mixed.includes('w22') && mixed.includes('ig:Demopolone'), 'politics is on the wall to start with', '');
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForSelector(BAND + ' .wf-open');
+    await page.click(BAND + ' .wf-open');
+    await page.click(BAND + ' .wf-nopol');
+    await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
+    await page.click(CELL);
+    await wallOn(page);
+    const quiet = await order(page);
+    check(!quiet.includes('w3') && !quiet.includes('w22') && !quiet.includes('ig:Demopolone') && quiet.includes('w1'), 'Hide politics holds on the wall, pictures too', quiet.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: Vintage’s wall, and the tap on a tile', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    const v = await page.$$eval('#panel-vintage .xt', (t) => t.map((a) => a.dataset.k));
+    check(v.some((k) => /^ig:/.test(k)) && v.some((k) => /^b-/.test(k)), 'shop posts and fit checks', v.join());
+    check(!(await page.$('#panel-vintage .xwall .frtiles, #panel-vintage .xwall .frrows')), 'Free stays in the regular view', '');
+    await page.click('#panel-vintage .xt[data-k^="ig:"]');
+    await page.waitForSelector('.sheet-card .sheet-star');
+    check(!!(await page.$('.sheet-card [data-act="share"]')), 'a shop post opens the picture sheet, with star and share', '');
+    await page.click('.sheet-card .sheet-star');
+    check(await page.$eval('.sheet-card .sheet-star', (b) => b.classList.contains('on') && b.getAttribute('aria-pressed') === 'true'), 'and the star takes', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click('#panel-vintage .xt[data-k^="b-"]');
+    await page.waitForSelector('.sheet-card .card.board');
+    check(true, 'a fit check opens its own card', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs');
+    await page.waitForSelector('#panel-wire .xt[data-k="ig:Demodemo_goodboys0"]');
+    await page.$eval('#panel-wire .xt[data-k="ig:Demodemo_goodboys0"]', (t) => t.click());
+    await page.waitForSelector('#vbox:not([hidden]) .vbox-acts .star');
+    check(true, 'a reel plays in the video box, with its star', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: fresh, and each view keeps its place', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 500 } });
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const y = (n) => page.evaluate((v) => { const p = document.querySelector('#panel-wire'); if (v != null) p.scrollTop = v; return p.scrollTop; }, n);
+    await page.waitForTimeout(100);
+    const first = (await order(page))[0];
+    await page.evaluate(async () => (await import('./js/explore.js')).settle());
+    await page.click('#panel-wire .wband .localsw-half[data-geo="everything"]');
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    await page.click('#panel-wire .wband .localsw-half[data-geo="local"]');
+    await page.waitForFunction(async () => !(await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    const again = await order(page);
+    check(again[0] !== first && again.indexOf(first) > again.findIndex((k) => /^ig:/.test(k)), 'a tile already shown sinks on the next fresh draw', [first, again.indexOf(first)].join(' '));
+    await y(700);
+    await page.waitForTimeout(250);
+    const wy = await y();
+    await page.click(CELL);
+    await page.waitForSelector('#panel-wire .wleads');
+    await y(400);
+    await page.waitForTimeout(100);
+    const ny = await y();
+    await page.click(CELL);
+    await wallOn(page);
+    check(Math.abs((await y()) - wy) < 2, 'back on the wall it is where it was', [wy, await y()].join());
+    check(await order(page).then((o) => o[0] === again[0]), 'in the same order', '');
+    await page.click(CELL);
+    await page.waitForSelector('#panel-wire .wleads');
+    check(Math.abs((await y()) - ny) < 2, 'and the paper is where it was', [ny, await y()].join());
+    await page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    const vy = (n) => page.evaluate((v) => { const p = document.querySelector('#panel-vintage'); if (v != null) p.scrollTop = v; return p.scrollTop; }, n);
+    await vy(200);
+    await page.waitForTimeout(100);
+    const v1 = await vy();
+    await page.click(CELL);
+    await vy(900);
+    await page.waitForTimeout(100);
+    const v2 = await vy();
+    await page.click(CELL);
+    check(Math.abs((await vy()) - v1) < 2, 'Vintage’s wall holds its place', [v1, await vy()].join());
+    await page.click(CELL);
+    check(Math.abs((await vy()) - v2) < 2, 'and so does its page', [v2, await vy()].join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: back never does nothing', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => { location.hash = 'wire/explore'; });
+    await page.waitForSelector('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForFunction(() => /feed\/dogs$/.test(location.hash));
+    await page.goBack();
+    await page.waitForFunction(() => location.hash === '#wire/explore');
+    check(!(await page.$('#panel-wire .ifeed.on')) && await pressed(page) === 'true', 'back undoes the chip and stays on the wall', page.url());
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForFunction(() => /feed\/dogs$/.test(location.hash));
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForSelector('#panel-wire .wleads');
+    await page.waitForFunction(() => location.hash === '#wire');
+    await page.waitForTimeout(150);
+    check(!!(await page.$('#panel-wire .wleads')) && await page.evaluate(() => localStorage.getItem('allday-wire-feeds')) === '["dogs"]', 'leaving by a word keeps the paper and the pick', page.url());
+    await page.goBack();
+    await page.waitForFunction(() => location.hash === '#vintage', null, { timeout: 4000 }).catch(() => {});
+    check(/#vintage$/.test(page.url()), 'and the next back goes somewhere', page.url());
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await page.evaluate(() => { location.hash = 'wire/feed/dogs'; });
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    await page.click('#panel-wire .ifeed[data-feed="good"]');
+    await page.waitForFunction(() => /dogs\+good$/.test(location.hash));
+    await page.click(CELL);
+    await page.waitForSelector('#subnav .wmode.on');
+    await page.goBack();
+    await page.waitForFunction(() => location.hash === '#vintage', null, { timeout: 4000 }).catch(() => {});
+    check(/#vintage$/.test(page.url()), 'the cell leaves no dead press either', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: what was seen sinks, and not while it is being looked at', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [1, 2, 3, 4, 5, 6].flatMap((i) => [post('dogz' + i, { t: 'dogs', c: 'A very good beagle on the lawn ' + i, hours: i }), post('homey' + i, { t: 'home', c: 'A new porch going up, week ' + i, hours: i })]), true);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const see = (keys) => page.evaluate(async (k) => { (await import('./js/store.js')).markWallSeen(k); }, keys);
+    const sitting = () => page.evaluate(async () => (await import('./js/explore.js')).settle());
+    const stories = (await order(page)).filter((k) => !/^ig:/.test(k));
+    await see(stories);
+    await sitting();
+    await page.click('#panel-wire .wband .localsw-half[data-geo="everything"]');
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    await page.click('#panel-wire .wband .localsw-half[data-geo="local"]');
+    await page.waitForFunction(async () => !(await import('./js/modes/wire-interests.js'))._state().order.includes('w8'));
+    const wall = await order(page);
+    const had = await page.evaluate(async () => (await import('./js/store.js')).wallSeen());
+    const lastNew = wall.reduce((n, k, i) => (had[k] ? n : i), -1), firstOld = wall.findIndex((k) => had[k]);
+    check(lastNew < firstOld && stories.every((k) => had[k]), 'everything already seen comes after everything new, not beside it', [lastNew, firstOld, wall.length].join());
+    await page.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    const dogs = (await order(page)).filter((k) => /Demodogz/.test(k));
+    await see(dogs);
+    await page.click('#panel-wire .ifeed[data-feed="home"]');
+    await page.waitForFunction(() => /dogs\+home$/.test(location.hash));
+    const blend = await order(page);
+    check(blend.slice(0, 12).filter((k) => /Demodogz/.test(k)).length >= 2, 'a second chip blends: the dogs just looked at stay on top', blend.slice(0, 12).join());
+    await sitting();
+    await page.click('#panel-wire .ifeed[data-feed="home"]');
+    await page.waitForFunction(() => /feed\/dogs$/.test(location.hash));
+    await page.click('#panel-wire .ifeed[data-feed="home"]');
+    await page.waitForFunction(() => /dogs\+home$/.test(location.hash));
+    const next = await order(page);
+    check(next.slice(0, 6).every((k) => !dogs.includes(k)), 'the next sitting they sink, and no seen key is on the first screen of a feed', next.slice(0, 6).join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: an offer that has run out', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const demoNow = Date.parse(JSON.parse(await readFile(path.join(APP, 'data/demo/wire.json'), 'utf8')).now);
+    const day = (t) => new Date(t).toLocaleString('en-US', { month: 'long', day: 'numeric' });
+    await withIg(page, [
+      post('gone', { c: 'Sidewalk sale ends ' + day(demoNow - 3 * 86400000), hours: 120 }),
+      post('ahead', { c: 'Sidewalk sale ends ' + day(demoNow + 3 * 86400000), hours: 1 }),
+      post('oldflyer', { kind: 'poster', hd: 'A show worth seeing at the Flynn', hours: 150 }),
+      post('newflyer', { kind: 'poster', hd: 'A show worth seeing at Radio Bean', hours: 5 }),
+      post('hit', { l: 900, hd: 'An old hit that everybody liked', hours: 600, u: 'https://www.instagram.com/p/DemoOldHit/' }),
+      post('hit', { l: 1, hd: 'This morning on the waterfront', hours: 2, u: 'https://www.instagram.com/p/DemoNewOne/' }),
+      post('set', { hd: 'Nice day for a Winooski wedding', hours: 3, u: 'https://www.instagram.com/p/DemoSetA/' }),
+      post('set', { hd: 'Nice day for a Winooski wedding', hours: 30, u: 'https://www.instagram.com/p/DemoSetB/' }),
+      post('set', { hd: 'Another line from the same minute', hours: 3.01, u: 'https://www.instagram.com/p/DemoSetC/' }),
+    ], true);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const all = await order(page);
+    check(!all.includes('ig:Demogone') && all.includes('ig:Demoahead'), 'a post naming a date gone is off the wall, one naming a date to come stays', '');
+    check(!all.includes('ig:Demooldflyer') && all.includes('ig:Demonewflyer'), 'a flyer ages out after a few days', '');
+    check(all.indexOf('ig:DemoNewOne') < all.indexOf('ig:DemoOldHit'), 'within an account the week’s post leads the old hit', [all.indexOf('ig:DemoNewOne'), all.indexOf('ig:DemoOldHit')].join());
+    check(['ig:DemoSetA', 'ig:DemoSetB', 'ig:DemoSetC'].filter((k) => all.includes(k)).length === 1, 'one set of posts is one tile', '');
+    const over = await page.evaluate(async () => {
+      const { isOver, aged } = await import('./js/modes/wire-photos.js');
+      const at = (m, d, h = 12) => new Date(2026, m, d, h).getTime();
+      const p = (c, m, d, x) => ({ c, ts: at(m, d) / 1000, ...x });
+      return {
+        flyer: [isOver(p('Halloween sale. TODAY ONLY OCTOBER 31ST', 9, 29), at(10, 1)), isOver(p('Halloween sale. TODAY ONLY OCTOBER 31ST', 9, 29), at(9, 31))],
+        slash: isOver(p('Handbags 50% off in store 10/30', 9, 28), at(10, 1)),
+        run: [isOver(p('Zombio Oct 29 and 30', 9, 25), at(9, 31)), isOver(p('Zombio Oct 29 and 30', 9, 25), at(9, 30))],
+        range: isOver(p('Open Oct 29-31', 9, 25), at(9, 30)),
+        named: isOver(p('Saturday October 17th, come by', 9, 12), at(9, 20)),
+        hd: isOver({ hd: 'Open mic Oct 15', c: 'Come out', ts: at(9, 10) / 1000 }, at(9, 16)),
+        later: isOver(p('Open through Nov 15', 9, 20), at(10, 1)),
+        both: isOver(p('Oct 12 and Nov 20', 9, 1), at(10, 1)),
+        year: isOver(p('Founded Oct 5, 1990', 9, 25), at(10, 1)),
+        always: isOver(p('Open 24/7, 365 days', 9, 25), at(10, 1)),
+        turn: isOver(p('Back on Jan 3', 11, 28), new Date(2026, 11, 30).getTime()),
+        tonight: [isOver(p('Tonight at the Flynn', 9, 20), at(9, 20, 20)), isOver(p('Tonight at the Flynn', 9, 20), at(9, 21))],
+        spooky: isOver(p('Happy Halloween from the shop', 9, 30), at(10, 1)),
+        posterKind: [isOver({ kind: 'poster', c: 'A show', ts: at(9, 20) / 1000 }, at(9, 27)), isOver({ kind: 'poster', c: 'A show', ts: at(9, 20) / 1000 }, at(9, 23))],
+        doPost: [aged({ s: 'do', ts: at(9, 20) / 1000 }, at(9, 27)), aged({ s: 'do', ts: at(9, 20) / 1000 }, at(9, 23)), isOver({ s: 'do', c: 'A rack of coats', ts: at(9, 20) / 1000 }, at(9, 27))],
+        plain: isOver(p('A very good dog', 8, 1), at(10, 1)),
+      };
+    });
+    check(over.flyer[0] && !over.flyer[1], 'today only October 31st: fine on the day, over the next', JSON.stringify(over));
+    check(over.slash && over.named && over.hd, '10/30, October 17th, and a date in the headline all count', JSON.stringify(over));
+    check(over.run[0] && !over.run[1] && !over.range, 'a run of days lasts to its last day', JSON.stringify(over));
+    check(!over.later && !over.both && !over.turn, 'a date still to come keeps it, across the new year too', JSON.stringify(over));
+    check(!over.year && !over.always, 'history and 24/7 are not dates', JSON.stringify(over));
+    check(!over.tonight[0] && over.tonight[1] && over.spooky, 'tonight and Halloween count once the day is past', JSON.stringify(over));
+    check(over.posterKind[0] && !over.posterKind[1] && !over.plain, 'a flyer ages out; a plain picture does not', JSON.stringify(over));
+    check(over.doPost.join() === 'true,false,false', 'a do post ages out of the Wire’s wall, and not out of the shops', JSON.stringify(over.doPost));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const v = await newPage(browser, base);
+    const vintage = JSON.parse(await readFile(path.join(APP, 'data/demo/vintage.json'), 'utf8'));
+    const shop = vintage.instagramPosts[0];
+    const anchor = Date.parse(vintage.anchor || '2026-10-16T12:00:00-04:00');
+    vintage.instagramPosts = vintage.instagramPosts.concat({ ...shop, u: 'https://www.instagram.com/p/DemoShopSale/', c: 'Half off the racks until ' + day(anchor - 20 * 86400000), hd: '' },
+      { ...shop, u: 'https://www.instagram.com/p/DemoShopTwin/', ts: shop.ts - 60, c: shop.c });
+    await v.page.route(/data\/demo\/vintage\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(vintage) }));
+    await v.page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await v.page.waitForSelector('#panel-vintage .xwall .xt');
+    const shops = await v.page.$$eval('#panel-vintage .xt', (t) => t.map((a) => a.dataset.k));
+    check(!shops.includes('ig:DemoShopSale'), 'Vintage’s wall drops it too', shops.join());
+    check(!shops.includes('ig:DemoShopTwin'), 'and keeps one of a set', shops.join());
+    await v.ctx.close();
+  });
+
+  await group('Explore: selling, and the line under a tile', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [
+      post('tattoo', { c: 'Text 802 245 3485 for your next tattoo Winooski, Vermont' }),
+      post('wedding', { c: 'BOOKING 2027 VERMONT WEDDINGS!!!' }),
+      post('sale', { hd: 'Handbags 50% off in store' }),
+      post('fine', { hd: 'A new bakery on Pine Street' }),
+      post('nocap', { c: '' , hours: 0.5 }),
+      post('feedsell', { t: 'dogs', c: 'A very good dog, DM us for prints' }),
+    ], true);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const all = await order(page);
+    check(!all.some((k) => /Demotattoo|Demowedding|Demosale/.test(k)) && all.includes('ig:Demofine'), 'a pitch is off the Wire’s wall', '');
+    const pics = all.filter((k) => /^ig:/.test(k));
+    check(pics.indexOf('ig:Demonocap') > pics.indexOf('ig:Demofine') && pics.indexOf('ig:Demonocap') >= pics.length - 8, 'a tile with no line waits behind those with one', [pics.indexOf('ig:Demonocap'), pics.length].join());
+    const t = await page.evaluate(async () => {
+      const x = await import('./js/explore.js');
+      const clean = [
+        'Don’t let 2⃣4⃣ scare you at the shop today',
+        '“Let’s see what’s out there this winter',
+        'Meet The Franks of Frank & Stein: ⁠ ⁠',
+        '​A leading space on a fine morning here',
+        '(News Release) The city opened the new bridge',
+        'Text 802 245 3485 for your next tattoo',
+        'DM us to book the summer season',
+      ].map(x.cleanCaption);
+      const story = (c) => x.storyView({ k: 'a', src: 'S', ch: 'local', ...c }).line;
+      return { clean,
+        cp: [x.caption({ cp: '*GIVEAWAY CLOSED - Check your DMs to see if you won!* It’s!' }), x.caption({ cp: 'A fine day at the' }), x.caption({ hd: 'Headline', cp: '*x*' })],
+        masthead: story({ ch: 'newsletters', title: '#BTV Daily 🗞 Sunday, November 01, 2026', line: 'The council meets, and snow on the way' }),
+        hashtag: story({ title: '#BTV Daily 🗞 Sunday' }),
+        weak: [x.weakStory({ ch: 'reddit', title: 'Affordable housing' }), x.weakStory({ ch: 'local', title: 'Center for Crime Victim Services Annual Public Meeting' }), x.weakStory({ ch: 'reddit', title: 'What is the best bagel in the Old North End?' }), x.weakStory({ ch: 'local', title: 'Snow by Friday' }), x.weakStory({ ch: 'newsletters', title: '#BTV Daily 🗞 Sunday, November 01, 2026' }), x.weakStory({ ch: 'newsletters', title: '#BTV Daily, November 01, 2026', line: 'A summary' })],
+        apart: x.apart(['a', 'a', 'a', 'b', 'c'], (v) => v).join(''),
+      };
+    });
+    check(t.clean[0] === 'Don’t let 24 scare you at the shop today' && t.clean[1] === 'Let’s see what’s out there this winter' && t.clean[2] === 'Meet The Franks of Frank & Stein', 'the fallback takes off keycaps, a stray quote and a word joiner', JSON.stringify(t.clean));
+    check(t.clean[3] === 'A leading space on a fine morning here' && t.clean[4] === 'The city opened the new bridge', 'and a zero-width space and a press office’s label', JSON.stringify(t.clean));
+    check(t.clean[5] === '' && t.clean[6] === '', 'a phone number or DM us leaves no line', JSON.stringify(t.clean));
+    check(t.cp[0] === 'GIVEAWAY CLOSED - Check your DMs to see if you won!' && t.cp[1] === '' && t.cp[2] === 'Headline', 'post.cp loses its marks and the hole after them', JSON.stringify(t.cp));
+    check(t.masthead === 'The council meets, and snow on the way' && t.hashtag === 'BTV Daily Sunday', 'a newsletter’s summary, not its masthead; no # and no emoji', JSON.stringify(t));
+    check(t.weak.join() === 'true,true,false,false,true,false', 'a two-word thread, a meeting notice and a bare masthead are not tiles', t.weak.join());
+    check(t.apart === 'abaca', 'the colours take turns while there is another', t.apart);
+    await page.evaluate(() => { location.hash = 'wire/feed/dogs'; });
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    check(!(await order(page)).includes('ig:Demofeedsell'), 'nor is a pitch in a feed', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: type keeps its own shape', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/example\.org\/shape-(\d+)x(\d+)/, (r) => {
+      const [, w, h] = r.request().url().match(/shape-(\d+)x(\d+)/);
+      return r.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '"><rect width="100%" height="100%" fill="#888"/></svg>' });
+    });
+    const at = (w, h) => 'https://example.org/shape-' + w + 'x' + h + '.svg';
+    await withIg(page, [
+      post('tallflyer', { kind: 'poster', hd: 'A tall flyer on the wall', palette: at(100, 300), hours: 0.1 }),
+      post('widecomic', { kind: 'other', hd: 'A wide comic on the wall', palette: at(300, 100), hours: 0.2 }),
+      post('fourfive', { kind: 'poster', hd: 'A four by five flyer', palette: at(400, 500), hours: 0.3 }),
+      post('laughing', { t: 'laughs', kind: 'vibe', c: 'A comic with a joke at its edge', palette: at(300, 100), hours: 0.4 }),
+      post('foodie', { kind: 'food', hd: 'A plate from the side', palette: at(300, 100), hours: 0.5 }),
+    ]);
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-wire .xt-p').length && [...document.querySelectorAll('#panel-wire .xt-p img')].every((i) => i.complete));
+    const box = (h) => page.$eval('#panel-wire .xt[data-k="ig:Demo' + h + '"] .xt-p', (b) => { const r = b.getBoundingClientRect(); return { r: +(r.height / r.width).toFixed(2), fit: getComputedStyle(b.querySelector('img')).objectFit }; });
+    const tall = await box('tallflyer'), wide = await box('widecomic'), ok = await box('fourfive'), food = await box('foodie');
+    check(tall.r === 1.33 && tall.fit === 'contain', 'a flyer taller than 3:4 shows all of it, on paper', JSON.stringify(tall));
+    check(wide.r === 0.75 && wide.fit === 'contain', 'a comic wider than 4:3 keeps its edges', JSON.stringify(wide));
+    check(ok.r === 1.25 && ok.fit === 'cover', 'a 4:5 flyer fills its own shape', JSON.stringify(ok));
+    check(food.fit === 'cover' && [0.8, 1, 1.25, 1.33].includes(food.r), 'a photograph stays in the stagger', JSON.stringify(food));
+    await page.evaluate(() => { location.hash = 'wire/feed/laughs'; });
+    await page.waitForSelector('#panel-wire .xt[data-k="ig:Demolaughing"]');
+    await page.waitForFunction(() => document.querySelector('#panel-wire .xt[data-k="ig:Demolaughing"] img').complete);
+    await page.waitForTimeout(50);
+    const laugh = await box('laughing');
+    check(laugh.fit === 'contain', 'anything in Laughs keeps its joke', JSON.stringify(laugh));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: a slow file holds nothing up (live)', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const posts = Array.from({ length: 10 }, (_, i) => ({ h: 'slow' + i, ts: now - (i + 1) * 3600, i: 'https://example.org/slow' + i + '.jpg', u: 'https://www.instagram.com/p/Slow' + i + '/', c: 'A fine picture of the lake, number ' + i, s: 'see' }));
+    const held = async (re) => {
+      const o = await newPage(browser, base);
+      let go;
+      const gate = new Promise((r) => { go = r; });
+      await o.page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ posts }) }));
+      await o.page.route(re, async (r) => { await gate; r.fallback(); });
+      return { ...o, go };
+    };
+    const paper = /wire-data\/data\/wire-today\.json$/;
+    const a = await held(paper);
+    await a.page.goto(base + '/all-day/#wire/explore');
+    await a.page.waitForSelector('#panel-wire .ifeed-list .xt', { timeout: 15000 });
+    check(!(await a.page.$('#panel-wire .ifeed-list .rd-empty')), 'the pictures draw with the paper still out', '');
+    const before = await a.page.evaluate(() => [...document.querySelectorAll('#panel-wire .xt')].filter((t) => t.getBoundingClientRect().top < innerHeight).map((t) => [t.dataset.k, Math.round(t.getBoundingClientRect().top)].join('@')));
+    a.go();
+    await a.page.waitForSelector('#panel-wire .xt-head', { state: 'attached', timeout: 15000 });
+    const after = await a.page.evaluate((b) => b.map((x) => { const [k] = x.split('@'); const t = document.querySelector('#panel-wire .xt[data-k="' + k + '"]'); return t ? [k, Math.round(t.getBoundingClientRect().top)].join('@') : k; }), before);
+    check(before.join() === after.join(), 'the paper comes: no tile on the screen moves', JSON.stringify([before, after]));
+    check(!a.errors.length, 'no console errors', a.errors.join(' | '));
+    await a.ctx.close();
+    const b = await held(/\/all-day\/data\/instagram\.json$/);
+    await b.page.goto(base + '/all-day/#wire/explore');
+    await b.page.waitForSelector('#panel-wire .ifeed-list .xt', { timeout: 15000 });
+    check((await b.page.$$('#panel-wire .xt')).length > 0 && !/ig:/.test(await b.page.$eval('#panel-wire .xt', (t) => t.dataset.k)), 'the stories draw with the pictures still out', '');
+    b.go();
+    await b.ctx.close();
+    const c = await held(/\/all-day\/data\/instagram\.json$|wire-data\/data\/wire-today\.json$/);
+    await c.page.goto(base + '/all-day/#wire/explore');
+    await c.page.waitForSelector('#panel-wire .ifeed-list .xwait', { timeout: 15000 });
+    const blank = await c.page.$eval('#panel-wire .ifeed-list', (n) => ({ text: n.textContent, cols: n.querySelectorAll('.xcol').length, w: n.querySelector('.xcol i').getBoundingClientRect().height }));
+    check(blank.text === '' && blank.cols === 2 && blank.w > 40, 'with neither, paper tiles in the same two columns and no word', JSON.stringify(blank));
+    c.go();
+    await c.ctx.close();
+  });
+
+  await group('Explore: a wall that changes behind another tab', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    let go;
+    const gate = new Promise((r) => { go = r; });
+    await page.route(/data\/demo\/interests\.json/, async (r) => { await gate; r.fallback(); });
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await page.waitForSelector('#subnav .xcell');
+    await page.waitForFunction(() => !document.querySelector('#panel-wire').hidden);
+    await page.evaluate(() => { location.hash = 'food'; });
+    await page.waitForFunction(() => document.querySelector('#panel-wire').hidden);
+    go();
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { location.hash = 'wire/explore'; });
+    await wallOn(page);
+    const lines = await page.$$eval('#panel-wire .xt-h', (t) => t.map((x) => x.textContent));
+    check(lines.length > 3 && lines.every((l) => l !== '…'), 'Wire: its captions are whole when it comes back', lines.slice(0, 5).join(' | '));
+    await page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    await page.evaluate(() => { location.hash = 'food'; });
+    await page.waitForFunction(() => document.querySelector('#panel-vintage').hidden);
+    await page.evaluate(() => window.dispatchEvent(new Event('allday-boards')));
+    await page.waitForTimeout(150);
+    await page.evaluate(() => { location.hash = 'vintage/explore'; });
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    const vl = await page.$$eval('#panel-vintage .xt-h', (t) => t.map((x) => x.textContent));
+    check(vl.length > 2 && vl.every((l) => l !== '…'), 'Vintage: the same', vl.slice(0, 5).join(' | '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: politics, stories and feeds on the wall', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [
+      post('hdpol', { hd: 'Governor announces reelection campaign', c: 'A nice day out' }),
+      post('cppol', { cp: 'The mayor spoke at the rally', c: 'A nice day out again' }),
+      post('council', { hd: 'City council votes on the budget', c: 'Another nice day out' }),
+      post('chief', { hd: 'New Burlington police chief will face tall order', c: 'More of a nice day' }),
+      post('calm', { hd: 'A heron on the breakwater', c: 'A nice day for a bird' }),
+      post('hdfeed', { t: 'laughs', hd: 'Comic: a senator and a duck', c: 'poof! . . .' }),
+      post('cpfeed', { t: 'laughs', cp: 'The president walks into a bar', c: 'poof again . . .' }),
+      post('okfeed', { t: 'laughs', hd: 'Comic: a duck and a pond', c: 'poof . . .' }),
+    ], true);
+    const interests = JSON.parse(await readFile(path.join(APP, 'data/demo/interests.json'), 'utf8'));
+    interests.feeds.nosy = [['Man pays for burrito with a live chicken', 'Odd One', 9], ['State police looking for two suspects in ATM theft', 'WCAX', 8], ['Goose takes over a garden shop', 'Odd Two', 7], ['A gnome turns up in a lineup', 'Odd Three', 6], ['A second gnome in the lineup', 'Odd One', 5]].map(([t, s, n]) => ({ t, s, u: 'https://example.org/n' + n, ts: 1793520000 + n, i: '' }));
+    interests.feeds.good = Array.from({ length: 8 }, (_, i) => ({ t: 'A lovely thing number ' + i, s: i < 5 ? 'Big Paper' : 'Small Paper ' + i, u: 'https://example.org/g' + i, ts: 1793520000 + i, i: '' }));
+    await page.route(/data\/demo\/interests\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(interests) }));
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    const stories = (await order(page)).filter((k) => !/^ig:/.test(k));
+    check(!['w3', 'w22'].includes(stories[0]) && !['w3', 'w22'].includes(stories[1]), 'the first stories on the wall are not politics', stories.slice(0, 3).join());
+    const tap = await page.$eval('#panel-wire .wband-top .wf-nopol', (b) => [b.getAttribute('aria-pressed'), b.closest('.wband-top').children.length]);
+    check(tap[0] === 'false' && tap[1] === 2, 'Hide politics is on the wall’s own row, costing no new one', tap.join());
+    await page.click('#panel-wire .wband-top .wf-nopol');
+    await page.waitForFunction(async () => !(await import('./js/modes/wire-interests.js'))._state().order.includes('w3'));
+    const quiet = await order(page);
+    check(await page.evaluate(() => document.activeElement.classList.contains('wf-nopol')), 'the keyboard stays on it', '');
+    check(!quiet.some((k) => /Demo(hdpol|cppol|council|chief)/.test(k)) && quiet.includes('ig:Democalm'), 'it reads what the tile prints, not just the caption', quiet.filter((k) => /Demo(hdpol|cppol|council|chief|calm)/.test(k)).join());
+    await page.click('#panel-wire .ifeed[data-feed="laughs"]');
+    await page.waitForSelector('#panel-wire .ifeed.on');
+    const fed = await order(page);
+    check(!fed.some((k) => /Demo(hdfeed|cpfeed)/.test(k)) && fed.includes('ig:Demookfeed'), 'and on a chip’s feed', fed.join());
+    await page.evaluate(() => { location.hash = 'wire/feed/nosy'; });
+    await page.waitForSelector('#panel-wire .ifeed.on[data-feed="nosy"]');
+    const nosy = await page.$$eval('#panel-wire .xt-head', (t) => t.map((a) => ({ k: a.dataset.k, t: a.querySelector('.xt-t').textContent, cls: a.className.split(' ').find((c) => /^xt-feed/.test(c)), bg: getComputedStyle(a).backgroundColor, h: a.offsetHeight, s: a.querySelector('.xt-s').textContent })));
+    check(!nosy.some((x) => /ATM/.test(x.t)) && nosy.length === 4, 'the town’s own crime report is not Nosy', JSON.stringify(nosy.map((x) => x.t)));
+    const tint = (s) => nosy.find((x) => x.s === s).bg;
+    check(new Set(nosy.map((x) => x.bg)).size === 3 && tint('Odd One') === nosy.filter((x) => x.s === 'Odd One')[1].bg, 'a feed of headlines has colour, one to a source', JSON.stringify(nosy.map((x) => x.bg)));
+    check(new Set(nosy.map((x) => x.h)).size >= 2, 'and uneven heights', JSON.stringify(nosy.map((x) => x.h)));
+    await page.evaluate(() => { location.hash = 'wire/feed/good'; });
+    await page.waitForSelector('#panel-wire .ifeed.on[data-feed="good"]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-wire .xt-head').length >= 5);
+    const by = Object.fromEntries(interests.feeds.good.map((x) => ['if-' + x.u, x.s]));
+    const good = (await order(page)).filter((k) => by[k]).map((k) => by[k]);
+    check(good.slice(0, 4).filter((s) => s === 'Big Paper').length <= 2, 'one paper never fills a screen of Good news', good.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: a story’s sheet and a failed picture', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const wire = JSON.parse(await readFile(path.join(APP, 'data/demo/wire.json'), 'utf8'));
+    const lift = (o) => { if (Array.isArray(o)) o.forEach(lift); else if (o && typeof o === 'object') { if (o.id === 'p6') o.thumb = 'https://example.org/gone.jpg'; Object.values(o).forEach(lift); } };
+    lift(wire);
+    await page.route(/data\/demo\/wire\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(wire) }));
+    await page.route(/example\.org\/gone\.jpg/, (r) => r.fulfill({ status: 404, body: '' }));
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    await page.$eval('#panel-wire .xt[data-k="w1"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card .sheet-star');
+    check(/Every downtown trip/.test(await page.$eval('.sheet-card', (c) => c.textContent)), 'a picked story’s sheet carries the reason it was picked', '');
+    check(await page.$eval('.sheet-card [data-open]', (a) => a.classList.contains('ghost')), 'with the original as a plain button', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForFunction(() => !document.querySelector('.sheet-card'));
+    const draw = async () => { for (let i = 0; i < 40; i += 1) { await page.evaluate(() => { const p = document.querySelector('#panel-wire'); p.scrollTop = p.scrollHeight; }); await page.waitForTimeout(30); } };
+    await draw();
+    check(await page.$eval('#panel-wire .idone', (n) => n.textContent) === 'That’s the wall', 'the wall’s last words are the wall’s', '');
+    await page.waitForSelector('#panel-wire .xt[data-k="p6"]', { state: 'attached' });
+    await page.$eval('#panel-wire .xt[data-k="p6"]', (t) => t.scrollIntoView());
+    await page.waitForSelector('#panel-wire .xt-head[data-k="p6"]');
+    check(true, 'a story whose picture failed stays, as its coloured headline', '');
+    await page.$eval('#panel-wire .xt-head[data-k="p6"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card .sheet-star');
+    check(!(await page.$('.sheet-card .c-media')), 'its sheet has no broken picture', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForFunction(() => !document.querySelector('.sheet-card'));
+    await page.$eval('#panel-wire .xt[data-k="w2"]', (t) => t.click());
+    await page.waitForSelector('.sheet-card .sheet-star');
+    const plain = await page.$eval('.sheet-card', (c) => ({ pic: !!c.querySelector('.c-media'), ghost: c.querySelector('[data-open]').classList.contains('ghost') }));
+    check(!plain.pic && !plain.ghost, 'and with nothing to read, the original is the primary button', JSON.stringify(plain));
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForFunction(() => !document.querySelector('.sheet-card'));
+    const refreshed = await page.evaluate(async () => {
+      const photos = await import('./js/modes/wire-photos.js');
+      const p = { h: 'renew', ts: 1793520000, u: 'https://www.instagram.com/p/Renew/', i: 'https://example.org/a.jpg', c: 'first' };
+      photos.igList([p]);
+      const [v] = photos.igList([{ ...p, i: 'https://example.org/b.jpg', c: 'second' }]);
+      return [v.media, v.it.media, v.it.text];
+    });
+    check(refreshed.join() === 'https://example.org/b.jpg,https://example.org/b.jpg,second', 'a pull renews the signed link of a post already known', refreshed.join());
+    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors but the picture that failed', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: links and the phone’s back', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await ctx.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-wire-feeds', '["dogs","plants"]'); } });
+    const picks = () => page.evaluate(() => localStorage.getItem('allday-wire-feeds'));
+    await page.goto(base + '/all-day/?demo=1#wire/feed/good');
+    await page.waitForSelector('#panel-wire .ifeed.on[data-feed="good"]');
+    check(await picks() === '["dogs","plants"]', 'a link shows its feed and leaves the kept picks alone', await picks());
+    await page.click('#panel-wire .ifeed[data-feed="tech"]');
+    await page.waitForFunction(() => /good\+tech$/.test(location.hash));
+    check(await picks() === '["good","tech"]', 'a chip tapped there keeps what is on screen', await picks());
+    await ctx.close();
+
+    let o = await newPage(browser, base), p = o.page;
+    const oops = [];
+    const reopen = async (hash) => {
+      oops.push(...o.errors);
+      await o.ctx.close();
+      o = await newPage(browser, base);
+      p = o.page;
+      await p.goto(base + '/all-day/?demo=1#' + hash);
+      await settle(p);
+    };
+    await p.goto(base + '/all-day/?demo=1#vintage');
+    await settle(p);
+    await p.evaluate(() => { location.hash = 'wire/explore'; });
+    await p.waitForSelector('#panel-wire .ifeed[data-feed="dogs"]');
+    await p.click('#panel-wire .ifeed[data-feed="dogs"]');
+    await p.waitForFunction(() => /feed\/dogs$/.test(location.hash));
+    await p.goBack();
+    await p.waitForFunction(() => location.hash === '#wire/explore');
+    await p.goForward();
+    await p.waitForFunction(() => /feed\/dogs$/.test(location.hash));
+    await p.waitForSelector('#panel-wire .ifeed.on');
+    await p.click('#subnav .wmode[data-view="news"]');
+    await p.waitForSelector('#panel-wire .wleads');
+    await p.waitForFunction(() => location.hash === '#wire');
+    await p.waitForTimeout(150);
+    check(!!(await p.$('#subnav .wmode.on[data-view="news"]')) && await p.$eval(CELL, (b) => b.getAttribute('aria-pressed')) === 'false', 'back, forward, then a word: the word lands', p.url());
+    await p.goBack();
+    await p.waitForFunction(() => location.hash === '#vintage', null, { timeout: 4000 }).catch(() => {});
+    check(/#vintage$/.test(p.url()), 'and the next back goes somewhere', p.url());
+
+    await reopen('food');
+    await p.evaluate(() => { location.hash = 'wire/explore'; });
+    await p.waitForSelector('#panel-wire .xt-head');
+    await p.click('#panel-wire .xt-head');
+    await p.waitForSelector('.sheet-card .sheet-star');
+    await p.click('.sheet-head .iconbtn');
+    await p.waitForFunction(() => !document.querySelector('.sheet-card'));
+    await p.click('#subnav .wmode[data-view="recaps"]');
+    await p.waitForSelector('#subnav .wmode.on[data-view="recaps"]');
+    await p.goBack();
+    await p.waitForFunction(() => location.hash === '#wire/explore', null, { timeout: 4000 }).catch(() => {});
+    check(/#wire\/explore$/.test(p.url()) && !!(await p.$('#subnav .xcell.on')), 'a sheet closed by hand, then a word: back lands on the wall, not past it', p.url());
+
+    await reopen('wire');
+    await p.evaluate(() => { location.hash = 'wire/feed/dogs'; });
+    await p.waitForSelector('#panel-wire .ifeed.on');
+    await p.goBack();
+    await p.waitForFunction(() => location.hash === '#wire');
+    await p.waitForSelector('#panel-wire .wleads');
+    check(await p.$eval(CELL, (b) => b.getAttribute('aria-pressed')) === 'false' && await p.evaluate(() => localStorage.getItem('allday-wire-feeds')) === null, 'back after a link to a feed steps off the wall', p.url());
+    await reopen('vintage');
+    await p.waitForSelector(CELL);
+    await p.evaluate(() => { location.hash = 'vintage/explore'; });
+    await p.waitForSelector('#panel-vintage .xwall .xt');
+    await p.goBack();
+    await p.waitForFunction(() => location.hash === '#vintage');
+    await p.waitForFunction(() => document.querySelector('#panel-vintage .xwall').hidden);
+    check(await p.$eval(CELL, (b) => b.getAttribute('aria-pressed')) === 'false' && !(await p.$eval('#panel-vintage .panel-body', (b) => b.hidden)), 'and off Vintage’s', p.url());
+    await p.click(CELL);
+    await p.waitForSelector('#panel-vintage .xwall .xt');
+    await p.evaluate(() => { location.hash = 'food'; });
+    await p.waitForFunction(() => location.hash === '#food');
+    await p.evaluate(() => { location.hash = 'vintage'; });
+    await p.waitForFunction(() => location.hash === '#vintage/explore', null, { timeout: 4000 }).catch(() => {});
+    check(/#vintage\/explore$/.test(p.url()) && !!(await p.$(CELL + '.on')), 'a tab coming back to its wall says so in the address', p.url());
+    await p.focus('#subnav .chip[data-chip="fit"]');
+    await p.keyboard.press('Enter');
+    await p.waitForFunction(() => /#vintage$/.test(location.hash));
+    check(await p.evaluate(() => document.activeElement.dataset.chip) === 'fit', 'a section word off Vintage’s wall keeps the keyboard', await p.evaluate(() => document.activeElement.tagName));
+
+    await reopen('wire');
+    await p.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 600; });
+    await p.waitForTimeout(100);
+    const y = await p.evaluate(() => document.querySelector('#panel-wire').scrollTop);
+    await p.evaluate(() => { location.hash = 'wire/explore'; });
+    await p.waitForSelector('#panel-wire .ifeed-list .xt');
+    await p.click(CELL);
+    await p.waitForSelector('#panel-wire .wleads');
+    check(Math.abs(await p.evaluate(() => document.querySelector('#panel-wire').scrollTop) - y) < 2, 'a link to the wall keeps the regular view’s place', String(y));
+    await p.evaluate(() => { localStorage.setItem('allday-wire-nopol', 'true'); });
+    await p.goto(base + '/all-day/?demo=1#wire/w22');
+    await p.reload();
+    await settle(p);
+    await p.evaluate(() => { location.hash = 'wire/explore'; });
+    await p.waitForSelector('#panel-wire .ifeed-list .xt');
+    check(!(await order(p)).includes('w22'), 'a shared card’s let-in stops at the wall', '');
+    oops.push(...o.errors);
+    check(!oops.length, 'no console errors', oops.join(' | '));
+    await o.ctx.close();
+
+    const l = await newPage(browser, base);
+    await l.page.addInitScript(() => { localStorage.setItem('allday-settings', JSON.stringify({ explore: { wire: true } })); });
+    await l.page.goto(base + '/all-day/#wire/feed/nosuch');
+    await l.page.waitForSelector(CELL, { timeout: 15000 });
+    await l.page.waitForSelector('#panel-wire .ifeed-list', { timeout: 15000 });
+    check(await l.page.$eval(CELL, (b) => b.getAttribute('aria-pressed')) === 'true', 'a stale feed link opens what the phone keeps', l.page.url());
+    await l.ctx.close();
+  });
+
+  await group('Explore: the cell, scrolled', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    const answers = () => page.evaluate(() => {
+      const c = document.querySelector('#subnav .xcell'), r = c.getBoundingClientRect();
+      const hit = (x, y) => { const e = document.elementFromPoint(x, y); return !!e && c.contains(e); };
+      const mx = r.left + r.width / 2, my = r.top + r.height / 2;
+      let down = 0, up = 0, left = 0, right = 0;
+      while (down < 30 && hit(mx, my + down + 0.5)) down += 0.5;
+      while (up < 30 && hit(mx, my - up - 0.5)) up += 0.5;
+      while (left < 30 && hit(mx - left - 0.5, my)) left += 0.5;
+      while (right < 30 && hit(mx + right + 0.5, my)) right += 0.5;
+      return { w: r.width, tall: up + down, wide: left + right };
+    });
+    await page.goto(base + '/all-day/?demo=1#wire/explore');
+    await wallOn(page);
+    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 900; });
+    await page.waitForFunction(() => document.body.classList.contains('pill-small'));
+    await page.waitForTimeout(350);
+    const w = await answers();
+    check(w.w < 42 && w.tall >= 43 && w.wide >= 43, 'Wire: 44px answers a thumb at the pill’s small size', JSON.stringify(w));
+    await page.goto(base + '/all-day/?demo=1#vintage/explore');
+    await page.waitForSelector('#panel-vintage .xwall .xt');
+    await page.evaluate(() => { document.querySelector('#panel-vintage').scrollTop = 900; });
+    await page.waitForFunction(() => document.body.classList.contains('pill-small'));
+    await page.waitForTimeout(350);
+    const v = await answers();
+    check(v.tall >= 43 && v.wide >= 43, 'Vintage: the same', JSON.stringify(v));
+    check(!(await page.$('#panel-vintage .xt.fi[data-k^="b-"]')) && !!(await page.$('#panel-vintage .xt.fi[data-k^="ig:"]')), 'a fit check has no mute to offer; a shop’s post does', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: 320 and 390, light and dark', async () => {
+    for (const width of [320, 390]) {
+      for (const scheme of ['light', 'dark']) {
+        const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 800 }, scheme });
+        const name = width + ' ' + scheme + ': ';
+        await page.goto(base + '/all-day/?demo=1#wire/explore');
+        await wallOn(page);
+        const w = await page.evaluate(() => {
+          const bar = document.querySelector('.wbar .wmodes'), end = bar.getBoundingClientRect().right, cell = document.querySelector('#subnav .xcell').getBoundingClientRect();
+          const tiles = [...document.querySelectorAll('#panel-wire .xt')].map((t) => t.getBoundingClientRect());
+          return { doc: document.documentElement.scrollWidth, cell: cell.right <= end, h: cell.height, over: bar.scrollWidth - bar.clientWidth, words: [...bar.querySelectorAll('.wmode')].every((b) => b.scrollWidth <= b.clientWidth + 1),
+            inside: tiles.every((r) => r.left >= 0 && r.right <= innerWidth), across: new Set(tiles.map((r) => Math.round(r.left))).size,
+            heads: [...document.querySelectorAll('#panel-wire .xt-t')].every((b) => b.scrollWidth <= b.clientWidth + 1 && b.scrollHeight <= b.clientHeight + 1),
+            lines: Math.max(...[...document.querySelectorAll('#panel-wire .xt-t')].map((b) => Math.round(b.clientHeight / parseFloat(getComputedStyle(b).lineHeight)))),
+            row: (() => { const t = document.querySelector('#panel-wire .wband-top'), n = t.querySelector('.wf-nopol').getBoundingClientRect(), s = t.querySelector('.localsw').getBoundingClientRect(); return n.right <= s.left && s.right <= innerWidth && n.left >= 0; })(),
+            colour: getComputedStyle(document.querySelector('#panel-wire .xt-s')).color, paper: getComputedStyle(document.body).backgroundColor };
+        });
+        check(w.doc <= width && w.cell && w.over <= 0 && w.words && w.h >= 44, name + 'the five segments fit the pill', JSON.stringify(w));
+        check(w.inside && w.across === 2, name + 'two across, nothing off the screen', JSON.stringify(w));
+        check(w.heads && w.lines <= 5, name + 'every headline fits its tile, in five lines at most', JSON.stringify(w));
+        check(w.row, name + 'Hide politics and the switch share their row', JSON.stringify(w));
+        check(w.colour !== w.paper, name + 'the words read on the paper', JSON.stringify(w));
+        await page.goto(base + '/all-day/?demo=1#vintage/explore');
+        await page.waitForSelector('#panel-vintage .xwall .xt');
+        const v = await page.evaluate(() => {
+          const cell = document.querySelector('#subnav .xcell').getBoundingClientRect(), pill = document.querySelector('#subnav .secpill').getBoundingClientRect();
+          return { doc: document.documentElement.scrollWidth, cell: cell.right <= pill.right, h: cell.height, room: document.querySelector('#subnav .secpill-scroll').clientWidth };
+        });
+        check(v.doc <= width && v.cell && v.h >= 44 && v.room >= 120, name + 'Vintage’s pill holds its cell, with room for its words', JSON.stringify(v));
+        check(!errors.length, name + 'no console errors', errors.join(' | '));
+        await ctx.close();
+      }
+    }
+  });
+}
+
 async function theWalk(browser, base) {
   await group('Walk: a tapped pill stays on at the foot of a page', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
@@ -17065,6 +18593,8 @@ try {
   await run(theRank);
   await run(theCalendar);
   await run(theWalk);
+  await run(theFeeds);
+  await run(theExplore);
 } finally {
   await browser.close();
   proc.kill();

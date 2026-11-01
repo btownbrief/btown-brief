@@ -20,6 +20,12 @@
 const LIVE = 'https://raw.githubusercontent.com/btownbrief/btown-brief/';
 
 const FILES = {
+  /* the row of feeds under the Wire's pill (scripts/build_interests.py) */
+  interests: {
+    live: null,
+    local: 'data/interests.json',
+    ok: (j) => j && j.feeds && typeof j.feeds === 'object',
+  },
   pulse: {
     live: LIVE + 'pulse-data/data/pulse.json',
     local: '../data/pulse.json',
@@ -312,8 +318,8 @@ export const peek = (key) => cache[key] || null;
 
 /* The free offers in pulse.json (wire_inbox.py reads them from Muse), newest
    first. Vintage's Free section and Social's block both read them here, so
-   the five days and the star's key are one rule. */
-const FREE_MS = 5 * 86400000;
+   the three days and the star's key are one rule. */
+const FREE_MS = 3 * 86400000;
 const offerKey = (u) => { let h = 5381; for (let i = 0; i < u.length; i += 1) h = (h * 33 + u.charCodeAt(i)) | 0; return 'fr-' + (h >>> 0).toString(36); };
 export function freeOffers(pulse) {
   const box = pulse && pulse.inbox && pulse.inbox.free;
@@ -331,6 +337,21 @@ export function check(key) {
   return fetchJSON(spec.live, 8000).then((json) => {
     if (!spec.ok(json)) return false;
     return offerFresh(key, json);
+  }).catch(() => false);
+}
+
+/* Read a file again now, past its dead window, whether or not it has a live
+   branch or ever arrived (a pull on the Wire's feeds). Resolves true when a
+   different payload landed or was offered. */
+export function reread(key) {
+  const spec = FILES[key];
+  if (!spec || inflight[key]) return Promise.resolve(false);
+  delete dead[key];
+  return fetchJSON(spec.live || spec.local, 8000).then((json) => {
+    if (cache[key]) return offerFresh(key, json);
+    if (!spec.ok(json)) return false;
+    settle(key, json, false);
+    return true;
   }).catch(() => false);
 }
 

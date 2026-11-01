@@ -25,7 +25,7 @@ export default {
   accent: '--app-town',
   href: '../town/',
   url: 'https://guide.btownbrief.com/town/',
-  line: 'What changed where you live.',
+  line: 'Home sales, permits and city hall.',
   tabs: [
     { mode: 'feed', label: 'Now', icon: 'spark' },
     { mode: 'alerts', label: 'Alerts', icon: 'bell',

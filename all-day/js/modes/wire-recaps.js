@@ -99,6 +99,14 @@ export function kindsOf(p) {
   const letters = p ? ctx.letters(p).length : 0;
   return letters ? kinds.concat({ key: LETTERS, label: LETTERS_LABEL, n: letters }) : kinds;
 }
+/* What Hide politics leaves of a recap: nothing of a politics recap, and of
+   a mixed one (the Morning briefing) the bullets that aren't. `isPolitics`
+   reads a bullet, or any { text }. */
+export function withoutPolitics(r, isPolitics) {
+  if (r.kind === 'politics') return null;
+  const bullets = r.bullets.filter((b) => !isPolitics(b));
+  return bullets.length ? { ...r, bullets, intro: isPolitics({ text: r.intro }) ? '' : r.intro } : null;
+}
 export const find = (p, id) => recapsOf(p).find((r) => r.id === id) || null;
 
 /* ------------------------------------------------------------- the card */
@@ -141,9 +149,10 @@ export function card(r, o = {}) {
    sideways, ending in "All recaps". Stephen's rule for every horizontal
    row: "See as a list" lays the same cards out down the page, with the
    Collapse bar to fold them back (ui.js listRail). `inRiver` is the set of
-   ids the river already shows. Returns the section, or null with no recaps. */
-export function strip(p, inRiver) {
-  const list = latestOf(p);
+   ids the river already shows, `keep` an optional pass over each recap (Hide
+   politics). Returns the section, or null with no recaps. */
+export function strip(p, inRiver, keep = (r) => r) {
+  const list = latestOf(p).map(keep).filter(Boolean);
   if (!list.length) return null;
   const wrap = el('section', 'rc-strip');
   wrap.setAttribute('aria-label', 'Recaps');

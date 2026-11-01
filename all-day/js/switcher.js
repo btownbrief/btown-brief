@@ -161,19 +161,24 @@ export function bindHold(cell) {
 }
 
 /* --------------------------------------------------------------- the bubble */
-let bubble = null;
+let bubble = null, opener = null;
 export function close() {
   if (!bubble) return;
   if (unslide) unslide();
+  /* opened from the chevron: focus goes back there, if it was in the bubble */
+  const back = opener && (bubble.contains(document.activeElement) || document.activeElement === document.body) ? opener : null;
+  if (opener) opener.setAttribute('aria-expanded', 'false');
+  opener = null;
   bubble.remove(); bubble = null;
+  if (back) back.focus({ preventScroll: true });
   document.removeEventListener('pointerdown', outside, true);
   document.removeEventListener('keydown', onKey, true);
 }
-function outside(e) { if (bubble && !bubble.contains(e.target)) close(); }
+function outside(e) { if (bubble && !bubble.contains(e.target) && !e.target.closest('.appsbtn')) close(); }
 function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
 export const isOpen = () => !!bubble;
 
-export function open({ quiet = false } = {}) {
+export function open({ quiet = false, from = null } = {}) {
   close();
   if (!quiet) { endShow(); setPlays(SHOW_PLAYS); }
   const me = S.app || APPS[0];
@@ -196,8 +201,10 @@ export function open({ quiet = false } = {}) {
   });
   b.appendChild(list);
   document.body.appendChild(b);
-  place(b);
+  place(b, from);
   bubble = b;
+  opener = from;
+  if (from) from.setAttribute('aria-expanded', 'true');
   setTimeout(() => {
     document.addEventListener('pointerdown', outside, true);
     document.addEventListener('keydown', onKey, true);
@@ -207,7 +214,8 @@ export function open({ quiet = false } = {}) {
   if (first) first.focus({ preventScroll: true });
 }
 /* above the pill on a phone; beside the centre cell on a wide screen's rail */
-function place(b) {
+function place(b, from) {
+  if (from) { b.style.top = (from.getBoundingClientRect().bottom + 6) + 'px'; return; }
   const bar = document.getElementById('tabbar');
   const cell = bar && bar.querySelector('.holdcell');
   if (!bar) return;
@@ -270,6 +278,18 @@ export function coach() {
       }, SHOW_UP_MS);
     }, SHOW_RING_MS);
   }, SHOW_SETTLE_MS);
+}
+
+/* The hold is quick once you know it and invisible until you do (Ashley,
+   2026-11-01), so the app's name in the mast also says there are others */
+export function appsButton() {
+  const b = el('button', 'appsbtn', ICON.down);
+  b.type = 'button';
+  b.setAttribute('aria-label', 'Switch apps');
+  b.setAttribute('aria-haspopup', 'dialog');
+  b.setAttribute('aria-expanded', 'false');
+  b.addEventListener('click', () => { if (bubble) close(); else open({ from: b }); });
+  return b;
 }
 
 /* ------------------------------------------------- the home-screen card (mast) */

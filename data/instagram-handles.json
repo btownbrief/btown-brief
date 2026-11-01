@@ -1,6 +1,6 @@
 {
-  "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. `national: true` (with category `national`) marks an account from away: its posts carry `n: 1`, show under National and Everything only, and never reach Food, Vintage, People or Town. The 22 national accounts were each confirmed on Instagram on 2026-10-30 from a public profile page; 27 quiet local accounts moved from tier 2 to tier 3 the same day to pay for them. A dormant account still costs its credit, so prune ones that stop posting.",
-  "updated": "2026-10-30",
+  "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `name` (optional) is what a reader sees instead of the handle; without it the account's own profile name is used, once a read has found it. `interest` (optional) puts an account in one of the Wire's feeds (dogs, home, plants, laughs, sports, wild), and `breed` (beagle or lab) in Dog people's Beagles or Labs chip. A tier 3 account with an `interest` is read every three days, because its pictures last about four. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. `national: true` (with category `national`) marks an account from away: its posts carry `n: 1`, show under National and Everything only, and never reach Food, Vintage, People or Town. The 22 national accounts were each confirmed on Instagram on 2026-10-30 from a public profile page; 27 quiet local accounts moved from tier 2 to tier 3 the same day to pay for them. The 21 dog and home accounts added 2026-11-01 were each read through the live API, and only ones with posts in the last 30 days were kept; those that post about daily are tier 2, the rest get the feeds' three-day read. A dormant account still costs its credit, so prune ones that stop posting.",
+  "updated": "2026-11-01",
   "tagged_block": [],
   "accounts": [
     {
@@ -162,6 +162,7 @@
     },
     {
       "h": "uvmathletics",
+      "name": "UVM Athletics",
       "tier": 2,
       "category": "events"
     },
@@ -585,11 +586,13 @@
     },
     {
       "h": "uvmlaneseries",
+      "name": "UVM Lane Series",
       "tier": 3,
       "category": "events"
     },
     {
       "h": "uvmmbb",
+      "name": "UVM Men's Basketball",
       "tier": 3,
       "category": "events"
     },
@@ -2093,6 +2096,7 @@
     },
     {
       "h": "uvmmhockey",
+      "name": "UVM Men's Hockey",
       "tier": 2,
       "category": "events"
     },
@@ -2138,11 +2142,13 @@
     },
     {
       "h": "uvmwbb",
+      "name": "UVM Women's Basketball",
       "tier": 2,
       "category": "events"
     },
     {
       "h": "uvmwhockey",
+      "name": "UVM Women's Hockey",
       "tier": 2,
       "category": "events"
     },
@@ -2163,24 +2169,32 @@
     },
     {
       "h": "newyorkercartoons",
+      "name": "New Yorker Cartoons",
+      "interest": "laughs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "theonion",
+      "name": "The Onion",
+      "interest": "laughs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "reductress",
+      "name": "Reductress",
+      "interest": "laughs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "middleclassfancy",
+      "name": "Middle Class Fancy",
+      "interest": "laughs",
       "tier": 2,
       "category": "national",
       "national": true
@@ -2205,48 +2219,64 @@
     },
     {
       "h": "thedogist",
+      "name": "The Dogist",
+      "interest": "dogs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "weratedogs",
+      "name": "WeRateDogs",
+      "interest": "dogs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "thedodo",
+      "name": "The Dodo",
+      "interest": "dogs",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "montereybayaquarium",
+      "name": "Monterey Bay Aquarium",
+      "interest": "wild",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "nasa",
+      "name": "NASA",
+      "interest": "wild",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "nasawebb",
+      "name": "NASA Webb Telescope",
+      "interest": "wild",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "houseofhighlights",
+      "name": "House of Highlights",
+      "interest": "sports",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "bleacherreport",
+      "name": "Bleacher Report",
+      "interest": "sports",
       "tier": 2,
       "category": "national",
       "national": true
@@ -2271,12 +2301,16 @@
     },
     {
       "h": "natgeotravel",
+      "name": "Nat Geo Travel",
+      "interest": "wild",
       "tier": 2,
       "category": "national",
       "national": true
     },
     {
       "h": "nationalparkservice",
+      "name": "National Park Service",
+      "interest": "wild",
       "tier": 2,
       "category": "national",
       "national": true
@@ -2290,6 +2324,651 @@
     {
       "h": "planetmoney",
       "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "doodle.thebeagle",
+      "name": "Doodle the Beagle",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "natchofunnybeagle",
+      "name": "Natcho the Funny Beagle",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "homeofbeagles",
+      "name": "Home of Beagles",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "beaglesunity",
+      "name": "Beagles Unity",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "snoopygrams",
+      "name": "Snoopy and the Peanuts Gang",
+      "interest": "laughs",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "theblacklabrador_poppy",
+      "name": "Poppy the Black Lab",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "imjaxthelab",
+      "name": "Jax the Black Lab",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "labradors.ins",
+      "name": "Labrador Retrievers",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "doggosdoingthings",
+      "name": "Doggos Doing Things",
+      "interest": "dogs",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dog_feelingsig",
+      "name": "Thoughts of Dog",
+      "interest": "dogs",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dogsofinstagram",
+      "name": "Dogs of Instagram",
+      "interest": "dogs",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "beagleskiko",
+      "name": "Kiki and Koko",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "beagle_l_o_v_e",
+      "name": "Beagle Love",
+      "interest": "dogs",
+      "breed": "beagle",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dognamedstella",
+      "name": "Stella and Mabel",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "mooseandpoppy",
+      "name": "Moose + Poppy",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "hectorthechocolabo",
+      "name": "Hector the Chocolate Lab",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "winstonrutledgeandreggie",
+      "name": "Winston, Rutledge and Reggie",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "cooperthecountsurfer",
+      "name": "Cooper the Dog",
+      "interest": "dogs",
+      "breed": "lab",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dog",
+      "name": "Dog",
+      "interest": "dogs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "doggosbeingdoggos",
+      "name": "Doggos Being Doggos",
+      "interest": "dogs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "kewgardens",
+      "name": "Kew Gardens",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "longwoodgardens",
+      "name": "Longwood Gardens",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nybg",
+      "name": "New York Botanical Garden",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "gardenanswer",
+      "name": "Garden Answer",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "hiltoncarter",
+      "name": "Hilton Carter",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "houseplantjournal",
+      "name": "House Plant Journal",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "epicgardening",
+      "name": "Epic Gardening",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "homesteadbrooklyn",
+      "name": "Plants with Summer Rayne Oakes",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thejungalow",
+      "name": "Jungalow",
+      "interest": "plants",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "apartmenttherapy",
+      "name": "Apartment Therapy",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thepajaamahub",
+      "name": "The Pajaama Hub",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "tulipsforthetable",
+      "name": "Tulips for the Table",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "chelseazeferina",
+      "name": "Chelsea Zeferina",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "ikeahack",
+      "name": "IKEA Hack",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "mrkate",
+      "name": "Mr. Kate",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "reneerenovates",
+      "name": "Renee Renovates",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "renovationhusbands",
+      "name": "Renovation Husbands",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thisoldhouse",
+      "name": "This Old House",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dominomag",
+      "name": "domino",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thesorrygirls",
+      "name": "The Sorry Girls",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "cozy.renter",
+      "name": "Cozy Renter",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thelovelydrawer",
+      "name": "The Lovely Drawer",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "imaniathome",
+      "name": "Imani at Home",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "alexandragater",
+      "name": "Alexandra Gater",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "itsmeshelbyturner",
+      "name": "Shelby Turner",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "malloryinteriors",
+      "name": "Mallory Interiors",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "my.philly.home",
+      "name": "My Philly Home",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "want.zamora",
+      "name": "Marco Zamora",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "athomewithashley",
+      "name": "At Home with Ashley",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "lonefoxhome",
+      "name": "Lone Fox",
+      "interest": "home",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "sportscenter",
+      "name": "SportsCenter",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "overtime",
+      "name": "Overtime",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dudeperfect",
+      "name": "Dude Perfect",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nhl",
+      "name": "NHL",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "mlb",
+      "name": "MLB",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "togethxr",
+      "name": "TOGETHXR",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "justwomenssports",
+      "name": "Just Women’s Sports",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "goodgood",
+      "name": "Good Good",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "bobdoessports",
+      "name": "Bob Does Sports",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "sportbible",
+      "name": "SPORTbible",
+      "interest": "sports",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nathanwpylestrangeplanet",
+      "name": "Strange Planet",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "lizclimo",
+      "name": "Liz Climo",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "theycantalkcomics",
+      "name": "They Can Talk",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "poorlydrawnlines",
+      "name": "Poorly Drawn Lines",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "shencomix",
+      "name": "Shen Comix",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "pizzacakecomic",
+      "name": "PizzaCake Comics",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "dadsaysjokes",
+      "name": "Dad Jokes",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "animalsdoingthings",
+      "name": "Animals Doing Things",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "failarmy",
+      "name": "FailArmy",
+      "interest": "laughs",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nasahubble",
+      "name": "Hubble Space Telescope",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nasaearth",
+      "name": "NASA Earth",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "iss",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "bbcearth",
+      "name": "BBC Earth",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "natgeo",
+      "name": "National Geographic",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nhm_wpy",
+      "name": "Wildlife Photographer of the Year",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "paulnicklen",
+      "name": "Paul Nicklen",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "yellowstonenps",
+      "name": "Yellowstone National Park",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "sandiegozoo",
+      "name": "San Diego Zoo",
+      "interest": "wild",
+      "tier": 3,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "cincinnatizoo",
+      "name": "Cincinnati Zoo",
+      "interest": "wild",
+      "tier": 3,
       "category": "national",
       "national": true
     }

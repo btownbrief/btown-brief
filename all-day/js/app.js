@@ -244,7 +244,8 @@ export function go(tab, param) {
 /* ------------------------------------------------------------ feed events */
 /* One delegated handler per feed. Tabs never attach pointer handlers to
    cards (DESIGN.md section 9 rule 7); they pass optional handlers here:
-   onSource(sid, item), onSave(item), onMute(sid, item), onPeek(item). */
+   onSource(sid, item), onSave(item), onMute(sid, item), onPeek(item), and
+   onTile(item) for a [data-tile] link that opens here rather than leaves. */
 let holdFired = false, holdDead = 0;
 
 export function bindFeed(host, h = {}) {
@@ -269,6 +270,7 @@ export function bindFeed(host, h = {}) {
       (h.onSource || sourceSheet)(srcb.dataset.src, it);
       return;
     }
+    if (h.onTile && it && e.target.closest('[data-tile]')) { e.preventDefault(); h.onTile(it); return; }
     if (e.target.closest('[data-open]') && it) {
       store.markRead(it.k);
       document.querySelectorAll('.card[data-k="' + CSS.escape(it.k) + '"]').forEach((n) => n.classList.add('is-read'));
@@ -409,8 +411,10 @@ function bindHold(host, onPeek) {
     if (!holdStart) return;
     if (Math.abs(e.clientX - holdStart.x) > 10 || Math.abs(e.clientY - holdStart.y) > 10) cancelHold();
   });
+  /* a press can outlast the peek's swallow: the click comes at the lift */
+  host.addEventListener('pointerup', () => { if (holdFired) holdDead = Date.now() + 400; });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => host.addEventListener(ev, cancelHold));
-  host.addEventListener('contextmenu', (e) => { if (e.target.closest('.card')) e.preventDefault(); });
+  host.addEventListener('contextmenu', (e) => { if (e.target.closest('.card, [data-tile]')) e.preventDefault(); });
 }
 
 /* ------------------------------------------------------------------ peek */
@@ -419,6 +423,7 @@ export function closePeek() {
   if (!peekEl) return;
   peekEl.remove(); peekEl = null;
   document.removeEventListener('pointerdown', onOutside, true);
+  lower();
 }
 function onOutside(e) { if (peekEl && !peekEl.contains(e.target)) closePeek(); }
 export function peek(it) {
@@ -451,6 +456,7 @@ export function peek(it) {
   box.querySelector('.iconbtn').addEventListener('click', closePeek);
   document.body.appendChild(box);
   peekEl = box;
+  raise();
   setTimeout(() => document.addEventListener('pointerdown', onOutside, true), 0);
 }
 
@@ -467,6 +473,52 @@ export function lightbox(it) {
   lbEl = lb;
 }
 function closeLightbox() { if (lbEl) { lbEl.remove(); lbEl = null; } }
+
+/* ----------------------------------------------------------- the back button */
+/* What opens over the page (a sheet, the player, a peek) stands on one
+   history entry of its own, so a phone's back closes it and stays in the
+   app. Closed by hand, the entry stays, spent: the next thing to open reuses
+   it, and a back that lands on or leaves one takes the extra step itself, so
+   the reader never presses back for nothing. Taking the entry off at the
+   close would be a traversal racing whatever the reader does next. */
+let layer = false, spent = '', spentAt = 0;   // spent: the address of a spent entry the reader is on, and the history's length then
+const onLayer = () => !!(history.state && history.state.layer);
+function raise() {
+  spent = '';
+  if (layer) return;
+  layer = true;
+  if (!onLayer()) history.pushState({ ...history.state, layer: 1 }, '');
+}
+function lower() {
+  if (!layer || sheetClose || peekEl || !$('vbox').hidden) return;
+  layer = false;
+  spent = onLayer() ? location.href : '';
+  spentAt = history.length;
+}
+window.addEventListener('popstate', (e) => {
+  if (layer) {
+    layer = false;
+    closePeek();
+    closeSheet();
+    closeVideo();
+    return;
+  }
+  /* a followed link fires this too, at a new address or the same one, on a new
+     entry: that one is left alone */
+  if (history.length !== spentAt) spent = '';
+  if (spent === location.href || (e.state && e.state.layer)) { spent = ''; history.back(); }
+});
+/* a tab says a new address for the entry it is on: a spent one is spent no more */
+export function rewrite(url, state = null) {
+  spent = '';
+  history.replaceState(state, '', url);
+}
+/* a step back in the tab's own history, past a spent entry if it is on one */
+export function stepBack() {
+  const n = !layer && onLayer() ? 2 : 1;
+  spent = '';
+  history.go(-n);
+}
 
 /* ----------------------------------------------------------------- sheets */
 let sheetClose = null;
@@ -492,10 +544,12 @@ export function sheet(titleText, build) {
   const close = () => {
     s.hidden = true; s.innerHTML = '';
     if (sheetClose === close) sheetClose = null;
+    lower();
     /* focus goes back where it came from, if that is still on the page */
     if (opener && opener.isConnected && opener !== document.body && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
   };
   sheetClose = close;
+  raise();
   x.addEventListener('click', close);
   scrim.addEventListener('click', close);
   build(body, card, close);
@@ -838,6 +892,7 @@ export function showVideo(id, title, nav) {
   $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox-hint').hidden = true;
   $('vbox').hidden = false;
+  raise();
   videoNav(nav);
   audio.pause();
   stopFake();
@@ -859,7 +914,7 @@ function openLabel(href) {
   const hit = OPEN_ON.find(([re]) => re.test(host));
   return hit ? hit[1] : 'Open the original';
 }
-export function showClip({ src, poster, title, href, vertical } = {}) {
+export function showClip({ src, poster, title, href, vertical, it } = {}) {
   closeVideo();
   audio.pause();
   stopFake();
@@ -887,7 +942,20 @@ export function showClip({ src, poster, title, href, vertical } = {}) {
   open.href = safeHref(href || src);
   open.textContent = openLabel(href || src) + ' ↗';
   $('vbox-hint').hidden = true;
+  if (it) open.before(clipActs(it));
   $('vbox').hidden = false;
+  raise();
+}
+/* a post in the player keeps the star and the share it has on its card */
+function clipActs(it) {
+  const box = el('div', 'vbox-acts');
+  box.dataset.k = it.k;
+  const saved = store.isSaved(it.k);
+  box.innerHTML = '<button class="act sh" type="button" aria-label="Share">' + ICON.share + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" type="button" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button>';
+  box.querySelector('.sh').addEventListener('click', () => share(it.shareTab || active, it.k, it.title || it.text, it.shareUrl));
+  box.querySelector('.star').addEventListener('click', () => toggleSave(it));
+  return box;
 }
 /* Closing gives the box back as YouTube expects it: 16:9, its own label. */
 export function closeVideo() {
@@ -897,8 +965,10 @@ export function closeVideo() {
   frame.innerHTML = '';
   frame.classList.remove('vertical');
   $('vbox-open').textContent = 'Open in YouTube ↗';
+  document.querySelectorAll('#vbox .vbox-acts').forEach((n) => n.remove());
   $('vbox').hidden = true;
   videoNav(null);
+  lower();
 }
 $('vbox-close').addEventListener('click', closeVideo);
 $('vbox').addEventListener('click', (e) => { if (e.target === $('vbox')) closeVideo(); });
@@ -918,10 +988,18 @@ function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().l
 const mast = $('mast');
 export function measure() {
   /* an app name longer than the mast's row has room for (The Paper on a
-     390 phone): Saved drops its word, as it does under 380 */
+     390 phone, All Day on a 320 one): Saved drops its word, as it does under
+     380, and then the logo goes. Measured in fractions, or a name short by
+     under a pixel reads "Bo…" */
   const wm = $('wordmark');
-  mast.classList.remove('tight');
-  if (wm && wm.offsetParent && wm.scrollWidth > wm.clientWidth + 1) mast.classList.add('tight');
+  mast.classList.remove('tight', 'tighter');
+  if (wm && wm.offsetParent) {
+    const text = document.createRange();
+    text.selectNodeContents(wm);
+    const short = () => text.getBoundingClientRect().width > wm.getBoundingClientRect().width + .1;
+    if (short()) mast.classList.add('tight');
+    if (short()) mast.classList.add('tighter');
+  }
   root.style.setProperty('--mast-total', mast.offsetHeight + 'px');
   root.style.setProperty('--player-h', dock.hidden ? '0px' : (dock.offsetHeight + 8) + 'px');
 }
@@ -1186,6 +1264,9 @@ function paintTabs() {
   });
 }
 
+/* a tab whose data moved while it was away draws when it comes back */
+export function markStale(tab) { stale[tab] = true; }
+
 export function route() {
   const { tab, param } = parseHash();
   if (!tab) return;
@@ -1194,6 +1275,7 @@ export function route() {
   /* a new address is a new place: a sheet left open (Settings, a mission,
      a film) closes, as the peek already did; a tab that wants one for its
      deep link opens it again in activate() below */
+  spent = '';
   if (sheetClose) sheetClose();
   const prev = active;
   if (prev && prev !== tab) {
@@ -1293,10 +1375,11 @@ export function start() {
     const top = el('div', 'panel-top');
     const ask = el('div', 'askslot');
     top.appendChild(ask);
-    if (FULL[key]) top.appendChild(fullLink(key));
+    /* the Wire's stays out of the way of the day's first story, at its foot */
+    if (FULL[key] && key !== 'wire') top.appendChild(fullLink(key));
     p.append(ptr, top, body);
     /* the Wire's foot: the apps, for when you do want them (asks.js) */
-    if (key === 'wire') p.appendChild(asks.outRow('panel-foot'));
+    if (key === 'wire') { p.appendChild(asks.outRow('panel-foot')); if (FULL[key]) p.appendChild(fullLink(key)); }
     app.appendChild(p);
     panels[key] = p;
     bodies[key] = body;
@@ -1377,6 +1460,7 @@ $('wordmark').addEventListener('click', (e) => {
 });
 /* the home-screen card, from the mast, until this app is on the home
    screen; the switcher's bubble and what is new in the other apps */
+$('wordmark').after(switcher.appsButton());
 const installBtn = switcher.installButton();
 installBtn.hidden = asks.installed();
 const calBtn = $('cal-btn');   // All Day's page has it; Town's and Body's do not
@@ -1485,5 +1569,7 @@ forwardWheel($('aside'), true);
 
 window.addEventListener('hashchange', () => { if (started) route(); });
 window.addEventListener('resize', measure);
+/* the serif that lands late is wider than the fallback */
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 if ('ResizeObserver' in window) new ResizeObserver(measure).observe(mast);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);

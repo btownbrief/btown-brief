@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v121';   // the walk: dead ends, names and labels, Reddit past RSS
+const VERSION = 'all-day-v124';   // Explore, phase one: the cell, the walls on the Wire and Vintage, the tiles with words
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -25,7 +25,9 @@ const SHELL_URLS = [
      built, and the switcher */
   './js/apps/index.js', './js/apps/all-day.js', './js/apps/body.js',
   './js/apps/town.js', './js/shelf.js', './js/switcher.js',
-  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
+  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/wire-interests.js', './js/modes/watch.js', './js/modes/food.js',
+  /* the headlines the feeds read, so Good news, Nosy and Tech open offline */
+  './data/interests.json',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
   /* The Build: the tab, its API (live, this phone, the demo) and the site */
@@ -40,6 +42,8 @@ const SHELL_URLS = [
   './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js', './js/forest.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
+  /* the Explore walls' cell memory and tiles, imported by the Wire and Vintage */
+  './js/explore.js',
   /* The Calendar's block, imported by What Now and People */
   './js/calendar.js', './data/calendar.json',
   /* the run clubs' week, imported by ui.js, People and What Now */

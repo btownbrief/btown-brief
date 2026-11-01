@@ -36,10 +36,15 @@
    pulse.json, newest first or by outlet, the outlet chips, search.
 
    Photo mode (wire-photos.js) is another way to read the tab: the News ·
-   Recaps · Square · Photos switch turns the paper into one feed of pictures
+   Recaps · Town · Photos switch turns the paper into one feed of pictures
    (neighbors' photos and art, the gallery, local Instagram; never the
    news), newest first. The choice is kept on the phone; #wire/photos opens
    it, and the old #art and #photos land there too.
+
+   The cell at the end of that switch is the tab's Explore wall (explore.js,
+   wire-interests.js). W.wall says it is on screen; W.mode goes on holding the
+   word underneath, which is where the cell comes back to. The interest chips
+   live only there.
 
    ?demo=1 runs exactly this file on wire-demo.js's fake payloads, which have
    the same shape as the real ones. */
@@ -51,8 +56,10 @@ import * as demo from './wire-demo.js';
 import * as photos from './wire-photos.js';
 import * as square from './wire-square.js';
 import * as recaps from './wire-recaps.js';
+import * as feeds from './wire-interests.js';
+import * as explore from '../explore.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, geoKeeps, setGeo, put, collapseBar } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, geoKeeps, setGeo, put, collapseBar, gridCell } from '../ui.js';
 import { liquify } from '../liquid.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
@@ -90,6 +97,11 @@ const TOPICS = [
   ['t:health', 'Health', ['health']],
 ];
 const TOPIC_OF = Object.fromEntries(TOPICS.flatMap(([key, , tags]) => tags.map((t) => [t, key])));
+/* What Hide politics hides beyond the tagger's politics: a story or a recap
+   line that mentions it under any other tag, or none (Ashley, 2026-11-01:
+   the governor, the midterms and Trump all got through). The words are
+   build_interests.py's, with the offices and Vermont's own names. */
+const POLITICS = /\b(?:trump|biden|harris|vance|obama|congress\w*|senat\w+|republican\w*|democrat\w*|gop|elections?|electoral|midterms?|ballots?|governors?|gubernatorial|lt\. gov|gov\.|sen\.|rep\.|phil scott|sanders|balint|mayor\w*|city council\w*|statehouse|candidates?|white house|supreme court|presiden\w*|lawmakers?|legislat\w+|council\w*|selectboard|police chief|zoning|moratorium\w*|(?:approv|reject)(?:es|ed)\s+(?:\w+\s+)?(?:\w+\s+)?data cent(?:er|re)s?|campaign\w*|tariffs?|immigra\w+|deport\w*|shutdown|abortion|gaza|israel\w*|ukrain\w*|russia\w*|pentagon|voters?|voting|partisan|impeach\w*)(?:\b|(?<=\.))/i;
 /* Topics view's shelves go a little further than the chips, so nothing
    the day carries is out of reach there: the world, tech and science, and
    the rest */
@@ -101,11 +113,14 @@ const SHELF_N = 4;       // stories on a shelf before "All N"
 const SPORTS = { nba: 'NBA', nfl: 'NFL', nhl: 'NHL', tennis: 'Tennis', mlb: 'MLB', local: 'Local', college: 'College' };
 const SPORT_ORDER = ['nba', 'nfl', 'nhl', 'tennis', 'mlb', 'local', 'college'];
 const NEWS_KEY = 'allday-wire-news';   // Feed or Topics, kept on the phone
-/* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
-   the list and photo icons "looked like the same information") */
-const MODES = [['news', 'News'], ['recaps', 'Recaps'], ['square', 'Square'], ['photos', 'Photos']];
+const NOPOL_KEY = 'allday-wire-nopol'; // Hide politics, kept on the phone
+/* the ways to read the tab, in words (his girlfriend, 2026-10-17: the list
+   and photo icons "looked like the same information"); Town is Ashley's word
+   ("you could just say town"), and the page itself is still Town Square */
+const MODES = [['news', 'News'], ['recaps', 'Recaps'], ['square', 'Town'], ['photos', 'Photos']];
 /* each word's water, a colour token */
 const MODE_WATER = ['--liq-news', '--liq-recaps', '--liq-square', '--liq-photos'];
+const WALL_WATER = '--liq-photos';     // the Explore cell's, the colour the plan's screens show
 /* the words of a day's end */
 const TURN_DONE = (day) => 'That’s ' + day;
 const WEEK_TILES = 7;
@@ -144,6 +159,9 @@ const W = {
   topic: 'all',         // or a TOPICS key
   sport: 's:all',       // under Sports: 's:' and a SPORTS key
   news: readNews(),     // News as the Feed or as Topics' shelves
+  nopol: !!store.read(NOPOL_KEY, false),   // Hide politics
+  fopen: false,         // News: the Filters row is open
+  letIn: null,          // a shared card's key, shown past the filters for this visit
   shelves: new Set(),   // the shelves opened past four
   rkind: 'all',         // Recaps: one kind, or all of them
   rOpen: new Set(),     // the recaps opened past five bullets
@@ -152,6 +170,11 @@ const W = {
   flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
   mode: photos.remembered() || 'news',   // News (the paper), Photos or Square
+  wall: false,          // the Explore wall is on screen, over the mode
+  places: {},           // { 'wall' or a mode: { y, n } } where each was left, so going between them holds both
+  dropEntry: false,     // a feed's history entry is on its way off (sayWhere)
+  byLink: false,        // the wall came by a link, over a regular view on this tab
+  selfHash: null,       // the address that step wrote, which is nothing to land on
   squareOk: app.demo ? true : null,      // the Square board is live (nn-ROUND4.sql); null until asked
   ig: null,             // the Instagram posts, for the News list's Instagram chip
   left: null,           // where the reader left off last time: { date, k, at }
@@ -222,6 +245,8 @@ function toCard(it, sources, isToday) {
        anything else, is `other`, which has no chip) */
     chip: SPORTS[it.sport] ? String(it.sport) : it.sport ? 'other' : '',
     site: String(it.site || (sources[it.src] && sources[it.src].site) || ''),
+    /* sports has its own presidents and votes */
+    pol: TOPIC_OF[it.topic] === 't:politics' || (it.topic !== 'sports' && POLITICS.test(it.title + ' ' + (it.line || ''))),
     line: it.ch === 'newsletters' && typeof it.line === 'string' ? it.line : '',
   };
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
@@ -262,7 +287,11 @@ function dayOf(p) {
   const own = all.filter((c) => c.own).sort((a, b) => b.d - a.d);
   const brief = (p.brief && card(p.brief)) || own[0] || null;
   const ranked = (list) => (Array.isArray(list) ? list : []).filter((x) => x && !x.own)
-    .map((x) => { const c = card(x); return c ? { c, why: String(x.why || ''), rank: Number(x.rank) || 0, at: String(x.ranked_at || '') } : null; })
+    .map((x) => {
+      const c = card(x);
+      if (c && POLITICS.test(String(x.why || ''))) c.pol = true;
+      return c ? { c, why: String(x.why || ''), rank: Number(x.rank) || 0, at: String(x.ranked_at || '') } : null;
+    })
     .filter(Boolean);
   const picks = ranked(p.picks).sort((a, b) => (a.rank || 99) - (b.rank || 99));
   /* the stories an earlier ranking that day held: newest ranking first, then
@@ -277,6 +306,7 @@ function dayOf(p) {
     const c = card(it);
     if (!c) return null;
     c.topic = topic;
+    if (topic === 't:sports') c.pol = false;
     if (chip) c.chip = SPORTS[chip] ? chip : 'other';
     return c;
   };
@@ -303,7 +333,10 @@ function loadMutes() {
   MUTE = Object.create(null);
   Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
 }
-const seen = (c) => !MUTE[c.sid] && (geoKeeps(c.local) || (geo() === 'local' && !!follows[c.sid]));
+/* W.letIn is a shared card: it shows for this visit whatever the reader's
+   switch and Hide politics say, and neither changes (2026-11-01: a link
+   turned a reader's Local paper to Everything for good) */
+const seen = (c) => !MUTE[c.sid] && (c.k === W.letIn || (!(W.nopol && c.pol) && (geoKeeps(c.local) || (geo() === 'local' && !!follows[c.sid]))));
 const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic) &&
   (W.topic !== 't:sports' || W.sport === 's:all' || c.chip === W.sport.slice(2));
 /* Sports and Markets read their lanes, the rest the river */
@@ -311,6 +344,9 @@ const lanes = () => W.topic === 't:sports' || W.topic === 't:markets';
 const topicsOn = () => W.news === 'topics' && W.mode === 'news' && W.view === 'paper' && W.ch !== 'instagram';
 /* no filter on: the Brief and What matters lead the day */
 const unfiltered = () => W.ch === 'all' && W.topic === 'all';
+/* the paper itself is on screen, not Unfiltered and not the wall */
+const inPaper = () => W.view === 'paper' && !W.wall;
+const onWall = () => W.view === 'paper' && W.wall;
 /* a local story's source is green only on Everything, where local and
    national share the list; on Local every one is local */
 const greenOf = (c) => !!c.local && geo() === 'everything';
@@ -378,7 +414,7 @@ function loadEdition(date) {
 }
 
 /* --------------------------------------------------------------- subnav */
-/* News · Recaps · Square · Photos is a pill that floats over the paper and stays
+/* News · Recaps · Town · Photos is a pill that floats over the paper and stays
    on screen as you scroll (Stephen, 2026-10-19: "that's how important it
    is"). Once the banner at the top of the paper has scrolled away, a small
    second row floats under it with the same two controls the banner leads
@@ -396,7 +432,7 @@ function modeRow() {
      hole between Recaps and Photos */
   const modes = MODES.map((m, i) => [...m, MODE_WATER[i]]).filter(([key]) => key !== 'square' || W.squareOk !== false);
   modes.forEach(([key, label]) => {
-    const on = W.mode === key && W.view === 'paper';
+    const on = W.mode === key && W.view === 'paper' && !W.wall;
     const wait = key === 'square' && !W.squareOk;
     const b = el('button', 'wmode' + (on ? ' on' : '') + (wait ? ' wait' : ''), esc(label));
     b.type = 'button';
@@ -406,11 +442,14 @@ function modeRow() {
     b.addEventListener('click', () => { if (!on && !(key === 'square' && !W.squareOk)) setMode(key); });
     g.appendChild(b);
   });
+  /* the fifth segment, there on every word; on the wall the words are drained
+     and the water pours into it */
+  g.appendChild(gridCell(W.wall, () => flipWall()));
   /* the chosen word sits in poured water, each its own colour (Stephen,
      2026-10-19: "that bubble and the motion ... for the main ones I want
      people switching through"); Unfiltered has no word on, so no water */
-  const at = modes.findIndex(([key]) => key === W.mode);
-  if (W.view === 'paper' && at >= 0) liquify(g, { key: 'wire-mode', idx: at, colors: modes.map((m) => m[2]) });
+  const at = W.wall ? modes.length : modes.findIndex(([key]) => key === W.mode);
+  if (W.view === 'paper' && at >= 0) liquify(g, { key: 'wire-mode', idx: at, colors: modes.map((m) => m[2]).concat(WALL_WATER) });
   return g;
 }
 /* a chip's colour mark: a dot in the source's colour */
@@ -453,15 +492,18 @@ function subnav() {
    scroll"). The wide screen's rail holds the chips instead. Each tap
    applies at once. */
 let FBODY = null;
-const dayRowShown = () => W.view === 'paper' && ((W.mode === 'news' && W.ch !== 'instagram') || W.mode === 'recaps');
+const dayRowShown = () => inPaper() && ((W.mode === 'news' && W.ch !== 'instagram') || W.mode === 'recaps');
 /* the row that floats: the day and the switch on News, the switch alone on
    Photos (Local is Burlington's pictures, Everything adds the world's), the
-   day alone on Recaps (a recap is the whole of X, never local or not) */
-const topRowShown = () => W.view === 'paper' && (W.mode === 'news' || W.mode === 'recaps' || W.mode === 'photos');
+   day alone on Recaps (a recap is the whole of X, never local or not), the
+   switch alone on the wall unless the chips have taken it over: an interest
+   has no Local */
+const topRowShown = () => W.view === 'paper' && (W.wall ? !feeds.active() : W.mode === 'news' || W.mode === 'recaps' || W.mode === 'photos');
 function topRow(cls) {
   const row = el('div', cls);
-  row.append(dayRowShown() ? dayPager() : el('span', 'wtop-sp'));
-  if (W.mode !== 'recaps') row.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
+  /* the wall has no Filters: Hide politics sits where the day would, in the banner */
+  row.append(dayRowShown() ? dayPager() : W.wall && cls === 'wband-top' ? noPolitics() : el('span', 'wtop-sp'));
+  if (W.wall || W.mode !== 'recaps') row.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
   return row;
 }
 function dayPager() {
@@ -524,6 +566,7 @@ function banner() {
   body.appendChild(filtersUI(true));
   FBODY = body;
   band.appendChild(body);
+  if (W.mode === 'news' && !W.fopen) return band;
   const foot = el('div', 'wband-foot');
   if (W.mode === 'news') {
     const raw = button('Unfiltered ' + ICON.arrow, 'ghost wf-raw', () => openRaw());
@@ -600,6 +643,7 @@ function focusKey(n) {
   if (n.dataset.chip) return '.chip[data-chip="' + CSS.escape(n.dataset.chip) + '"]';
   if (n.dataset.slot) return '.wm-slot[data-slot="' + CSS.escape(n.dataset.slot) + '"]';
   if (n.classList.contains('localsw-half')) return '.localsw-half.on';
+  if (n.classList.contains('wf-nopol')) return '.wf-nopol';
   const label = n.getAttribute('aria-label');
   return label ? '[aria-label="' + CSS.escape(label) + '"]' : null;
 }
@@ -607,6 +651,7 @@ function focusKey(n) {
    banner, the rail and the paper, from the top; focus stays on the chip
    that was tapped */
 function changed() {
+  W.letIn = null;
   const a = document.activeElement;
   const host = a && a.closest ? a.closest('.wband, .aside, .wfloat') : null;
   const was = host ? focusKey(a) : null;
@@ -634,6 +679,29 @@ function clearFilters() {
   W.ch = 'all'; W.topic = 'all'; W.sport = 's:all'; W.slot = null;
   history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
   changed();
+}
+/* News' one button for everything past the source row */
+function filtersBtn() {
+  const n = (W.topic !== 'all' ? 1 : 0) + (W.slot ? 1 : 0) + (W.nopol && W.ch !== 'instagram' ? 1 : 0) + (topicsOn() ? 1 : 0);
+  const b = el('button', 'wf-open' + (W.fopen ? ' on' : ''), ICON.filter + '<span>Filters' + (n ? ' · ' + n : '') + '</span>');
+  b.type = 'button';
+  b.setAttribute('aria-expanded', W.fopen ? 'true' : 'false');
+  b.addEventListener('click', () => {
+    W.fopen = !W.fopen;
+    /* Show all lives in what Filters opens, and closes with it */
+    if (!W.fopen) W.fwrap = false;
+    render();
+    const again = W.root.querySelector('.wf-open');
+    if (again) again.focus({ preventScroll: true });
+  });
+  return b;
+}
+function noPolitics() {
+  const b = el('button', 'wf-nopol' + (W.nopol ? ' on' : ''), 'Hide politics');
+  b.type = 'button';
+  b.setAttribute('aria-pressed', W.nopol ? 'true' : 'false');
+  b.addEventListener('click', () => { W.nopol = !W.nopol; store.write(NOPOL_KEY, W.nopol); changed(); });
+  return b;
 }
 /* the chips; in the banner they go without heads and without the buttons
    the banner's foot carries */
@@ -682,8 +750,19 @@ function filtersUI(band) {
       cls: SRC_CH.has(key) ? 'w-src-' + key : '', icon: SRC_CH.has(key) ? DOT : '' }))
     .filter((c) => c.key === 'all' || c.key === W.ch || c.n !== 0);
   h('Source');
-  f.appendChild(chips(kinds, W.ch, pickKind));
+  const srcRow = chips(kinds, W.ch, pickKind);
+  /* News opens on one row (Ashley, 2026-11-01: "you don't know where to
+     start"); Filters holds the rest, in place */
+  if (band) srcRow.prepend(filtersBtn());
+  f.appendChild(srcRow);
   checkTopic(d);
+  if (band && !W.fopen) return f;
+  /* the Instagram list has no shelves and no politics: neither would do anything */
+  if (W.ch !== 'instagram') {
+    const ways = el('div', 'wf-ways');
+    ways.append(newsSwitch(), noPolitics());
+    f.appendChild(ways);
+  }
   /* Topics view is every topic at once: no topic row there */
   if (W.ch !== 'instagram' && !topicsOn()) {
     const n = topicCounts(d);
@@ -724,9 +803,10 @@ function filtersUI(band) {
 /* At 1280 and up: the same filters, in place, and what you saved. */
 function aside() {
   const box = el('div', 'wside');
-  if (W.view === 'paper') {
+  /* a feed has no filters of the paper's: only what you saved */
+  if (inPaper()) {
     const fs = el('section', 'ws');
-    fs.appendChild(el('h3', null, W.mode === 'news' ? 'Filters' : W.mode === 'photos' ? 'Photos' : W.mode === 'recaps' ? 'Recaps' : 'The Square'));
+    fs.appendChild(el('h3', null, W.mode === 'news' ? 'Filters' : W.mode === 'photos' ? 'Photos' : W.mode === 'recaps' ? 'Recaps' : 'Town Square'));
     fs.appendChild(filtersUI());
     box.appendChild(fs);
   }
@@ -758,7 +838,7 @@ function renderSquare(opts = {}) {
   const root = W.root;
   const seq = ++squareSeq;
   const draw = () => {
-    if (seq !== squareSeq || W.mode !== 'square' || W.view !== 'paper') return;
+    if (seq !== squareSeq || W.mode !== 'square' || !inPaper()) return;
     square.render(root, { limit: opts.limit });
     paperTop(root);
     if (app.activeTab() === 'wire') app.paintSubnav();
@@ -770,7 +850,7 @@ function renderSquare(opts = {}) {
     if (!W.pulse) pulseForSquare();
     return;
   }
-  root.innerHTML = '<p class="loading">Loading the Square…</p>';
+  root.innerHTML = '<p class="loading">Loading Town Square…</p>';
   square.ensure().then(draw);
 }
 function landSquare() {
@@ -785,7 +865,7 @@ square.init({
   today: () => (W.today ? dayOf(W.today).cards : []),
   pulse: () => W.pulse,
   needPulse: () => pulseForSquare(),
-  showing: () => W.mode === 'square' && W.view === 'paper' && panelOn(),
+  showing: () => W.mode === 'square' && inPaper() && panelOn(),
   panel: () => W.panel,
   redraw: () => redraw(),
 });
@@ -828,7 +908,7 @@ function renderRecaps() {
   if (r.need) {
     root.innerHTML = '<p class="loading">Loading the recaps…</p>';
     loadEdition(r.need).catch(() => { W.noEarlier = tk; })
-      .then(() => { if (seq === recapSeq && W.mode === 'recaps' && W.view === 'paper') render(); });
+      .then(() => { if (seq === recapSeq && W.mode === 'recaps' && inPaper()) render(); });
     return;
   }
   if (r.borrowed) W.shownDay = r.date;
@@ -904,24 +984,77 @@ function squareReady() {
     squareAsk = app.demo ? Promise.resolve(true) : boards.roundFour().then((v) => v === true, () => false);
     squareAsk.then((ok) => {
       W.squareOk = ok;
-      if (!ok && W.mode === 'square') { W.mode = 'news'; if (W.root) render(); }
+      if (!ok && W.mode === 'square') { W.mode = 'news'; if (W.root && !W.wall) render(); }
       if (app.activeTab() === 'wire') app.paintSubnav();
     });
   }
   return squareAsk;
 }
 
+/* The address of what is on screen, so it can be copied or shared */
+function hashNow() {
+  const at = W.view === 'raw' ? 'unfiltered'
+    : W.wall ? (feeds.active() ? 'feed/' + feeds.hash() : 'explore')
+    : W.mode === 'recaps' ? 'recaps' + (W.start ? '/' + W.start : '')
+    : W.mode !== 'news' ? W.mode
+    : W.start || (W.ch !== 'all' ? W.ch : '');
+  return location.search + '#wire' + (at ? '/' + at : '');
+}
 /* The switch: the choice is kept on the phone, and the address says which
    view this is, so it can be shared. Focus stays on the switch. */
 function setMode(mode) {
+  const fromWall = onWall();
+  if (fromWall) leaveWall();
   W.mode = mode === 'photos' || mode === 'square' || mode === 'recaps' ? mode : 'news';
   photos.remember(W.mode);
   W.view = 'paper';
   W.photoOpen = null;
-  history.replaceState(null, '', location.search + '#wire' + (W.mode === 'recaps' ? '/recaps' + (W.start ? '/' + W.start : '') : W.mode !== 'news' ? '/' + W.mode : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
-  app.paintSubnav(); render(); app.scrollTop();
+  W.letIn = null;
+  sayWhere();
+  app.paintSubnav();
+  if (fromWall) backTo(W.mode); else { render(); app.scrollTop(); }
   const b = document.querySelector('#subnav .wmode[data-view="' + W.mode + '"]');
   if (b) b.focus({ preventScroll: true });
+}
+
+/* ---------------------------------------------------------- the Explore cell */
+/* where each view was left, so going to the other and back holds both */
+const viewKey = () => (W.wall ? 'wall' : W.mode);
+function keepPlace() { if (W.panel) W.places[viewKey()] = { y: W.panel.scrollTop, n: shownNow() }; }
+function backTo(view) {
+  const at = W.places[view];
+  render(at ? { limit: at.n } : {});
+  app.scrollTop();
+  if (at && W.panel) W.panel.scrollTop = at.y;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  keepPlace();
+  W.wall = false;
+  W.byLink = false;
+  explore.visit('wire');
+}
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  keepPlace();
+  W.wall = !W.wall;
+  W.byLink = false;
+  explore.flip('wire', W.wall);
+  W.view = 'paper';
+  W.letIn = null;
+  sayWhere();
+  app.paintSubnav();
+  backTo(viewKey());
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
+}
+/* The address says what is on screen. Leaving a feed's own history entry takes
+   that entry back off, or the press of back that undid the feed would land on
+   a view with no feed in it and do nothing; the popstate below says where we
+   are once the step has landed. */
+function sayWhere() {
+  if (history.state && history.state.feedOn) { W.dropEntry = true; app.stepBack(); return; }
+  app.rewrite(hashNow());
 }
 
 /* The Square's hold on the Unfiltered wire (its Facebook and Reddit
@@ -951,7 +1084,7 @@ function renderPhotos(opts = {}) {
   const seq = ++photoSeq;
   loadMutes();
   const draw = () => {
-    if (seq !== photoSeq || W.mode !== 'photos' || W.view !== 'paper') return;
+    if (seq !== photoSeq || W.mode !== 'photos' || !inPaper()) return;
     const first = !root.querySelector('.pm-head');
     const was = photos.cat();
     photos.render(root, { limit: opts.limit, until: W.photoOpen || opts.until });
@@ -968,28 +1101,40 @@ function renderPhotos(opts = {}) {
 function landPhoto() {
   const k = W.photoOpen;
   if (!k) return;
-  /* a shared post from the other side of the switch: flip it and draw again */
-  if (geo() !== 'everything' && photos.igHidden(k)) { setGeo('everything'); app.paintSubnav(); render(); return; }
+  /* a shared post from the other side of the switch: let it in and draw again */
+  if (photos.igHidden(k)) { W.letIn = k; render(); return; }
   W.photoOpen = null;
   if (app.flashHit(W.root, k) && photos.openPicture(k)) return;
   app.toast('That photo has moved on.');
 }
 
+feeds.init({
+  changed: (was) => feedsChanged(was),
+  /* the pill is as it was, and the keyboard may be on it */
+  landed: () => wallLanded(),
+  muted: (sid) => !!MUTE[sid],
+  stories: () => (W.today ? dayOf(W.today).all.filter(seen).sort((a, b) => b.d - a.d) : []),
+  storiesIn: () => !!W.today || W.failed,
+  whyOf: (k) => { const d = W.today && dayOf(W.today); return (d && d.picks.concat(d.earlier).find((x) => x.c.k === k) || {}).why || ''; },
+  keeps: (v) => geoKeeps(v.local),
+  quiet: (text) => !W.nopol || !POLITICS.test(text),
+  feed: { onSource: (sid, it) => sourceSheet(sid, it), onMute: (sid, it) => muteSource(sid, it) },
+});
 photos.init({
   now: () => SRC.now(),
   clockReady: () => (app.demo ? demo.init() : Promise.resolve()),
   ago,
-  visible: (v) => !(v.sid && MUTE[v.sid]) && geoKeeps(v.local),
+  visible: (v) => !(v.sid && MUTE[v.sid]) && (v.k === W.letIn || geoKeeps(v.local)),
   green: () => true,
   hydrate: (host, keys) => hydrateVotes(host, keys),
   panel: () => W.panel,
-  showing: () => W.mode === 'photos' && W.view === 'paper' && panelOn(),
+  showing: () => W.mode === 'photos' && inPaper() && panelOn(),
   redraw: () => redraw(),
   onMute: (sid, it) => muteSource(sid, it),
   squareOk: () => !!W.squareOk,
   squareReady: () => squareReady(),
   pickCat: (k) => pickCat(k),
-  wide: () => geo() !== 'local',
+  wide: () => geo() !== 'local' || /^pw:/.test(W.letIn || ''),
   national: () => geo() === 'national',
   /* the day's pictures from everywhere (the payload key may still settle) */
   world: () => (W.today && (W.today.photos_world || W.today.world_photos)) || [],
@@ -1061,11 +1206,63 @@ function goDay(date) {
    Before today's first ranking the paper opens on the latest day that has
    one (the reviewers, 2026-10-19: a morning reader met two empty states
    and no stories). */
+/* the wall is the whole page while it is on: the switch, the chips, the tiles */
+function renderWall(opts = {}) {
+  const root = W.root;
+  loadMutes();
+  feeds.keepFocus();
+  root.innerHTML = '';
+  if (topRowShown()) {
+    const band = el('section', 'wband');
+    band.setAttribute('aria-label', 'What the wall shows');
+    band.appendChild(topRow('wband-top'));
+    root.appendChild(band);
+  }
+  root.appendChild(feeds.bar());
+  feeds.draw(root, opts.limit);
+  feeds.refocus();
+  floatCheck();
+  if (app.activeTab() === 'wire') app.paintAside();
+}
+/* A file landed. Nothing can be measured while the tab is away, so a wall that
+   is not on screen draws when it comes back (app.markStale). */
+function wallLanded() {
+  if (!onWall()) return;
+  if (app.activeTab() === 'wire') redraw(false);
+  else app.markStale('wire');
+}
+/* Going onto a feed is a step the phone's back undoes: the address before it
+   is marked and a new one pushed. Blending or a breed only rewrites it, and
+   tapping the last chip off is that same step back. */
+function feedsChanged(was) {
+  W.view = 'paper';
+  W.letIn = null;
+  const on = feeds.active();
+  if (on && !was) { history.replaceState({ beforeFeed: 1 }, ''); history.pushState({ feedOn: 1 }, '', hashNow()); }
+  else if (!on && history.state && history.state.feedOn) app.stepBack();
+  else history.replaceState(on ? history.state : null, '', hashNow());
+  app.paintSubnav(); render(); app.scrollTop();
+  feeds.refocus();
+}
+/* The step sayWhere() took lands on whatever entry is under the feed, marked
+   or not: after back and forward the mark has gone. Only back onto a marked
+   entry undoes the chips. */
+window.addEventListener('popstate', (e) => {
+  if (!W.root || !(W.dropEntry || (e.state && e.state.beforeFeed))) return;
+  if (W.dropEntry) W.dropEntry = false;
+  else if (feeds.active()) { feeds.clear(); W.view = 'paper'; app.paintSubnav(); render(); app.scrollTop(); }
+  history.replaceState(null, '', hashNow());
+  /* the hashchange this step also fires is our own address, nothing to land on */
+  W.selfHash = location.hash;
+  setTimeout(() => { W.selfHash = null; }, 200);
+});
 function render(opts = {}) {
   const root = W.root;
   if (!root) return;
+  if (W.wall) feeds.hold();
   stopRun();
   if (W.view === 'raw') { renderRaw(); return; }
+  if (W.wall) { renderWall(opts); return; }
   if (W.mode === 'photos') { renderPhotos(opts); return; }
   if (W.mode === 'square') { renderSquare(opts); return; }
   if (W.mode === 'recaps') { renderRecaps(); return; }
@@ -1105,8 +1302,8 @@ function render(opts = {}) {
          flash an empty paper */
       if (empty && (!W.idxDone || (prev && !pp))) root.innerHTML = '<p class="loading">Loading the wire…</p>';
       if (prev && !pp) {
-        loadEdition(prev).then(() => { if (W.view === 'paper' && W.mode === 'news' && !W.start && (!W.panel || W.panel.scrollTop < 120)) render(); },
-          () => { W.noEarlier = tk; if (empty && W.view === 'paper' && W.mode === 'news') render(); });
+        loadEdition(prev).then(() => { if (inPaper() && W.mode === 'news' && !W.start && (!W.panel || W.panel.scrollTop < 120)) render(); },
+          () => { W.noEarlier = tk; if (empty && inPaper() && W.mode === 'news') render(); });
         if (empty) return;
       } else if (empty && !W.idxDone) return;
       else if (pp) {
@@ -1140,7 +1337,7 @@ function render(opts = {}) {
     /* the newest recap of each kind, after the top stories; a bullet the
        river already carries is not repeated there */
     if (!W.start && W.today && W.today.date === tk) {
-      const st = recaps.strip(W.today, new Set(dayOf(W.today).all.map((c) => c.k)));
+      const st = recaps.strip(W.today, new Set(dayOf(W.today).all.map((c) => c.k)), W.nopol ? recapKeep(dayOf(W.today)) : undefined);
       if (st) feed.appendChild(st);
     }
     if (borrow) {
@@ -1165,6 +1362,13 @@ function render(opts = {}) {
   app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
   watch(run);
   painted(root);
+}
+/* Hide politics on the strip: a bullet is politics by its own words or by the
+   story it came from */
+function recapKeep(d) {
+  const pol = new Set(d.cards.filter((c) => c.pol).map((c) => c.k));
+  const isPol = (b) => pol.has(b.id) || POLITICS.test(b.text + ' ' + (b.note || ''));
+  return (r) => recaps.withoutPolitics(r, isPol);
 }
 /* after a paper view is drawn: the filters read the day it shows, and
    focus follows a day arrow to the new day's banner */
@@ -1210,7 +1414,6 @@ function headBlock(host, date, d, ranked) {
   const row = el('div', 'whead-row', '<span class="s"></span>');
   row.firstChild.textContent = headSub(date, d);
   row.firstChild.dataset.of = date;
-  row.appendChild(newsSwitch());
   h.appendChild(row);
   const on = [];
   if (W.ch !== 'all') on.push(KIND_NAME[W.ch] || W.ch);
@@ -1252,7 +1455,8 @@ function setNews(key) {
   if (W.news === 'topics') { W.topic = 'all'; W.sport = 's:all'; W.slot = null; }
   W.shelves.clear();
   app.paintSubnav(); render(); app.scrollTop();
-  const b = W.root && W.root.querySelector('.wnsw-b[data-news="' + W.news + '"]');
+  /* the banner's, or the rail's on a wide screen */
+  const b = [...document.querySelectorAll('.wnsw-b[data-news="' + W.news + '"]')].find((n) => n.offsetParent);
   if (b) b.focus({ preventScroll: true });
 }
 
@@ -1343,9 +1547,9 @@ function paintHeadSub() {
 function briefPin(d) {
   return wireCls(cards.lead({ ...d.brief, media: '', thumb: '', why: '' }, { tag: 'The Brief', greenLocal: greenOf(d.brief), meta: geoMeta(d.brief) }), d.brief);
 }
+const pickShows = (x) => seen(x.c) && (x.c.local || geo() !== 'local' || x.c.k === W.letIn);
 function mattersOf(d) {
-  const keep = (x) => seen(x.c) && (x.c.local || geo() !== 'local');
-  return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
+  return { list: d.picks.filter(pickShows), earlier: d.earlier.filter(pickShows) };
 }
 const mattersKeys = (d) => { const { list, earlier } = mattersOf(d); return list.concat(earlier).map((x) => x.c.k); };
 
@@ -1382,8 +1586,7 @@ function asItStood(d, at) {
     else { out.push({ ...carried[ci], n: r }); ci++; }
     r++;
   }
-  const keep = (x) => seen(x.c) && (x.c.local || geo() !== 'local');
-  return out.filter(keep);
+  return out.filter(pickShows);
 }
 /* Morning · Midday · Evening, in Filters; only when there was more than
    one ranking to choose from */
@@ -1422,7 +1625,7 @@ function topBlock(host, d, isToday) {
   }
   if (!shown.length && !early.length) return mattersKeys(d);
   const box = el('div', 'wleads');
-  shown.slice(0, PICKS_OPEN).forEach((x) => put(box, leadCard(x.c, x.why, x.n)));
+  shown.slice(0, PICKS_OPEN).forEach((x, i) => put(box, i ? storyRow(x.c, { rank: x.n }) : leadCard(x.c, x.why, x.n)));
   if (box.children.length) host.appendChild(box);
   const rest = shown.slice(PICKS_OPEN);
   const more = () => {
@@ -1502,7 +1705,7 @@ function moreSheet(it) {
     const up = row(ICON.up, 'Upvote', '', () => { app.toggleVote(it); paintUp(up); });
     up.dataset.wact = 'up';
     paintUp(up);
-    row(ICON.share, 'Share', '', () => { close(); app.share('wire', it.k, it.title || it.text); }).dataset.wact = 'share';
+    row(ICON.share, 'Share', '', () => { close(); app.share(it.shareTab || 'wire', it.k, it.title || it.text, it.shareUrl); }).dataset.wact = 'share';
     const label = it.open || (it.ch === 'reddit' ? 'Open the thread' : 'Open the story');
     const a = el('a', 'wact', ICON.ext + '<span class="l">' + esc(label) + '</span>' + (it.comments ? '<span class="n">' + esc(plural(it.comments, 'reply', 'replies')) + '</span>' : ''));
     a.href = safeHref(it.href);
@@ -1620,7 +1823,7 @@ function loadIg() {
   if (!W.igP) {
     W.igP = photos.instagram().then((posts) => {
       W.ig = Array.isArray(posts) ? posts : [];
-      if (app.activeTab() === 'wire' && W.mode === 'news' && W.view === 'paper') {
+      if (app.activeTab() === 'wire' && W.mode === 'news' && inPaper()) {
         app.paintSubnav();
         paintFilters();
         if (W.ch === 'instagram') render();
@@ -1630,7 +1833,7 @@ function loadIg() {
   return W.igP;
 }
 function igRows() {
-  return photos.igList(W.ig).filter((v) => !MUTE[v.sid] && geoKeeps(v.local));
+  return photos.igList(photos.notFeed(W.ig)).filter((v) => !MUTE[v.sid] && geoKeeps(v.local));
 }
 function igCount() { return W.ig ? igRows().length : null; }
 let igRun = null;
@@ -1826,6 +2029,7 @@ function stopRun() {
   photos.stop();
   square.stop();
   if (igRun) { igRun.dead = true; igRun = null; }
+  feeds.stop();
   if (observer) { observer.disconnect(); observer = null; }
   if (W.raw.run) W.raw.run.dead = true;
   W.run = null;
@@ -1836,6 +2040,7 @@ let tracking = 0;
 function track() {
   floatCheck();
   if (tracking) return;
+  if (onWall()) { tracking = requestAnimationFrame(() => { tracking = 0; feeds.topUp(); }); return; }
   if (W.view === 'paper' && W.mode === 'photos') { tracking = requestAnimationFrame(() => { tracking = 0; photos.topUp(); }); return; }
   if (W.view !== 'paper' || !W.run) return;
   tracking = requestAnimationFrame(() => {
@@ -1904,13 +2109,15 @@ function sourceSheet(sid, from) {
   const name = first.src || info.name || app.sourceName(sid);
   const ch = first.ch || info.ch || 'local';
   const when = !day || day.date === todayKey() ? 'today' : weekday(day.date);
+  /* a feed's own source: not on the paper, so nothing to count or follow */
+  const fromFeed = ch === 'feed';
   app.sheet(name, (body, card, close) => {
     body.appendChild(el('div', 'srchead', mark(name, ch === 'x' || ch === 'facebook' ? 'round xl' : 'xl') + '<div><div class="k">' +
-      esc(KIND_LABEL[ch] || 'Source') + (first.local && ch !== 'local' ? ' · Local' : '') + '</div><div class="n">' + esc(plural(items.length, 'story', 'stories') + ' ' + when) + '</div></div>'));
+      esc(KIND_LABEL[ch] || 'Source') + (first.local && ch !== 'local' ? ' · Local' : '') + '</div>' + (fromFeed ? '' : '<div class="n">' + esc(plural(items.length, 'story', 'stories') + ' ' + when) + '</div>') + '</div>'));
     const row = el('div', 'linkrow');
     /* Follow is for a source outside Burlington: it then shows on Local
        too. A local source is always there, so it gets no Follow button. */
-    if (!first.local) {
+    if (!first.local && !fromFeed) {
       const fol = button('', '', () => { setFollow(sid, !follows[sid]); paintFol(); app.refresh(); });
       const paintFol = () => { fol.textContent = follows[sid] ? 'Following ✓' : 'Follow'; fol.classList.toggle('ghost', !follows[sid]); };
       paintFol();
@@ -1968,7 +2175,7 @@ function openRaw() {
 }
 function closeRaw() {
   W.view = 'paper'; W.raw.outlet = ''; W.raw.q = '';
-  history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
+  history.replaceState(null, '', hashNow());
   app.paintSubnav(); render(); app.scrollTop();
 }
 const rawLayout = () => (store.settings().layout === 'sources' ? 'sources' : 'newest');
@@ -2131,7 +2338,7 @@ function landPhotos(p) {
   if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember('photos'); }
   /* a shared picture is found under All; one from everywhere, on Everything */
   if (k) photos.setCat('all');
-  if (/^pw:/.test(k) && geo() === 'local') setGeo('everything');
+  W.letIn = /^pw:/.test(k) ? k : null;
   W.photoOpen = k || null;
   app.paintSubnav(); render();
   if (!k) app.scrollTop();
@@ -2141,7 +2348,7 @@ function landPhotos(p) {
 function landSquareParam(p) {
   W.wantSquare = false;
   squareReady().then((ok) => {
-    if (!ok) { app.toast('The Square isn’t open yet. Here’s the news.'); W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); return; }
+    if (!ok) { app.toast('Town Square isn’t open yet. Here’s the news.'); W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); return; }
     W.view = 'paper';
     if (W.mode !== 'square') { W.mode = 'square'; photos.remember('square'); }
     W.squareOpen = p.startsWith('square/') ? p.slice(7) : null;
@@ -2153,9 +2360,34 @@ function landSquareParam(p) {
 
 function land() {
   const p = W.pending;
-  if (p && isPhotoParam(p)) { W.pending = null; landPhotos(p); return; }
-  if (p && (p === 'square' || p.startsWith('square/'))) { W.pending = null; landSquareParam(p); return; }
-  if (!p || (!W.today && !W.failed) || !W.idxDone) return;
+  if (!p) return;
+  /* a wall's link needs nothing from the paper; a stale feed link changes
+     nothing, and the address goes back to saying what is on screen. All of
+     them are visits: what the phone opens on stays what it was. */
+  if (p === 'explore' || p.startsWith('feed/')) {
+    W.pending = null;
+    W.wantSquare = false;
+    W.photoOpen = null;
+    W.letIn = null;
+    const undone = p === 'explore' && feeds.endVisit();
+    const already = p === 'explore' && W.wall && !undone;
+    const up = W.wall;
+    if (p === 'explore' || feeds.open(p.slice(5).split('+'))) {
+      /* from the regular view: its place holds, and back steps off the wall */
+      if (!up) { keepPlace(); W.byLink = true; }
+      W.view = 'paper';
+      W.wall = true;
+    }
+    history.replaceState(history.state, '', hashNow());
+    if (!already) { app.paintSubnav(); render(); if (!up) app.scrollTop(); }
+    return;
+  }
+  /* every other link is a place in the paper: the wall steps aside, chips and
+     all kept, or render() would go on drawing it whatever the link asked for */
+  if (W.wall) { leaveWall(); app.paintSubnav(); render(); }
+  if (isPhotoParam(p)) { W.pending = null; landPhotos(p); return; }
+  if (p === 'square' || p.startsWith('square/')) { W.pending = null; landSquareParam(p); return; }
+  if ((!W.today && !W.failed) || !W.idxDone) return;
   W.pending = null;
   W.wantSquare = false;
   if (p === 'local' || p === 'national' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
@@ -2197,7 +2429,7 @@ function hunt(k) {
   const show = (date, c) => {
     if (!live()) return;
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
-    if (!seen(c)) setGeo('everything');
+    if (!seen(c)) W.letIn = c.k;
     W.view = 'paper'; W.ch = 'all'; W.topic = 'all'; W.sport = 's:all'; W.news = 'feed';
     /* a sports or markets story the river never carried is on its chip */
     const q = payloadFor(date);
@@ -2249,42 +2481,50 @@ function mount(root) {
   W.root = root;
   W.panel = root.closest('.panel');
   W.left = readLeft();
+  /* the saved view, from the first paint; a link to somewhere is a visit */
+  const link = location.hash.startsWith('#wire/') ? location.hash.slice(6) : '';
+  const staleFeed = link.startsWith('feed/') && !feeds.names(link.slice(5).split('+'));
+  W.wall = link && !staleFeed ? link === 'explore' || link.startsWith('feed/') : explore.kept('wire');
   /* a kept Square waits for the board's answer; News until then */
   if (W.mode === 'square' && !W.squareOk) { W.mode = 'news'; W.wantSquare = true; }
   squareReady().then((ok) => {
-    if (ok && W.wantSquare && W.mode === 'news' && W.view === 'paper' && !W.pending) { W.mode = 'square'; render(); if (app.activeTab() === 'wire') app.paintSubnav(); }
+    if (ok && W.wantSquare && W.mode === 'news' && W.view === 'paper' && !W.pending) { W.mode = 'square'; if (!W.wall) render(); if (app.activeTab() === 'wire') app.paintSubnav(); }
     W.wantSquare = false;
   });
   loadIg();
+  feeds.ensure();      // so the row is settled before the cell is ever tapped
   window.addEventListener('pagehide', saveLeft);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && app.activeTab() === 'wire') saveLeft(); });
   render();
   if (W.panel) W.panel.addEventListener('scroll', track, { passive: true });
   if (!app.demo) {
     /* a fresh payload never lands under a reader: at the top it applies,
-       further down it waits for a pull or a tap on the tab */
+       further down it waits for a pull or a tap on the tab. A chip's feed reads
+       none of them, so there it goes in quietly, ready for when it is undone. */
     data.setFreshGate((apply) => {
-      if (app.activeTab() !== 'wire' || !W.panel || W.panel.scrollTop < 120) apply();
+      if (app.activeTab() !== 'wire' || !W.panel || W.panel.scrollTop < 120 || (onWall() && feeds.active())) apply();
       else { W.queued.push(apply); app.toast('New stories on the Wire.'); }
     });
     data.setStaleHandler((s) => { if (W.stale !== s) { W.stale = s; if (app.activeTab() === 'wire') paintHeadSub(); } });
   }
   SRC.today((j) => {
     W.today = j;
-    if (W.view === 'paper' && (!W.start || !W.run)) render();
-    if (app.activeTab() === 'wire') app.paintSubnav();
+    if (inPaper() && (!W.start || !W.run)) render();
+    /* the wall's stories have come, or come fresh; a chip's feed reads none */
+    else if (!feeds.active()) wallLanded();
+    if (app.activeTab() === 'wire' && !W.wall) app.paintSubnav();
     land();
     app.recount();
-  }, () => { W.failed = true; render(); land(); });
+  }, () => { W.failed = true; if (onWall()) wallLanded(); else render(); land(); });
   SRC.index((j) => {
     W.index = j; W.idxDone = true;
     const run = W.run;
     /* the archive arrived after the page: let the river run on into it */
     if (run && run.done && run.end) { run.end.remove(); run.end = null; run.done = false; fill(run); }
     /* today has no ranking yet: the page can now lead with the latest day that does */
-    if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
+    if (inPaper() && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
     /* Recaps with none yet today can now lead with the day before */
-    if (W.view === 'paper' && W.mode === 'recaps' && !W.start && W.today && !recaps.feedOf(W.today).length) render();
+    if (inPaper() && W.mode === 'recaps' && !W.start && W.today && !recaps.feedOf(W.today).length) render();
     if (app.activeTab() === 'wire') paintFilters();
     /* the day's ‹ can now see the days before */
     if (W.reading) paintDateline(W.reading);
@@ -2292,17 +2532,18 @@ function mount(root) {
   }, () => {
     W.idxDone = true;
     /* an empty today waited for the archive; without it, draw today as it is */
-    if (W.view === 'paper' && W.mode === 'news' && !W.start) render();
+    if (inPaper() && W.mode === 'news' && !W.start) render();
     land();
   });
 }
 
 /* a mute, a follow or the switch: redraw as far down as the reader was */
-function redraw() {
+const shownNow = () => (W.view !== 'paper' ? 0 : W.wall ? feeds.drawn() : W.mode === 'photos' ? photos.drawn() : W.mode === 'square' ? square.drawn() : W.ch === 'instagram' ? W.igShown || 0 : W.run ? W.run.shown : 0);
+function redraw(barToo = true) {
   const y = W.panel ? W.panel.scrollTop : 0;
-  const shown = W.view !== 'paper' ? 0 : W.mode === 'photos' ? photos.drawn() : W.mode === 'square' ? square.drawn() : W.ch === 'instagram' ? W.igShown || 0 : W.run ? W.run.shown : 0;
+  const shown = shownNow();
   if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
-  app.paintSubnav();
+  if (barToo) app.paintSubnav();
   render({ limit: shown });
   if (W.panel) W.panel.scrollTop = y;
 }
@@ -2319,15 +2560,27 @@ app.register('wire', {
   icon: ICON.wire,
   promise: 'Today’s Burlington news, picked from everything that arrived, with a reason on the ones that matter.',
   mount,
-  activate(param) { if (param) { W.pending = param; land(); } },
-  refresh: redraw,
-  deactivate() { app.closePeek(); if (W.mode === 'news' && W.view === 'paper') { saveLeft(); W.left = readLeft() || W.left; } },
+  activate(param) {
+    if (location.hash === W.selfHash) return;
+    if (param) { W.pending = param; land(); return; }
+    if (!W.wall) return;
+    /* the bare address under a wall's link: back steps off it, or back would
+       change the address and nothing else */
+    if (W.byLink) { feeds.endVisit(); leaveWall(); app.paintSubnav(); backTo(W.mode); }
+    /* or the tab came back to its wall, and the address says so */
+    else history.replaceState(history.state, '', hashNow());
+  },
+  refresh: () => redraw(),
+  deactivate() { app.closePeek(); explore.settle(); W.byLink = false; if (W.mode === 'news' && W.view === 'paper') { saveLeft(); W.left = readLeft() || W.left; } },
   subnav,
   keepSubnav: true,
   aside,
   newSince,
   pull() {
     if (applyQueued()) return 'Fresh stories are in';
+    /* on the wall, or with the row short of a file, the wall's files come again too */
+    const more = feeds.pull(onWall());
+    if (onWall()) return more.then((got) => (got ? 'Fresh posts are in' : null));
     if (W.view !== 'paper' || W.start || W.mode !== 'news' || W.ch === 'instagram') return null;
     return SRC.check();
   },

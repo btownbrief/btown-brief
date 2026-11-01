@@ -9,7 +9,7 @@
    - Free. What neighbors are giving away: public Buy Nothing and gifting
      groups and Facebook Marketplace's free listings, read by Muse
      (pulse.json's inbox.free, scripts/wire_inbox.py). Newest first, nothing
-     past five days (wire.js freeOffers), filtered by where it was posted,
+     past three days (wire.js freeOffers), filtered by where it was posted,
      star and share on each. A two-up grid of tiles when any has a photo,
      clean rows when none does, six and then "See more" either way. A tile
      opens the post on Facebook. No offers, no section and no chip.
@@ -78,6 +78,12 @@
      (the merch data's first variant), not the small left-chest patch the
      merch data calls `front` (Stephen, 2026-10-17).
 
+   The cell at the end of the pill is the tab's Explore wall (explore.js): the
+   shops' posts and the fit checks, two across, newest first, each with its
+   words under it. It is drawn beside the page, not over it, so going to one
+   and back holds both places and a half-typed form. Free stays on the page.
+   #vintage/explore opens it. Any section leaves it and goes there.
+
    Before the board had those two kinds, a design was a `spotted` post with
    shop "Make a tee" (the choice in its body) and a fit check one with shop
    "Fit check". Those still show where they belong until they end, three
@@ -93,11 +99,13 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
+import * as explore from '../explore.js';
+import * as photos from './wire-photos.js';
 import { sectionBar } from '../sections.js';
 import { el, esc, safeHref, ICON, art, section, button, pills, chips, cards, agoShort, listRail, moreGrid } from '../ui.js';
 
 const WORDS = {
-  free: 'Free', freeHead: 'Free this week', everything: 'All', openOn: 'Open on Facebook',
+  free: 'Free', freeHead: 'Free right now', everything: 'All', openOn: 'Open on Facebook',
 };
 const FREE_GROUPS = ['Buy Nothing', 'Gifting', 'Marketplace'];
 const KEY = 'vintage';
@@ -143,8 +151,9 @@ const S = {
   shops: null, shopsFailed: false, designs: null, designsTotal: null, designsFailed: false,
   spotted: null, swaps: null, fit: null, sent: null, got: 0, off: false, failed: false, homesDemo: 0,
   handles: null, posts: null, free: null, freeGroup: 'all',
+  wall: false, byLink: false, run: null, seen: {}, place: { wall: 0, page: 0 },
 };
-let root = null, slots = null, pending = null, ready = false;
+let root = null, slots = null, pending = null, ready = false, wallHost = null;
 
 /* ---------------------------------------------------------------- loading */
 let demoP = null;
@@ -332,6 +341,65 @@ function render() {
   root.appendChild(el('div', 'spacer'));
   SLOTS.forEach(paint);
   fillShopList();
+  drawWall();
+}
+
+/* ------------------------------------------------------------ the wall */
+const wallReady = () => S.fit !== null && S.posts !== null && (!!S.handles || S.shopsFailed);
+function wallViews() {
+  const shops = explore.noTwins(photos.igList(newIn().filter((p) => photos.forWall(p) && !store.isMuted('ig:' + p.h))));
+  const fits = (S.fit || []).map((p) => boards.item(p, { tab: KEY, ratio: 'r45', meta: noMeta })).filter((it) => it.media);
+  app.know(fits);
+  const all = shops.concat(fits.map((it) => ({ k: it.k, it, media: it.media, line: it.title, src: it.author, d: it.created, url: it.href, open: () => fitOpen(it.k) })));
+  return explore.sink(explore.wordsFirst(all.sort((a, b) => b.d - a.d)), S.seen);
+}
+/* a draw when there is nothing yet is a fresh one, and tiles already shown
+   sink; a redraw under the reader keeps the order and the place */
+function drawWall() {
+  if (!S.wall || !wallHost) return;
+  /* nothing can be measured while the tab is away: it draws on the way back */
+  if (app.activeTab() !== KEY) { app.markStale(KEY); return; }
+  const p = panel();
+  const y = p ? p.scrollTop : 0;
+  const upto = S.run ? S.run.drawn() : 0;
+  if (S.run) S.run.stop();
+  else S.seen = explore.seen();
+  S.run = null;
+  wallHost.innerHTML = '';
+  const list = wallReady() ? wallViews() : [];
+  if (list.length) S.run = explore.grid(wallHost, list, { upto, end: 'That’s the wall' });
+  else if (wallReady()) wallHost.appendChild(el('p', 'rd-empty', 'Nothing here yet'));
+  else explore.waiting(wallHost);
+  if (p && upto) p.scrollTop = y;
+}
+let wallT = 0;
+function wallSoon() { clearTimeout(wallT); wallT = setTimeout(drawWall); }
+function showWall(on) {
+  const p = panel();
+  if (p) S.place[S.wall ? 'wall' : 'page'] = p.scrollTop;
+  S.wall = on;
+  root.hidden = on;
+  wallHost.hidden = !on;
+  if (on && !S.run) drawWall();
+  app.paintSubnav();
+  app.scrollTop();
+  if (p) p.scrollTop = S.place[on ? 'wall' : 'page'] || 0;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  S.byLink = false;
+  explore.visit(KEY);
+  showWall(false);
+}
+const sayWhere = () => app.rewrite(location.search + '#' + KEY + (S.wall ? '/explore' : ''));
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  S.byLink = false;
+  explore.flip(KEY, !S.wall);
+  showWall(!S.wall);
+  sayWhere();
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
 }
 
 function paint(k) {
@@ -345,6 +413,7 @@ function paint(k) {
   ({ free: paintFree, fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (p && app.activeTab() === KEY) p.scrollTop = y + (above ? host.offsetHeight - was : 0);
   resettle();                     // anything drawn late moves what is under it
+  if (k === 'newin' || k === 'fit') wallSoon();
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its
@@ -1105,6 +1174,9 @@ let route = 0;                // bumped on every landing and leaving, so a slow 
 function land() {
   if (!pending || !ready) return;
   const k = pending;
+  /* a link is a visit: the wall opens, or steps aside, and the phone's choice stays */
+  if (k === 'explore') { pending = null; if (!S.wall) { S.byLink = true; showWall(true); } return; }
+  if (S.wall) leaveWall();
   if (SECTIONS.some(([s]) => s === k)) { pending = null; jump(k); return; }
   if (k === 'map') {
     if (!S.shops && !S.shopsFailed) return;
@@ -1137,9 +1209,17 @@ app.register(KEY, {
   promise: 'Every thrift and vintage shop around Burlington, fit checks, and what is on the racks this week.',
   mount(r) {
     root = r;
+    /* the saved view, from the first paint; a link to somewhere is a visit */
+    const link = location.hash.startsWith('#' + KEY + '/') ? location.hash.slice(KEY.length + 2) : '';
+    S.wall = link ? link === 'explore' : explore.kept(KEY);
+    wallHost = el('div', 'xwall');
+    r.after(wallHost);
+    r.hidden = S.wall;
+    wallHost.hidden = !S.wall;
     if (!app.demo) { ready = true; render(); loadLive(); return; }
     /* the demo is all local: draw once, with the demo boards seeded */
     r.innerHTML = '<p class="loading">Loading…</p>';
+    drawWall();
     demoFile().then((d) => {
       takeShops(d);
       const shift = Math.round(Date.now() / 1000 - Date.parse(d.anchor || '2026-10-16T12:00:00-04:00') / 1000);
@@ -1156,15 +1236,30 @@ app.register(KEY, {
       land();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b></div>'; });
   },
-  activate(param) { route++; pending = param || null; land(); },
-  refresh() { if (ready) SLOTS.forEach(paint); },
-  deactivate() { route++; if (M && !M.getContainer().isConnected) dropMap(); },
+  activate(param) {
+    route++;
+    pending = param || null;
+    /* the bare address under a wall's link: back steps off it. Otherwise the
+       tab came back to its wall, and the address says so. */
+    if (!pending && S.wall) { if (S.byLink) leaveWall(); else sayWhere(); }
+    land();
+  },
+  refresh() { if (ready) { SLOTS.forEach(paint); drawWall(); } },
+  deactivate() { route++; S.byLink = false; explore.settle(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     const n = { free: S.free && S.free.length, spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
     const fresh = newIn().length;
     /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
-    return sectionBar({ key: 'sec-vintage', title: 'Vintage', color: '--liq-vintage', find: (k) => slots && slots[k], onPick: (k) => jump(k),
+    return sectionBar({ key: 'sec-vintage', title: 'Vintage', color: '--liq-vintage', find: (k) => slots && slots[k], cell: { on: S.wall, flip: flipWall },
+      onPick: (k) => {
+        const off = S.wall;
+        if (off) { leaveWall(); sayWhere(); }
+        jump(k);
+        /* the pill was drawn again under the keyboard */
+        const b = off && document.querySelector('#subnav .secpill .chip[data-chip="' + k + '"]');
+        if (b) b.focus({ preventScroll: true });
+      },
       items: SECTIONS.filter(([key]) => (key !== 'newin' || fresh) && (key !== 'free' || n.free)).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
   },
   keepSubnav: true,

@@ -2,7 +2,7 @@
    newest first, one full-width picture at a time (Stephen, 2026-10-17: "I
    really should try to become the new LOCAL INSTAGRAM").
 
-   The News · Recaps · Square · Photos switch at the top of the Wire turns it on
+   The News · Recaps · Town · Photos switch at the top of the Wire turns it on
    (Stephen's girlfriend, 2026-10-17: the old list/photo icons "looked like
    the same information"); the choice is kept on the phone (localStorage
    `allday-wire-view`). #wire/photos opens it, and so do the old #art and
@@ -54,6 +54,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import * as store from '../store.js';
 import * as wall from '../photo-wall.js';
+import { caption, pitches } from '../explore.js';
 import { RULES } from '../boards-core.js';
 import { el, esc, safeHref, ICON, art, mark, cards, button, listRail } from '../ui.js';
 
@@ -118,7 +119,7 @@ const P = {
 export function init(c) { ctx = c; }
 
 /* ------------------------------------------------------------ loading */
-const clockNow = () => (ctx ? ctx.now() : Date.now());
+export const clockNow = () => (ctx ? ctx.now() : Date.now());
 
 /* The art board's pictures, newest first: its posts never expire, so the
    list is paged (the RPC's cap at a time) to the end, up to MAX_PAGES. */
@@ -283,7 +284,7 @@ function seed(d) {
       place: p.place || '', expires_at: at + RULES.boards.art.kinds.notice.days * DAY, created_at: at }, 0);
   });
   /* Instagram, in build_instagram.py's shape; the picture is a palette name */
-  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '', s: p.s || 'see', ...(p.f ? { f: 1 } : {}), ...(p.n ? { n: 1 } : {}) }));
+  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '', s: p.s || 'see', ...(p.f ? { f: 1 } : {}), ...(p.n ? { n: 1 } : {}), ...(p.t ? { t: p.t } : {}), ...(p.br ? { br: p.br } : {}), ...(p.hd ? { hd: p.hd } : {}), ...(p.cp ? { cp: p.cp } : {}), ...(p.ad ? { ad: 1 } : {}), ...(p.nm ? { nm: p.nm } : {}), ...(p.kind ? { kind: p.kind } : {}), ...(p.l ? { l: p.l } : {}), ...(p.vu ? { v: 1, vu: p.vu, ve: Math.round(Date.now() / 1000) + (p.veHours || 0) * 3600 } : {}) }));
 }
 function demoGallery(d) {
   const now = clockNow();
@@ -330,14 +331,80 @@ function igView(p) {
   let it = igKeys.get(k);
   if (!it) {
     it = { k, kind: 'image', href: p.u, media: p.i, ratio: 'r45', title: short(cap) || handle, text: squash(cap),
-      src: handle, sid: 'ig:' + p.h, local: !p.n, d: Number(p.ts) || 0, open: 'Open on Instagram' };
+      src: p.nm || handle, sid: 'ig:' + p.h, local: !p.n, d: Number(p.ts) || 0, open: 'Open on Instagram',
+      /* from any tab's wall a post lands in Photos; a feed's post has no place
+         in the paper to land on, so its link is Instagram's */
+      shareTab: 'wire', ...(p.t ? { shareUrl: p.u } : {}) };
     igKeys.set(k, it);
     app.know([it]);
   }
-  it.ago = it.d ? ctx.ago(it.d * 1000) : '';
+  /* a pull brings a new signature for a post already known: the tile and the
+     sheet read this object, so the new link goes on it */
+  Object.assign(it, { media: p.i, title: short(cap) || handle, text: squash(cap) });
+  it.ago = it.d && ctx ? ctx.ago(it.d * 1000) : '';
   return { it, k, from: 'instagram', media: it.media, ratio: 'r45', cap: oneLine(cap) || handle, alt: squash(cap).slice(0, 250) || 'Instagram photo from ' + handle,
-    src: handle, sid: it.sid, local: !p.n, d: it.d, url: p.u, cats: igCats(p) };
+    src: p.nm || handle, sid: it.sid, local: !p.n, d: it.d, url: p.u, cats: igCats(p), reel: !!p.v, likes: Number(p.l) || 0,
+    vu: isUrl(p.vu) ? p.vu : '', ve: Number(p.ve) || 0, line: caption(p), poster: carriesType(p) };
 }
+/* A post with a feed's key in `t` is that feed's: it stays out of Photos, the
+   News list and Social, which are the accounts of Burlington and the old
+   national list. */
+export const notFeed = (posts) => (posts || []).filter((p) => !p.t);
+/* A post that has run out: it names a date that has gone ("October 31st",
+   "10/30", "Oct 29 and 30"), says "today only" or Halloween once that day is
+   over, or is a flyer more than a few days old. Every date it names has to be
+   past; one with an older year is history, not a date. Read from the words the
+   tile can show, and the top of the caption, where a flyer says when. */
+const WHEN_DAYS = 5;       // a flyer lasts this long, and on the Wire's wall a do post
+const MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
+const DATE_DAY = '(\\d{1,2})(?:st|nd|rd|th)?';
+const NAMED_DATE = new RegExp('\\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\\.?\\s+' + DATE_DAY + '(?:\\s*(?:-|–|—|&|and|to|through|thru)\\s*' + DATE_DAY + ')?(?:,?\\s+(\\d{4}))?(?![\\d:])', 'gi');
+const SLASH_DATE = /(?<![\d/])(\d{1,2})\/(\d{1,2})(?:\/(\d{2}|\d{4}))?(?![\d/])/g;
+const ONE_DAY = /\b(?:today only|one day only|tonight)\b/i;
+const HALLOWEEN = /\bhalloween\b/i;
+const whenText = (p) => [p.hd, p.cp, String(p.c || '').slice(0, 200)].filter(Boolean).join(' · ');
+/* the end of that day, in the year that puts it nearest the post */
+function endOf(month, day, posted, year) {
+  const at = (y) => new Date(y, month, day, 23, 59, 59).getTime();
+  if (year) return at(year);
+  const y = new Date(posted).getFullYear();
+  return [y - 1, y, y + 1].map(at).reduce((a, b) => (Math.abs(b - posted) < Math.abs(a - posted) ? b : a));
+}
+function datesIn(text, posted) {
+  const ends = [];
+  const y0 = new Date(posted).getFullYear();
+  const take = (month, day, year) => {
+    if (month < 0 || month > 11 || day < 1 || day > 31 || (year && year < y0)) return;
+    ends.push(endOf(month, day, posted, year));
+  };
+  for (const m of text.matchAll(NAMED_DATE)) take(MONTHS.indexOf(m[1].toLowerCase()), Number(m[3] || m[2]), Number(m[4]) || 0);
+  for (const m of text.matchAll(SLASH_DATE)) take(Number(m[1]) - 1, Number(m[2]), m[3] ? (m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3])) : 0);
+  return ends;
+}
+export function isOver(p, now = clockNow()) {
+  const posted = Number(p.ts) * 1000;
+  if (!posted) return false;
+  if (p.kind === 'poster' && now - posted > WHEN_DAYS * 86400000) return true;
+  const text = whenText(p);
+  const ends = datesIn(text, posted);
+  if (ONE_DAY.test(text)) ends.push(new Date(posted).setHours(23, 59, 59));
+  if (HALLOWEEN.test(text)) ends.push(endOf(9, 31, posted));
+  return ends.length > 0 && Math.max(...ends) < now;
+}
+/* A paid post, a sad one or one that has run out is left off a wall and out of
+   a feed; the other views keep their own rules. */
+export const forWall = (p) => !p.ad && !p.sad && !isOver(p);
+/* A do post is what is on around town, and most say when only in the picture.
+   The Wire's wall lets them go after a few days; a shop's rack on Vintage is
+   not an event, and a feed's dog is not either. */
+export const aged = (p, now = clockNow()) => p.s === 'do' && now - Number(p.ts) * 1000 > WHEN_DAYS * 86400000;
+/* a booking or a price pitch that the builder has not marked `ad`: the Wire
+   wall and its feeds leave these out, Vintage keeps a shop's new arrivals */
+export const selling = (p) => pitches(whenText(p));
+/* The kinds a stagger suits are photographs, and a reel's frame is one. A
+   poster, a comic, or a still no one sorted into a kind may have words to the
+   edges, so it keeps its own shape. */
+const carriesType = (p) => p.kind === 'poster' || (p.kind === 'other' && !p.v) || (Array.isArray(p.t) ? p.t : [p.t]).includes('laughs');
 /* an Instagram post that exists but sits on the other side of the switch */
 export const igHidden = (k) => (app.demo ? demoIg : P.ig || []).map(igView).some((v) => v && v.k === k && !ctx.visible(v));
 /* The posts as the News list's Instagram chip draws them: newest first,
@@ -418,7 +485,7 @@ export function build() {
   P.pics.forEach((it) => all.push(picView(it)));
   P.square.forEach((it) => all.push(picView(it)));
   P.gallery.forEach((it) => { it.ago = it.created ? ctx.ago(it.created * 1000) : it.ago; all.push(picView(it)); });
-  (app.demo ? demoIg : P.ig).forEach((p) => all.push(igView(p)));
+  notFeed(app.demo ? demoIg : P.ig).forEach((p) => all.push(igView(p)));
   worldRows().forEach((p) => all.push(worldView(p)));
   /* each picture once: by key, then by its link */
   const keys = new Set(), links = new Set();

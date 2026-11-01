@@ -17,7 +17,7 @@
    button at its end lists every section in a sheet, so no one has to
    scroll sideways to find one.
 
-     pill({ key, title, items, current, color, onPick, find })
+     pill({ key, title, items, current, color, onPick, find, cell })
        key      the water's name, one per pill
        title    the tab's name: the group's label and the All sheet's title
        items    [{ key, label, n, icon }] in page order
@@ -28,6 +28,11 @@
        onPick   (key) => the tab's own jump or view change
        find     (key) => that section's node, so the pill can follow the
                 scroll; left out on a view switch
+       cell     { on, flip }: the Explore cell at the pill's right end, outside
+                the scroller, there on every section. While it is on the
+                segments are drained: none is on and none holds water, because
+                the wall is none of them. A tap on one is the tab's onPick,
+                as ever, and the tab leaves its wall.
 
    The segments are buttons with the shared chip markup (data-chip, the
    label, an optional count), so a tab reads and is tested the same way.
@@ -50,7 +55,7 @@
               (Real life / Online, ui.js worldSwitch) the pill leaves out
               the side that is not showing, as the page does. */
 
-import { el, esc, ICON } from './ui.js';
+import { el, esc, ICON, gridCell } from './ui.js';
 import { liquify } from './liquid.js';
 import * as store from './store.js';
 
@@ -100,7 +105,7 @@ export function pill(o) {
   if (!items.length) return null;
   if (o.fresh && typeof o.find === 'function') placeSections(items.map((it) => String(it.key)), o.find);
   const P = { key: o.key, title: o.title || 'Sections', items, keys: items.map((it) => String(it.key)), colors: items.map(() => o.color),
-    onPick: o.onPick || (() => {}), find: typeof o.find === 'function' ? o.find : null, on: null };
+    onPick: o.onPick || (() => {}), find: typeof o.find === 'function' ? o.find : null, on: null, drained: !!(o.cell && o.cell.on) };
   const wrap = el('div', 'secpill');
   wrap.dataset.pill = P.key;
   if (o.color) { wrap.style.setProperty('--secpill-water', 'var(' + o.color + ')'); wrap.style.setProperty('--secpill-ink', 'var(' + o.color + '-ink)'); }
@@ -127,12 +132,15 @@ export function pill(o) {
   all.setAttribute('aria-haspopup', 'dialog');
   all.addEventListener('click', () => allSheet(P));
   wrap.append(scroller, all);
+  if (o.cell) wrap.appendChild(gridCell(o.cell.on, o.cell.flip));
   Object.assign(P, { wrap, scroller, track });
   STATE.set(wrap, P);
   /* the segment on: where the reader is on a tab of sections, else what the tab says */
   const want = (k) => (k != null && P.keys.includes(String(k)) ? String(k) : null);
-  const spied = P.find && !locks[P.key] ? spyPick(P, shell.panel ? shell.panel() : null) : null;
-  setOn(P, spied || want(locks[P.key] && locks[P.key].on) || want(o.current) || want(lastOn[P.key]) || P.keys[0], false);
+  const spied = P.find && !locks[P.key] && !P.drained ? spyPick(P, shell.panel ? shell.panel() : null) : null;
+  /* liquify has no segment to take when drained, and lastOn stays for the way back */
+  if (P.drained) wrap.classList.add('drained');
+  else setOn(P, spied || want(locks[P.key] && locks[P.key].on) || want(o.current) || want(lastOn[P.key]) || P.keys[0], false);
   requestAnimationFrame(() => { fit(P); center(P, false); });
   return wrap;
 }
@@ -141,7 +149,7 @@ export function pill(o) {
    section it does not stop at the ones in between */
 function pick(P, k) {
   if (P.find) lock(P.key, k);
-  if (k !== P.on) setOn(P, k, true);
+  if (k !== P.on && !P.drained) setOn(P, k, true);
   P.onPick(k);
 }
 function lock(key, k) {
@@ -156,7 +164,7 @@ function lock(key, k) {
     const live = livePill(key);
     if (live && shell.panel) {
       const panel = shell.panel();
-      if (panel) tapped[key] = { k: L.on, y: panel.scrollTop };
+      if (panel && !live.drained) tapped[key] = { k: L.on, y: panel.scrollTop };
       follow(live, panel);
     }
   };
@@ -169,7 +177,7 @@ export function hold(key, k) {
   k = String(k);
   lock(key, k);
   const live = livePill(key);
-  if (live && live.keys.includes(k) && live.on !== k) setOn(live, k, true);
+  if (live && live.keys.includes(k) && live.on !== k && !live.drained) setOn(live, k, true);
 }
 
 function setOn(P, k, smooth) {
@@ -252,6 +260,7 @@ function spyPick(P, panel) {
   return best || first;
 }
 function follow(P, panel) {
+  if (P.drained) return;
   const L = locks[P.key];
   if (L) { L.seen = performance.now(); return; }
   const k = spyPick(P, panel);
@@ -297,5 +306,5 @@ export function sectionBar(o) {
 }
 
 /* for the tests: the pill's state */
-export const _state = (key) => { const P = livePill(key); return P ? { on: P.on, keys: P.keys.slice(), locked: !!locks[key], over: P.wrap.classList.contains('over'),
+export const _state = (key) => { const P = livePill(key); return P ? { on: P.on, keys: P.keys.slice(), locked: !!locks[key], over: P.wrap.classList.contains('over'), drained: P.drained,
   fresh: P.items.filter((it) => isNew(it)).map((it) => String(it.key)) } : null; };

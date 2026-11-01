@@ -9,7 +9,7 @@ export default {
   accent: '--app-body',
   href: '../body/',
   url: 'https://guide.btownbrief.com/body/',
-  line: 'Your day, one tap at a time.',
+  line: 'Workouts, habits and recovery.',
   tabs: [
     { mode: 'day', label: 'Today', icon: 'habits' },
     { mode: 'template', label: 'Habits', icon: 'check', top: ['Habits', 'Season', 'Template', 'Build'] },

@@ -24,9 +24,11 @@
      loadGallery(tab)            the approved gallery photos that belong on the wall
      drawWall(host, list, onOpen)  the three-column grid, two tall tiles in ten
      openSheet(it)               the whole picture in a sheet: a neighbor's with
-                                 vote, share, shirt and report or delete; a gallery
-                                 photo with share; an Instagram post with vote,
-                                 share and the way to the original
+                                 vote, share, star, shirt and report or delete; a
+                                 gallery photo with share and star; an Instagram
+                                 post or a story with vote, share, star and the
+                                 way to the original (a story with no picture has
+                                 no picture box)
      compose(kind, onPosted)     the photo-and-art submission sheet (boards.compose),
                                  moderated by the photo queue; a photo asks what it
                                  is (PHOTO_CATS) */
@@ -215,7 +217,7 @@ export function openSheet(it) {
   app.sheet(it.title, (body) => {
     const box = el('div');
     box.dataset.k = it.k;   // the sheet's buttons reach their item through bindFeed
-    const media = el('span', 'c-media ' + (it.ratio || 'r45'), art(it.media));
+    const media = el('span', 'c-media ' + (it.ratio || 'r45'), it.media ? art(it.media) : '');
     const img = media.querySelector('img');
     if (img) {
       img.alt = it.alt || it.title;
@@ -226,7 +228,7 @@ export function openSheet(it) {
         media.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
       });
     }
-    box.appendChild(media);
+    if (it.media) box.appendChild(media);
     const r = el('div', 'linkrow');
     if (it.gallery) {
       const where = [it.spot, it.area].filter(Boolean).join(', ');
@@ -234,6 +236,7 @@ export function openSheet(it) {
       if (it.text && it.text !== it.title) box.appendChild(el('p', 'c-text', esc(it.text)));
       r.appendChild(upBtn(it));
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
+      r.appendChild(starBtn(it));
     } else if (it.pic) {
       box.appendChild(el('p', 'sheet-note', esc(['by ' + it.author, it.what + (it.medium ? ' · ' + it.medium : ''), it.ago].filter(Boolean).join(' · '))));
       if (it.text) box.appendChild(el('p', 'c-text', esc(it.text)));
@@ -241,6 +244,7 @@ export function openSheet(it) {
       up.dataset.act = 'photovote';
       r.appendChild(up);
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
+      r.appendChild(starBtn(it));
       if (it.shirt) r.appendChild(shirtLink(it, 'btn ghost'));
       r.appendChild(it.mine ? actBtn('bdelete', ICON.trash + ' Delete', 'ghost') : actBtn('breport', ICON.flag + ' Report', 'ghost'));
     } else {
@@ -248,8 +252,10 @@ export function openSheet(it) {
       if (it.text && it.text !== it.title) box.appendChild(el('p', 'c-text pm-full', esc(it.text)));
       r.appendChild(upBtn(it));
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
+      r.appendChild(starBtn(it));
       if (/^https?:/i.test(it.href || '')) {
-        const a = el('a', 'btn ghost', esc(it.open || 'Open the original') + ' ' + ICON.ext);
+        /* nothing to read here: the original is where this goes */
+        const a = el('a', 'btn' + (it.text && it.text !== it.title ? ' ghost' : ''), esc(it.open || 'Open the original') + ' ' + ICON.ext);
         a.href = safeHref(it.href);
         a.target = '_blank'; a.rel = 'noopener';
         a.dataset.open = '';   // the shell marks it read, and in the demo only toasts
@@ -260,6 +266,15 @@ export function openSheet(it) {
     body.appendChild(box);
     app.bindFeed(body);
   });
+}
+/* the star, as a card has it: the shell's toggleSave paints it */
+function starBtn(it) {
+  const on = store.isSaved(it.k);
+  const b = el('button', 'act star sheet-star' + (on ? ' on' : ''), ICON.star);
+  b.dataset.act = 'save';
+  b.setAttribute('aria-label', 'Save');
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  return b;
 }
 /* the Wire's own vote, as a sheet button: the shell's toggleVote paints it */
 function upBtn(it) {

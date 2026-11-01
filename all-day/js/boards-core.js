@@ -390,7 +390,7 @@ export const ARCHETYPE_LABELS = { new: 'New in town', regular: 'Weeknight regula
 export const REASON_LABELS = { spam: 'Spam, or not from around here', unkind: 'Rude or unkind', unsafe: 'Not safe', other: 'Something else' };
 export const INTEREST_LABELS = { sports: 'Pickup sports', running: 'Running', outdoors: 'The outdoors', games: 'Games', music: 'Live music',
   dance: 'Dancing', books: 'Books', making: 'Making things', languages: 'Languages', food: 'Food and drink' };
-export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings',
+export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'Town Square', gatherings: 'Gatherings',
   playlists: 'Playlists', nightlife: 'Open tonight', sports: 'Pickup', stage: 'Been there', neighbors: 'Neighbors', shifts: 'Shifts',
   clubs: 'Start something', streets: 'Street reports', rescue: 'Food rescue', mind: 'Mind' };
 /* the kinds' words, for a compose sheet and the boards desk */

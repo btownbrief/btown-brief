@@ -66,6 +66,13 @@ body.chrome-away .mast { transform: translateY(-100%); }
   font-weight: 500; line-height: 1; letter-spacing: .005em; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+/* the apps, from the name: Stephen moved them to the pill's hold on
+   2026-10-29; a stranger never found that, so both ways stay */
+.appsbtn { flex: 0 0 auto; position: relative; display: grid; place-items: center; width: 28px; height: var(--hit); margin-left: -6px; color: inherit; }
+/* a 44px target in a 28px place: it takes the gap toward the logo's link, so
+   a thumb a little wide opens the bubble and doesn't leave the app */
+.appsbtn::after { content: ""; position: absolute; inset: 0 -8px; }
+.appsbtn .i { width: 18px; height: 18px; opacity: .8; }
 /* the Btown Brief logo beside the wordmark, a clear step away from it
    (Stephen, 2026-10-22); it opens btownbrief.com. The faint rim keeps the
    logo's cream corner from melting into cream paper on the wide rail. */
@@ -394,6 +401,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .vbox-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--lightbox); }
 .vbox-foot { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--gutter); }
 .vbox-foot .note { flex: 1; }
+.vbox-acts { display: flex; margin-right: auto; }
+.vbox-acts .act { width: var(--hit); height: var(--hit); padding: 0; justify-content: center; }
+.vbox-acts .act .i { width: 20px; height: 20px; }
 
 /* ============================================================ toast, confirm */
 .toast { position: fixed; left: 50%; transform: translateX(-50%); z-index: 100;
@@ -445,11 +455,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
   .mast:has(.wbar, .secbar)::before { border-radius: 0 0 var(--r-media) var(--r-media); }
   .mast-row, .subnav { max-width: none; }
   .mast-row { padding-left: var(--gutter); }
-  .wordmark, .mast .brandlink { display: none; }
+  .wordmark, .appsbtn, .mast .brandlink { display: none; }
   .mast-title { display: block; font-size: var(--fs-wordmark); }
   .app { left: 0; right: 0; }
   .panel { padding-bottom: calc(64px + var(--player-h, 0px)); }
-  .panel-body, .panel-top, .panel-foot { margin-left: var(--main-x); width: var(--main); }
+  .panel-body, .panel-top, .panel-foot, .xwall { margin-left: var(--main-x); width: var(--main); }
   .panel-body .feed, .panel-body .hb, .panel-body .sq-compose { max-width: none; }
   .panel-top .fullpage { max-width: none; }
   .tabbar { left: var(--edge); right: auto; top: 0; bottom: 0; width: var(--nav-w); height: auto; padding: 22px 0;
@@ -1787,6 +1797,12 @@ body.wire-float .mast:has(.wbar) .subnav::before { bottom: -60px; }
   body.pill-small .wbar .wmodes { transform: scale(.9); }
   body.pill-small.wire-float .wfloat { transform: translateY(-5px); }
 }
+.wbar .wmodes { grid-auto-columns: auto; }   /* Town Square is the long word */
+/* a narrow phone: the four words fit, each still its own target */
+@media (max-width: 374px) {
+  .wbar .wmodes { padding: 2px; gap: 0; }
+  .wbar .wmode { padding: 0 2px; letter-spacing: -.01em; }
+}
 .wbar .wmode { color: var(--dock-ink); }
 .wbar .wmode:hover { background: var(--dock-hover); }
 .wbar .wmode.on { background: var(--sunset); color: var(--sunset-ink); }
@@ -1863,6 +1879,97 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wband { padding: var(--s3) 0 var(--s1); border-bottom: 1px solid var(--line-soft); }
 .wband-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: 0 var(--gutter) var(--s3); }
 .wband .wf { gap: 2px; padding: 0; }
+/* the feeds under the pill, each its own colour (Ashley, 2026-11-01: "I like
+   all the colors") */
+.ifeeds { display: flex; gap: var(--s2); overflow-x: auto; scrollbar-width: none; padding: var(--s3) var(--gutter) var(--s1); }
+.ifeeds::-webkit-scrollbar { display: none; }
+.ifeed { --c: var(--feed-dogs); --i: var(--feed-dogs-ink); --l: var(--feed-dogs-line); position: relative; flex: 0 0 auto; height: 40px; padding: 0 var(--s3); border-radius: var(--r-pill);
+  border: 1.5px solid var(--l, var(--c)); color: var(--ink); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
+/* 44px, as .wf .chip: ::after sits inside the border, so it reaches past it too */
+.ifeed::after { content: ""; position: absolute; inset: -3.5px -1.5px; }
+.wf-open::after, .wf-nopol::after, .ibreeds .chip::after { content: ""; position: absolute; inset: -3px -1px; }
+.ifeed.on { background: var(--c); border-color: var(--c); color: var(--i); }
+.ifeed-home { --c: var(--feed-home); --i: var(--feed-home-ink); --l: var(--feed-home-line); }
+.ifeed-plants { --c: var(--feed-plants); --i: var(--feed-plants-ink); --l: var(--feed-plants-line); }
+.ifeed-good { --c: var(--feed-good); --i: var(--feed-good-ink); --l: var(--feed-good-line); }
+.ifeed-nosy { --c: var(--feed-nosy); --i: var(--feed-nosy-ink); --l: var(--feed-nosy); }
+.ifeed-laughs { --c: var(--feed-laughs); --i: var(--feed-laughs-ink); --l: var(--feed-laughs); }
+.ifeed-sports { --c: var(--feed-sports); --i: var(--feed-sports-ink); --l: var(--feed-sports); }
+.ifeed-wild { --c: var(--feed-wild); --i: var(--feed-wild-ink); --l: var(--feed-wild); }
+.ifeed-tech { --c: var(--feed-tech); --i: var(--feed-tech-ink); --l: var(--feed-tech); }
+.ibreeds { padding: 2px var(--gutter) var(--s2); }
+.ibreeds .chip { position: relative; height: 40px; }
+/* a wall has its own end: the paper's way out to the apps and the full page isn't it */
+#panel-wire:has(.ifeed-list) .panel-foot, #panel-wire:has(.ifeed-list) .fullpage, .panel:has(.xwall:not([hidden])) .panel-foot { display: none; }
+.wband:has(+ .ifeeds) { padding-bottom: 0; border-bottom: 0; }
+.wband:has(+ .ifeeds) .wband-top { padding-bottom: 0; }
+.ifeed-list, .xwall { padding-bottom: var(--s6); }
+.xwall { padding-top: var(--s3); }
+/* the Explore cell (ui.js gridCell): no word, the same glyph on and off, the
+   tab's water when on; at the right end of the pill, outside any scroller */
+.xcell { position: relative; z-index: 1; flex: 0 0 auto; display: grid; place-items: center; width: var(--hit); height: var(--hit); border-radius: var(--r-pill); color: var(--dock-ink); transition: color .15s ease, background .15s ease; }
+.xcell .i { width: var(--icon); height: var(--icon); }
+.wbar .xcell::after { content: ""; position: absolute; inset: -3px; }   /* 44 at the floating pill's .9 */
+.xcell:hover { background: var(--dock-hover); }
+.xcell:focus-visible { outline-color: var(--dock-ink); outline-offset: -3px; }
+.wbar .xcell.on { background: var(--liq-photos); color: var(--liq-photos-ink); }
+.wbar .wmodes.liquid .xcell.on { background: transparent; }
+.secpill .xcell { height: 100%; margin-left: var(--s1); }
+.secpill .xcell::after { content: ""; position: absolute; inset: -4px -3px; }
+.secpill .xcell.on { background: var(--secpill-water, var(--sunset)); color: var(--secpill-ink, var(--sunset-ink)); }
+/* two uneven columns of tiles (explore.js), a tile's words under its picture */
+.xgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); padding: var(--s2) var(--s3) 0; align-items: start; }
+.xcol { display: grid; gap: var(--s3); min-width: 0; }
+.xfoot { height: 1px; }
+.xt { position: relative; display: grid; gap: 6px; min-width: 0; color: var(--ink); -webkit-touch-callout: none; touch-action: pan-y; transform: translateX(var(--swipe, 0)); }
+.xt:not(.is-swiping) { transition: transform .18s cubic-bezier(.2, .8, .3, 1); }
+.xt, .xt img { -webkit-user-drag: none; }
+.xt-p { position: relative; display: block; overflow: hidden; border-radius: var(--r-thumb); background: var(--paper-2); }
+.xt-p.r45 { aspect-ratio: 4 / 5; }
+.xt-p.r11 { aspect-ratio: 1; }
+.xt-p.r34 { aspect-ratio: 3 / 4; }
+.xt-p.xt-fit img { object-fit: contain; }   /* wider or taller than its box: all of it, on paper */
+.xt-p img, .xt-p .ph { display: block; width: 100%; height: 100%; object-fit: cover; }
+.xt-h { padding: 0 2px; font-size: var(--fs-w-meta); font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.xt-s { padding: 0 2px; font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.xt-p + .xt-s { padding-bottom: 2px; }
+/* a story with no picture is its headline, in its source's colour */
+.xt-head { align-content: space-between; gap: var(--s3); min-height: 170px; padding: var(--s3); border-radius: var(--r-thumb); background: var(--c); color: var(--i); }
+.xt-head.r11 { min-height: 140px; }
+.xt-head.r34 { min-height: 205px; }
+.xt-t { font-family: var(--serif); font-weight: 500; font-size: var(--fs-w-card); line-height: 1.18; overflow-wrap: break-word; min-width: 0;
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.xt-head .xt-s { padding: 0; color: inherit; font-weight: 600; }
+.xt-news { --c: var(--liq-people); --i: var(--liq-people-ink); }
+.xt-reddit { --c: var(--liq-reddit); --i: var(--liq-reddit-ink); }
+.xt-facebook { --c: var(--liq-square); --i: var(--liq-square-ink); }
+.xt-x { --c: var(--liq-sports); --i: var(--liq-sports-ink); }
+.xt-newsletters { --c: var(--liq-pods); --i: var(--liq-pods-ink); }
+.xt-feed-nosy { --c: var(--feed-nosy); --i: var(--feed-nosy-ink); }
+.xt-feed-wild { --c: var(--feed-wild); --i: var(--feed-wild-ink); }
+.xt-feed-laughs { --c: var(--feed-laughs); --i: var(--feed-laughs-ink); }
+.xt-feed-plants { --c: var(--feed-plants); --i: var(--feed-plants-ink); }
+.xt-feed-sports { --c: var(--feed-sports); --i: var(--feed-sports-ink); }
+.xt-feed-home { --c: var(--feed-home); --i: var(--feed-home-ink); }
+.xwait i { display: block; border-radius: var(--r-thumb); background: var(--paper-2); }
+.xwait i.r45 { aspect-ratio: 4 / 5; }
+.xwait i.r11 { aspect-ratio: 1; }
+.xwait i.r34 { aspect-ratio: 3 / 4; }
+@media (max-width: 359px) { .xt-t { font-size: var(--fs-lead); } }
+/* the star in a picture's sheet, a full target in the row of buttons */
+.sheet-star { width: var(--hit); height: var(--hit); margin: -4px 0; padding: 0; justify-content: center; }
+/* on its disc, so it reads on a white wall */
+.iplay { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--r-pill); background: var(--media-disc); color: var(--on-media); }
+.iplay .i { width: 14px; height: 14px; }
+.idone { padding: var(--s5) var(--gutter); text-align: center; color: var(--ink-3); font-size: var(--fs-meta); }
+/* News' Filters button leads its one row of chips */
+.wf-open { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 var(--s3); border-radius: var(--r-pill);
+  border: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
+.wf-open .i { width: 16px; height: 16px; }
+.wf-open.on { background: var(--paper-2); color: var(--ink); }
+.wf-ways { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: var(--s1) var(--gutter); }
+.wf-nopol { position: relative; height: 40px; padding: 0 var(--s3); border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
+.wf-nopol.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .wband .wf .chips { padding: 2px var(--gutter) 6px; }
 .wband .wf .wm-slots { padding: 2px var(--gutter) 6px; }
 .wband-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: 0 var(--s2); }
@@ -1901,8 +2008,11 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 /* beside a picture the row is narrow: the source over its age, so the four
    buttons keep their 44px and the name keeps its room */
 .wrow.has-thumb .w-meta .w-who { row-gap: 2px; }
-.wrow.has-thumb .w-meta .srcbtn { flex: 0 0 100%; padding: 0; text-align: left; }
-.wrow.has-thumb .w-meta .srcbtn + .dot { display: none; }
+/* a row with a picture: the headline beside it, the meta line under both, so
+   the name reads whole and the star stays on screen at 320 */
+.wrow.has-thumb .w-body { display: contents; }
+.wrow.has-thumb .w-body > * { grid-column: 2; }
+.wrow.has-thumb .w-body > .w-meta { grid-column: 1 / -1; }
 .w-meta .act .i { width: 19px; height: 19px; }
 .w-meta .act::after { display: none; }
 .w-meta .act.star { margin-right: -12px; }
@@ -1961,7 +2071,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wnsw { position: relative; flex: 0 0 auto; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px;
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft); }
 .wnsw.liquid { overflow: hidden; }
-.wnsw-b { position: relative; z-index: 1; height: 34px; padding: 0 14px; border-radius: var(--r-pill); font-size: var(--fs-button); font-weight: 700;
+.wnsw-b { position: relative; z-index: 1; height: 38px; padding: 0 14px; border-radius: var(--r-pill); font-size: var(--fs-button); font-weight: 700;
   color: var(--ink-2); white-space: nowrap; }
 .wnsw-b:hover { color: var(--ink); }
 .wnsw-b[data-news="feed"].on { background: var(--liq-news); color: var(--liq-news-ink); }
@@ -2044,6 +2154,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 /* the Filters sheet, and the same controls in the wide screen's rail */
 .wf { display: grid; gap: var(--s1); padding-bottom: var(--s2); }
 .wf .sheet-h { padding-top: var(--s4); font-size: var(--fs-w-meta); }
+.aside .wf-ways { padding: var(--s1) 0; }
 .aside .wf .chips, .wband.wrap .wf .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; overflow: visible; }
 .aside .wf .chips { padding: 2px 0 4px; }
 .aside .wf .chips::after, .wband.wrap .wf .chips::after { display: none; }
@@ -2093,6 +2204,8 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
   .wleads > .card.wlead:first-child .c-title { font-size: var(--fs-w-lead-xl); line-height: 1.12; }
   .wleads > .card.wlead:first-child .w-dek { font-size: var(--fs-lead); }
   .wleads > .card.wlead:not(.has-pic):first-child .w-body { padding-top: var(--s2); }
+  /* picks two to five are rows, the column's full width under the big card */
+  .feed.wire .wleads > .card.wrow { grid-column: 1 / -1; padding-left: 0; padding-right: 0; }
 }
 @media (min-width: 1280px) {
   /* the rail holds the chips and Unfiltered: the banner keeps the day and the switch */
@@ -2173,6 +2286,7 @@ body.desk { overflow: auto; }
      reach them all, under the mast and inside a tab alike (Food's filters,
      What Now's themes) */
   .subnav .chips, .panel-body .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; }
+  .ifeeds { flex-wrap: wrap; row-gap: var(--s2); overflow: visible; }
   .subnav .chips { padding-bottom: 12px; }
   .subnav .chips::after, .panel-body .chips::after { display: none; }
   .toolband { flex-wrap: wrap; row-gap: 8px; }
@@ -2918,6 +3032,9 @@ body.bd-full { overflow: hidden; }
 /* a longer app name than the row holds: Saved keeps its star, drops its word */
 .mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
 .mast.tight .savedbtn > span { display: none; }
+/* the name still short: the logo gives up its place, measure() in app.js */
+.mast.tighter .brandlink { display: none; }
+.mast.tighter .appsbtn { margin-right: auto; }
 /* All Day's calendar button takes the sun's seat on a phone, where five will
    not fit beside the logo; the theme stays in Settings, Appearance */
 @media (max-width: 439px) { :root[data-app="all-day"] #theme-btn { display: none; } }

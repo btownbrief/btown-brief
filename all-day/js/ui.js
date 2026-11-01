@@ -88,6 +88,7 @@ export const ICON = {
   flag: svg('<path d="M5.5 21V4.5M5.5 4.5h11l-2.2 4 2.2 4h-11"/>'),
   more: svg('<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>'),
   down: svg('<path d="m6 9.5 6 6 6-6"/>'),
+  filter: svg('<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'),
   trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
   /* the apps' own: All Day is the Wire's pulse */
   body: svg('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/><path d="M7.5 12.5h2.6l1.2-2.2 1.8 3.6 1.2-1.4h2.2"/>'),
@@ -142,6 +143,17 @@ export function agoShort(epochSec) {
    listener, so a broken image never leaves a grey hole. */
 let PALETTE = Object.create(null);
 export function setPalette(p) { PALETTE = p && typeof p === 'object' ? p : PALETTE; }
+
+/* The Explore cell: the same glyph on and off, no word, and the tab's water
+   when it is on (explore.js). The pill it sits in sets its colour. */
+export function gridCell(on, onFlip) {
+  const b = el('button', 'xcell' + (on ? ' on' : ''), ICON.grid);
+  b.type = 'button';
+  b.setAttribute('aria-label', 'Explore');
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.addEventListener('click', onFlip);
+  return b;
+}
 
 export function art(media) {
   const m = String(media || '');
@@ -654,8 +666,8 @@ function wmeta(it, o) {
     /* the upvote with its count and Share stay on the card (Stephen,
        2026-10-20: "I see you cut the Share button ... Please re-add", "add
        the upvote button too"); ⋯ keeps the rest */
-    (o.noActs ? '' : '<button class="act up w-up' + (voted ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + voted + '">' + ICON.up + '<span class="n">' + (voteN(it) || '') + '</span></button>' +
-      '<button class="act sh w-sh" data-act="share" aria-label="Share">' + ICON.share + '</button>') +
+    '<button class="act up w-up' + (voted ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + voted + '">' + ICON.up + '<span class="n">' + (voteN(it) || '') + '</span></button>' +
+    '<button class="act sh w-sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
     '<button class="act w-more" data-act="wmore" aria-label="More: the original, the source, mute">' + ICON.more + '</button>' +
     '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
 }

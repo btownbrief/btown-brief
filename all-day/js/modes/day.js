@@ -231,7 +231,7 @@ function sceneTile() {
   const p = S.scene.find((x) => !S.dead.has(x.id));
   if (!p) return null;
   const pic = app.demo ? art(p.art) : '<img class="tf-pic" src="' + esc(safeHref(p.pic)) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">';
-  const name = '@' + p.h;
+  const name = p.nm || '@' + p.h;
   const c = liveTile('scene', 'scene', name, (it) => '<a class="tf-go" href="' + esc(safeHref(p.url)) + '" target="_blank" rel="noopener"' + (app.demo ? ' data-open' : '') + ' aria-label="' + esc(name) + '"></a>' +
     '<div class="dy-top"><p class="dy-sub">' + esc(name) + '</p>' + acts(it) + '</div>', p.url, pic, 'scene-' + p.id);
   c.dataset.post = p.id;

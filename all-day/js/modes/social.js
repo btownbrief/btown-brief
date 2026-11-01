@@ -40,7 +40,7 @@ const COPY = {
   isNew: 'New',
   loading: 'Loading',
   empty: 'Nothing here yet',
-  free: 'Free this week',
+  free: 'Free right now',
   got: (n) => (n === 1 ? '1 new post' : n + ' new posts'),
 };
 const PLATS = [['reddit', 'Reddit'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['x', 'X'], ['board', 'The Board']];
@@ -82,7 +82,7 @@ function gather() {
     put('facebook', x.name || x.from, x.name || x.from, g ? g[0] : 'https://www.facebook.com/', post(x.u, x.d * 1000, x.summary, '', true));
   });
   data.freeOffers(S.pulse).forEach((x) => put('facebook', 'free', COPY.free, '#vintage/free', { ...post(x.u, x.d * 1000, x.title + ' · ' + x.where, x.photo || '', true), k: x.k, shareTab: 'vintage' }));
-  ((S.ig && S.ig.posts) || []).forEach((x) => put('instagram', x.h, '@' + x.h, 'https://www.instagram.com/' + x.h + '/', post(x.u, x.ts * 1000, x.c, x.i, !x.n)));
+  ((S.ig && S.ig.posts) || []).filter((x) => !x.t).forEach((x) => put('instagram', x.h, x.nm || '@' + x.h, 'https://www.instagram.com/' + x.h + '/', post(x.u, x.ts * 1000, x.c, x.i, !x.n)));
   /* a subreddit is many people, not one account, so each thread people answered is its own block */
   (S.reddit || []).filter((x) => Number(x.comments) >= THREAD_MIN).forEach((x) => put('reddit', x.id || x.url, x.sub, 'https://www.reddit.com/' + x.sub + '/', post(x.url, x.ts, x.title, '', true)));
   const b = S.board;

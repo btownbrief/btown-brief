@@ -76,14 +76,23 @@ that reads a category or the food flag can pick it up; its posts carry `n: 1`,
 which the switch (Local, National, Everything) reads. It has its own cap, so
 it cannot push a local post out.
 
+NAMES. A post's `nm` is its account's name ("UVM Men's Basketball", not
+@uvmmbb), one per handle, stamped on every post on every run. A post's `user`
+can be a collab's other party, so a name is taken only from a post the account
+itself owns, and it costs nothing: it comes with the read already paid for, and
+the ledger's `names` remembers it. A roster `name` wins, for a handle that
+cannot wait for its next read or whose own profile name says little. A local
+profile that reads as a person's name is left on the handle.
+
 KIND. Every post also carries `kind`, what the PICTURE is, for the Photos
 chips: vibe (a room, a crowd, a night out), poster (a flyer for a dated
 event), food, pets, scenic, other. The account's category is only the first
 guess: a cat cafe's latte is food, not pets, and a restaurant's trivia flyer
 is a poster, not food. So once a run, Claude Haiku 5.5 reads the account,
 its category and the caption of every post that has no kind yet, in one
-batched call, and says which kind each is and whether it is sure. The
-posts it is not sure about (up to IMAGE_LOOK_MAX) get a second call that
+batched call, and says which kind each is, whether it is sure, and for a
+national post whether it is an ad (ADS below) and whether it is sad (SAD
+below). The posts it is not sure about (up to IMAGE_LOOK_MAX) get a second call that
 shows it the 480px thumbnail itself. A kind is decided once per post and
 carried with it, so a post is never paid for twice. Without a key, past
 AI_MONTH_CAP_USD, or when a call fails, a post gets its category's kind
@@ -91,6 +100,81 @@ with `kd: 1` (defaulted) and is asked about again next run; an unsure post
 whose picture could not be looked at this run ships the caption's guess,
 also with `kd: 1`. The spend is
 kept in the ledger's `ai` block; AI COST below has the measured numbers.
+
+CAPTIONS. Videos do not autoplay in the grid, so the line under a tile has to
+say what the post is, and the post usually says so itself. mark_captions runs
+on every post in the payload, for nothing: clean_caption takes off hashtags,
+@handles and emoji and keeps the first sentence, and that ships as `cp`, in the
+account's own words. On the live payload that is about 50 of every 100 posts,
+and no model ever sees them. `c` stays whole, except on a post that ends up with
+`hx`: see TITLES. The two accounts in CAPTION_SAYS_NOTHING never get a `cp`.
+
+TITLES. The rest are gaps: a line of three words or fewer or a run-on, not
+English, only hashtags, a question, a call to action, a sentence cut off or with
+a hole where a handle or the object of a sentence was, a relative day on a post
+over a day old, or a local line that names a private person. A gap goes to
+Claude Sonnet 5.5 with its caption AND its thumbnail, in batches after the kinds,
+and comes back as one of three: `hd`, 3 to 8 plain words; `ad: 1`, a national
+paid or selling post, which never needs a title; or `hx: 1`, asked, with nothing
+worth saying. A post with no real words and nothing clear in its picture gets
+`hx` and no line, because a guess is worse than a blank. Why the picture and why
+Sonnet: measured 2026-11-01 on 475 gaps, read against the pictures, Haiku from
+the caption alone got about 9 in 100 wrong or invented, Haiku with the picture
+about 6 ("Bellie Jean", "Low ticket prices" for a nearly sold-out show), and
+Sonnet with the picture under 2. Decided once per post and carried, like `kind`,
+unless a carried title no longer passes clean_hd. A post whose thumbnail will not
+download waits for the next run. The account goes by its name, never its handle.
+Each post goes out under a code made from its identity and an answer counts only
+under a code from its own batch, so a model that loses its place loses that post
+until the next run, never labels the wrong picture. A title that breaks the rules
+gets one more try in the same run, then `hx`. A batch whose answer is no use is
+halved until the post that broke it is alone, and only that post gets `hx`. A run
+with no key, past the cap or out of time leaves the rest for the next run. A
+stalled call gives up after MODEL_TIMEOUT_S, and SIGTERM during any of this still
+writes the payload and records what was spent. A post with `hx` ships without `c`:
+the page rebuilds a line from `c` when it finds no `hd` or `cp`, so a caption the
+build turned down (a phone number, "LIMITED TIME ONLY") would come back under the
+tile. The sheet then shows the picture and the link.
+
+DATES. A date in a line goes stale as surely as "tonight", so any `cp` or `hd` whose
+last date has passed is a gap and is titled again, told today's date. A holiday is a
+date when nothing else is given: "Happy Halloween" goes on Nov 1. A poster is
+another matter: the picture itself still says the show is on. A poster whose last
+date has passed, in its line or its caption, gets `gone: 1` and stops asking anyone
+for anything; so does one over a week old whose caption only says "this Friday".
+A poster's line has to say when, so one whose caption has the date and whose first
+sentence does not is a gap: "Unconventional pairings tend to hit the palate" was a
+rap night on Nov 21.
+
+A local line can go stale with no date in it: "Last Burlington farmers market of the
+season" was true on Oct 31, and only the caption's "today" says so. So when a local
+caption's day has gone by (caption_passed), its `cp` is a gap and its `hd` is asked
+about once more, told the day it was posted and today's date, and comes back with
+`hs: 1` so it is not asked a third time. The caption alone proves nothing: "Open today
+til 5" under a new rack is still a new rack, and the title says so.
+
+ADS. `ad: 1` marks a paid post, and a post carrying it has no `cp` or `hd`. The
+API's is_paid_partnership and a caption's own declaration (#ad, #sponsored,
+#paidpartnership, #gifted, #BrandPartner, a leading "Ad:", "paid partnership")
+count on any account; a discount code, "sponsored by", "presented by" or "Buy ... NOW"
+counts off a local account only, because a Burlington shop selling its own goods is news for its
+neighbors, not an ad. The rules read the whole caption when the post is first
+read, before `c` is cut to 1,000 characters. They caught 11 of the 59 posts a
+model flagged on the live payload, so a national post also gets a yes or no
+inside its kind call, which costs no extra call and reads the end of a long
+caption as well as its start. Local posts never take a model's word for it.
+
+SAD. The feeds under the Wire's pill exist for fun. A national post in one of
+them gets a second yes or no in that same call: `sad: 1` for a death, grief, an
+injury, abuse or politics, and SAD_WORDS catches for nothing what that call misses
+on a joke, along with a dog's upset stomach, which is nobody's idea of a good tile. Like `ad` it is said once and carried. A local post gets `sad` for one
+thing only, an election, from that same call or ELECTION_WORDS: "How we can protect
+this election" is not what a wall of the town is for, and a neighbor's other bad
+news is still news. The post keeps its line.
+
+HELD. A `sad` or `gone` post is left out of `posts` and written to `held` instead,
+so the page never meets it and the next run still knows what was decided about it.
+Nothing in `held` costs a model call again.
 
 PERSISTENCE. Each category's cap is filled one post per account at a time
 (every account's newest, then every account's second newest, ...), not
@@ -132,11 +216,15 @@ import re
 import signal
 import sys
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
 import zlib
 from zoneinfo import ZoneInfo
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from town.title_guard import CONTACT, FIRST, NOT_SURNAME, names_person
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "data" / "instagram-handles.json"
@@ -148,6 +236,7 @@ TZ = ZoneInfo("America/New_York")
 ENDPOINT = "https://api.scrapecreators.com/v2/instagram/user/posts"
 POSTS_PER_HANDLE = 6          # newest few per account; the tab is a mixed feed
 KEEP_DAYS = 21                # older than this is not "what is happening"
+INTEREST_KEEP_DAYS = 60       # a feed's account has no news to go stale and some post monthly, but a 149-day-old post in a fresh feed reads as a stuck feed
 WANT_W = 480                  # candidate width to prefer for the grid
 
 # THE ONE NUMBER. Credits this builder may spend in a calendar month. Set
@@ -155,10 +244,14 @@ WANT_W = 480                  # candidate width to prefer for the grid
 # tagged = 88 credits a day, 2,640 in a 30-day month. At the Freelance pack's
 # price ($47 for 25,000 credits, $0.00188 each) the ceiling is about $9.93 a
 # month. Raise it and the tier 3 rotation is the only thing that grows.
-MONTHLY_CREDIT_BUDGET = 5400
+# Raised 2026-11-01 from 5400 for the Wire's feeds: 59 national accounts cost
+# about 27 credits a day, about $1.50 a month. Raised 2026-11-01 from 6200 for
+# 21 more dog and home accounts: 10 credits a day, about $0.58 a month.
+MONTHLY_CREDIT_BUDGET = 6510
 
 RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projection only
 TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
+INTEREST_PERIOD_DAYS = 3      # a tier 3 account in one of the Wire's feeds: pictures last ~4 days, so a feed never goes blank
 TIERS = (1, 2, 3)
 PENDING_MAX_H = 6             # a --reserve older than this is not executed
 # Wall-clock budget for the account requests in one --execute. The workflow's
@@ -167,21 +260,29 @@ PENDING_MAX_H = 6             # a --reserve older than this is not executed
 # of 2026-10-26, -28 and -29 hit that (Oct 27's finished in 28 minutes). Past
 # this budget the run stops asking, gives the unasked accounts their rotation
 # places back, and writes what it has, leaving ~10 minutes for the tagged
-# shelf, the kind calls and the write.
-FETCH_BUDGET_S = 20 * 60
-# What one run reserves. A run gets through about 92 accounts inside
+# shelf, the kind and title calls and the write. 23 minutes is RUN_MAX at 13
+# seconds each; the title step is bounded by HD_TIME_S.
+FETCH_BUDGET_S = 23 * 60
+# What one run reserves. A run gets through about 100 accounts inside
 # FETCH_BUDGET_S (about 13 seconds each, 2026-10-30), and credits reserved past
 # that stay spent with no request behind them. Two runs a day at this cap cover
-# the roster's 173 a day: tier 2 daily, tier 3 about weekly.
-RUN_MAX = 92
+# the roster's 210 a day: tier 2 daily, tier 3 about weekly.
+RUN_MAX = 105
 ONLY_MAX = 5                  # --only is a small local test, never a second schedule
 CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other", "national")
+# The feeds under the Wire's pill (all-day/js/modes/wire-interests.js). A roster
+# account's `interest` is one of these and rides on its posts as `t`; `breed`
+# as `br`, because Ashley wants beagles and labs, not every dog (2026-11-01).
+INTERESTS = ("dogs", "home", "plants", "laughs", "sports", "wild")
+BREEDS = ("beagle", "lab")
+LINK_IN_BIO = re.compile(r"\blink in (?:my |our |the )?bio\b", re.I)
 
 # One cap per category, so a chip never comes up empty because another kind
-# of account posts more. About 1.25 KB a post: the caps total ~630 posts,
-# ~790 KB, against 388 posts and 483 KB before the bigger roster.
+# of account posts more. About 1.5 KB a post, with signed video links: about
+# 1,150 posts and 1.75 MB. National is the 101 accounts at POSTS_PER_HANDLE, so
+# the feeds show every post a read paid for; the local caps are what they were.
 CAP = {"food": 150, "venue": 90, "events": 100, "shop": 60, "pets": 50,
-       "scenic": 90, "other": 90, "national": 132}
+       "scenic": 90, "other": 90, "national": 606}
 TAGGED_CAP = 12
 
 # @btownbrief's numeric id (the tagged-posts endpoint takes ids, not handles).
@@ -205,6 +306,7 @@ KIND_OF_CATEGORY = {"food": "food", "venue": "vibe", "events": "poster", "pets":
                     "scenic": "scenic", "shop": "other", "other": "other"}
 KIND_BATCH = 150              # posts per caption call; a steady-state run is one call
 CAPTION_CHARS = 300           # of each caption the model reads
+CAPTION_TAIL = 120            # and of a national caption's end, where a plug sits
 IMAGE_LOOK_MAX = 60           # unsure posts per run that get their thumbnail looked at
 IMAGE_MAX_BYTES = 1_500_000   # a 480px thumbnail is ~20-60 KB; anything bigger is skipped
 # AI COST. Claude Haiku 5.5, $0.10 / $0.50 per million tokens in / out
@@ -214,9 +316,34 @@ IMAGE_MAX_BYTES = 1_500_000   # a 480px thumbnail is ~20-60 KB; anything bigger 
 # as new: captions 47,922 in / 8,165 out tokens over three calls = $0.0089
 # ($0.00002 a post); 60 thumbnails 31,431 in / 904 out = $0.0036 ($0.00006 a
 # post). The roster brings ~150 new posts a day, about half unsure, so a
-# steady month is roughly $0.10 of captions and $0.13 of looks. This cap is
-# the backstop, not the budget.
-AI_MONTH_CAP_USD = 3.0
+# steady month is roughly $0.10 of captions and $0.13 of looks, about $0.25.
+# Titles are Claude Sonnet 5.5, $2 / $10 per million, for the gaps only: measured
+# 2026-11-01 on the live payload, the 475 gaps with their thumbnails over 60 calls
+# and 105 second tries, 375,427 in / 22,083 out tokens = $0.97 ($0.002 a post).
+# Haiku on the same run cost $0.05 and got three times as many wrong (TITLES
+# above). At about 75 gaps a day that is about $4.50 a month, so the whole month
+# is about $4.75 and this is the backstop.
+AI_MONTH_CAP_USD = 7.0
+
+CP_CHARS = (12, 140)          # a first sentence outside this is a gap: too little to say, or a run-on
+CP_MIN_WORDS = 4              # "Two scientists" says nothing, and neither does a bare date
+SHORT_LINE_WORDS = CP_MIN_WORDS    # a line this short has to show an English word
+STALE_S = 86400               # "tonight" on a post older than this is wrong
+WEEK_S = 7 * 86400            # and so is "Friday" on one older than this
+NEXT_YEAR_DAYS = 60           # a date this far before its post is next year's: December's "Jan 3"
+HD_FIELDS = ("hd", "ad", "hx", "gone", "hs")
+HD_WORDS = (3, 8)             # a title outside this is not a title
+HD_BATCH = 12                 # posts per title call: each one carries a picture
+HD_CAPTION_CHARS = 400        # of each caption the model reads
+HD_TOKENS_EACH = 100          # output room per post, thinking included
+HD_TIME_S = 90                # no new title call past this: the kinds, the titles and the write share the last minutes of the step
+HD_LEAVES_USD = 0.50          # titles stop this far short of the cap, so they can never starve the kinds
+MODEL_TIMEOUT_S = 45          # one model attempt: a batch answers in 10 to 20 seconds, and a stall must not eat the step
+
+
+class Stopped(BaseException):
+    """SIGTERM during the model calls. Not an Exception, so nothing on the way
+    up (the kind call's catch, ask_json's retry) can take it for a bad answer."""
 
 
 def log(m: str) -> None:
@@ -345,7 +472,7 @@ def fetch_tagged(key: str) -> list[dict]:
     return items or []
 
 
-def tagged_record(it: dict, cutoff: float, now: float | None = None) -> dict | None:
+def tagged_record(it: dict, cutoff: float, now: float | None = None, national: bool = False) -> dict | None:
     handle = ((it.get("user") or {}).get("username") or "").strip().lstrip("@").lower()
     if not handle:
         return None
@@ -372,6 +499,8 @@ def tagged_record(it: dict, cutoff: float, now: float | None = None) -> dict | N
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
         add_video(rec, it, now if now is not None else time.time())
+    if it.get("is_paid_partnership") is True or is_ad({"c": cap, "n": national}):
+        rec["ad"] = 1
     return rec
 
 
@@ -470,9 +599,10 @@ def carry_ok(rec: dict, now: float, cutoff: float) -> bool:
     return True
 
 
-def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> dict | None:
+def post_record(h: str, it: dict, cutoff: float, now: float | None = None, national: bool = False) -> dict | None:
     """One rostered account's post as the payload keeps it, or None when it
-    is too old or has no picture."""
+    is too old or has no picture. The ad rules read the whole caption here:
+    `c` is cut to 1,000 characters and a #ad often sits at the very end."""
     ts = taken_at(it)
     if not ts or ts < cutoff:
         return None
@@ -492,16 +622,52 @@ def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> di
     cap = caption_of(it)
     if cap:
         rec["c"] = cap[:1000]
+    likes = it.get("like_count")
+    if isinstance(likes, int) and likes > 0:
+        rec["l"] = likes        # the Wire's feeds lead with an account's best, not its latest
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
         add_video(rec, it, now if now is not None else time.time())
+    if it.get("is_paid_partnership") is True or is_ad({"c": cap, "n": national}):
+        rec["ad"] = 1
     return rec
 
 
+def own_name(h: str, items: list[dict], national: bool) -> str:
+    """The account's profile name, from the first post it owns, or "". A
+    collab comes back under the other party, and a person's name on a local
+    account stays off the page."""
+    for it in items:
+        user = it.get("user") or it.get("owner") or {}
+        if norm_handle(user.get("username")) == h:
+            name = clean_name(user.get("full_name"))
+            return "" if not national and names_private(name) else name
+    return ""
+
+
+def clean_name(raw: object) -> str:
+    """A profile name as a reader should see it: plain letters, no emoji, and
+    no tagline after a bar or a bullet ("Michelle Kolbeck | DIY • IKEAHACK").
+    Anything still past 40 characters stops at a whole word."""
+    t = "".join(ch for ch in plain_letters(str(raw or ""))
+                if unicodedata.category(ch) not in ("So", "Sk", "Cs", "Co", "Cf", "Me"))
+    t = NAME_BREAK.split(" ".join(t.split()))[0]
+    if len(t) > 40:
+        t = t[:41].rsplit(" ", 1)[0]
+    words = t.strip(" .,;:&+-\u2013\u2014").split()
+    while words and words[-1].lower() in DANGLES:
+        words.pop()
+    return " ".join(words) if any(ch.isalpha() for ch in t) else ""
 
 
 def norm_handle(h: object) -> str:
     return str(h or "").strip().lstrip("@").lower()
+
+
+def merch_post(rec: dict) -> bool:
+    """A breed page's "link in bio" is a tee or a mug, not a dog. Bigger
+    accounts link to their stories that way, so this is for Beagles and Labs."""
+    return bool(LINK_IN_BIO.search(rec.get("c") or ""))
 
 
 def load_block() -> set[str]:
@@ -553,8 +719,8 @@ def fair_cap(recs: list[dict], n: int) -> list[dict]:
 
 def load_roster(path: pathlib.Path | None = None) -> list[dict]:
     """The roster's `accounts`, cleaned: one dict per handle with `h`, `tier`,
-    `category`, `s` (`do` or `see`, kept on posts for older readers), `food`
-    and `national`.
+    `category`, `s` (`do` or `see`, kept on posts for older readers), `food`,
+    `national`, and the optional `interest`, `breed` and `name`.
 
     A typo must not stop a build or cost money, so bad values fail CHEAP: an
     unknown tier becomes 3 (the least often fetched), an unknown category
@@ -587,7 +753,10 @@ def load_roster(path: pathlib.Path | None = None) -> list[dict]:
         out.append({"h": h, "tier": tier, "category": cat,
                     "s": "see" if a.get("s") == "see" else "do",
                     "food": not national and (cat == "food" or a.get("food") is True),
-                    "national": national})
+                    "national": national,
+                    "interest": a["interest"] if a.get("interest") in INTERESTS else None,
+                    "breed": a["breed"] if a.get("breed") in BREEDS else None,
+                    "name": " ".join(str(a.get("name") or "").split())[:40] or None})
     if dupes:
         log(f"WARNING: {len(dupes)} duplicate handle(s), first entry kept: {', '.join(dupes[:6])}")
     if fixed:
@@ -614,7 +783,22 @@ The account's category is a hint, not the answer. A cat cafe's latte is food, a
 restaurant's trivia flyer is a poster, a brewery's crowded taproom is vibe. A
 caption describes the post but not always the picture: "join us Friday" may sit
 on a flyer or on a photo of last week's crowd. Say sure=false whenever the
-caption does not settle what the picture shows."""
+caption does not settle what the picture shows.
+
+ad, for a national post only (category national): true when it is mostly selling
+something, the account's own prints, books, merch, courses or products included, or
+is a paid partnership, a gifted post, a discount code or a brand's plug. "Presented by"
+a brand, "Buy ... NOW" at a site, and thanks to a clothing label for an outfit are all
+ads. A recipe, a clip or a story with one plug at the end is not an ad. Any other post:
+false.
+
+sad, for a national post only (category national): true when the post touches a death,
+grief, an injury, abuse, or politics, even as a joke or an aside. A pet that died or was
+hurt, a stray found in a bad way, a fundraiser for a vet bill, a tribute, a fan mocking a
+tragedy, an elected leader, a law, an election, ballots or a reminder to vote, ICE, MAGA
+and a satire of any of these all count. A sports knock that is only a moment in a game
+does not, nor does a dog that looks sad for a treat. A Burlington post: true only for an
+election, a candidate, a ballot question or a reminder to vote. Nothing else counts there."""
 
 LOOK_RULES = KIND_RULES + """
 
@@ -626,6 +810,8 @@ def kind_schema(sure: bool) -> dict:
     props = {"i": {"type": "integer"}, "kind": {"type": "string", "enum": list(KINDS)}}
     if sure:
         props["sure"] = {"type": "boolean"}
+        props["ad"] = {"type": "boolean"}
+        props["sad"] = {"type": "boolean"}
     return {"type": "object", "additionalProperties": False, "required": ["kinds"],
             "properties": {"kinds": {"type": "array", "items": {
                 "type": "object", "properties": props, "required": list(props),
@@ -635,14 +821,17 @@ def kind_schema(sure: bool) -> dict:
 def kind_line(i: int, rec: dict, hints: dict) -> str:
     also = sorted(hints.get(rec["h"], ()))
     what = "reel" if rec.get("v") else "photo"
-    cap = (rec.get("c") or "")[:CAPTION_CHARS] or "(no caption)"
+    c = rec.get("c") or ""
+    cap = c[:CAPTION_CHARS] or "(no caption)"
+    if rec.get("n") and len(c) > CAPTION_CHARS:       # a plug sits at the end
+        cap += " \u2026 " + c[max(CAPTION_CHARS, len(c) - CAPTION_TAIL):]
     return (f"{i}. @{rec['h']} · {rec.get('category') or 'other'}"
             + (f" (also {', '.join(also)})" if also else "") + f" · {what} · {cap}")
 
 
-def read_kinds(raw: object, n: int, sure: bool) -> dict[int, tuple[str, bool]]:
-    """The model's answer -> {index: (kind, sure)}. A bad index, a repeat or
-    an unknown kind is dropped, and that post simply keeps its default."""
+def read_kinds(raw: object, n: int, sure: bool) -> dict[int, tuple[str, bool, bool, bool]]:
+    """The model's answer -> {index: (kind, sure, ad, sad)}. A bad index, a repeat
+    or an unknown kind is dropped, and that post simply keeps its default."""
     out = {}
     for e in raw if isinstance(raw, list) else []:
         if not isinstance(e, dict):
@@ -652,7 +841,7 @@ def read_kinds(raw: object, n: int, sure: bool) -> dict[int, tuple[str, bool]]:
             continue
         if e.get("kind") not in KINDS:
             continue
-        out[i] = (e["kind"], e.get("sure") is True if sure else True)
+        out[i] = (e["kind"], e.get("sure") is True if sure else True, e.get("ad") is True, e.get("sad") is True)
     return out
 
 
@@ -690,6 +879,17 @@ def post_key(rec: dict) -> str:
 def ai_spent(ledger: dict | None, now: float) -> float:
     ai = (ledger or {}).get("ai") or {}
     return float(ai.get("usd") or 0) if ai.get("month") == month_key(local_day(now)) else 0.0
+
+
+def record_ai(ledger: dict, now: float, run: dict, usd: float) -> None:
+    """Add one run's model spend to the ledger's `ai` block."""
+    month = month_key(local_day(now))
+    ai = ledger.get("ai")
+    if not isinstance(ai, dict) or ai.get("month") != month:
+        ai = {"month": month, "usd": 0.0, "runs": []}
+    ai["usd"] = round(ai["usd"] + usd, 6)
+    ai["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc).isoformat(timespec="seconds"), **run})
+    ledger["ai"] = ai
 
 
 def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
@@ -748,7 +948,7 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
     def ask(system, user, schema, n, sure, label):
         try:
             answer, got = wc.ask_json(engine, system, user, schema, max_tokens=60 * n + 500,
-                                      log_prefix="kind")
+                                      log_prefix="kind", timeout=MODEL_TIMEOUT_S)
         except Exception as e:  # noqa: BLE001 — SDK missing, network, a bad answer
             got = getattr(e, "usage", {}) or {}
             answer = None
@@ -757,79 +957,754 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
             usage[k] += got.get(k, 0)
         return read_kinds(answer.get("kinds") if isinstance(answer, dict) else None, n, sure)
 
-    # The picture itself settles what a caption cannot. Claude only: the
-    # OpenRouter fallback reads text, so there a caption's guess is final.
-    can_look = look and engine["provider"] == "anthropic"
-    unsure = []
-    for start in range(0, len(todo), KIND_BATCH):
-        if over_cap("caption"):
-            break
-        batch = todo[start:start + KIND_BATCH]
-        text = "POSTS:\n" + "\n".join(kind_line(i, r, hints) for i, r in enumerate(batch))
-        got = ask(KIND_RULES, text, kind_schema(True), len(batch), True, "caption")
-        report["asked"] += len(batch)
-        for i, rec in enumerate(batch):
-            if i not in got:
-                continue
-            kind, sure = got[i]
-            rec["kind"] = kind          # unsure: the caption's best guess while it waits for a look
-            if sure or not can_look:
-                rec.pop("kd", None)
-            else:
-                unsure.append(rec)
-
-    if unsure and not over_cap("image"):
-        # At most IMAGE_LOOK_MAX downloads, newest first, inside a deadline:
-        # a CDN that hangs must not eat the step's timeout before the
-        # payload is written.
-        shown, content = [], []
-        deadline = time.monotonic() + 90
-        for rec in sorted(unsure, key=lambda r: -r["ts"])[:IMAGE_LOOK_MAX]:
-            if time.monotonic() > deadline:
-                log("kind: thumbnail downloads ran out of time")
+    try:
+        # The picture itself settles what a caption cannot. Claude only: the
+        # OpenRouter fallback reads text, so there a caption's guess is final.
+        can_look = look and engine["provider"] == "anthropic"
+        unsure = []
+        for start in range(0, len(todo), KIND_BATCH):
+            if over_cap("caption"):
                 break
-            pic = fetch_thumb(rec["i"])
-            if not pic:
-                continue
-            content.append({"type": "text", "text": "Image " + kind_line(len(shown), rec, hints)})
-            content.append({"type": "image", "source": {"type": "base64",
-                                                        "media_type": pic[0], "data": pic[1]}})
-            shown.append(rec)
-        if shown:
-            content.append({"type": "text", "text": f"Give the kind of each of the {len(shown)} images."})
-            got = ask(LOOK_RULES, content, kind_schema(False), len(shown), False, "image")
-            report["looked"] = len(shown)
-            for i, rec in enumerate(shown):
-                if i in got:
-                    rec["kind"] = got[i][0]
+            batch = todo[start:start + KIND_BATCH]
+            text = "POSTS:\n" + "\n".join(kind_line(i, r, hints) for i, r in enumerate(batch))
+            got = ask(KIND_RULES, text, kind_schema(True), len(batch), True, "caption")
+            report["asked"] += len(batch)
+            for i, rec in enumerate(batch):
+                if i not in got:
+                    continue
+                kind, sure, ad, sad = got[i]
+                rec["kind"] = kind          # unsure: the caption's best guess while it waits for a look
+                if ad and rec.get("n"):
+                    rec["ad"] = 1
+                if sad and (rec.get("t") or not rec.get("n")):
+                    rec["sad"] = 1
+                if sure or not can_look:
                     rec.pop("kd", None)
-    # An unsure post nobody looked at (past IMAGE_LOOK_MAX, a thumbnail that
-    # would not download, the cap) keeps the caption's guess, still marked
-    # `kd`, and is asked again next run.
-    for rec in todo:
-        for twin in twins[post_key(rec)][1:]:
-            twin["kind"] = rec["kind"]
-            if rec.get("kd"):
-                twin["kd"] = 1
-            else:
-                twin.pop("kd", None)
+                else:
+                    unsure.append(rec)
 
-    report["decided"] = sum(1 for r in todo if not r.get("kd"))
-    usd = wc.cost_usd(engine["model"], usage)
-    report["usd"] = usd
-    if ledger is not None and (usage["calls"] or usage["in"]):
-        month = month_key(local_day(now))
-        ai = ledger.get("ai")
-        if not isinstance(ai, dict) or ai.get("month") != month:
-            ai = {"month": month, "usd": 0.0, "runs": []}
-        ai["usd"] = round(ai["usd"] + usd, 6)
-        ai["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc).isoformat(timespec="seconds"),
-                           "model": engine["model"], "asked": report["asked"], "looked": report["looked"],
-                           "in": usage["in"], "out": usage["out"], "usd": round(usd, 6)})
-        ledger["ai"] = ai
-    log(f"kind: {report['decided']} of {len(todo)} new post(s) decided ({report['asked']} by caption, "
-        f"{report['looked']} looked at) · {usage['in']:,} in / {usage['out']:,} out tokens · "
-        f"${usd:.4f} this run · ${ai_spent(ledger, now) if ledger else usd:.2f} this month")
+        if unsure and not over_cap("image"):
+            # At most IMAGE_LOOK_MAX downloads, newest first, inside a deadline:
+            # a CDN that hangs must not eat the step's timeout before the
+            # payload is written.
+            shown, content = [], []
+            deadline = time.monotonic() + 90
+            for rec in sorted(unsure, key=lambda r: -r["ts"])[:IMAGE_LOOK_MAX]:
+                if time.monotonic() > deadline:
+                    log("kind: thumbnail downloads ran out of time")
+                    break
+                pic = fetch_thumb(rec["i"])
+                if not pic:
+                    continue
+                content.append({"type": "text", "text": "Image " + kind_line(len(shown), rec, hints)})
+                content.append({"type": "image", "source": {"type": "base64",
+                                                            "media_type": pic[0], "data": pic[1]}})
+                shown.append(rec)
+            if shown:
+                content.append({"type": "text", "text": f"Give the kind of each of the {len(shown)} images."})
+                got = ask(LOOK_RULES, content, kind_schema(False), len(shown), False, "image")
+                report["looked"] = len(shown)
+                for i, rec in enumerate(shown):
+                    if i in got:
+                        rec["kind"] = got[i][0]
+                        rec.pop("kd", None)
+    finally:
+        # A post nobody looked at (past IMAGE_LOOK_MAX, a thumbnail that would
+        # not download, the cap) keeps the caption's guess, still marked `kd`,
+        # and is asked again next run. The spend lands here however the calls
+        # ended: SIGTERM must not lose what has been paid for.
+        for rec in todo:
+            for twin in twins[post_key(rec)][1:]:
+                twin["kind"] = rec["kind"]
+                for flag in ("ad", "sad"):
+                    if rec.get(flag):
+                        twin[flag] = 1
+                if rec.get("kd"):
+                    twin["kd"] = 1
+                else:
+                    twin.pop("kd", None)
+
+        report["decided"] = sum(1 for r in todo if not r.get("kd"))
+        usd = wc.cost_usd(engine["model"], usage)
+        report["usd"] = usd
+        if ledger is not None and (usage["calls"] or usage["in"]):
+            record_ai(ledger, now, {"model": engine["model"], "asked": report["asked"], "looked": report["looked"],
+                                    "in": usage["in"], "out": usage["out"], "usd": round(usd, 6)}, usd)
+        log(f"kind: {report['decided']} of {len(todo)} new post(s) decided ({report['asked']} by caption, "
+            f"{report['looked']} looked at) · {usage['in']:,} in / {usage['out']:,} out tokens · "
+            f"${usd:.4f} this run · ${ai_spent(ledger, now) if ledger else usd:.2f} this month")
+    return report
+
+
+# ----------------------------------------------------------------- caption
+
+HANDLE = re.compile(r"(?<![\w&.])@[\w.]*\w")
+HASHTAG = re.compile(r"(?<![\w&])#\w*[^\W\d]\w*")   # "#1 in the league" is a number
+AT_HOLE, TAG_HOLE = "\x00", "\x01"   # where each stood, until the sentence is known
+SENTENCE_END = re.compile(r"[.!?\u2026]+[\"'\u201d\u2019)]*(?=\s|$)")
+NOT_THE_END = set("st mt ft dr mr mrs ms jr sr no vs ave rd jan feb mar apr jun jul aug sep sept oct nov dec "
+                  "mon tue tues wed thu thur thurs fri sat sun inc co am pm pres feat prod dept gov sen rep prof "
+                  "capt sgt lt gen col blvd hwy ste apt bros corp ltd".split())
+INITIALS = re.compile(r"(?:[a-z]\.)+[a-z]")     # D.C., U.S., a.m.
+# A line that stops on one of these lost what came after: "Pack the Gut pres".
+WANTS_A_NAME = set("pres feat ft vs mr mrs ms dr mt".split())
+# A line cannot stop on these: the emoji or the tag that ended it cut it off.
+DANGLES = set("a an the and or of at in on to for with from by w/ & are is was were be been am but that which who "
+              "whose because starting until till including featuring plus as if when while than your our my their "
+              "his her its this these those will can would should could have has had not very next".split())
+# ...and these want the object a stripped hashtag took with it.
+WANTS_OBJECT = DANGLES | set("support supporting love loving visit visiting thank thanks welcome welcoming meet join "
+                             "joining try trying celebrate celebrating honor honoring congrats congratulations "
+                             "shoutout".split())
+ENGLISH = set("the a an and of to in is it for on with at this that you we i my our your are was be have has from "
+              "by not but so just all new who what when how they he she his her its as or if me out up can will "
+              "get got".split())
+FOREIGN = set("le les des du et est avec une dans sur que qui nous vous pas tr\u00e8s mais \u00eatre ce cette il elle "
+              "quand au aux hein tout el los las es para una por del pero como esta este m\u00e1s ich und der das ist "
+              "nicht mit ein eine f\u00fcr auf aus einem euch wir hai hain nahi nahin kya kyu kyun aur liye bhi yaar kaise kuch "
+              "hoon tha thi wala wali bhai mera meri tera teri apna apni ka ke ko mein hum humare hamare tum aap yeh woh "
+              "ek se toh bahut accha acha pyar dost ghar feliz navidad todos todas nuestros nuestras amigos amigas gracias muy hola natal nossos nossas obrigado "
+              "obrigada voc\u00ea uma joyeux no\u00ebl tous nos amis merci bonjour frohe weihnachten alle unsere freunde "
+              "danke".split())
+# A brand's "#AcmePartner" is declared; a life partner is not.
+AD_DECLARED = re.compile(r"(?<!\w)#(?:ads?|paidad|sponsored|sponsoredpost|sponsor|gifted(?:by\w*)?|paidpartnership|"
+                         r"(?!(?:life|dance|dancing|business|work|gym|training|running|hiking|climbing|study|crime|"
+                         r"sparring|tennis|pickleball|golf|doubles|soul)partner\b)\w+partner)\b|"
+                         r"\[ ?a ?d ?\]|\bpaid partnership\b|^\s*(?:paid )?(?:ad|sponsored)\s*:", re.I)
+AD_PLUGGED = re.compile(r"(?i:\buse (?:my |our )?code\b|\bsponsored by\b|\bpresented by\b)|(?i:\bbuy\b).{0,60}\bNOW\b|"
+                        r"(?i:\bcomment\s+)[\"'\u2018\u201c]?[A-Z]{3,}\b(?i:.{0,30}\b(?:send|link|dm)\b)")   # "comment SHOP and I'll send the link"
+NAME_BREAK = re.compile(r"\s*[|\u2022\u00b7/,]\s*|\s+[-\u2013\u2014:]\s+")
+# Asks instead of says. A venue's "Join us Friday" is neither: it says what is on.
+CALL_TO_ACTION = re.compile(
+    r"\b(?:dm (?:us|me)|message (?:us|me)|link in (?:my |our |the )?bio|check (?:the )?caption|comment [\"'\u2018\u201c]|"
+    r"tag (?:a|your) \w+|save this|shop now|order now|buy now|in the comments|scroll (?:if|down|to|for))\b", re.I)
+# A caption that opens on the order. A title may: its "Shop" is a noun.
+OPENS_ON_AN_ORDER = re.compile(
+    r"^(?:comment|dm|tag|follow|save|share|click|tap|swipe|subscribe|sign up|register|shop|order|buy|drop your|"
+    r"grab your|get your|check (?:out|the caption)|don['\u2019]?t miss|see (?:the )?link|link in)\b", re.I)
+# A first sentence that could sit under any picture.
+SAYS_NOTHING = re.compile(r"^(?:it['\u2019]?s that time|that time of (?:the )?year|came for\b|you know what (?:time|day)|"
+                          r"guess wh(?:at|o)\b|big news\b|we have news\b|the wait is over\b|here we go\b)", re.I)
+# What the kind call's `sad` can miss on a joke or a stray tag: it read past the
+# Onion's "ICE Agent..." and a comic's #maga on 2026-11-01.
+SAD_WORDS = re.compile(r"\b(?:ice agents?|ice raids?|trump|biden|maga|ballots?|election day|oval office|white house|"
+                       r"washington,? d\.?c\b\.?|congress|republicans?|democrats?|"
+                       r"rest in peace|rest easy|we mourn|passed away|diarrh?ea|vomit\w*)(?!\w)", re.I)
+# The same for a local post, which only an election makes unfit for the wall.
+ELECTION_WORDS = re.compile(r"\b(?:elections?|ballots?|voters?|candidates?|midterms?|early voting|get out the vote|go vote)\b", re.I)
+# Accounts whose caption is not about the picture: Dad Says Jokes opens every joke
+# on a paragraph of filler ("Star Wars became hugely popular..." under an ultrasound
+# gag) and a serial's caption is only its number. Their line comes from the picture.
+CAPTION_SAYS_NOTHING = {"dadsaysjokes", "shencomix"}
+WEEKDAY = r"(?:mon|tues|wednes|thurs|fri|satur|sun)(?:day)?"
+RELATIVE_DAY = re.compile(rf"\b(?:tonight|tonite|today|tomorrow|tmrw|yesterday|last night|this (?:{WEEKDAY}|morning|"
+                          rf"afternoon|evening|weekend|week|month)|next (?:{WEEKDAY}|week|weekend|month))\b", re.I)
+# A title stays up for days, so a day of the week is as relative as "tonight".
+# "every Thursday" and a name are not.
+NAMED_DAY = re.compile(r"\b(?:mon|tues|wednes|thurs|fri|satur|sun)day\b", re.I)
+A_NAME_NOT_A_DAY = re.compile(r"\b(?:every|black|cyber|super|good|ash|palm|easter|new music)\s+\w+day\b|"
+                              r"\b\w+day night (?:live|football|raw|baseball)\b|\bfriday the 13th\b", re.I)
+MONTH = (r"(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|"
+         r"oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)")
+MONTHS = "jan feb mar apr may jun jul aug sep oct nov dec".split()
+DAY_OF_MONTH = r"(\d{1,2})(?:st|nd|rd|th)?(?![\d/]|:\d)(?!\s*(?:am|pm)\b)"     # "Oct 30:" is a date, "Oct 3:30" is not
+# "Oct 23", "October 28-31", "Oct 26 to Nov 1", "Oct 29 and 30", "Thursday, October 29, 2026"
+NAMED_DATE = re.compile(rf"\b{MONTH}\b\.?\s+{DAY_OF_MONTH}(?:\s*(?:-|\u2013|\u2014|to|through|thru|and|&)\s*"
+                        rf"(?:{MONTH}\b\.?\s+)?{DAY_OF_MONTH})?(?:,?\s+(20\d\d)\b)?", re.I)
+# A bare 10/16 needs a weekday or the like in front of it: 3/4 is a cup and 10/10 a good dog.
+SLASH_DATE = re.compile(r"(?:\b(?:mon|tues?|wed(?:nes)?|thu(?:rs?)?|fri|sat(?:ur)?|sun)(?:day)?[.,!]*\s*\(?|\(|\bon\s+|"
+                        r"\b(?:tonight|today|only)\b[!:,\s-]*)(\d{1,2})/(\d{1,2})\b", re.I)
+FULL_DATE = re.compile(r"\b(\d{1,2})[-./](\d{1,2})[-./](20\d\d|2\d)\b")      # 10-31-2026, 10/29/26
+# A holiday is the date when nothing else gives one, and Thanksgiving's is worked out.
+HOLIDAYS = ((re.compile(r"\bhall\w*ween\b|\btrick[- ]or[- ]treat", re.I), 10, 31),
+            (re.compile(r"\bchristmas\b|\bxmas\b", re.I), 12, 25),
+            (re.compile(r"\bnew year['\u2019]?s eve\b|\bnye\b", re.I), 12, 31),
+            (re.compile(r"\bvalentine['\u2019]?s\b", re.I), 2, 14))
+THANKSGIVING = re.compile(r"\bthanksgiving\b", re.I)
+
+
+ROSTER_TEXT: str | None = None    # every handle, read once: see rostered()
+PLACE_WORDS = NOT_SURNAME - {"night", "day", "week", "show"}      # "Pam McDonald Day" is still Pam
+# title_guard reads a first name and a capitalized word as a person. These are
+# the ones that are not: "Ethan Allen Park", "the Seth Yacovone Band", "Penny
+# Cluse Cafe", and a few names that only ever mean a place, a brand or a job.
+NAMED_PLACE = re.compile(
+    r"\b[A-Z][\w\u2019'-]+\s+[A-Z][\w\u2019'-]+\s+(?:" + "|".join(sorted(w.title() for w in PLACE_WORDS)) + r"|"
+    r"Band|Trio|Quartet|Orchestra|Bakery|Bistro|Boutique|Brewing|Cafe|Collective|Company|Co|Coffee|Distillery|"
+    r"Foundation|Gallery|Grill|Homestead|Institute|Lounge|Museum|Orchard|Photography|Restaurant|Salon|Studio|"
+    r"Studios|Tavern|Vineyard|Vintage|Winery)\b(?!\s+(?:Manager|Owner|Director|Chef|Captain|Coordinator|Assistant|Lead)\b)")
+NOT_NEIGHBORS = re.compile(r"\b(?:Ethan Allen|Ira Allen|Elijah Craig|Norman Rockwell|Shirley Temple|Deputy Mayor)\b")
+# title_guard knows a list of first names, and Burlington's are not all on it. So
+# a full name is also read from how it is used: thanked, introduced, credited,
+# listed, or doing what a shop does not do. Two capitalized words alone prove
+# nothing here: half of Church Street reads that way, and a miss on a shop costs
+# its line. A first name alone is fine, except a customer's (FOR_SOMEONE).
+NAME_WORD = r"[A-Z\u00c0-\u00de][\w'\u2019-]*[a-z\u00df-\u00ff]"
+FULL_NAME = rf"({NAME_WORD})\s+({NAME_WORD})"
+CREDIT = (r"(?i:\b(?:meet|thanks? to|thank you|congrats(?: to)?|congratulations(?: to)?|shout ?outs? to|"
+          r"(?:art|work|photos?|words|led|hosted|taught|painted|made) by|runner|player|captain|student|teacher|barista|bartender)\s+)")
+CREDITED = re.compile(CREDIT + FULL_NAME + r"\b")
+ACTS_LIKE_A_PERSON = re.compile(FULL_NAME + r"\s+(?:(?:discuss|talk|retire|graduate|level|commit|recall|reflect)\w*\b|"
+                                r"[a-z]+\s+(?:her|his)\b)")
+LISTED = re.compile(rf"{NAME_WORD}\s+{NAME_WORD}(?:(?:,\s+|,?\s+and\s+){NAME_WORD}\s+{NAME_WORD}){{2,}}")   # two is a band bill
+LOWER_CREDITED = re.compile(r"(?i:\b(?:thanks? to|thank you|congrats(?: to)?|congratulations(?: to)?|shout ?outs? to|meet)\s+)"
+                            r"([a-z]+)\s+([a-z]+)\b")
+# A shop's customer goes by a first name, and that is still a neighbor: "Flying fish
+# for Oliver". A title can say what was made; a line ending on who it was for cannot.
+FOR_SOMEONE = re.compile(rf"\bfor\s+({NAME_WORD})(?:['\u2019]s\b.*)?\W*$")
+NOT_A_PERSON = PLACE_WORDS | ENGLISH | WANTS_OBJECT | set(
+    "our my your all everyone everybody team crew staff friends family club society league group union bank credit "
+    "brewers brewing brewery company consulting creative design designs media press records books bikes cycles farm "
+    "farms market foods food kitchen coffee tea wine cider beer spirits arts art music theatre theater dance community "
+    "city town county state vermont burlington winooski shelburne stowe montpelier williston essex middlebury "
+    "champlain green mountain mountains new old north south east west big little great good best santa claus "
+    "halloween christmas thanksgiving january february march april may june july august september october november "
+    "december monday tuesday wednesday thursday friday saturday sunday uvm".split())
+
+
+def is_english(text: str) -> bool:
+    """A cheap read of a caption's language: its script, then its small words.
+    Two of a foreign list's words, outnumbering the English ones, say it is
+    not; a plain noun phrase has neither and stands, and "Main Street" or "Big
+    Sur" is one word short of tripping it. Measured on the live payload's
+    French, German and Hindi-English accounts, 2026-11-01."""
+    letters = [ch for ch in text if ch.isalpha()]
+    if sum(ord(ch) > 0x24F for ch in letters) > 0.3 * len(letters):
+        return False
+    words = re.findall(r"[^\W\d_]+", text.lower())
+    foreign = sum(w in FOREIGN for w in words)
+    return foreign < 2 or sum(w in ENGLISH for w in words) >= foreign
+
+
+def unproved(line: str) -> bool:
+    """A line of bare minimum length with not one small English word: "Ek se
+    bhale do". A plain noun phrase lands here too, and all that costs is a title."""
+    words = re.findall(r"[^\W\d_]+", line.lower())
+    return len(words) <= SHORT_LINE_WORDS and not any(w in ENGLISH for w in words)
+
+
+def foreign_script(text: str) -> bool:
+    return any(ch.isalpha() and ord(ch) > 0x24F for ch in text)
+
+
+def first_sentence(text: str) -> str:
+    pos = 0
+    while True:
+        m = SENTENCE_END.search(text, pos)
+        if not m:
+            return text
+        word = re.search(r"[\w.]*$", text[:m.start()]).group(0).lower()
+        if m.group(0) != "." or not (word in NOT_THE_END or len(word) == 1 or INITIALS.fullmatch(word)):
+            return text[:m.end()]
+        pos = m.end()
+
+
+def plain_letters(text: str) -> str:
+    return "".join(unicodedata.normalize("NFKC", ch) if 0x1D400 <= ord(ch) <= 0x1D7FF else ch for ch in text)
+
+
+def cut_off(line: str) -> bool:
+    """A line that stops mid-thought: on a small word, on an abbreviation whose
+    full stop has gone, inside a bracket."""
+    last = re.sub(r"^\W+|\W+$", "", line.split()[-1]).lower()
+    return (last in DANGLES or last in WANTS_A_NAME or bool(INITIALS.fullmatch(last))
+            or line.count("(") != line.count(")") or line.count("[") != line.count("]"))
+
+
+def clean_caption(text: object) -> str:
+    """A caption's first sentence, as the line under its tile, or "" when the
+    post is a gap and the title step has to fill it. Free, and the first thing
+    any post meets.
+
+    Off come hashtags, @handles and emoji. Styled letters (\U0001D5DA\U0001D5EE\U0001D5FA\U0001D5F2)
+    become plain ones, and an emoji or a bullet ends a thought as a full stop
+    does, because a caption's line breaks are gone by the time it gets here.
+    It is a gap with under CP_CHARS[0] characters or CP_MIN_WORDS words left,
+    over CP_CHARS[1], in another language or another script, when it asks a
+    question or gives an order instead of saying what the post is, when it is
+    cut off, or when a tag leaves a hole: "We had a blast at
+    @thepipelineproject's event" cannot lose its handle and stay a sentence,
+    and "Proud to support #VermontFoodbank" cannot lose what it supports."""
+    if not isinstance(text, str):
+        return ""
+    t = HASHTAG.sub(f" {TAG_HOLE} ", HANDLE.sub(f" {AT_HOLE} ", plain_letters(text)))
+    if not is_english(t):
+        return ""
+    kept = []
+    for ch in t:
+        kind = unicodedata.category(ch)
+        if kind == "So" and ord(ch) >= 0x2300 or ch in "|\u2022\u00b7":
+            kept.append("\n")
+        elif kind not in ("Sk", "Cs", "Co", "Cf", "Me") and ch != "\ufe0f":
+            kept.append(ch)
+    part = next((p for p in "".join(kept).split("\n") if re.search(r"\w", p)), "")
+    line = first_sentence(" ".join(part.split()))
+    tail = re.search(rf"(\S+)[\s{TAG_HOLE}]*{TAG_HOLE}[\s{TAG_HOLE}]*[.!?\u2026]*$", line)
+    if tail and tail.group(1).lower() in WANTS_OBJECT or re.match(rf"[\s{TAG_HOLE}]*{TAG_HOLE}[\s{TAG_HOLE}]*[a-z]", line):
+        return ""
+    line = re.sub(rf"[\s{TAG_HOLE}]+(?=[.!?\u2026]*$)", "", line).lstrip(f" {TAG_HOLE}")
+    # a bilingual caption's label, a press office's
+    line = re.sub(r"^(?:EN:|\(news release\))\s*", "", line.strip(" ,:;-\u2013\u2014").rstrip(". "), flags=re.I)
+    if line.count("\u201c") != line.count("\u201d") or line.count('"') % 2:
+        line = line.strip('"\u201c\u201d')     # the quote ran on past the sentence
+    if AT_HOLE in line or TAG_HOLE in line or not CP_CHARS[0] <= len(line) <= CP_CHARS[1]:
+        return ""
+    if sum(any(ch.isalpha() for ch in w) for w in line.split()) < CP_MIN_WORDS or re.search(r"\?\W*$", line):
+        return ""
+    if cut_off(line) or OPENS_ON_AN_ORDER.search(line) or CALL_TO_ACTION.search(line) or SAYS_NOTHING.search(line):
+        return ""
+    if not is_english(line) or foreign_script(line) or unproved(line):
+        return ""
+    return line
+
+
+def is_ad(rec: dict) -> bool:
+    """Does the caption say it is paid for? The API's own flag is read in
+    post_record. Off a local account a discount code counts too; on one it is
+    a Burlington shop selling its own goods, or a venue's presale."""
+    cap = rec.get("c") or ""
+    return bool(AD_DECLARED.search(cap) or (rec.get("n") and AD_PLUGGED.search(cap)))
+
+
+def last_date(text: str, ts: float) -> dt.date | None:
+    """The latest date a line or a caption gives, read from the day of its post.
+    A date with no year is that year's, unless that puts it long before the post."""
+    posted = local_day(ts)
+    found = []
+
+    def add(month: int, day: int, year: int | None) -> None:
+        try:
+            date = dt.date(year or posted.year, month, day)
+        except ValueError:
+            return
+        if not year and date < posted - dt.timedelta(days=NEXT_YEAR_DAYS):
+            date = date.replace(year=date.year + 1)
+        found.append(date)
+
+    for m in NAMED_DATE.finditer(text):
+        first, day, second, end, year = m.groups()
+        add(MONTHS.index(first[:3].lower()) + 1, int(day), int(year) if year else None)
+        if end:
+            add(MONTHS.index((second or first)[:3].lower()) + 1, int(end), int(year) if year else None)
+    for m in SLASH_DATE.finditer(text):
+        add(int(m.group(1)), int(m.group(2)), None)
+    for m in FULL_DATE.finditer(text):
+        add(int(m.group(1)), int(m.group(2)), int(m.group(3)[-2:]) + 2000)
+    if not found:
+        for word, month, day in HOLIDAYS:
+            if word.search(text):
+                add(month, day, None)
+        if THANKSGIVING.search(text):
+            add(11, 22 + (3 - dt.date(posted.year, 11, 22).weekday()) % 7, None)
+    return max(found) if found else None
+
+
+def date_passed(text: str, rec: dict, now: float) -> bool:
+    last = last_date(text, rec.get("ts") or now)
+    return last is not None and last < local_day(now)
+
+
+def days_said(text: str) -> bool:
+    return bool(NAMED_DAY.search(A_NAME_NOT_A_DAY.sub(" ", text)))
+
+
+def caption_passed(rec: dict, now: float) -> bool:
+    """Has the day a local caption is about gone by? A date from before the post
+    is a memory and says nothing. National captions are not about a day here."""
+    cap, ts = rec.get("c") or "", rec.get("ts") or now
+    if rec.get("n"):
+        return False
+    last = last_date(cap, ts)
+    if last:
+        return local_day(ts) <= last < local_day(now)
+    return (bool(RELATIVE_DAY.search(cap)) and now - ts > STALE_S) or (days_said(cap) and now - ts > WEEK_S)
+
+
+def stale(line: str, rec: dict, now: float) -> bool:
+    """"Tonight at 5pm" stops being true the day after the post, "Friday" the
+    week after, and "Oct 23" on Oct 24."""
+    age = now - (rec.get("ts") or now)
+    return (bool(RELATIVE_DAY.search(line)) and age > STALE_S) or (days_said(line) and age > WEEK_S) or \
+        date_passed(line, rec, now)
+
+
+def still_ahead(rec: dict, now: float) -> bool:
+    """Does the caption give a date that has not come yet?"""
+    last = last_date(rec.get("c") or "", rec.get("ts") or now)
+    return last is not None and last >= local_day(now)
+
+
+def missing_date(line: str, rec: dict) -> bool:
+    """A poster's line that leaves out the date its caption gives."""
+    ts = rec.get("ts") or 0
+    return bool(line) and rec.get("kind") == "poster" and not last_date(line, ts) and \
+        last_date(rec.get("c") or "", ts) is not None
+
+
+def over(rec: dict, old: dict, now: float) -> bool:
+    """Has the event on this poster happened? Its line and caption together
+    give the last date, so a caption's "Oct 23 and Nov 6" stays up. With no date
+    at all, "this Friday" over a week ago is the same answer."""
+    if rec.get("kind") != "poster":
+        return False
+    words = " ".join(filter(None, (rec.get("hd"), old.get("hd"), rec.get("cp"), rec.get("c"))))
+    if last_date(words, rec.get("ts") or now):
+        return date_passed(words, rec, now)
+    return now - (rec.get("ts") or now) > WEEK_S and (bool(RELATIVE_DAY.search(words)) or days_said(words))
+
+
+def carried_line(rec: dict, old: dict | None, now: float | None = None) -> dict:
+    """What a gap already has from this post or the last payload: a title that
+    still passes today's checks, or `hx`. A title the rules have since turned
+    against is asked about again."""
+    old = old or {}
+    if old.get("ad"):
+        return {"ad": 1}
+    if old.get("gone"):
+        return {"gone": 1}
+    hd = rec.get("hd") or old.get("hd")
+    if hd:
+        settled = rec.get("hs") or old.get("hs")
+        if now is not None and not settled and caption_passed(rec, now):
+            return {}
+        hd = clean_hd(hd, bool(rec.get("n")), rec, now)
+        return ({"hd": hd, "hs": 1} if settled else {"hd": hd}) if hd else {}
+    return {"hx": 1} if rec.get("hx") or old.get("hx") else {}
+
+
+def mark_captions(posts: list[dict], prev_hd: dict | None = None, now: float | None = None) -> None:
+    """Sort every post, for nothing: `ad`, or `cp` and no model ever, or a gap
+    left for assign_titles. `c` stays as it is. A local line that names a
+    private person or gives a phone number is a gap too, so it gets the
+    title's rules, and so is any line whose "tonight" or "Oct 23" has passed:
+    its `cp` gives way to a title. A gap keeps what it was already given, so a
+    run cut short loses no title it has paid for. A poster whose event is over
+    is no gap: it gets `gone` and no line."""
+    now = time.time() if now is None else now
+    for rec in posts:
+        old = (prev_hd or {}).get(post_key(rec)) or {}
+        words = " ".join(filter(None, (rec.get("c"), rec.get("hd"), old.get("hd"))))
+        if rec.get("ad") or old.get("ad") or is_ad(rec):
+            rec["ad"] = 1
+            line = ""
+        elif rec.get("gone") or old.get("gone") or over(rec, old, now):
+            rec["gone"] = 1
+            line = ""
+        else:
+            line = "" if rec.get("h") in CAPTION_SAYS_NOTHING else clean_caption(rec.get("c"))
+            if (stale(line, rec, now) or caption_passed(rec, now) or missing_date(line, rec)
+                    or (not rec.get("n") and (names_private(line, rec) or CONTACT.search(line)))):
+                line = ""
+        if line:
+            rec["cp"] = line
+        else:
+            rec.pop("cp", None)
+        if not rec.get("n"):
+            sad = ELECTION_WORDS.search(words)
+        else:
+            sad = rec.get("t") and SAD_WORDS.search(words)
+        if sad:
+            rec["sad"] = 1
+        kept = {} if line or rec.get("ad") or rec.get("gone") else carried_line(rec, old, now)
+        rec.pop("hd", None)
+        rec.pop("hx", None)
+        rec.pop("hs", None)
+        rec.update(kept)
+
+
+# ------------------------------------------------------------------- title
+
+HD_RULES = """You write the short line shown under a picture in a phone app's grid. Videos
+there do not play by themselves, so this line is how a reader knows what the post is.
+
+Each post comes as a line, code · account name · national or Burlington · reel or photo ·
+the day it was posted · caption, and then its picture. A caption's "today" or "this
+Friday" counts from the day it was posted. Answer for every post, repeating its code exactly. The
+account name is exact: write it as given, or leave it out. An account shown as "unnamed"
+has no name you can use.
+
+title: what the post is, 3 to 8 plain English words, in sentence case. Count them: nine
+words is too many, and a title that long is thrown away.
+- Say only what the caption says or the picture plainly shows, and check each against the
+  other. Words printed in the picture count. Good: "Beagle steals a sandwich off the
+  counter", "Jazz trio plays Radio Bean Oct 23", "Renter paints a checkerboard kitchen floor".
+- Never guess. A caption of a word or two, emoji or bare tags on a picture with no clear
+  subject gets an empty string. "nap" under a sleeping cat is "Cat asleep on a sunny
+  windowsill"; "nap" under a picture you cannot make out is an empty string.
+- Get the who right. Do not swap an owner and a pet, do not take a tagged sponsor for a
+  place, and copy a name letter for letter or leave it out. With two subjects, give each
+  only what you can see on it: do not hand the baby's costume to the dog. Do not say how
+  two people are related unless the caption does. On a joke, say what the picture shows,
+  not what the caption chats about.
+- No relative days and no days of the week: no tonight, tomorrow, this Saturday, next week
+  or Thursday, because the line stays up for days. Give a date only as the caption gives it
+  ("Oct 23"), and never work out a weekday from it. A habit is fine: "every Thursday".
+  Today's date comes after the posts, and a date or a holiday that has passed never goes in
+  a title. A post that only announces something now over, a show, a sale, a market day or a
+  closure, gets an empty string; one with something still worth seeing, a sunset or a band,
+  says that, undated, and never as if it were still to come. A poster's title gives its date.
+- A fact, never a sales line, a question or an order. No "don't miss", "shop now", "you'll love".
+- A whole phrase: never stop on a word like "for", "a" or "next".
+- No hashtags, emoji, @handles or quotation marks, and no period at the end.
+- Translate anything not in English, by what it means in that language.
+- No private person's full name. A first name, a job ("the new chef"), a pet's name or a
+  public figure's name is fine, but never a customer's: "Flying fish tattoo", not "for Oliver".
+- Nothing about a sick stomach, vomit or diarrhea, and an empty string if that is all there is.
+- A joke, a greeting or a question still has a subject, so say it plainly: "Beagle begs
+  the moment dinner sits down", "Jax the Lab says happy birthday".
+
+ad: true for a paid partnership, a sponsored or gifted post, a discount code or an
+affiliate link, or a post that is mostly selling a product, the account's own merch,
+courses and books included. "Presented by" a brand, "Buy ... NOW" at a site and thanks to
+a clothing label for an outfit are ads. An ad's title is an empty string. Judge the post
+by what it is mostly about: a recipe or a clip with one plug at the end is not an ad. A
+Burlington business saying what it has on (the special, a new batch, a show, the week's
+rack) is news for its neighbors, not an ad."""
+
+HD_AGAIN = """
+
+Each of these came back with a title that broke a rule: too long, cut off, a question, a
+private person's name, a phone number, a relative day or a date or holiday that has passed. Write it
+again: 6 words at most, no day of the week, a date only if it is still to come, with the
+person's job or group instead of their name. Something still to come is still worth a title."""
+
+HD_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["items"],
+             "properties": {"items": {"type": "array", "items": {
+                 "type": "object", "additionalProperties": False, "required": ["code", "title", "ad"],
+                 "properties": {"code": {"type": "string"}, "title": {"type": "string"},
+                                "ad": {"type": "boolean"}}}}}}
+
+
+def hd_code(rec: dict) -> str:
+    """The name a post goes by in a title call, from its identity, not its place."""
+    return f"{zlib.crc32(post_key(rec).encode()):08x}"
+
+
+def hd_line(code: str, rec: dict) -> str:
+    """One post for a title call. The account goes by its name and never its
+    handle, which a model will split into a business that does not exist
+    (@barkeatersvt came back as "Bar Eaters")."""
+    day = local_day(rec["ts"]) if rec.get("ts") else None
+    posted = f"posted {day:%b} {day.day}" if day else "posted when unknown"
+    return (f"{code} · {rec.get('nm') or 'unnamed'} · {'national' if rec.get('n') else 'Burlington'} · "
+            f"{'reel' if rec.get('v') else 'photo'} · {posted} · {(rec.get('c') or '(no caption)')[:HD_CAPTION_CHARS]}")
+
+
+def title_content(batch: dict[str, dict], pics: dict[str, tuple[str, str]], note: str) -> list[dict]:
+    """A title call: each post's line and then its picture, so nothing depends
+    on the model counting pictures."""
+    content: list[dict] = []
+    for code, rec in batch.items():
+        content.append({"type": "text", "text": hd_line(code, rec)})
+        content.append({"type": "image", "source": {"type": "base64", "media_type": pics[code][0], "data": pics[code][1]}})
+    content.append({"type": "text", "text": f"Give the title of each of the {len(batch)} posts." + note})
+    return content
+
+
+def rostered(words: str) -> bool:
+    """Is this the name in one of our own accounts' handles? "Stay Gold" is
+    @staygoldvintage, and no list of shop words would know it."""
+    global ROSTER_TEXT
+    if ROSTER_TEXT is None:
+        try:
+            doc = json.loads(ROSTER.read_text(encoding="utf-8"))
+            ROSTER_TEXT = " ".join(re.sub(r"[._]", "", norm_handle(a.get("h")))
+                                   for a in doc.get("accounts") or [] if isinstance(a, dict))
+        except (OSError, ValueError, AttributeError):
+            ROSTER_TEXT = ""
+    return re.sub(r"\W", "", words).lower() in ROSTER_TEXT
+
+
+def a_person(first: str, last: str) -> bool:
+    return not ({first.lower(), last.lower()} & NOT_A_PERSON or rostered(first + last))
+
+
+def names_by_use(text: str) -> bool:
+    """A full name read from how the line uses it, whatever the first name."""
+    pairs = [m.groups() for pat in (CREDITED, ACTS_LIKE_A_PERSON) for m in pat.finditer(text)]
+    for m in LISTED.finditer(text):
+        names = [g.groups() for g in re.finditer(FULL_NAME, m.group(0))]
+        if all(a_person(*n) for n in names):
+            return True
+    someone = FOR_SOMEONE.search(text)
+    return any(a_person(*p) for p in pairs) or bool(someone and a_person(someone.group(1), "")) or any(
+        m.group(1).lower() in FIRST and a_person(*m.groups()) for m in LOWER_CREDITED.finditer(text))
+
+
+def names_private(text: str, rec: dict | None = None) -> bool:
+    """names_person, less what only looks like a neighbor (the account's own
+    name, a name on a place or a business), plus names_by_use."""
+    for own in ((rec or {}).get("nm"),):
+        text = text.replace(own, " ") if own else text
+    return names_by_use(text) or names_person(NAMED_PLACE.sub(" ", NOT_NEIGHBORS.sub(" ", text)))
+
+
+def clean_hd(raw: object, national: bool, rec: dict | None = None, now: float | None = None) -> str | None:
+    """A title the code will put in front of a reader, or None. The model is
+    told every one of these; this is what holds if it forgets. A local post
+    gets the same name check as a local account: the national feeds are full
+    of public figures, and the check cannot tell them from a neighbor."""
+    t = " ".join(str(raw or "").split()).rstrip(".!")
+    if not HD_WORDS[0] <= len(t.split()) <= HD_WORDS[1]:
+        return None
+    if re.search(r"[#@\"“”?]", t) or t[0].islower() or t.isupper() or cut_off(t) or CONTACT.search(t):
+        return None
+    if RELATIVE_DAY.search(t) or NAMED_DAY.search(A_NAME_NOT_A_DAY.sub(" ", t)) or CALL_TO_ACTION.search(t):
+        return None
+    if any(unicodedata.category(ch) in ("So", "Sk", "Cs", "Co", "Cf") for ch in t):
+        return None
+    if now is not None and date_passed(t, rec or {}, now):
+        return None
+    return None if not national and names_private(t, rec) else t
+
+
+def read_hd(raw: object, batch: dict[str, dict], last: bool = True, now: float | None = None) -> dict[str, dict]:
+    """The model's answer -> {code: fields}, for the posts of `batch` (by
+    code) it really answered. A code outside the batch, or one given twice,
+    says the model lost its place, so nothing under it counts and those posts
+    wait for the next run. A title that breaks the rules is still an answer
+    for that post: empty fields ask for another try, and on the `last` try it
+    gets `hx` and is not paid for again."""
+    items = [e for e in (raw if isinstance(raw, list) else []) if isinstance(e, dict)]
+    said = [e.get("code") for e in items]
+    out = {}
+    for e in items:
+        code = e.get("code")
+        if not isinstance(code, str) or code not in batch or said.count(code) > 1:
+            continue
+        # An ad's title is empty, so an ad with a title is a model hedging. And
+        # a local shop selling its own goods is news.
+        if e.get("ad") is True and batch[code].get("n") and not e.get("title"):
+            out[code] = {"ad": 1}
+            continue
+        hd = clean_hd(e.get("title"), bool(batch[code].get("n")), batch[code], now)
+        if hd:
+            out[code] = {"hd": hd}
+            if now is not None and caption_passed(batch[code], now):
+                out[code]["hs"] = 1
+        elif now is not None and still_ahead(batch[code], now):
+            out[code] = {}          # no title for an event still to come is a slip: asked again, next run if need be
+        else:
+            out[code] = {"hx": 1} if last or not e.get("title") else {}
+    return out
+
+
+def assign_titles(posts: list[dict], prev_hd: dict, ledger: dict | None, now: float) -> dict:
+    """Give every gap its `hd`, `ad` or `hx`. Returns what the run did and
+    spent. A post with a `cp` or an `ad` is no gap and never gets here; a gap
+    keeps what it has, or what it had in the last payload (`prev_hd`, by
+    post_key); a rostered post that also tags the Brief is asked about once
+    and both copies get the answer. The model reads the caption and looks at
+    the picture: a post whose thumbnail will not download waits for the next
+    run rather than have its title guessed from the words alone."""
+    todo, twins = [], {}
+    for rec in posts:
+        if rec.get("cp") or rec.get("ad") or rec.get("gone"):
+            continue
+        k = post_key(rec)
+        known = carried_line(rec, prev_hd.get(k), now)
+        if known:
+            rec.update(known)
+        else:
+            if k not in twins:
+                twins[k] = []
+                todo.append(rec)
+            twins[k].append(rec)
+    report = {"asked": 0, "decided": 0, "no_picture": 0, "in": 0, "out": 0, "usd": 0.0}
+    if not todo:
+        return report
+    try:
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+        import wire_common as wc
+    except Exception as e:
+        log(f"title: wire_common unavailable ({str(e)[:60]}); {len(todo)} post(s) wait")
+        return report
+    engine = wc.pick_engine("title")
+    if engine is None:
+        log(f"title: no Anthropic key; {len(todo)} post(s) wait")
+        return report
+    usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
+    cap = AI_MONTH_CAP_USD - HD_LEAVES_USD
+    started = time.monotonic()
+    queue, note, stopped = todo, "", False
+    day = local_day(now)
+    today = f" Today is {day:%b} {day.day}, {day.year}."
+    pics: dict[str, tuple[str, str]] = {}
+
+    def settle(rec, fields):
+        report["decided"] += 1
+        for twin in twins[post_key(rec)]:
+            twin.update(fields)
+
+    try:
+        for last in (False, True):
+            again = []
+            shards = [queue[i:i + HD_BATCH] for i in range(0, len(queue), HD_BATCH)]
+            while shards:
+                shard = shards.pop(0)
+                spent = ai_spent(ledger, now) + wc.cost_usd(engine["model"], usage)
+                if spent >= cap or time.monotonic() - started > HD_TIME_S:
+                    log(f"title: stopped at ${spent:.2f} after {time.monotonic() - started:.0f}s "
+                        f"(cap ${cap:.2f}, {HD_TIME_S}s); {len(shard) + sum(map(len, shards))} post(s) wait")
+                    stopped = True
+                    break
+                batch = {}
+                for rec in shard:
+                    code = hd_code(rec)
+                    if code not in pics and time.monotonic() - started <= HD_TIME_S:
+                        pic = fetch_thumb(rec.get("i") or "")
+                        if pic:
+                            pics[code] = pic
+                        else:
+                            report["no_picture"] += 1
+                    if code in pics:
+                        batch[code] = rec
+                if not batch:
+                    continue
+                try:
+                    answer, got = wc.ask_json(engine, HD_RULES, title_content(batch, pics, today + note), HD_SCHEMA,
+                                              max_tokens=HD_TOKENS_EACH * len(batch) + 500,
+                                              log_prefix="title", timeout=MODEL_TIMEOUT_S)
+                except Exception as e:  # noqa: BLE001 — SDK missing, network, a bad answer
+                    got = getattr(e, "usage", {}) or {}
+                    answer = None
+                    log(f"title: call failed ({str(e)[:80]})")
+                    for k in usage:
+                        usage[k] += got.get(k, 0)
+                    if not got.get("calls"):        # no answer at all: the model is out, and every post waits
+                        stopped = True
+                        break
+                    # It answered and the answer was no use, so one post is
+                    # choking the batch. Halve until that post is alone: it
+                    # gets `hx`, and the rest get their titles.
+                    if len(batch) > 1:
+                        recs = list(batch.values())
+                        shards[:0] = [recs[:len(recs) // 2], recs[len(recs) // 2:]]
+                    else:
+                        settle(shard[0], {"hx": 1})
+                    continue
+                for k in usage:
+                    usage[k] += got.get(k, 0)
+                report["asked"] += len(batch)
+                decided = read_hd(answer.get("items") if isinstance(answer, dict) else None, batch, last, now)
+                for code, fields in decided.items():
+                    if fields:
+                        settle(batch[code], fields)
+                    else:
+                        again.append(batch[code])
+            if stopped:
+                break
+            queue, note = again, HD_AGAIN
+    finally:
+        # However the calls ended: SIGTERM must not lose what has been paid for.
+        usd = wc.cost_usd(engine["model"], usage)
+        report.update({"in": usage["in"], "out": usage["out"], "usd": usd})
+        if ledger is not None and (usage["calls"] or usage["in"]):
+            record_ai(ledger, now, {"model": engine["model"], "asked": report["asked"], "in": usage["in"],
+                                    "out": usage["out"], "usd": round(usd, 6)}, usd)
+        log(f"title: {report['decided']} of {report['asked']} asked decided, {len(todo)} wanted, "
+            f"{report['no_picture']} with no picture · {usage['in']:,} in / {usage['out']:,} out tokens · "
+            f"${usd:.4f} this run")
     return report
 
 
@@ -907,6 +1782,8 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
             raise ValueError(f"month is {doc.get('month')!r}")
         runs = [r for r in (doc.get("runs") or []) if isinstance(r, dict)]
         out = {"month": month, "spent": spent, "last": last, "runs": runs}
+        names = doc.get("names") if isinstance(doc.get("names"), dict) else {}
+        out["names"] = {norm_handle(h): n for h, n in names.items() if n and isinstance(n, str)}
         ai = doc.get("ai")
         if (isinstance(ai, dict) and ai.get("month") == month
                 and isinstance(ai.get("usd"), (int, float)) and not isinstance(ai.get("usd"), bool)):
@@ -970,7 +1847,11 @@ def plan(accounts: list[dict], last: dict, now: float, credits: int,
 
     t1 = oldest_first(a for a in accounts if a["tier"] == 1)
     t2 = oldest_first(a for a in accounts if a["tier"] == 2 and day_of(a["h"]) != today)
-    t3_all = [a for a in accounts if a["tier"] == 3]
+    t3_all = [a for a in accounts if a["tier"] == 3 and not a.get("interest")]
+    fed = [a for a in accounts if a["tier"] == 3 and a.get("interest")]
+    room_fed = max(0, math.ceil(len(fed) / INTEREST_PERIOD_DAYS) - sum(1 for a in fed if day_of(a["h"]) == today))
+    due_fed = oldest_first(a for a in fed if day_of(a["h"]) is None
+                           or (today - day_of(a["h"])).days >= INTEREST_PERIOD_DAYS)[:room_fed]
     taken_today = sum(1 for a in t3_all if day_of(a["h"]) == today)
     room3 = max(0, tier3_quota(len(t3_all)) - taken_today)
     due3 = oldest_first(a for a in t3_all
@@ -979,7 +1860,7 @@ def plan(accounts: list[dict], last: dict, now: float, credits: int,
 
     left = max(0, credits)
     picked, skipped, want_tagged = [], [], False
-    for group in (t1, ["tagged"] if tagged else [], t2, due3):
+    for group in (t1, ["tagged"] if tagged else [], t2, due_fed, due3):
         for a in group:
             if left <= 0:
                 skipped.append("tagged" if a == "tagged" else a["h"])
@@ -995,7 +1876,9 @@ def plan(accounts: list[dict], last: dict, now: float, credits: int,
 def projection(accounts: list[dict], tagged: bool = True) -> dict:
     """Steady-state cost of a roster: credits a day and a 31-day month."""
     n = {t: sum(1 for a in accounts if a["tier"] == t) for t in TIERS}
-    day = RUNS_PER_DAY * (n[1] + (1 if tagged else 0)) + n[2] + tier3_quota(n[3])
+    fed = sum(1 for a in accounts if a["tier"] == 3 and a.get("interest"))
+    day = (RUNS_PER_DAY * (n[1] + (1 if tagged else 0)) + n[2] + tier3_quota(n[3] - fed)
+           + math.ceil(fed / INTEREST_PERIOD_DAYS))
     return {"tiers": n, "per_day": day, "per_month": day * 31}
 
 
@@ -1005,14 +1888,17 @@ def save_ledger(path: pathlib.Path, ledger: dict) -> None:
         "_comment": "Written by scripts/build_instagram.py; read back by it. "
                     "spent = Scrape Creators credits this builder spent this "
                     "Burlington month (one per request, failures included). "
-                    "last = when each account was last requested. Do not "
-                    "hand-edit spent downward.",
+                    "last = when each account was last requested. names = "
+                    "each account's own profile name. Do not hand-edit spent "
+                    "downward.",
         "month": ledger["month"],
         "budget": MONTHLY_CREDIT_BUDGET,
         "spent": ledger["spent"],
         "runs": ledger["runs"][-62:],
         "last": dict(sorted(ledger["last"].items())),
     }
+    if ledger.get("names"):
+        doc["names"] = dict(sorted(ledger["names"].items()))
     if ledger.get("pending"):
         doc["pending"] = ledger["pending"]
     if ledger.get("ai"):
@@ -1021,6 +1907,54 @@ def save_ledger(path: pathlib.Path, ledger: dict) -> None:
 
 
 # -------------------------------------------------------------------- main
+
+def payload_counts(posts: list[dict]) -> dict:
+    """The payload's top-level numbers, always counted from the posts it ships."""
+    segs = ("do", "see", "tagged")
+    return {
+        # Accounts represented in THIS payload, not the whole roster.
+        "handles": sorted({p["h"] for p in posts}),
+        "segments": {s: {"posts": sum(1 for r in posts if r["s"] == s),
+                         "accounts": len({r["h"] for r in posts if r["s"] == s})} for s in segs},
+        "categories": {c: sum(1 for r in posts if r.get("category") == c) for c in CATEGORIES},
+        # What the pictures are (`kind` on each post); `kd` marks a post still
+        # on its category's default, to be judged next run.
+        "kinds": {k: sum(1 for r in posts if r.get("kind") == k) for k in KINDS},
+        "kinds_defaulted": sum(1 for r in posts if r.get("kd")),
+        # Posts with a line for their tile, their own or a model's; the ones
+        # marked as ads, and the ones the fun feeds leave out.
+        "captioned": sum(1 for r in posts if r.get("cp")),
+        "titled": sum(1 for r in posts if r.get("hd")),
+        "ads": sum(1 for r in posts if r.get("ad")),
+        "sad": sum(1 for r in posts if r.get("sad")),
+        # Posts that carry a playable MP4 right now, and the food-tagged ones.
+        "videos": sum(1 for r in posts if r.get("vu")),
+        "food": sum(1 for r in posts if r.get("f")),
+        "national": sum(1 for r in posts if r.get("n")),
+    }
+
+
+def payload(posts: list[dict]) -> dict:
+    """The file: what the page shows in `posts`, and in `held` what it must not
+    but the next run has to remember. A post the build gave no line goes out
+    without its caption, or the page would make a line of it."""
+    for rec in posts:
+        if rec.get("hx"):
+            rec.pop("c", None)
+    held = [r for r in posts if r.get("sad") or r.get("gone")]
+    shown = [r for r in posts if not (r.get("sad") or r.get("gone"))]
+    return {
+        "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        # These URLs stop working, and saying when is better than showing a
+        # grid of broken frames. Measured at 4.3-4.5 days.
+        "expires_hint_days": 4,
+        **payload_counts(shown),
+        "sad": sum(1 for r in held if r.get("sad")),
+        "gone": sum(1 for r in held if r.get("gone")),
+        "posts": shown,
+        "held": held,
+    }
+
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -1228,7 +2162,13 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     seg_of = {a["h"]: a["s"] for a in accounts}
     food = {a["h"] for a in accounts if a["food"]}
     national = {a["h"] for a in accounts if a["national"]}
+    interest = {a["h"]: a["interest"] for a in accounts if a["interest"]}
+    breed = {a["h"]: a["breed"] for a in accounts if a["breed"]}
+    known = {h: n for h, n in ((h, clean_name(n)) for h, n in ((ledger or {}).get("names") or {}).items())
+             if n and h in cat_of}
+    names = dict(known)
     cutoff = now - KEEP_DAYS * 86400
+    fed_cutoff = now - INTEREST_KEEP_DAYS * 86400
 
     # Read the previous payload. Which of its posts we KEEP is decided after
     # the scrape, not before: a handle scheduled for today whose request fails
@@ -1239,8 +2179,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     if not args.no_carry and out_path.exists():
         try:
             prev = json.loads(out_path.read_text(encoding="utf-8"))
-            got = prev.get("posts")
-            prev_posts = got if isinstance(got, list) else []
+            prev_posts = [r for f in ("posts", "held") if isinstance(prev.get(f), list) for r in prev[f]]
         except Exception as e:
             log(f"could not read the previous payload ({str(e)[:60]}) — "
                 f"building from this run alone")
@@ -1273,12 +2212,15 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
             # It answered. Even an empty list is an answer — the account posted
             # nothing recent — so its stale posts are now genuinely stale.
             answered.add(h)
+            name = own_name(h, items, a["national"])
+            if name:
+                names[h] = name
             kept = 0
             for it in items:
                 if kept >= POSTS_PER_HANDLE:
                     break
-                rec = post_record(h, it, cutoff, now)
-                if not rec:
+                rec = post_record(h, it, fed_cutoff if a.get("interest") else cutoff, now, a["national"])
+                if not rec or (a.get("breed") and merch_post(rec)):
                     continue
                 fresh.append(rec)
                 kept += 1
@@ -1302,7 +2244,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     if want_tagged:
         try:
             for it in fetch_tagged(key):
-                rec = tagged_record(it, tagged_cutoff, now)
+                rec = tagged_record(it, tagged_cutoff, now, norm_handle((it.get("user") or {}).get("username")) in national)
                 if rec and rec["h"] not in block:
                     tagged.append(rec)
             tagged_ok = True
@@ -1329,7 +2271,9 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
             continue            # today's fetch replaces it wholesale
         if h not in cat_of:
             continue            # dropped from the roster since that run
-        if not carry_ok(rec, now, cutoff):
+        if not carry_ok(rec, now, fed_cutoff if h in interest else cutoff):
+            continue
+        if h in breed and merch_post(rec):
             continue
         carried.append(rec if video_ok(rec, now) else drop_video(rec))
 
@@ -1350,6 +2294,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     # Stamp segment, category and the food flag on every record, carried ones
     # included: the payload follows the roster as it is now, not the copy of
     # it that was current when the post was first seen.
+    shown = {**names, **{a["h"]: a["name"] for a in accounts if a["name"]}}
     by_key = {}
     for rec in carried + fresh:
         rec["s"] = seg_of.get(rec["h"], "do")
@@ -1362,6 +2307,12 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
             rec["n"] = 1
         else:
             rec.pop("n", None)
+        for field, value in (("t", interest.get(rec["h"])), ("br", breed.get(rec["h"])),
+                             ("nm", shown.get(rec["h"]))):
+            if value:
+                rec[field] = value
+            else:
+                rec.pop(field, None)
         # A post URL identifies a post. The account URL does not — it is the
         # fallback for a post with no shortcode, and keying on it would fold
         # every shortcode-less post from that handle into one.
@@ -1391,47 +2342,58 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     prev_kinds = {post_key(r): r["kind"] for r in prev_posts
                   if isinstance(r, dict) and r.get("kind") in KINDS and not r.get("kd")}
     before = ai_spent(ledger, now)
+    if ledger is not None:
+        ledger["names"] = names
+    # The line under each tile, the same way: decided once and carried.
+    prev_hd = {post_key(r): {f: r[f] for f in HD_FIELDS if r.get(f)} for r in prev_posts
+               if isinstance(r, dict) and any(r.get(f) for f in HD_FIELDS)}
+
+    # A post is judged once, so a kept kind keeps what was said with it.
+    prev_sad = {post_key(r) for r in prev_posts if isinstance(r, dict) and r.get("sad")}
+    for rec in posts:
+        if post_key(rec) in prev_sad:
+            rec["sad"] = 1
+
+    # From here the posts are paid for, so the step's timeout must not lose
+    # them: SIGTERM ends the model calls and the payload is still written.
+    def _stop(signum, frame):
+        raise Stopped()
+    old_stop = None
     try:
-        assign_kinds(posts, prev_kinds, load_hints(accounts), ledger, now,
-                     look=not getattr(args, "no_look", False))
-    except Exception as e:  # noqa: BLE001 — a kind is never worth the payload
-        log(f"kind: classification failed ({type(e).__name__}); unjudged posts keep their category's kind")
-        for rec in posts:
-            if rec.get("kind") not in KINDS:
-                rec["kind"] = KIND_OF_CATEGORY.get(rec.get("category"), "other")
-                rec["kd"] = 1
-    if ledger is not None and ledger_path is not None and ai_spent(ledger, now) != before:
+        old_stop = signal.signal(signal.SIGTERM, _stop)
+    except ValueError:
+        pass                    # not the main thread (a test harness)
+    try:
+        try:
+            assign_kinds(posts, prev_kinds, load_hints(accounts), ledger, now,
+                         look=not getattr(args, "no_look", False))
+        except Exception as e:  # noqa: BLE001 — a kind is never worth the payload
+            log(f"kind: classification failed ({type(e).__name__}); unjudged posts keep their category's kind")
+        mark_captions(posts, prev_hd, now)
+        try:
+            assign_titles(posts, prev_hd, ledger, now)
+        except Exception as e:  # noqa: BLE001 — a title is never worth the payload
+            log(f"title: failed ({type(e).__name__}); unjudged posts wait for the next run")
+    except Stopped:
+        log("the step's timeout came during the model calls; writing what this run has")
+        mark_captions(posts, prev_hd, now)
+    finally:
+        if old_stop is not None:
+            signal.signal(signal.SIGTERM, old_stop)
+    for rec in posts:
+        if rec.get("kind") not in KINDS:
+            rec["kind"] = KIND_OF_CATEGORY.get(rec.get("category"), "other")
+            rec["kd"] = 1
+    if (ledger is not None and ledger_path is not None
+            and (ai_spent(ledger, now) != before or names != known)):
         save_ledger(ledger_path, ledger)
 
-    segs = ("do", "see", "tagged")
-    counts = {s: sum(1 for r in posts if r["s"] == s) for s in segs}
-    accts = {s: len({r["h"] for r in posts if r["s"] == s}) for s in segs}
-    cats = {c: sum(1 for r in posts if r.get("category") == c) for c in CATEGORIES}
-    kinds = {k: sum(1 for r in posts if r.get("kind") == k) for k in KINDS}
-
-    out = {
-        "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        # These URLs stop working, and saying when is better than showing a
-        # grid of broken frames. Measured at 4.3-4.5 days.
-        "expires_hint_days": 4,
-        # Accounts represented in THIS payload, not the whole roster.
-        "handles": sorted({p["h"] for p in posts}),
-        "segments": {s: {"posts": counts[s], "accounts": accts[s]} for s in segs},
-        "categories": cats,
-        # What the pictures are (`kind` on each post); `kd` marks a post still
-        # on its category's default, to be judged next run.
-        "kinds": kinds,
-        "kinds_defaulted": sum(1 for r in posts if r.get("kd")),
-        # Posts that carry a playable MP4 right now, and the food-tagged ones.
-        "videos": sum(1 for r in posts if r.get("vu")),
-        "food": sum(1 for r in posts if r.get("f")),
-        "national": sum(1 for r in posts if r.get("n")),
-        "posts": posts,
-    }
+    out = payload(posts)
+    cats, kinds = out["categories"], out["kinds"]
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
-    log(f"wrote {out_path}  {len(posts)} posts from {len(out['handles'])} accounts · "
+    log(f"wrote {out_path}  {len(out['posts'])} posts, {len(out['held'])} held, from {len(out['handles'])} accounts · "
         + " · ".join(f"{c} {n}" for c, n in cats.items() if n)
         + " · kinds " + " ".join(f"{k} {n}" for k, n in kinds.items() if n)
         + f" · {out['videos']} with video, {out['food']} food · "

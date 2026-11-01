@@ -478,7 +478,7 @@ def photo_tiles(instagram, now):
             continue
         per[p["h"]] = per.get(p["h"], 0) + 1
         out.append({"id": "photo-" + _post_id(p), "kind": "photo", "ts": _post_time(p).isoformat(timespec="seconds"),
-                    "title": "@" + p["h"], "pic": p["i"], "url": p["u"]})
+                    "title": p.get("nm") or "@" + p["h"], "pic": p["i"], "url": p["u"]})
     return out[:MAX_PHOTOS]
 
 
