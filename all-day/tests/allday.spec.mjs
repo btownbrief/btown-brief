@@ -13860,7 +13860,9 @@ async function sectionPills(browser, base) {
       const onBg = await page.$eval('#subnav .secpill .chip.on', (b) => getComputedStyle(b).backgroundColor);
       check(/rgba\(0, 0, 0, 0\)|transparent/.test(onBg), tab + ': the canvas carries the colour, not the button', onBg);
       seen.set(tab, look.tone.toUpperCase());
-      /* floating: scrolled down, it stays at the top, settled smaller */
+      /* floating: scrolled down, it stays at the top, settled smaller. A first
+         visit to Habits is shorter than the phone, so it is given the length. */
+      await page.evaluate((sel) => { const n = document.querySelector(sel); const pad = document.createElement('div'); pad.style.height = '1600px'; n.appendChild(pad); }, panelSel(tab));
       for (let i = 0; i < 6; i++) { await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, 200), panelSel(tab)); await page.waitForTimeout(70); }
       await page.waitForTimeout(500);
       const fl = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'); const r = w.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, away: document.body.classList.contains('chrome-away'), small: document.body.classList.contains('pill-small'), t: getComputedStyle(w).transform }; });
