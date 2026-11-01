@@ -359,7 +359,8 @@ def shape_reddit(posts):
             flair = m.group(1)
         title = p["title"][m.end():] if m and finds.clean(flair, 24).lower() == m.group(1).lower() else p["title"]
         out.append({"id": p["id"], "t": finds.clean(title, 200), "url": p["url"], "out": p.get("out") or "",
-                    "flair": finds.clean(flair, 24) if flair else "", "score": p.get("score"), "comments": p.get("comments")})
+                    "flair": finds.clean(flair, 24) if flair else "", "score": p.get("score"), "comments": p.get("comments"),
+                    "at": int(p["created"].timestamp()) if p.get("created") else 0})
         if len(out) >= REDDIT_N:
             break
     return out

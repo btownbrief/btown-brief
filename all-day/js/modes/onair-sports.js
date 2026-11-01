@@ -19,7 +19,7 @@
        From X      Grok's Sports recap bullets for the league, read from the
                    Wire's own wire-today.json (never a second pipeline);
                    credited to X, never "AI"
-       On Reddit   r/nba or r/nfl, the day's top posts
+       On Reddit   r/nba or r/nfl, the latest list of top posts, each dated
        Headlines   the Wire's sports lane for the league
      Local hoops
        UVM basketball (men's and women's next games and last results), the
@@ -241,7 +241,7 @@ function drawReddit(host, S, lg) {
   ctx.sec(host, 'On r/' + lg, '', 'sp-reddit');
   ctx.openable(host, 'sp:' + lg + ':reddit', 'r/' + lg, list, SHOW.reddit, (p) => linkRow({
     url: p.url, text: p.t, tag: p.flair || '', out: https(p.out) ? p.out : '',
-    meta: [Number.isInteger(p.score) ? big(p.score) + ' upvotes' : '', Number.isInteger(p.comments) ? big(p.comments) + ' comments' : ''].filter(Boolean).join(' · '),
+    meta: [Number.isInteger(p.score) ? big(p.score) + ' upvotes' : '', Number.isInteger(p.comments) ? big(p.comments) + ' comments' : '', p.at > 0 ? agoShort(p.at) : ''].filter(Boolean).join(' · '),
   }), 'sp-links-list');
   return true;
 }

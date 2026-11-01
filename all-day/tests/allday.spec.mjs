@@ -14035,6 +14035,25 @@ async function sectionPills(browser, base) {
    to the games; X and Reddit; the leagues people can join. The demo carries a
    real 2026-10-22 snapshot, re-dated; the live file is the committed one. */
 async function onAirSports(browser, base) {
+  await group('On Air: a Reddit row says how old it is', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/demo\/onair\.json/, async (r) => {
+      const res = await r.fetch();
+      const j = await res.json();
+      Object.assign(j.sports.leagues.nba.reddit[0], { score: 2400, comments: 310, at: Math.floor(Date.now() / 1000) - 3 * 86400 });
+      Object.assign(j.sports.leagues.nba.reddit[1], { score: 900, comments: 40 });
+      await r.fulfill({ response: res, body: JSON.stringify(j) });
+    });
+    await page.goto(base + '/all-day/?demo=1#onair/sports');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="sp-reddit"]', { timeout: 8000 });
+    await page.$eval('#panel-onair [data-sec="sp-reddit"]', (n) => { n.style.scrollMarginTop = '160px'; n.scrollIntoView(); });
+    const rows = await page.$$eval('#panel-onair .sp-links-list', (ls) => [...ls.find((l) => l.querySelector('a[href*="reddit.com/r/"]')).querySelectorAll('.sp-link .s')].map((n) => n.textContent));
+    check(/ · 3d$/.test(rows[0]) && !/d$/.test(rows[1]), 'the post’s age closes the meta line; a row with no date just leaves it out', JSON.stringify(rows.slice(0, 2)));
+    await page.screenshot({ path: path.join(SHOTS, 'onair-reddit-dated-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
   await group('On Air: Sports, demo', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#onair/sports');
@@ -16365,6 +16384,17 @@ async function theReddit(browser, base) {
     await page.click(panel + ' .rd-tile .act.star');
     check(await page.$eval(panel + ' .rd-tile .act.star', (b) => b.classList.contains('on')), 'star saves', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Reddit: Fresh says so when the intake fails', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+    await page.route(/reddit-intake\.json$/, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#reddit');
+    await page.waitForSelector(panel + ' .rd-empty');
+    const said = await page.$eval(panel + ' .rd-empty', (n) => n.textContent);
+    check(said === 'Reddit didn’t load', 'never “nothing fresh” for a file that never came', said);
+    const thrown = errors.filter((e) => !/Failed to load resource/.test(e));
+    check(!thrown.length, 'nothing throws', thrown.join(' | '));
     await ctx.close();
   });
   await group('Reddit: the New mark and the bar’s count', async () => {

@@ -72,15 +72,20 @@ export const held = (title, flair) => namesPerson(title) || CRIME.test(String(ti
 
 /* ----------------------------------------------------------------- Fresh */
 const sameKey = (p) => String(p.out || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-/* The clock the age limit runs on: now, or the newest post when the store has stopped growing. */
-export const ageClock = (posts, nowMs) => Math.min(nowMs, Math.max(0, ...posts.map((p) => {
-  const t = Date.parse((p && p.created) || '');
-  return t <= nowMs ? t : 0;
-})));
+/* The clock each sub's age limit runs on: now, or the sub's newest post when it has stopped
+   growing, the same sub by sub rule the intake's prune() keeps posts by. */
+export function ageClock(posts, nowMs) {
+  const newest = new Map();
+  posts.forEach((p) => {
+    const t = Date.parse((p && p.created) || '');
+    if (t <= nowMs && !(newest.get(p.sub) >= t)) newest.set(p.sub, t);
+  });
+  return (sub) => (newest.has(sub) ? newest.get(sub) : nowMs);
+}
 function usable(p, clock) {
   const ts = when(p.created);
   if (!ts || !SUBS.includes(p.sub) || p.nsfw !== false || (p.score || 0) < 0) return false;
-  return clock - ts <= MAX_AGE_DAYS * DAY && !held(p.title, p.flair);
+  return clock(p.sub) - ts <= MAX_AGE_DAYS * DAY && !held(p.title, p.flair);
 }
 export function freshFrom(intake, nowMs) {
   const best = new Map();

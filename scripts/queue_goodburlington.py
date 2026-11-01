@@ -50,6 +50,7 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import refresh_chatter as chatter
 import reddit_client
+from town.title_guard import held as title_held
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 QUEUE = os.path.join(ROOT, "data", "goodburlington-queue.json")
@@ -99,7 +100,7 @@ def parse_listing(raw, sub):
         if not post_id or not title:
             continue
         posts.append({"id": post_id, "sub": f"r/{sub}", "title": title,
-                      "body": chatter.clean_space(row.get("selftext")),
+                      "body": chatter.clean_space(row.get("selftext")), "flair": row.get("link_flair_text"),
                       "score": row.get("score"), "created_utc": row.get("created_utc") or 0,
                       "permalink": "https://www.reddit.com" + (row.get("permalink") or "")})
     return posts
@@ -135,7 +136,7 @@ def parse_intake(raw):
         if str(row.get("sub")).lower() not in wanted or row.get("nsfw") is not False or not row.get("created"):
             continue
         posts.append({"id": row["id"], "sub": row["sub"], "title": row["title"], "body": "",
-                      "score": row.get("score"), "permalink": row["url"],
+                      "flair": row.get("flair"), "score": row.get("score"), "permalink": row["url"],
                       "created_utc": datetime.fromisoformat(row["created"]).timestamp()})
     return posts
 
@@ -250,7 +251,7 @@ def screen(post, rejected, taken, now=None):
     if chatter.term_hit(post["title"] + " " + post["body"],
                         chatter.ROUGH_TERMS | chatter.ACCUSE | chatter.DEROGATORY):
         return "rough-terms"
-    if chatter.safety_flag(post):
+    if chatter.safety_flag(post) or title_held(post["title"], post.get("flair")):
         return "name-safety"
     return None
 
@@ -397,6 +398,7 @@ def selftest():
     assert screen(post("ino", "Lovely sunset", score=None), {}, nobody, now) is None
     assert screen(post("ddd", "Old news", hours=72), {}, nobody, now) == "too-old"
     assert screen(post("eee", "Repeat"), {"eee": "x"}, nobody, now) == "already-judged"
+    assert screen(post("hhh", "Karen Smith made my whole week"), {}, nobody, now) == "name-safety"
     assert screen(post("fff", "Nice day"), {}, ({"fff"}, set()), now) == "already-on-target"
     # Title match catches a crosspost whose source id the feed never told us
     assert screen(post("ggg", "Been living here for one year now. Thank you all! ❤️"), {},

@@ -623,6 +623,19 @@ def render(page, videos, threads, related, votes, date):
 # One topic, end to end
 # ----------------------------------------------------------------------
 
+def pick_threads(threads, picks):
+    """The model's picks among the threads it was given. No link check: Reddit
+    has just listed these, and it answers GitHub's runners with a 403 for any
+    thread, so link_ok would drop them all."""
+    by_url = {thread["url"]: thread for thread in threads}
+    picked = []
+    for pick in (picks or [])[:MAX_THREADS]:
+        thread = by_url.get(clean(pick.get("url")))
+        if thread is not None:
+            picked.append(dict(thread, why=pick.get("why", "")))
+    return picked
+
+
 def build_one(leader, payload):
     headline = clean(leader.get("title")) or clean(leader.get("url"))
     print(f"topics: working on {headline!r}")
@@ -678,14 +691,7 @@ def build_one(leader, payload):
         if link_ok(url):
             picked_videos.append(dict(video, url=url, why=pick.get("why", "")))
 
-    by_url = {thread["url"]: thread for thread in threads}
-    picked_threads = []
-    for pick in (page.get("thread_picks") or [])[:MAX_THREADS]:
-        thread = by_url.get(clean(pick.get("url")))
-        if thread is None:
-            continue
-        if link_ok(thread["url"]):
-            picked_threads.append(dict(thread, why=pick.get("why", "")))
+    picked_threads = pick_threads(threads, page.get("thread_picks"))
 
     wiki = [entry for entry in wiki if link_ok(entry["url"])]
     if not wiki:

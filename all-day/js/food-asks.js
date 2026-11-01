@@ -110,7 +110,7 @@ export function asksFrom(intake, nowMs) {
     const sub = String(p.sub || '').toLowerCase();
     if (!SUB_IDS[sub] || gone[p.id] || p.nsfw === true) return;
     const ms = Date.parse(p.created || '');
-    if (!Number.isFinite(ms) || ms > now + 3600000 || clock - ms > MAX_AGE_DAYS * DAY) return;
+    if (!Number.isFinite(ms) || ms > now + 3600000 || clock(p.sub) - ms > MAX_AGE_DAYS * DAY) return;
     const ask = isFoodAsk(p.title) && p.kind !== 'link';
     if (!ask && !isFoodTalk(p)) return;
     if (seen.has(p.url)) return;

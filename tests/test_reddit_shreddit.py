@@ -399,6 +399,17 @@ class FrozenInoreaderTests(Offline):
             posts = qg.load_candidates(client)
         self.assertEqual([(p["id"], p["score"], p["sub"]) for p in posts], [("aa1", 40, "r/burlington")])
 
+    def test_queue_holds_back_what_the_title_guard_holds(self):
+        import queue_goodburlington as qg
+        now = datetime(2026, 11, 14, 12, tzinfo=timezone.utc)
+        row = {"sub": "r/burlington", "url": "https://www.reddit.com/r/burlington/comments/bb1/x/",
+               "created": "2026-11-14T10:00:00+00:00", "score": 40, "nsfw": False}
+        intake = {"posts": [dict(row, id="bb1", title="Karen Smith freaks out over a parking spot"),
+                            dict(row, id="bb2", title="Lovely sunset tonight", flair="Removed by mods"),
+                            dict(row, id="bb3", title="Lovely sunset tonight")]}
+        posts = qg.parse_intake(json.dumps(intake))
+        self.assertEqual([qg.screen(p, {}, (set(), set()), now=now) for p in posts], ["name-safety", "name-safety", None])
+
 
 class TopicPageTests(Offline):
     INTAKE = {"posts": [
@@ -424,6 +435,17 @@ class TopicPageTests(Offline):
         self.assertEqual([t["title"] for t in got], ["Why the solar eclipse track moved",
                                                      "Solar eclipse viewing in Burlington"])
         self.assertEqual(client.fetch.urls(".rss"), [])
+
+    def test_a_thread_reaches_the_page_though_reddit_blocks_the_runner(self):
+        import build_topic_page as tp
+        self.now[0] = AFTER.timestamp()
+        threads = tp.reddit("the solar eclipse", client=self.client(FakeWeb()), intake=self.INTAKE)
+        picks = [{"url": threads[0]["url"], "why": "the main thread"}, {"url": "https://www.reddit.com/r/x/comments/made/up/"}]
+        with mock.patch.object(tp, "link_ok", side_effect=lambda url: "reddit.com" not in url):
+            markup = tp.render_lurk(tp.pick_threads(threads, picks))
+        self.assertIn("Why the solar eclipse track moved", markup)
+        self.assertIn("the main thread", markup)
+        self.assertNotIn("/made/up/", markup)
 
     def test_no_intake_means_no_threads(self):
         import build_topic_page as tp

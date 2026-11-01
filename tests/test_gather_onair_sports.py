@@ -12,7 +12,7 @@ import os
 import sys
 import tempfile
 import unittest
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -109,12 +109,14 @@ class Reddit(unittest.TestCase):
             {"id": "a", "title": "[Highlight] Damian Lillard hits from Dame Distance", "url": "https://www.reddit.com/r/nba/comments/a/x/", "out": "https://streamable.com/abc"},
             {"id": "b", "title": "GAME THREAD: Cavaliers @ 76ers", "url": "https://www.reddit.com/r/nba/comments/b/x/"},
             {"id": "c", "title": "Barkley on Shaq", "url": "https://www.reddit.com/r/nba/comments/c/x/", "nsfw": True},
-            {"id": "d", "title": "Lamelo Ball travels a few steps", "url": "https://www.reddit.com/r/nba/comments/d/x/", "flair": "Highlight", "score": 9000, "comments": 800},
+            {"id": "d", "title": "Lamelo Ball travels a few steps", "url": "https://www.reddit.com/r/nba/comments/d/x/", "flair": "Highlight", "score": 9000, "comments": 800,
+             "created": datetime.fromtimestamp(1793000000, timezone.utc)},
         ]
         out = s.shape_reddit(posts)
         self.assertEqual([p["id"] for p in out], ["a", "d"])
         self.assertEqual((out[0]["flair"], out[0]["t"], out[0]["out"]), ("Highlight", "Damian Lillard hits from Dame Distance", "https://streamable.com/abc"))
         self.assertEqual((out[1]["score"], out[1]["comments"]), (9000, 800))
+        self.assertEqual((out[0]["at"], out[1]["at"]), (0, 1793000000))
 
 
 ARCHIVE = """<html><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"category":{"latest":{"items":[
