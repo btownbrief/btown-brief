@@ -5881,7 +5881,7 @@ async function theFood(browser, base) {
     check((await card()).k === first.k, 'a tap on the left side goes back', '');
     const seen = [];
     for (let i = 0; i < 6; i++) { const c = await card(); seen.push(c); await page.click(foodPanel + ' .deck .hit.r'); }
-    check(seen.length === 6, 'six deals, turned one by one', seen.length);
+    check(new Set(seen.map((c) => c.k)).size === 6, 'six deals, turned one by one', seen.map((c) => c.k).join());
     const end = await card();
     check(end.k === 'deals-end' && await page.$eval('#panel-food .deck h3', (h) => h.textContent) === 'That’s all.', 'after the last deal, the deck says that’s all', JSON.stringify(end));
     await page.click(foodPanel + ' .deck .hit.r');

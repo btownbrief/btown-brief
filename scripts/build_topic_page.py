@@ -443,7 +443,7 @@ def reddit(query, client=None, intake=None):
     SECRET are set, else the public search feed until it ends 2026-11-13,
     else the shared intake's titles (a nicety: any failure is no threads)."""
     client = client or reddit_client.Client()
-    threads = search_threads(query, client)
+    threads = [t for t in search_threads(query, client) if not held(t["title"])]
     if threads:
         return threads
     try:

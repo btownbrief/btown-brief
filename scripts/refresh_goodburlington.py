@@ -34,6 +34,7 @@ import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import reddit_client  # noqa: E402
+from town.title_guard import held  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "reddit.json")
@@ -168,13 +169,23 @@ def load_posts(fixtures=None, client=None):
     return merge_posts(groups), mode
 
 
+def last_good_count():
+    try:
+        with open(OUT, encoding="utf-8") as src:
+            return len(json.load(src).get("posts") or [])
+    except (OSError, ValueError, AttributeError):
+        return 0
+
+
 def run(fixtures=None, dry_run=False):
     posts, mode = load_posts(fixtures)
+    posts = [p for p in posts if not held(p["title"])]
     posts.sort(key=lambda p: p.get("created_utc") or 0, reverse=True)
     posts = posts[:12]
 
-    if not posts:
-        print("zero GoodBurlington posts loaded; keeping last good data/reddit.json")
+    # a thin answer is a broken listing, not a quiet sub
+    if len(posts) < min(3, last_good_count()) or not posts:
+        print(f"{len(posts)} GoodBurlington posts loaded; keeping last good data/reddit.json")
         return 0
 
     output = {

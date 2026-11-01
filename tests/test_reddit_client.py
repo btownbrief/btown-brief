@@ -262,6 +262,38 @@ class KeepsLastGoodTests(Offline):
             with open(out) as fh:
                 self.assertEqual(json.load(fh)["updated"], "before")
 
+    def goodburlington_run(self, posts, before=12):
+        import refresh_goodburlington as rg
+        with tempfile.TemporaryDirectory() as tmp:
+            out = os.path.join(tmp, "reddit.json")
+            with open(out, "w") as fh:
+                json.dump({"updated": "before", "posts": [{"title": "kept"}] * before}, fh)
+            with mock.patch.object(rg, "OUT", out), mock.patch.object(rg, "load_posts", return_value=(posts, "reddit-only")), \
+                    redirect_stdout(io.StringIO()):
+                rg.run()
+            with open(out) as fh:
+                return json.load(fh)
+
+    def test_goodburlington_keeps_a_full_file_over_a_thin_answer(self):
+        one = [{"title": "A nice day at the lake", "url": "https://www.reddit.com/r/GoodBurlington/comments/a/x/"}]
+        self.assertEqual(self.goodburlington_run(one)["updated"], "before")
+
+    def test_goodburlington_takes_a_short_file_from_a_short_one(self):
+        one = [{"title": "A nice day at the lake", "url": "https://www.reddit.com/r/GoodBurlington/comments/a/x/"}]
+        self.assertEqual([p["title"] for p in self.goodburlington_run(one, before=1)["posts"]], ["A nice day at the lake"])
+
+    def test_goodburlington_holds_a_username_and_a_private_name(self):
+        posts = [{"title": t, "url": "https://www.reddit.com/r/GoodBurlington/comments/%d/x/" % i}
+                 for i, t in enumerate(["Thanks to u/somebody for the ride", "Jennifer Smith found my dog", "Lake sunset", "Fall colors", "New bakery"])]
+        self.assertEqual([p["title"] for p in self.goodburlington_run(posts)["posts"]], ["Lake sunset", "Fall colors", "New bakery"])
+
+    def test_topic_search_holds_what_the_intake_route_holds(self):
+        import build_topic_page as tp
+        found = [{"title": "Thanks to u/somebody", "url": "https://www.reddit.com/r/vermont/comments/a/x/"},
+                 {"title": "Winooski school board statement", "url": "https://www.reddit.com/r/vermont/comments/b/x/"}]
+        with mock.patch.object(tp, "search_threads", return_value=found):
+            self.assertEqual([t["title"] for t in tp.reddit("winooski", client=object())], ["Winooski school board statement"])
+
 
 class SecretsNeverLeakTests(Offline):
     def assert_clean(self, text):

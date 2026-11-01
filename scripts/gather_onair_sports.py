@@ -65,6 +65,7 @@ import xml.etree.ElementTree as ET
 from datetime import date, datetime, timedelta, timezone
 
 import gather_onair_finds as finds
+from town.title_guard import CONTACT
 import reddit_client
 import reddit_intake as reddit
 
@@ -351,7 +352,8 @@ def reddit_top(key, client):
 def shape_reddit(posts):
     out = []
     for p in posts:
-        if p.get("nsfw") or p.get("stickied") or REDDIT_SKIP.search(p.get("title", "")):
+        # players are public figures here, so only the contact half of the title guard
+        if p.get("nsfw") or p.get("stickied") or REDDIT_SKIP.search(p.get("title", "")) or CONTACT.search(p.get("title", "")):
             continue
         flair = p.get("flair")
         m = re.match(r"^\[([^\]]{2,24})\]\s*", p["title"])

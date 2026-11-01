@@ -118,6 +118,11 @@ class Reddit(unittest.TestCase):
         self.assertEqual((out[1]["score"], out[1]["comments"]), (9000, 800))
         self.assertEqual((out[0]["at"], out[1]["at"]), (0, 1793000000))
 
+    def test_a_username_never_reaches_the_list_but_a_player_does(self):
+        posts = [{"id": "a", "title": "u/somebody called this in August", "url": "https://www.reddit.com/r/nba/comments/a/x/"},
+                 {"id": "b", "title": "Kevin Durant scores 40", "url": "https://www.reddit.com/r/nba/comments/b/x/"}]
+        self.assertEqual([p["id"] for p in s.shape_reddit(posts)], ["b"])
+
 
 ARCHIVE = """<html><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"category":{"latest":{"items":[
 {"title":"Keep up with the Cup","permalink":"https://www.nba.com/news/cup"},
