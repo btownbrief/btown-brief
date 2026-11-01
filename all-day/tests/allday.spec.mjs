@@ -5265,16 +5265,16 @@ async function theAnswers(browser, base) {
     const pill = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
     check(pill[1] === 'talk' && pill[2] === 'board', 'its own pill, right after Talk', pill.join());
     const order = await page.$$eval(bd + ' .tb', (ns) => ns.map((n) => ({ k: n.dataset.k, brow: n.querySelector('.eyebrow').textContent, meta: n.querySelector('.tb-meta').textContent })));
-    check(order.length === 8, 'eight show', String(order.length));
+    check(order.length === 4, 'four show', String(order.length));
     check(order[0].k === 'bd003' && /^3 answers · /.test(order[0].meta), 'freshest answer on top, with its count and time', JSON.stringify(order[0]));
     check(order[0].brow === 'Steve asks' && order.some((o) => o.brow !== 'Steve asks'), 'his prompts say so; Talk cards say what they are', JSON.stringify(order));
+    await page.click(bd + ' .tb-more');
+    await page.waitForFunction((p) => document.querySelectorAll(p + ' .tb').length > 4, bd);
     const zero = await page.$$eval(bd + ' .tb', (ns) => ns.map((n) => n.innerText).join(' '));
     check(/Be the first\./.test(zero), 'with no answers, Be the first', zero);
-    await page.click(bd + ' .tb-more');
-    await page.waitForFunction((p) => document.querySelectorAll(p + ' .tb').length > 8, bd);
-    check((await page.$$(bd + ' .tb')).length > 8, 'See more shows more', '');
-    const last = await page.$eval(bd + ' .tb:nth-child(9)', (n) => n.dataset.k);
-    await page.click(bd + ' .tb:nth-child(9) .tb-go');
+    check((await page.$$(bd + ' .tb')).length > 4, 'See more shows more', '');
+    const last = await page.$eval(bd + ' .tb:nth-child(5)', (n) => n.dataset.k);
+    await page.click(bd + ' .tb:nth-child(5) .tb-go');
     await page.fill(bd + ' [data-k="' + last + '"] .ans-box', 'A first answer here.');
     await page.click(bd + ' [data-k="' + last + '"] .ans-go');
     await page.waitForFunction(([p, k]) => document.querySelector(p + ' .tb').dataset.k === k, [bd, last]);
@@ -5327,7 +5327,7 @@ async function theAnswers(browser, base) {
     await z.page.route(/\/rest\/v1\/rpc\/btb_sa_/, (r) => r.abort());
     await z.page.goto(base + '/all-day/#people/board');
     await z.page.waitForSelector(bd + ' .tb');
-    check((await z.page.$$(bd + ' .tb')).length === 8 && !z.errors.filter((e) => !/Failed to load|net::/.test(e)).length, 'backend down: the prompts still show', z.errors.join(' | '));
+    check((await z.page.$$(bd + ' .tb')).length === 4 && !z.errors.filter((e) => !/Failed to load|net::/.test(e)).length, 'backend down: the prompts still show', z.errors.join(' | '));
     await z.ctx.close();
   });
   await group('Answers: a tease gives nothing whole (360 and 390, demo)', async () => {
@@ -5339,6 +5339,8 @@ async function theAnswers(browser, base) {
       await page.route('**/data/demo/answers.json', (r) => r.fulfill({ json: { rows } }));
       await page.goto(base + '/all-day/?demo=1#people/board');
       await page.waitForSelector(bd + ' [data-k="bd001"] .ans-cut');
+      await page.click(bd + ' .tb-more');
+      await page.waitForSelector(bd + ' [data-k="bd005"] .ans-cut');
       const cuts = await page.$$eval(bd + ' .tb', (ns) => Object.fromEntries(ns.map((n) => [n.dataset.k, (n.querySelector('.ans-cut') || {}).textContent])));
       if (width === 390) {
         check(cuts.bd002 === 'Fl…' && !cuts.bd002.includes('Flynn'), 'one word: two letters', cuts.bd002);
@@ -5362,6 +5364,7 @@ async function theAnswers(browser, base) {
     for (const height of [844, 664]) {
       const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height }, touch: true });
       await page.goto(base + '/all-day/?demo=1#people/board');
+      await page.click(bd + ' .tb-more');
       await page.waitForSelector(bd + ' .tb:nth-child(8)');
       const k = await page.$eval(bd + ' .tb:nth-child(8)', (n) => n.dataset.k);
       const sc = bd + ' [data-k="' + k + '"]';
@@ -6902,9 +6905,9 @@ async function theWatch(browser, base) {
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
     check((await dots()).every((d) => d[1] === '0'), 'alone: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
     const sw = await page.$eval(wPanel + ' [data-who]', (b) => ({ label: b.querySelector('label').textContent.trim(), role: b.querySelector('input[data-with]').getAttribute('role'),
-      on: b.querySelector('input[data-with]').checked, line: b.querySelector('.note').textContent, legend: !!b.querySelector('[data-legend]') }));
+      on: b.querySelector('input[data-with]').checked, line: b.querySelector('.note'), legend: !!b.querySelector('[data-legend]') }));
     check(sw.label === 'Watching with someone' && sw.role === 'switch' && !sw.on, 'the partner mode is a switch that says what it is: Watching with someone, off', JSON.stringify(sw));
-    check(sw.line === 'Mark what each of you has seen, and find films neither of you has.' && !sw.legend, 'one line says what it is for; no legend while it is off', JSON.stringify(sw));
+    check(!sw.line && !sw.legend, 'no line under it; no legend while it is off', JSON.stringify(sw));
     check(!/Just me|With partner/.test(await page.$eval(wPanel + ' [data-slot="list"]', (n) => n.innerText)), 'the old “With partner / Just me” words are gone', '');
 
     await page.click(wPanel + ' [data-who] input[data-with]');
@@ -16902,9 +16905,9 @@ async function theWalk(browser, base) {
     await page.waitForSelector('#panel-people .tb-more', { timeout: 8000 });
     await page.$eval('#panel-people .tb-more', (b) => b.click());
     const grown = await page.$$eval('#panel-people .tb', (n) => n.length);
-    check(grown > 8 && await page.$eval('#panel-people .tb-sec .collapsebar', (n) => !n.hidden), 'See more on the Board brings Collapse', String(grown));
+    check(grown > 4 && await page.$eval('#panel-people .tb-sec .collapsebar', (n) => !n.hidden), 'See more on the Board brings Collapse', String(grown));
     await page.$eval('#panel-people .tb-sec [data-collapse]', (b) => b.click());
-    check((await page.$$eval('#panel-people .tb', (n) => n.length)) === 8, 'and Collapse folds it back to eight', '');
+    check((await page.$$eval('#panel-people .tb', (n) => n.length)) === 4, 'and Collapse folds it back to four', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

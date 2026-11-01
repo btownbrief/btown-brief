@@ -1345,9 +1345,8 @@ function rateTiles() {
   });
 }
 
-/* Watching with someone: a switch, the one line that says what it is for,
-   and while it is on, which dot is whose */
-function withSwitch(nouns) {
+/* Watching with someone: a switch, and while it is on, which dot is whose */
+function withSwitch() {
   const box = el('div', 'wwith');
   box.dataset.who = '1';
   const lab = el('label', 'consent', '<input type="checkbox" role="switch" data-with> ' + esc('Watching with someone'));
@@ -1359,7 +1358,7 @@ function withSwitch(nouns) {
     saveLocal();
     draw('list');
   });
-  box.append(lab, el('p', 'note', esc('Mark what each of you has seen, and find ' + nouns + ' neither of you has.')));
+  box.append(lab);
   if (us()) {
     /* the dots sit side by side on every poster: the first is yours */
     const who = (first, name) => '<span class="wwho"><span class="wdots" aria-hidden="true"><i' + (first ? ' class="on"' : '') + '></i><i' + (first ? '' : ' class="on"') + '></i></span>' + esc(name) + '</span>';
@@ -1382,7 +1381,7 @@ function drawList(host) {
   const sub = us() ? '<b>' + esc(neither) + '</b> ' + esc('neither of you has seen') : '<b>' + esc(left) + '</b> ' + esc('of ' + n + ' to go');
   const head = sec(host, 'The list', sub, 'list');
   if (F.seed) head.dataset.seed = '1';
-  host.appendChild(withSwitch(noun[1]));
+  host.appendChild(withSwitch());
 
   /* the ranking, chosen: the chip that is on says what the order is */
   const sorts = SORTS.filter(([k]) => k !== 'trend' || trends().length);

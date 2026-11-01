@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v120';   // Answers, The Board, The Calendar, City Hall in 5
+const VERSION = 'all-day-v121';   // the walk: dead ends, names and labels, Reddit past RSS
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

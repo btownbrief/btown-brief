@@ -24,7 +24,7 @@ import * as talk from './talk.js';
 
 const TAB = 'people';
 const PROMPTS_URL = '../data/board-prompts.json';
-const SHOW = 8;
+const SHOW = 4;
 const MOVE_MS = 320;
 const CATALOG_WAIT_MS = 2500;
 const WORDS = { title: 'The Board', steve: 'Steve asks', more: 'See more', share: 'Share', star: 'Save', first: 'Be the first.', answer: 'Answer', answers: 'Answers' };

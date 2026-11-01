@@ -865,7 +865,7 @@ const HELP_LINES = [
 const helpList = () => '<ul class="hb-helpl">' + HELP_LINES.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>';
 function helpSheet() {
   app.sheet('How Habits works', (sheetBody) => {
-    sheetBody.innerHTML = helpList() + '<p class="sheet-note">' + esc('Seasons with a small group, and a party at the end, are coming.') + '</p>';
+    sheetBody.innerHTML = helpList();
   });
 }
 
