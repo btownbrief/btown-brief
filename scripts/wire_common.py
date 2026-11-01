@@ -24,7 +24,7 @@ station's wire story about Gaza is not local; a national outlet's story about
 Winooski is).
 
 Engines. Which models run is decided by which key exists, never by a flag:
-ANTHROPIC_API_KEY -> Claude Haiku 5.5 tags, Claude Opus 5.5 curates;
+ANTHROPIC_API_KEY -> Claude Haiku 5.5 tags and curates;
 otherwise OPENROUTER_API_KEY -> GLM 5.3 Flash runs both prompts. No key -> the
 scripts skip quietly and the last good files stay up.
 """
@@ -502,16 +502,20 @@ GLM = "z-ai/glm-5.3-flash"
 PRICES["claude-opus-4-8"] = {"in": 5.00, "out": 25.00, "cache_read": 0.50, "cache_write": 6.25}
 FALLBACK_PRICE_AS = "claude-opus-4-8"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api"
-# Stephen's Max plan carries $100 a month of API credits (2026-10-16). The Wire
-# takes at most $60 of it, leaving room for whatever else uses the key.
-MONTH_CAP_USD = 60.0
+# The Wire's own monthly ceiling on the Anthropic key. Haiku runs the whole
+# Wire for a few dollars a month; $10 leaves room under the console's org
+# limit for the other jobs that share the key (the weather read).
+MONTH_CAP_USD = 10.0
 
 
 def pick_engine(role):
-    """role is "tag" or "curate" -> {"provider", "model"} or None (no key)."""
+    """role is "tag" or "curate" -> {"provider", "model"[, "effort"]} or None
+    (no key)."""
     if os.environ.get("ANTHROPIC_API_KEY"):
-        return {"provider": "anthropic",
-                "model": "claude-haiku-5-5" if role == "tag" else "claude-opus-5-5"}
+        # Haiku 5.5 runs both prompts (2026-11-01; Opus 5.5 curated before, at
+        # many times the cost). Curation gets effort medium, tagging low.
+        return {"provider": "anthropic", "model": "claude-haiku-5-5",
+                "effort": "low" if role == "tag" else "medium"}
     if os.environ.get("OPENROUTER_API_KEY"):
         return {"provider": "openrouter", "model": GLM}
     return None
@@ -634,16 +638,18 @@ def _create(client, engine, system, user, schema, max_tokens, attempt, effort="l
             thinking={"type": "enabled", "budget_tokens": 1024},
         )
     if model == "claude-haiku-5-5":
-        # Tagging is classification: thinking off (allowed on Haiku 5.5 at
-        # effort high or below), effort low. Haiku has no server-side fallback.
+        # Thinking off (allowed on Haiku 5.5 at effort high or below). Tagging
+        # runs at effort low, curation at medium (the engine says which).
+        # Haiku has no server-side fallback.
         return client.messages.create(
             model=model, max_tokens=max_tokens, system=system, messages=messages,
             thinking={"type": "disabled"},
-            output_config={"effort": "low", "format": fmt},
+            output_config={"effort": engine.get("effort", "low"), "format": fmt},
         )
-    # Claude Opus 5.5: thinking cannot be disabled on this model (a 400 at
-    # every effort), so `thinking` is omitted and effort low keeps it short
-    # (council_summaries.py asks for more: its accuracy outweighs the cost).
+    # Claude Opus 5.5 (pick_engine no longer picks it; council_summaries.py asks
+    # for it by name, at more effort: its accuracy outweighs the cost): thinking
+    # cannot be disabled on this model (a 400 at every effort), so `thinking`
+    # is omitted and effort low keeps it short.
     # The first attempt opts into the server-side refusal fallback; the retry
     # goes without it, so a 400 on the beta can never block the run.
     params = dict(model=model, max_tokens=max_tokens, system=system, messages=messages,
@@ -729,6 +735,16 @@ def selftest():
     assert sorted(item["sport"] for item in wire_items(pulse, 200, 1)) == ["mlb", "nfl"]
     assert abs(cost_usd("claude-opus-5-5", {"in": 1_000_000, "out": 100_000}) - 6.0) < 1e-9
     assert pick_engine is not None and et_now().tzinfo is not None
+    _saved = os.environ.get("ANTHROPIC_API_KEY")
+    os.environ["ANTHROPIC_API_KEY"] = "x"
+    assert pick_engine("curate") == {"provider": "anthropic", "model": "claude-haiku-5-5",
+                                     "effort": "medium"}
+    assert pick_engine("tag") == {"provider": "anthropic", "model": "claude-haiku-5-5",
+                                  "effort": "low"}
+    if _saved is None:
+        del os.environ["ANTHROPIC_API_KEY"]
+    else:
+        os.environ["ANTHROPIC_API_KEY"] = _saved
     assert display_name({"id": "t", "short": "Top News &amp…", "name": "Top News &amp; Analysis"}) \
         == "Top News & Analysis"
     assert place_of("Millions announced to rebuild Barre's North End") == ("away", "Barre")

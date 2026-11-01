@@ -24,7 +24,7 @@ import wire_common as wc  # noqa: E402
 NOON = datetime(2026, 10, 16, 16, 30, tzinfo=timezone.utc)
 TODAY = "2026-10-16"
 USAGE = {"in": 900, "out": 300, "cache_read": 0, "cache_write": 0, "calls": 1}
-ENGINE = {"provider": "anthropic", "model": "claude-opus-5-5"}
+ENGINE = {"provider": "anthropic", "model": "claude-haiku-5-5", "effort": "medium"}
 
 
 def item(n, title=None, **extra):
