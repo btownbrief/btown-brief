@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-01T22:58:21+00:00",
+ "updated": "2026-11-01T23:47:44+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 54,
+  "temp": 52,
   "sky": "Clear",
   "from": "airport",
-  "hi": 56,
+  "hi": 64,
   "lo": 45,
-  "rain": "Dry through tonight",
+  "rain": "Dry through Monday",
   "obs": {
-   "temp": 54,
+   "temp": 52,
    "sky": "Clear",
-   "at": "2026-11-01T21:45:00+00:00"
+   "at": "2026-11-01T22:55:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-01T17:00:00-05:00",
-    "temp": 54,
-    "sky": "Sunny"
-   },
    {
     "t": "2026-11-01T18:00:00-05:00",
     "temp": 52,
@@ -44,28 +39,33 @@
     "t": "2026-11-01T22:00:00-05:00",
     "temp": 46,
     "sky": "Partly Cloudy"
+   },
+   {
+    "t": "2026-11-01T23:00:00-05:00",
+    "temp": 46,
+    "sky": "Partly Cloudy"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
  "wire": [
   {
-   "title": "Data centers need guardrails now",
+   "title": "Burlington man held on bail after reports of shotgun at City Hall Park",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/01/burlington-man-held-bail-after-reports-shotgun-city-hall-park/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/f5674897912e"
+  },
+  {
+   "title": "Bringing pumpkin carving into Lake Champlain",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/01/bringing-pumpkin-carving-into-lake-champlain/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/5b44388d9438"
+  },
+  {
+   "title": "New Burlington police chief will face tall order",
    "src": "VTDigger",
-   "url": "https://vtdigger.org/2026/11/01/opinion-data-centers-need-guardrails-now/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/e0586bdb4a0b"
-  },
-  {
-   "title": "Glazed Donuts’ New Essex Café to Replace Leo & Co.",
-   "src": "Seven Days",
-   "url": "https://www.sevendaysvt.com/food-drink/foodnews/glazed-donuts-new-essex-cafe-to-replace-leo-co/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/4f9834218e5f"
-  },
-  {
-   "title": "Warming trend today through Wednesday, with a few daily high temperature records approached and possibly exceeded; mostly dry, some shower chances near the Canadian border Tuesday.",
-   "src": "NWS Burlington",
-   "url": "https://x.com/NWSBurlington/status/2116836210937143506",
-   "link": "https://guide.btownbrief.com/all-day/#wire/297e28cf251c"
+   "url": "https://vtdigger.org/2026/11/01/new-burlington-police-chief-will-face-tall-order/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/2a3b48538da6"
   }
  ],
  "tonight": [
@@ -107,13 +107,13 @@
   }
  ],
  "game": {
-  "title": "UVM Women's Soccer vs Binghamton",
-  "when": "Today 3:30 pm",
-  "start": "2026-11-01T20:30:00+00:00",
+  "title": "UVM Women's Basketball vs Keene State",
+  "when": "Tomorrow 6 pm",
+  "start": "2026-11-02T23:00:00+00:00",
   "all_day": false,
   "home": true,
   "tv": "ESPN+",
-  "url": "https://uvmathletics.com/calendar.aspx?game_id=6820&sport_id=15",
-  "link": "https://guide.btownbrief.com/sports.html"
+  "url": "https://uvmathletics.com/calendar.aspx?game_id=6950&sport_id=10",
+  "link": "https://guide.btownbrief.com/all-day/#onair/hoops"
  }
 }
