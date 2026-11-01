@@ -50,7 +50,7 @@
      next day it has shows, or "Back Oct 30" while it is closed. Partizanfilm
      is picked first (Stephen, 2026-10-18: the local one). Every theater
      keeps its Showtimes button to its own page. Back then opened as a list,
-     and the list once "Show more" has grown it, carry a Collapse bar that
+     and the list once "See more" has grown it, carry a Collapse bar that
      stays in reach while the list is on screen.
    - Back then: the time machine. ‹ October 2021 › and a row of years; the
      month's big titles (scripts/build_time_machine.py, monthly: what Rotten
@@ -158,7 +158,7 @@ const ROWS = 40;            // trailer rows drawn at a time
 const WORDS = {
   dropped: 'Just dropped', inTheaters: 'In theaters', onTv: 'On TV now', comingSoon: 'Coming soon', newHome: 'New at home', newTv: 'New on TV', everything: 'All',
   play: 'Play the trailer for ', prev: 'Previous trailer', next: 'Next trailer', save: 'Save', share: 'Share', fresh: 'New', trailer: ' trailer',
-  list: 'See as a list', listOf: 'Trailers', allGenres: 'All', surprise: 'Surprise me', more: 'Show more',
+  list: 'See as a list', listOf: 'Trailers', allGenres: 'All', surprise: 'Surprise me', more: 'See more',
   nextUp: 'Next up', week: 'Out this week', weekChip: 'This week', theaters: 'Coming to theaters', soonChip: 'Coming soon', home: 'at home',
 };
 const YT = /^[A-Za-z0-9_-]{11}$/;
