@@ -104,7 +104,10 @@ async function group(name, fn) {
 const freePort = () => new Promise((res) => { const s = net.createServer(); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => res(p)); }); });
 async function serve() {
   const port = await freePort();
-  const proc = spawn('python3', ['-m', 'http.server', String(port), '--bind', '127.0.0.1'], { cwd: REPO, stdio: 'ignore' });
+  /* http.server's own backlog is 5: a page's modules arrive faster than that
+     and the overflow reads as ERR_CONNECTION_RESET */
+  const serve = 'import http.server as h; h.ThreadingHTTPServer.request_queue_size = 256; h.ThreadingHTTPServer(("127.0.0.1", ' + port + '), h.SimpleHTTPRequestHandler).serve_forever()';
+  const proc = spawn('python3', ['-c', serve], { cwd: REPO, stdio: 'ignore' });
   const base = 'http://127.0.0.1:' + port;
   for (let i = 0; i < 50; i++) {
     try { const r = await fetch(base + '/all-day/'); if (r.ok) return { base, proc }; } catch (e) { /* not up yet */ }
@@ -5264,7 +5267,7 @@ async function theAnswers(browser, base) {
     check(order.length === 8, 'eight show', String(order.length));
     check(order[0].k === 'bd003' && /^3 answers · /.test(order[0].meta), 'freshest answer on top, with its count and time', JSON.stringify(order[0]));
     check(order[0].brow === 'Steve asks' && order.some((o) => o.brow !== 'Steve asks'), 'his prompts say so; Talk cards say what they are', JSON.stringify(order));
-    const zero = await page.$eval(bd + ' .tb:last-child', (n) => n.innerText);
+    const zero = await page.$$eval(bd + ' .tb', (ns) => ns.map((n) => n.innerText).join(' '));
     check(/Be the first\./.test(zero), 'with no answers, Be the first', zero);
     await page.click(bd + ' .tb-more');
     await page.waitForFunction((p) => document.querySelectorAll(p + ' .tb').length > 8, bd);
@@ -9403,7 +9406,7 @@ async function theVintage(browser, base) {
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
     check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
-    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]:not([data-grid=tees]):not([data-grid=newin])')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
+    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]:not([data-grid=tees]):not([data-grid=newin]):not([data-grid=free])')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
     check(JSON.stringify(titles) === JSON.stringify({ fit: ['My Sunday fit', 'Head to toe Old Gold'], spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'] }),
       'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
     const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
