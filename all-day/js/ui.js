@@ -212,6 +212,29 @@ export function pills(options, current, onPick, cls) {
   return wrap;
 }
 
+/* A row in a feed that says where else the tab goes, for a tab whose pill
+   filters and so sits still on Latest while the reader scrolls (a pill that
+   follows the scroll shows this by itself). The arrow nudges while the row is
+   on screen. color is a --token; its -ink twin colours the words, white if it
+   has none. */
+const JUMP_EVERY = 8;
+let jumpSeen = null;
+export function jumpRow({ label, onPick, color }) {
+  const b = el('button', 'jumprow', '<span>' + esc(label) + '</span>' + ICON.arrow);
+  b.type = 'button';
+  if (color) b.setAttribute('style', '--jr:var(' + color + ');--jr-ink:var(' + color + '-ink,var(--tf-white))');
+  b.addEventListener('click', onPick);
+  if (typeof IntersectionObserver !== 'function') b.classList.add('on');
+  else {
+    jumpSeen = jumpSeen || new IntersectionObserver((seen) => seen.forEach((e) => e.target.classList.toggle('on', e.isIntersecting)));
+    jumpSeen.observe(b);
+  }
+  return b;
+}
+/* which kind's row follows tile i of a list of n, or null: one row after every
+   eighth tile, taking the kinds in turn */
+export const jumpAt = (i, n, kinds) => (n < JUMP_EVERY || !kinds.length || (i + 1) % JUMP_EVERY ? null : kinds[((i + 1) / JUMP_EVERY - 1) % kinds.length]);
+
 /* A section head: 21px Lora title, a grey line, an optional control. `sub`
    is trusted markup (a tab may bold a number); pass esc() text into it. */
 export function section(host, title, sub, right) {

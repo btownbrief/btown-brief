@@ -16,11 +16,13 @@
    cell. A mouse gets the same on press-and-hold; a keyboard or a screen
    reader gets "Btown apps" in Settings, which opens the same bubble.
 
-   Three dots on the cell, one per app, say there is more here. On the
-   first three opens, across every app, the app does the hold itself with
-   no words: a soft disc settles on the cell, the real ring fills, the real
-   bubble rises, stays and drops back. Any touch, scroll or key stops it at
-   once, and it ends for good the first time the hold is used.
+   Three dots on the cell, one per app, say there is more here. The name in
+   the mast is the plain way in (Stephen, 2026-11-01: still not obvious): the
+   name and its chevron are one button, and on the first five opens, across
+   every app, the name rolls through the other two and back, each in its own
+   colour, while the chevron pulses. Any touch, scroll or key snaps it back
+   at once. The chevron keeps a slow pulse, and the roll ends for good, the
+   first time the switcher is used, by tap or by hold.
 
    The everyday way between apps is still a card: a restaurant in Town
    opens in All Day, a habit in Body (app.js sends a link to a tab this app
@@ -40,14 +42,12 @@ import * as asks from './asks.js';
 export const HOLD_MS = 300;        // the ring's fill (Stephen, 2026-10-30: 1500, then 750, were too long)
 export const GRACE_MS = 150;       // a plain tap is over before the ring shows
 const SLOP = 12;                   // px a resting finger may drift
-const COACH_KEY = 'allday-coach-apps'; // plays so far; a timestamp from the old coach mark counts as done
-const SHOW_PLAYS = 3;              // the first three opens
-const SHOW_SETTLE_MS = 350;        // the disc settles
-const SHOW_RING_MS = 500;          // the ring, slowed so the eye can catch it
-const SHOW_UP_MS = 1400;           // the bubble stays
-const SHOW_DROP_MS = 180;          // and drops back (app.css .ab-drop)
+const COACH_KEY = 'allday-coach-apps'; // opens that rolled so far; USED, or a timestamp from the old coach mark, is done
+const SHOW_PLAYS = 5;              // the first five opens
+const USED = SHOW_PLAYS + 1;       // the switcher has been used
+const ROLL_MS = 1600;              // the name's roll (app.css am-roll)
 
-let S = { sheet: null, toast: () => {}, app: null, demo: false, newIn: () => false };
+let S = { sheet: null, toast: () => {}, app: null, demo: false, newIn: () => false, home: () => {} };
 export function bind(o) { S = { ...S, ...o }; }
 
 /* the centre cell of a bar of n: What Now in All Day's nine */
@@ -55,8 +55,9 @@ export const centreIndex = (n) => Math.floor(n / 2);
 
 /* an app's tile: its glyph on its own colour (the accent is a token name
    from a config: letters and hyphens only) */
+const accentOf = (a) => (/^--[a-z-]+$/.test(a.accent || '') ? a.accent : '--app-all-day');
 export function tile(a, cls) {
-  const t = /^--[a-z-]+$/.test(a.accent || '') ? a.accent : '--app-all-day';
+  const t = accentOf(a);
   return '<span class="apptile' + (cls === 'sm' ? ' sm' : '') + '" style="--tile:var(' + t + ');--tile-pop:var(' + t + '-pop)">' + (ICON[a.icon] || ICON.grid) + '</span>';
 }
 
@@ -71,10 +72,10 @@ function stopHold() {
   start = null;
   if (ring) { ring.remove(); ring = null; }
 }
-function showRing(x, y, ms = HOLD_MS) {
+function showRing(x, y) {
   ring = el('div', 'holdring');
   ring.setAttribute('aria-hidden', 'true');
-  ring.style.setProperty('--hold-ms', ms + 'ms');
+  ring.style.setProperty('--hold-ms', HOLD_MS + 'ms');
   ring.style.left = x + 'px';
   ring.style.top = y + 'px';
   ring.innerHTML = '<svg viewBox="0 0 64 64"><circle class="hr-track" cx="32" cy="32" r="28"/><circle class="hr-fill" cx="32" cy="32" r="28" pathLength="100"/></svg>';
@@ -178,9 +179,9 @@ function outside(e) { if (bubble && !bubble.contains(e.target) && !e.target.clos
 function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
 export const isOpen = () => !!bubble;
 
-export function open({ quiet = false, from = null } = {}) {
+export function open({ from = null } = {}) {
   close();
-  if (!quiet) { endShow(); setPlays(SHOW_PLAYS); }
+  used();
   const me = S.app || APPS[0];
   const b = el('div', 'appbubble');
   b.setAttribute('role', 'dialog');
@@ -196,7 +197,8 @@ export function open({ quiet = false, from = null } = {}) {
     row.href = a.href + (S.demo ? '?demo=1' : '');
     row.dataset.app = a.id;
     if (fresh) row.dataset.new = '1';
-    if (here) { row.setAttribute('aria-current', 'page'); row.addEventListener('click', (e) => { e.preventDefault(); close(); }); }
+    /* this app's row is where the name's old tap went: home, or the top of it */
+    if (here) { row.setAttribute('aria-current', 'page'); row.addEventListener('click', (e) => { e.preventDefault(); close(); S.home(); }); }
     list.appendChild(row);
   });
   b.appendChild(list);
@@ -209,7 +211,6 @@ export function open({ quiet = false, from = null } = {}) {
     document.addEventListener('pointerdown', outside, true);
     document.addEventListener('keydown', onKey, true);
   }, 0);
-  if (quiet) return;
   const first = b.querySelector('.ab-row.on') || b.querySelector('.ab-row');
   if (first) first.focus({ preventScroll: true });
 }
@@ -230,65 +231,76 @@ function place(b, from) {
   }
 }
 
-/* -------------------------------------------------- the hold, shown wordlessly */
-let showing = false, showTimer = 0, ghost = null;
-const plays = () => { try { return Number(localStorage.getItem(COACH_KEY)) || 0; } catch (e) { return SHOW_PLAYS; } };
+/* -------------------------------------------------------- the name, rolling */
+let rollTimer = 0;
+const plays = () => { try { return Number(localStorage.getItem(COACH_KEY)) || 0; } catch (e) { return USED; } };
 const setPlays = (n) => { try { localStorage.setItem(COACH_KEY, String(n)); } catch (e) { /* the next open plays it again */ } };
+const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const nameBtn = () => document.querySelector('.appsbtn');
+const lineWidths = (b) => [...b.querySelectorAll('.am-line')].map((l) => l.getBoundingClientRect().width);
 
 /* any touch, scroll or key ends it: a finger already down only shows up as
-   a scroll. A press on the bubble leaves the bubble up, so a tap on a row
-   still works */
-const SHOW_STOPS = ['pointerdown', 'keydown', 'wheel', 'scroll'];
-function endShow(e) {
-  if (!showing) return;
-  showing = false;
-  clearTimeout(showTimer);
-  showTimer = 0;
-  SHOW_STOPS.forEach((t) => document.removeEventListener(t, endShow, true));
-  if (ghost) { ghost.remove(); ghost = null; }
-  if (ring) { ring.remove(); ring = null; }
-  if (bubble && e && bubble.contains(e.target)) bubble.classList.remove('ab-rise', 'ab-drop');
-  else close();
+   a scroll */
+const ROLL_STOPS = ['pointerdown', 'keydown', 'wheel', 'scroll'];
+function endRoll() {
+  if (!rollTimer) return;
+  clearTimeout(rollTimer);
+  rollTimer = 0;
+  ROLL_STOPS.forEach((t) => document.removeEventListener(t, endRoll, true));
+  const b = nameBtn();
+  if (b) b.classList.remove('rolling');
+}
+function used() {
+  endRoll();
+  setPlays(USED);
+  const b = nameBtn();
+  if (b) b.classList.remove('nudge');
+}
+/* the room the widest name needs, kept from the first paint so the logo and
+   the icons stand still; measure() in app.js gives way to it on a small phone */
+export function reserve() {
+  const b = nameBtn();
+  if (!b || !b.offsetParent) return;
+  const w = lineWidths(b);
+  if (w.length) b.style.setProperty('--am-slack', (Math.max(...w) - w[0]) + 'px');
 }
 export function coach() {
-  const covered = ['sheet', 'vbox', 'confirm'].some((id) => { const n = document.getElementById(id); return n && !n.hidden; });
-  if (showing || bubble || start || document.hidden || covered || plays() >= SHOW_PLAYS) return;
-  const cell = document.querySelector('#tabbar .holdcell');
-  if (!cell || !cell.offsetParent) return;
-  setPlays(plays() + 1);
-  showing = true;
-  const r = cell.getBoundingClientRect();
-  const x = r.left + r.width / 2, y = r.top + r.height / 2;
-  ghost = el('div', 'holdghost');
-  ghost.setAttribute('aria-hidden', 'true');
-  ghost.style.left = x + 'px';
-  ghost.style.top = y + 'px';
-  document.body.appendChild(ghost);
-  SHOW_STOPS.forEach((t) => document.addEventListener(t, endShow, { capture: true, passive: true }));
-  showTimer = setTimeout(() => {
-    showRing(x, y, SHOW_RING_MS);
-    showTimer = setTimeout(() => {
-      ring.remove(); ring = null;
-      ghost.remove(); ghost = null;
-      open({ quiet: true });
-      bubble.classList.add('ab-rise');
-      showTimer = setTimeout(() => {
-        bubble.classList.add('ab-drop');
-        showTimer = setTimeout(endShow, SHOW_DROP_MS);
-      }, SHOW_UP_MS);
-    }, SHOW_RING_MS);
-  }, SHOW_SETTLE_MS);
+  const n = plays(), b = nameBtn();
+  if (n >= USED || still() || !b || !b.offsetParent) return;
+  b.classList.add('nudge');
+  const covered = ['sheet', 'vbox', 'confirm'].some((id) => { const x = document.getElementById(id); return x && !x.hidden; });
+  if (n >= SHOW_PLAYS || rollTimer || bubble || start || document.hidden || covered || document.body.classList.contains('chrome-away')) return;
+  const w = lineWidths(b);
+  if (!w.length) return;
+  setPlays(n + 1);
+  /* the chevron steps aside for a wider name, inside the reserved room */
+  [1, 2].forEach((k) => b.style.setProperty('--am-' + k, Math.max(0, w[k] - w[0]) + 'px'));
+  b.classList.add('rolling');
+  ROLL_STOPS.forEach((t) => document.addEventListener(t, endRoll, { capture: true, passive: true }));
+  rollTimer = setTimeout(endRoll, ROLL_MS);
+}
+/* the reel: this app, the others in the switcher's order, this app again */
+function reel(me) {
+  const i = Math.max(0, APPS.findIndex((a) => a.id === me.id));
+  const lit = (a) => 'var(' + accentOf(a) + '-lit)';
+  const line = (a, k) => k === 0 ? '<span class="am-line">' + esc(a.name) + '</span>'
+    : k === APPS.length ? '<span class="am-line am-home" style="--am-lit:' + lit(a) + '">' + esc(a.name) + '</span>'
+    : '<span class="am-line" style="color:' + lit(a) + '">' + esc(a.name) + '</span>';
+  const r = el('span', 'am-reel', '<span class="am-track">' + [...APPS, me].map((_, k) => line(APPS[(i + k) % APPS.length], k)).join('') + '</span>');
+  r.setAttribute('aria-hidden', 'true');
+  return r;
 }
 
 /* The hold is quick once you know it and invisible until you do (Ashley,
-   2026-11-01), so the app's name in the mast also says there are others */
-export function appsButton() {
-  const b = el('button', 'appsbtn', ICON.down);
+   2026-11-01), so the app's name in the mast opens the apps too */
+export function appsButton(me) {
+  const b = el('button', 'appsbtn', '<span class="wordmark" id="wordmark">' + esc(me.name) + '</span>' + ICON.down);
   b.type = 'button';
-  b.setAttribute('aria-label', 'Switch apps');
+  b.setAttribute('aria-label', me.name + ', switch apps');
   b.setAttribute('aria-haspopup', 'dialog');
   b.setAttribute('aria-expanded', 'false');
   b.addEventListener('click', () => { if (bubble) close(); else open({ from: b }); });
+  if (plays() < SHOW_PLAYS && !still()) b.appendChild(reel(me));
   return b;
 }
 

@@ -992,6 +992,7 @@ export function measure() {
      380, and then the logo goes. Measured in fractions, or a name short by
      under a pixel reads "Bo…" */
   const wm = $('wordmark');
+  switcher.reserve();
   mast.classList.remove('tight', 'tighter');
   if (wm && wm.offsetParent) {
     const text = document.createRange();
@@ -1418,8 +1419,8 @@ export function start() {
   route();
   /* the No-algorithm challenge: its card on the Wire and #challenge. Loaded
      after the first route, so it can never hold up or break the boot. */
-  /* the first three opens: the app does the hold itself */
-  setTimeout(() => switcher.coach(), 1400);
+  /* the first five opens: the name rolls through the apps */
+  setTimeout(() => switcher.coach(), 1200);
   if (panels.wire) import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
 }
 
@@ -1452,21 +1453,16 @@ $('vbox-close').innerHTML = ICON.x;
 paintSavedBtn();
 paintPlayButtons();
 
-$('wordmark').textContent = APP.name;
-$('wordmark').setAttribute('href', '#' + HOME);
-$('wordmark').addEventListener('click', (e) => {
-  e.preventDefault();
-  if (active === HOME) { scrollTop(true); checkNew(); } else go(HOME);
-});
-/* the home-screen card, from the mast, until this app is on the home
-   screen; the switcher's bubble and what is new in the other apps */
-$('wordmark').after(switcher.appsButton());
+/* the name and its chevron are one button, to the apps; the home-screen card,
+   from the mast, until this app is on the home screen; the switcher's bubble,
+   what is new in the other apps, and home from this app's row */
+$('wordmark').replaceWith(switcher.appsButton(APP));
 const installBtn = switcher.installButton();
 installBtn.hidden = asks.installed();
 const calBtn = $('cal-btn');   // All Day's page has it; Town's and Body's do not
 if (calBtn) calBtn.innerHTML = ICON.calendar;
 (calBtn || $('theme-btn')).before(installBtn);
-switcher.bind({ sheet, toast, app: APP, demo, newIn });
+switcher.bind({ sheet, toast, app: APP, demo, newIn, home: () => { if (active === HOME) { scrollTop(true); checkNew(); } else go(HOME); } });
 
 /* Whether another app has something new since the reader last looked
    there, for the dot in the switcher. Honest and cheap: a tab of that app

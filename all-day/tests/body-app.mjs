@@ -357,6 +357,15 @@ export async function bodyTests(browser, base, h) {
     await page.goto(base + '/body/#leagues');
     await page.waitForSelector('.lg-wrap');
     check((await page.$$('.lg-org')).length === L.organizers.filter((o) => live(o).length).length, 'every organizer with a running league has a tile', '');
+    const tiles = (await page.$$('.lg-org')).length;
+    const sportsNow = (await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent.trim()))).slice(1);
+    const jumps = await page.$$eval('.lg-wrap > .jumprow', (n) => n.map((x) => x.textContent));
+    check(jumps.length === Math.floor(tiles / 8) && jumps.every((j, i) => j === 'More ' + sportsNow[i % sportsNow.length]), 'All has a jump row every eight organizers, in the pill’s order', jumps.join() + ' / ' + sportsNow.join());
+    await page.click('.lg-wrap > .jumprow');
+    await sleep(250);
+    check(!(await page.$('.jumprow')) && (await page.$eval('#subnav .secpill .chip.on', (c) => 'More ' + c.textContent.trim())) === jumps[0], 'a jump row filters to that sport and the pill follows', '');
+    await page.click('#subnav .secpill .chip:has-text("All")');
+    await sleep(250);
     const game = L.organizers.find((o) => o.id === 'game-on-vt');
     const rows = await page.$$eval('[data-org="game-on-vt"] .lg-sport summary', (n) => n.map((x) => x.textContent));
     check(rows.length === new Set(live(game).map((x) => x.sport)).size, 'one small row per sport, not one tile per league', rows.join());

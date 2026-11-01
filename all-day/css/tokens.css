@@ -171,6 +171,11 @@
   --app-town: #2A3442;              /* slate, city hall */
   --app-town-pop: #2F6FB2;          /* lake blue */
   --app-town-pop-ink: #FFFFFF;
+  /* each app's name in colour on any app's mast, for the name's roll (big
+     type, 3:1 or better on every mast, both themes) */
+  --app-all-day-lit: var(--app-all-day-pop);
+  --app-body-lit: var(--app-body-pop);
+  --app-town-lit: #83B5E9;
   --recap: #5B3F94;                 /* a recap's kind title */
   --recap-soft: #EEE8F6;            /* a recap's card */
   --recap-line: rgba(91, 63, 148, .18);

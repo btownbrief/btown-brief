@@ -8,7 +8,7 @@
    (the day's street once the houses run out), then the feed, with a "You're
    caught up" line where the new ones stop. The newest council summary is one
    tile, dated, and opens City Hall's Council section. The pill filters by kind, freshest
-   kind first.
+   kind first. It sits still on Latest, so jump rows in that list go to the kinds.
 
    Tiles with a place show the state's aerial photo of it, stored with the site
    in data/town/aerials so a reader never calls the state's server. A private
@@ -23,7 +23,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON, agoShort, safeHref, art } from '../ui.js';
+import { el, esc, ICON, agoShort, safeHref, art, jumpRow, jumpAt } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { getJSON, fmtDay, money, shortMoney, daysTo, today, plusDays, dayOf } from './town-kit.js';
 import { chips as outsideChips, WEATHER_URL } from '../outside.js';
@@ -37,6 +37,7 @@ const COPY = {
   all: 'Latest',
   isNew: 'New',
   caught: 'You’re caught up',
+  jump: (l) => (l.key === 'news' ? 'Read more news' : 'More ' + l.label),
   fresh: (n) => (n === 1 ? '1 new' : n + ' new'),
   since: 'since you checked',
   quiet: 'Nothing new yet',
@@ -341,6 +342,12 @@ function inLane(t) {
   const lane = LANES.find((l) => l.key === S.filter);
   return !!lane && lane.kinds.includes(t.kind);
 }
+/* the pill's kinds, freshest first */
+function lanes() {
+  const newest = (l) => Math.max(0, ...S.tiles.filter((t) => l.kinds.includes(t.kind)).map((t) => ms(t) / 1000));
+  return LANES.map((l) => ({ ...l, newest: newest(l) })).filter((l) => l.newest).sort((a, b) => b.newest - a.newest);
+}
+const alive = (l) => S.tiles.some((t) => l.kinds.includes(t.kind) && !S.dead.has(t.id));
 function draw() {
   const root = S.root;
   if (!root) return;
@@ -357,9 +364,12 @@ function draw() {
   }
   const list = S.tiles.filter((t) => inLane(t) && !S.dead.has(t.id) && !(S.filter === 'all' && (t === S.pick || t === S.hot)));
   let marked = S.filter !== 'all' || !list.some(fresh);
-  list.forEach((t) => {
+  const kinds = S.filter === 'all' ? lanes().filter(alive) : [];
+  list.forEach((t, i) => {
     if (!marked && !fresh(t)) { wrap.appendChild(el('div', 'tf-caught', esc(COPY.caught))); marked = true; }
     wrap.appendChild(tile(t));
+    const l = jumpAt(i, list.length, kinds);
+    if (l) wrap.appendChild(jumpRow({ label: COPY.jump(l), color: '--app-town-pop', onPick: () => setFilter(l.key) }));
   });
   if (!list.length) wrap.appendChild(el('p', 'tf-empty', esc(COPY.empty)));
   root.appendChild(wrap);
@@ -513,10 +523,8 @@ app.register('feed', {
   deactivate() { looked(); },
   subnav() {
     if (!S.loaded || !S.tiles.length) return null;
-    const newest = (l) => Math.max(0, ...S.tiles.filter((t) => l.kinds.includes(t.kind)).map((t) => ms(t) / 1000));
-    const lanes = LANES.map((l) => ({ key: l.key, label: l.label, newest: newest(l) })).filter((l) => l.newest).sort((a, b) => b.newest - a.newest);
     return sectionBar({ key: 'town-feed', title: COPY.label, color: '--app-town-pop', current: S.filter, onPick: setFilter,
-      items: [{ key: 'all', label: COPY.all }].concat(lanes) });
+      items: [{ key: 'all', label: COPY.all }].concat(lanes()) });
   },
   keepSubnav: true,
   newSince() { return S.loaded ? S.tiles.filter(fresh).length : 0; },

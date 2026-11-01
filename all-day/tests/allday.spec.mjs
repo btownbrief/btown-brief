@@ -531,8 +531,8 @@ async function newPage(browser, base, opts = {}) {
   /* The shell's two asks (asks.js: home screen, newsletter) wait for real
      use, which a group that runs the clock forward can reach by accident;
      every group but the asks' own starts as a subscribed, installed reader */
-  /* the switcher shows its hold on a phone's first three opens; groups not about it start past them (opts.coach: a new phone) */
-  if (!opts.coach) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '3'); } catch (e) { /* blocked */ } });
+  /* the name rolls on a phone's first five opens; groups not about it start with the switcher used (opts.coach: a new phone) */
+  if (!opts.coach) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '6'); } catch (e) { /* blocked */ } });
   if (!opts.asks) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-asks')) localStorage.setItem('allday-asks', JSON.stringify({ subscribed: true, installed: true, 'installed-out': true, 'installed-eat': true, 'installed-people': true,
     'installed-body': true, 'installed-town': true, 'installed-play': true, 'installed-paper': true })); } catch (e) { /* blocked */ } });
   /* GoatCounter's own script is stubbed; this records what the app asks it to count */
@@ -1050,7 +1050,7 @@ async function theWire(browser, base) {
         floatHidden: getComputedStyle(f).visibility === 'hidden' && f.getAttribute('aria-hidden') === 'true',
         filters: !!document.querySelector('.wfilter'), subBg: getComputedStyle(sub).backgroundImage };
     });
-    check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfloat"]' && !chrome.filters, 'under the mast: the pill, and no Filters button', JSON.stringify(chrome));
+    check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfloat","wways"]' && !chrome.filters, 'under the mast: the pill, the day row and the row of ways', JSON.stringify(chrome));
     check(chrome.floatHidden, 'at the top the floating day row is hidden: the banner shows the same two controls', JSON.stringify(chrome));
     check(chrome.bottom <= 130, 'the chrome above the banner is 130px or less (' + chrome.bottom + ')', chrome.bottom);
     check(JSON.stringify(chrome.modes.filter((m) => m !== 'square')) === '["news","recaps","photos"]', 'the words are there from the first paint (the Square’s only while it may open)', JSON.stringify(chrome.modes));
@@ -1966,10 +1966,10 @@ async function wirePass2(browser, base) {
     await everywhere(page);
     await page.goto(base + '/all-day/');
     await openFilters(page);
-    await page.waitForSelector('#panel-wire .wband .wnsw', { timeout: 15000 });
-    const sw = await page.$$eval('#panel-wire .wband .wnsw-b', (bs) => bs.map((b) => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]));
+    await page.waitForSelector('#subnav .wnsw', { timeout: 15000 });
+    const sw = await page.$$eval('#subnav .wnsw-b', (bs) => bs.map((b) => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]));
     check(JSON.stringify(sw.map((b) => b[0] + ':' + b[1])) === '["Feed:true","Topics:false"]' && sw.every((b) => b[2] >= 32), 'Feed | Topics sits in the head, Feed on', JSON.stringify(sw));
-    await page.click('#panel-wire .wnsw-b[data-news="topics"]');
+    await page.click('#subnav .wnsw-b[data-news="topics"]');
     await page.waitForSelector('#panel-wire .wshelf', { timeout: 8000 });
     const t = await page.evaluate(() => {
       const p = document.querySelector('#panel-wire');
@@ -1999,7 +1999,7 @@ async function wirePass2(browser, base) {
     await page.waitForSelector('#panel-wire .wshelf', { timeout: 15000 });
     check(true, 'a reload opens on Topics again', '');
     await openFilters(page);
-    await page.click('#panel-wire .wnsw-b[data-news="feed"]');
+    await page.click('#subnav .wnsw-b[data-news="feed"]');
     await page.waitForSelector('#panel-wire .wleads', { timeout: 8000 });
     check(await page.evaluate(() => localStorage.getItem('allday-wire-news')) === null && !(await page.$('#panel-wire .wshelf')), 'Feed brings the paper back, and the phone forgets Topics', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -15107,150 +15107,158 @@ async function theApps(browser, base) {
     await t.ctx.close();
   });
 
-  await group('apps: the first three opens show the hold, with no words, and three dots mark the cell', async () => {
+  await group('apps: the name rolls through the apps on the first five opens, and three dots mark the cell', async () => {
     const SW = await readFile(path.join(APP, 'js/switcher.js'), 'utf8');
-    const num = (name) => Number((SW.match(new RegExp('const ' + name + ' = (\\d+);')) || [])[1]);
-    const [SETTLE, RING, UP, DROP] = ['SHOW_SETTLE_MS', 'SHOW_RING_MS', 'SHOW_UP_MS', 'SHOW_DROP_MS'].map(num);
-    check(RING === 500 && UP === 1400, 'the show’s ring takes 500 ms and the bubble stays 1.4 s', RING + ' ' + UP);
-    const WAIT = 1400 + SETTLE + RING + 900;   /* past where a show would have reached its bubble */
-    /* every step of a show, as the page saw it */
+    const ROLL = Number((SW.match(/const ROLL_MS = (\d+);/) || [])[1]);
+    check(ROLL === 1600 && /const SHOW_PLAYS = 5;/.test(SW), 'the roll takes 1.6 s, on five opens', String(ROLL));
+    const WAIT = 1200 + ROLL + 500;   /* past where a roll would have ended */
+    /* every roll, as the page saw it */
     const watch = (page) => page.addInitScript(() => {
-      window.__show = [];
-      new MutationObserver((ms) => { for (const m of ms) {
-        for (const n of m.addedNodes) if (n.classList) ['holdghost', 'holdring', 'appbubble'].forEach((c) => { if (n.classList.contains(c)) window.__show.push([c, performance.now(), c === 'appbubble' ? '' : n.textContent]); });
-        for (const n of m.removedNodes) if (n.classList && n.classList.contains('appbubble')) window.__show.push(['gone', performance.now(), '']);
-      } }).observe(document, { childList: true, subtree: true });
+      window.__rolls = [];
+      addEventListener('DOMContentLoaded', () => new MutationObserver(() => {
+        const b = document.querySelector('.appsbtn'), on = !!b && b.classList.contains('rolling'), r = window.__rolls, last = r[r.length - 1];
+        if (on && (!last || last.end)) r.push({ start: performance.now(), end: 0 });
+        else if (!on && last && !last.end) last.end = performance.now();
+      }).observe(document, { attributes: true, attributeFilter: ['class'], subtree: true }));
     });
-    const steps = (page) => page.evaluate(() => window.__show.map((s) => s[0]).join());
-    const stage = (page) => page.evaluate(() => ({ ghost: !!document.querySelector('.holdghost'), ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble'),
-      key: localStorage.getItem('allday-coach-apps'), tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab }));
-    const none = (st) => !st.ghost && !st.ring && !st.bubble;
-    /* a new phone: the disc, the real ring, the real bubble, then nothing */
+    const rolls = (page) => page.evaluate(() => window.__rolls.length);
+    const state = (page) => page.evaluate(() => { const b = document.querySelector('.appsbtn'), w = document.getElementById('wordmark');
+      return { rolling: b.classList.contains('rolling'), nudge: b.classList.contains('nudge'), name: w.textContent, shown: getComputedStyle(w).visibility === 'visible',
+        reel: !!b.querySelector('.am-reel') && getComputedStyle(b.querySelector('.am-reel')).visibility === 'visible', bubble: !!document.querySelector('.appbubble'),
+        key: localStorage.getItem('allday-coach-apps'), tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab }; });
+    const lefts = (page) => page.evaluate(() => ['brand', 'cal-btn', 'theme-btn', 'saved-btn', 'settings-btn'].map((id) => { const n = document.getElementById(id); return n && n.offsetParent ? n.getBoundingClientRect().left : null; }));
+    /* a new phone, in each app: it rolls through the others and home, and nothing beside it moves */
+    const names = { 'all-day': 'All Day,Body,Town,All Day', body: 'Body,Town,All Day,Body', town: 'Town,All Day,Body,Town' };
+    for (const id of Object.keys(names)) {
+      const a = await newPage(browser, base, { coach: true, viewport: { width: 390, height: 844 } });
+      await watch(a.page);
+      await a.page.goto(base + '/' + id + '/?demo=1');
+      await a.page.waitForFunction(() => document.getElementById('wordmark').offsetParent);
+      await a.page.evaluate(() => document.fonts.ready);
+      await a.page.waitForTimeout(250);
+      const before = await lefts(a.page);
+      await a.page.waitForSelector('.appsbtn.rolling');
+      const lines = await a.page.$$eval('.am-line', (l) => l.map((x) => x.textContent));
+      check(lines.join() === names[id], id + ': the reel runs through the other apps and home', lines.join());
+      const during = [];
+      for (let k = 0; k < 8; k++) { during.push(await lefts(a.page)); await a.page.waitForTimeout(150); }
+      check(during.every((d) => JSON.stringify(d) === JSON.stringify(before)), id + ': the logo and the icons stand still through the roll', JSON.stringify([before, during[3]]));
+      await a.page.screenshot({ path: path.join(SHOTS, 'app-name-roll-' + id + '-390.png'), clip: { x: 0, y: 0, width: 390, height: 60 } });
+      await a.page.waitForSelector('.appsbtn:not(.rolling)');
+      const ran = await a.page.evaluate(() => window.__rolls[0]);
+      check(ran.end - ran.start >= ROLL - 60 && ran.end - ran.start <= ROLL + 300, id + ': it takes its own time', JSON.stringify(ran));
+      const after = await state(a.page);
+      check(after.name === APPS.find((x) => x.id === id).name && after.shown && !after.reel && after.nudge && !after.bubble && after.key === '1', id + ': it ends on its true name, the chevron pulsing, one play counted, no bubble', JSON.stringify(after));
+      check(await a.page.$eval('.appsbtn .i', (i) => getComputedStyle(i).animationName) === 'am-breathe', id + ': the slow pulse takes over', '');
+      check(!a.errors.length, id + ': no console errors', a.errors.join(' | '));
+      await a.ctx.close();
+    }
+    /* each colour on every mast: 3:1 for big type */
+    const lit = ['#F5B04B', '#5DA142', '#83B5E9'];
+    const lumOf = (hex) => { const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+    const contrast = (x, y) => { const [p, q] = [lumOf(x), lumOf(y)].sort((m, n) => n - m); return (p + .05) / (q + .05); };
+    check(lit.every((c) => ['#0E2A47', '#16334F', '#183D26', '#214A30', '#2A3442', '#343F4E'].every((m) => contrast(c, m) >= 3)), 'each name’s colour reads 3:1 on every mast, in both themes', '');
+    /* the colours as drawn */
+    const col = await newPage(browser, base, { coach: true });
+    await col.page.goto(base + '/town/?demo=1');
+    await col.page.waitForSelector('.appsbtn.rolling');
+    const drawn = await col.page.$$eval('.am-line', (l) => l.map((x) => getComputedStyle(x).color));
+    check(drawn[1] === 'rgb(245, 176, 75)' && drawn[2] === 'rgb(93, 161, 66)' && drawn[3] === 'rgb(131, 181, 233)', 'each name is in its own app’s colour', JSON.stringify(drawn));
+    await col.ctx.close();
+    /* a press stops it at once, on the true name, and it does not start again */
     const a = await newPage(browser, base, { coach: true });
-    await watch(a.page);
     await a.page.goto(base + '/town/?demo=1#alerts');
-    await a.page.waitForSelector('.holdring');
-    await a.page.screenshot({ path: path.join(SHOTS, 'app-switch-show-ring-390.png') });
-    await a.page.waitForSelector('.appbubble');
-    await a.page.screenshot({ path: path.join(SHOTS, 'app-switch-show-bubble-390.png') });
-    const quiet = await a.page.evaluate(() => !(document.activeElement && document.activeElement.closest('.appbubble')));
-    await a.page.waitForFunction(() => window.__show.some((s) => s[0] === 'gone'), null, { timeout: 6000 });
-    const ran = await a.page.evaluate(() => window.__show);
-    const gap = (i) => ran[i + 1][1] - ran[i][1];
-    check(ran.map((s) => s[0]).join() === 'holdghost,holdring,appbubble,gone', 'a new phone sees the disc, then the ring, then the bubble, which goes by itself', ran.map((s) => s[0]).join());
-    check(ran.every((s) => s[2] === ''), 'the disc and the ring carry no words', JSON.stringify(ran));
-    check(gap(0) >= SETTLE - 30 && gap(0) <= SETTLE + 400 && gap(1) >= RING - 30 && gap(1) <= RING + 400 && gap(2) >= UP + DROP - 30 && gap(2) <= UP + DROP + 400, 'each step takes its own time', JSON.stringify([gap(0), gap(1), gap(2)]));
-    check(quiet, 'the show never takes the focus', '');
-    const after = await stage(a.page);
-    check(none(after) && after.tab === 'alerts' && after.key === '1', 'it leaves the page as it was, one play counted', JSON.stringify(after));
-    check(!(await a.page.$('.coachmark')) && !(await a.page.$('#toast:not([hidden])')), 'and there is no toast', '');
-    check(!a.errors.length, 'no console errors', a.errors.join(' | '));
-    /* any touch stops it at once: during the disc, and with the bubble up */
-    await a.page.reload();
-    await a.page.waitForSelector('.holdghost');
+    await a.page.waitForSelector('.appsbtn.rolling');
     await a.page.mouse.move(2, 300);
     await a.page.mouse.down();
-    const stopped = await stage(a.page);
+    const stopped = await state(a.page);
     await a.page.mouse.up();
-    await a.page.waitForTimeout(RING + SETTLE + 200);
-    const stoppedLater = await stage(a.page);
-    check(none(stopped) && none(stoppedLater), 'a press anywhere stops it at once, and it does not start again', JSON.stringify([stopped, stoppedLater]));
-    await a.page.reload();
-    await a.page.waitForSelector('.appbubble');
-    await a.page.mouse.down();
-    const stoppedUp = await stage(a.page);
-    await a.page.mouse.up();
-    check(none(stoppedUp), 'a press off the bubble closes it at once', JSON.stringify(stoppedUp));
+    check(!stopped.rolling && stopped.shown && !stopped.reel && stopped.name === 'Town', 'a press anywhere snaps it back at once', JSON.stringify(stopped));
+    await a.page.waitForTimeout(ROLL);
+    check(!(await state(a.page)).rolling, 'and it does not start again', '');
     await a.ctx.close();
     /* a finger stops it the same way */
     const f = await newPage(browser, base, { coach: true, touch: true });
     await f.page.goto(base + '/town/?demo=1#alerts');
-    await f.page.waitForSelector('.holdghost');
+    await f.page.waitForSelector('.appsbtn.rolling');
     await f.page.touchscreen.tap(2, 300);
-    const stoppedF = await stage(f.page);
-    await f.page.waitForTimeout(RING + SETTLE + 200);
-    check(none(stoppedF) && none(await stage(f.page)), 'a finger stops it too', JSON.stringify(stoppedF));
+    check(!(await state(f.page)).rolling, 'a finger stops it too', '');
     await f.ctx.close();
     /* a finger already down and scrolling the feed makes no new press; the scroll stops it, as a wheel does */
     const sc = await newPage(browser, base, { coach: true, touch: true });
-    await watch(sc.page);
     await sc.page.goto(base + '/town/?demo=1#alerts');
-    await settle(sc.page);
-    const cdp = await sc.ctx.newCDPSession(sc.page);
-    const touch = (type, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: 195, y }] });
-    const downFirst = await steps(sc.page) === '';
-    await touch('touchStart', 700);
-    for (let y = 697, end = Date.now() + WAIT; Date.now() < end; y -= 3) { await touch('touchMove', y); await sc.page.waitForTimeout(30); }
-    const scrolled = await steps(sc.page);
-    await touch('touchEnd');
-    check(downFirst && scrolled === 'holdghost', 'a finger already down and scrolling stops it at the disc', JSON.stringify([downFirst, scrolled]));
+    await sc.page.waitForSelector('.appsbtn.rolling');
+    await sc.page.evaluate(() => document.dispatchEvent(new Event('scroll')));
+    check(!(await state(sc.page)).rolling, 'a scroll stops it', '');
     await sc.page.reload();
-    await sc.page.waitForSelector('.holdghost');
+    await sc.page.waitForSelector('.appsbtn.rolling');
     await sc.page.mouse.move(195, 400);
     await sc.page.mouse.wheel(0, 120);
-    await sc.page.waitForTimeout(RING + SETTLE + 200);
-    check(none(await stage(sc.page)) && !/appbubble/.test(await steps(sc.page)), 'a wheel stops it too', await steps(sc.page));
+    await sc.page.waitForFunction(() => !document.querySelector('.appsbtn.rolling'), null, { timeout: 500 });
+    check(true, 'a wheel stops it too', '');
     await sc.ctx.close();
-    /* a tap on a row while it is up still works, and the bubble stops going */
-    const g = await newPage(browser, base, { coach: true });
-    await g.page.goto(base + '/all-day/?demo=1');
-    await g.page.waitForSelector('.appbubble');
-    await g.page.hover('.appbubble .ab-row[data-app="town"]');
-    await g.page.mouse.down();
-    await g.page.waitForTimeout(UP + DROP + 200);
-    check(!!(await g.page.$('.appbubble')), 'a press on the bubble keeps it up', '');
-    await Promise.all([g.page.waitForURL(/\/town\/\?demo=1$/), g.page.mouse.up()]);
-    await g.ctx.close();
-    /* a press during the drop: the row stays solid, with no fade back in */
-    const dr = await newPage(browser, base, { coach: true });
-    await dr.page.goto(base + '/all-day/?demo=1');
-    await dr.page.waitForSelector('.appbubble');
-    const caught = await dr.page.evaluate((ms) => new Promise((res) => {
-      const b = document.querySelector('.appbubble');
-      new MutationObserver((_, o) => {
-        if (!b.classList.contains('ab-drop')) return;
-        o.disconnect();
-        setTimeout(() => {
-          b.querySelector('.ab-row').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-          requestAnimationFrame(() => { const s = getComputedStyle(b); res({ opacity: s.opacity, anim: s.animationName }); });
-        }, ms);
-      }).observe(b, { attributes: true });
-    }), DROP / 3);
-    await dr.page.waitForTimeout(DROP + 200);
-    check(caught.opacity === '1' && caught.anim === 'none' && !!(await dr.page.$('.appbubble')), 'a press during the drop keeps the bubble solid and up', JSON.stringify(caught));
-    await dr.ctx.close();
-    /* the first three opens, across the apps, and never a fourth */
+    /* the first five opens, across the apps, and never a sixth; the pulse stays till it is used */
     const n = await newPage(browser, base, { coach: true });
     await watch(n.page);
     const keys = [];
-    for (const id of ['all-day', 'town', 'body']) {
+    for (const id of ['all-day', 'town', 'body', 'all-day', 'town']) {
       await n.page.goto(base + '/' + id + '/?demo=1');
-      await n.page.waitForFunction(() => window.__show.length > 0, null, { timeout: 8000 });
+      await n.page.waitForFunction(() => window.__rolls.length > 0, null, { timeout: 8000 });
       keys.push(await n.page.evaluate(() => localStorage.getItem('allday-coach-apps')));
     }
-    check(keys.join() === '1,2,3', 'it plays on opens 1, 2 and 3, across all the apps', keys.join());
+    check(keys.join() === '1,2,3,4,5', 'it plays on opens 1 to 5, across all the apps', keys.join());
     await n.page.goto(base + '/all-day/?demo=1');
     await settle(n.page);
     await n.page.waitForTimeout(WAIT);
-    check(await steps(n.page) === '', 'and not on the fourth', await steps(n.page));
+    const sixth = await state(n.page);
+    check(await rolls(n.page) === 0 && sixth.key === '5' && sixth.nudge, 'not on the sixth, and the chevron still pulses', JSON.stringify(sixth));
+    /* a tap on the name ends it for good, and opens the bubble under the mast */
+    const hit = await n.page.$eval('#wordmark', (w) => { const r = w.closest('button').getBoundingClientRect(); return { h: r.height, x: r.left + 12, y: r.top + 4 }; });
+    check(hit.h >= 44, 'the name and chevron are one button, 44px tall', JSON.stringify(hit));
+    await n.page.mouse.click(hit.x, hit.y);
+    await n.page.waitForSelector('.appbubble');
+    const tapped = await state(n.page);
+    check(tapped.key === '6' && !tapped.nudge, 'a tap on the name opens the bubble and ends the pulse', JSON.stringify(tapped));
+    check(await n.page.$eval('.appbubble', (b) => b.getBoundingClientRect().top >= document.querySelector('.appsbtn').getBoundingClientRect().bottom), 'from the mast', '');
+    await n.page.keyboard.press('Escape');
+    await n.page.reload();
+    await settle(n.page);
+    await n.page.waitForTimeout(WAIT);
+    const done = await state(n.page);
+    check(await rolls(n.page) === 0 && !done.nudge, 'and after that nothing plays or pulses', JSON.stringify(done));
     await n.ctx.close();
-    /* one real hold ends it for good */
+    /* home went from the name to this app's row */
+    const r = await newPage(browser, base);
+    await r.page.goto(base + '/town/?demo=1#alerts');
+    await settle(r.page);
+    await r.page.click('#wordmark');
+    await r.page.waitForSelector('.appbubble');
+    check((await state(r.page)).tab === 'alerts', 'a tap on the name no longer changes the tab', '');
+    await r.page.click('.appbubble .ab-row.on');
+    await r.page.waitForFunction(() => document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab !== 'alerts');
+    check(!(await r.page.$('.appbubble')), 'this app’s row goes home and closes the bubble', '');
+    await r.ctx.close();
+    /* one real hold ends it for good, mid-roll */
     const h = await newPage(browser, base, { coach: true });
     await watch(h.page);
     await h.page.goto(base + '/town/?demo=1#alerts');
-    await h.page.waitForSelector('.holdghost');
-    const hc = await h.page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await h.page.waitForSelector('.appsbtn.rolling');
+    const hc = await h.page.$eval('#tabbar .holdcell', (x) => { const b = x.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
     await h.page.mouse.move(hc.x, hc.y);
     await h.page.mouse.down();
     await h.page.waitForSelector('.appbubble');
     await h.page.mouse.up();
-    await h.page.waitForTimeout(UP + DROP + 300);
-    check((await stage(h.page)).bubble, 'a real hold during the show is the reader’s: the bubble stays', '');
+    await h.page.waitForTimeout(ROLL);
+    const heldUp = await state(h.page);
+    check(heldUp.bubble && !heldUp.rolling && !heldUp.nudge, 'the hold still works, and stops the roll', JSON.stringify(heldUp));
     await h.page.reload();
     await settle(h.page);
     await h.page.waitForTimeout(WAIT);
-    check(await steps(h.page) === '' && (await stage(h.page)).key === '3', 'one real hold ends it for good', JSON.stringify([await steps(h.page), await stage(h.page)]));
+    const heldDone = await state(h.page);
+    check(await rolls(h.page) === 0 && heldDone.key === '6' && !heldDone.nudge, 'one real hold ends it for good', JSON.stringify(heldDone));
     await h.ctx.close();
+    /* the automatic bubble is gone for good */
+    check(!/holdghost|ab-rise/.test(SW), 'the app no longer opens the bubble by itself', '');
     /* an old timestamp, a blocked store, a hidden page and an open sheet play nothing, and break nothing */
     const old = await newPage(browser, base, { coach: true });
     await watch(old.page);
@@ -15258,7 +15266,7 @@ async function theApps(browser, base) {
     await old.page.goto(base + '/town/?demo=1');
     await settle(old.page);
     await old.page.waitForTimeout(WAIT);
-    check(await steps(old.page) === '' && (await stage(old.page)).key === '1761860000000', 'an old coach mark’s timestamp never plays it', await steps(old.page));
+    check(await rolls(old.page) === 0 && (await state(old.page)).key === '1761860000000', 'an old coach mark’s timestamp never plays it', '');
     await old.ctx.close();
     const blocked = await newPage(browser, base, { coach: true });
     await watch(blocked.page);
@@ -15266,7 +15274,7 @@ async function theApps(browser, base) {
     await blocked.page.goto(base + '/town/?demo=1');
     await settle(blocked.page);
     await blocked.page.waitForTimeout(WAIT);
-    check(await steps(blocked.page) === '' && !blocked.errors.length, 'a blocked store plays nothing and throws nothing', blocked.errors.join(' | '));
+    check(await rolls(blocked.page) === 0 && !blocked.errors.length, 'a blocked store plays nothing and throws nothing', blocked.errors.join(' | '));
     await blocked.ctx.close();
     const hid = await newPage(browser, base, { coach: true });
     await watch(hid.page);
@@ -15275,7 +15283,7 @@ async function theApps(browser, base) {
     await settle(hid.page);
     await hid.page.waitForTimeout(WAIT);
     const hidKey = await hid.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
-    check(await steps(hid.page) === '' && hidKey === null, 'a hidden page plays nothing and spends no play', await steps(hid.page));
+    check(await rolls(hid.page) === 0 && hidKey === null, 'a hidden page plays nothing and spends no play', '');
     await hid.ctx.close();
     const sh = await newPage(browser, base, { coach: true });
     await watch(sh.page);
@@ -15284,41 +15292,35 @@ async function theApps(browser, base) {
     await sh.page.waitForSelector('.sheet-body');
     await sh.page.waitForTimeout(WAIT);
     const shKey = await sh.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
-    check(await steps(sh.page) === '' && shKey === null, 'an open sheet plays nothing and spends no play', await steps(sh.page));
+    check(await rolls(sh.page) === 0 && shKey === null, 'an open sheet plays nothing and spends no play', '');
     await sh.ctx.close();
-    const vb = await newPage(browser, base, { coach: true });
-    await watch(vb.page);
-    await vb.page.goto(base + '/all-day/?demo=1#watch');
-    await vb.page.click('#panel-watch .wt-drop-pic');
-    await vb.page.waitForSelector('#vbox:not([hidden])');
-    await vb.page.waitForTimeout(WAIT);
-    const vbKey = await vb.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
-    check(await steps(vb.page) === '' && vbKey === null, 'an open video box plays nothing and spends no play', await steps(vb.page));
-    await vb.page.reload();
-    await vb.page.evaluate(() => { document.getElementById('confirm').hidden = false; });
-    await vb.page.waitForTimeout(WAIT);
-    const cfKey = await vb.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
-    check(await steps(vb.page) === '' && cfKey === null, 'an open confirm box plays nothing and spends no play', await steps(vb.page));
-    await vb.ctx.close();
-    /* reduced motion: the same steps, nothing animated */
+    /* reduced motion: no roll, and a chevron that stays still */
     const rm = await newPage(browser, base, { coach: true, motion: 'reduce' });
+    await watch(rm.page);
     await rm.page.goto(base + '/town/?demo=1');
-    await rm.page.waitForSelector('.holdghost');
-    const rmGhost = await rm.page.$eval('.holdghost', (x) => getComputedStyle(x).animationName);
-    await rm.page.waitForSelector('.holdring');
-    const rmRing = await rm.page.$eval('.holdring .hr-fill', (x) => getComputedStyle(x).animationName);
-    await rm.page.waitForSelector('.appbubble');
-    const rmBubble = await rm.page.$eval('.appbubble', (x) => getComputedStyle(x).animationName);
-    check(rmGhost === 'none' && rmRing === 'none' && rmBubble === 'none', 'reduced motion: the same steps, with no animation', JSON.stringify([rmGhost, rmRing, rmBubble]));
-    await rm.page.waitForSelector('.appbubble', { state: 'detached', timeout: 4000 });
+    await settle(rm.page);
+    await rm.page.waitForTimeout(WAIT);
+    const rmAnim = await rm.page.$eval('.appsbtn .i', (i) => getComputedStyle(i).animationName);
+    check(await rolls(rm.page) === 0 && rmAnim === 'none' && !(await rm.page.$('.am-reel')), 'reduced motion: no roll, a static chevron', rmAnim);
     await rm.ctx.close();
-    /* wide: the bubble beside the rail, and no dots on the rail */
+    /* a small phone: each name fits, on its first open too */
+    for (const id of ['all-day', 'body', 'town']) {
+      const s = await newPage(browser, base, { coach: true, viewport: { width: 320, height: 700 } });
+      await s.page.goto(base + '/' + id + '/?demo=1');
+      await s.page.waitForSelector('.appsbtn.rolling');
+      const m = await s.page.evaluate(() => { const b = document.querySelector('.appsbtn'), row = document.querySelector('.mast-row'), wm = document.getElementById('wordmark'), rect = (n) => n && n.offsetParent ? n.getBoundingClientRect() : null;
+        const next = [...row.children].slice(1).map(rect).filter(Boolean)[0], reel = b.querySelector('.am-track').getBoundingClientRect();
+        return { over: row.scrollWidth - row.clientWidth, whole: wm.scrollWidth <= wm.clientWidth + 1, reelEnd: b.getBoundingClientRect().left + reel.width, next: next.left }; });
+      check(m.over <= 0 && m.whole && m.reelEnd <= m.next, id + ' at 320: the widest name fits beside the icons', JSON.stringify(m));
+      await s.ctx.close();
+    }
+    /* wide: the mast has no name, so no roll, and the hold is unchanged */
     const w = await newPage(browser, base, { coach: true, viewport: { width: 1280, height: 800 } });
+    await watch(w.page);
     await w.page.goto(base + '/all-day/?demo=1');
-    await w.page.waitForSelector('.appbubble');
-    const wide = await w.page.evaluate(() => ({ side: document.querySelector('.appbubble').getBoundingClientRect().left >= document.getElementById('tabbar').getBoundingClientRect().right,
-      dots: getComputedStyle(document.querySelector('#tabbar .holdcell'), '::after').display }));
-    check(wide.side && wide.dots === 'none', 'wide: the show opens beside the rail, which has no dots', JSON.stringify(wide));
+    await settle(w.page);
+    await w.page.waitForTimeout(WAIT);
+    check(await rolls(w.page) === 0 && await w.page.evaluate(() => localStorage.getItem('allday-coach-apps')) === null && await w.page.$eval('#tabbar .holdcell', (x) => getComputedStyle(x, '::after').display) === 'none', 'wide: no roll, no play spent, no dots on the rail', '');
     await w.ctx.close();
     /* the dots: three, one per app, on every phone bar, in both themes */
     const rgb = (name) => { const h = tok(name); return 'rgb(' + [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(', ') + ')'; };
@@ -16934,10 +16936,10 @@ async function theFeeds(browser, base) {
     check(leads[0] === true && leads.slice(1).every((x) => !x), 'one big card, then rows', JSON.stringify(leads));
     await page.click(BAND + ' .wf-open');
     await page.waitForSelector(BAND + ' .wf-ways');
-    check(!!(await page.$(BAND + ' .wf-raw')) && !!(await page.$(BAND + ' .wnsw')), 'Filters opens them in place, with Feed and Topics', '');
-    await page.click(BAND + ' .wf-nopol');
+    check(!!(await page.$(BAND + ' .wf-raw')) && !!(await page.$('#subnav .wways:not(.shut) .wnsw')), 'Filters opens them in place, with Feed and Topics', '');
+    await page.click('#subnav .wf-nopol');
     await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
-    check(await page.$eval(BAND + ' .wf-nopol', (b) => b.getAttribute('aria-pressed')) === 'true', 'Hide politics stays pressed', '');
+    check(await page.$eval('#subnav .wf-nopol', (b) => b.getAttribute('aria-pressed')) === 'true', 'Hide politics stays pressed', '');
     await page.reload();
     await settle(page);
     check(await page.$eval(BAND + ' .wf-open span', (s) => s.textContent) === 'Filters · 1', 'Hide politics is kept', '');
@@ -17299,7 +17301,7 @@ async function theFeeds(browser, base) {
     check(before.includes('w3') && before.includes('w22'), 'the paper holds a tagged story and an untagged one', before.join());
     check(/midterms/.test(await strip()), 'and the strip a politics line', '');
     await page.click(BAND + ' .wf-open');
-    await page.click(BAND + ' .wf-nopol');
+    await page.click('#subnav .wf-nopol');
     await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
     const after = await keys();
     check(!after.includes('w3'), 'the story tagged politics is gone', after.join());
@@ -17449,12 +17451,76 @@ async function theFeeds(browser, base) {
     }
   });
 
+  await group('Feeds: the row of ways floats, shrinks into Filters, and Good news', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const WAYS = '#subnav .wways';
+    await page.addInitScript(() => { new MutationObserver((l) => { if (l.some((m) => m.target.classList.contains('flash'))) window.__flashed = 1; }).observe(document, { subtree: true, attributes: true, attributeFilter: ['class'] }); });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const ways = () => page.$eval(WAYS, (b) => {
+      const r = b.querySelector('.wways-row');
+      return { shut: b.classList.contains('shut'), stuck: b.classList.contains('stuck'), order: [...r.children].map((n) => n.textContent),
+        seen: getComputedStyle(r).visibility, pageW: document.documentElement.scrollWidth, w: innerWidth, right: r.getBoundingClientRect().right };
+    });
+    const first = await ways();
+    check(!first.shut && first.order.join('|') === 'FeedTopics|Good news|Hide politics', 'Feed and Topics, Good news, Hide politics, in that order', JSON.stringify(first));
+    check(first.pageW <= first.w && first.right <= first.w, 'the row stays on the screen', JSON.stringify(first));
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('#subnav .wways-row')).visibility === 'hidden', null, { timeout: 6000 });
+    check((await ways()).shut && await page.evaluate(() => !!window.__flashed), 'after a few seconds it goes, and Filters flashes', '');
+    await page.click('#subnav [data-view="photos"]');
+    await page.click('#subnav [data-view="news"]');
+    await page.waitForSelector(WAYS);
+    check((await ways()).shut, 'coming back to News does not play it again', '');
+    await page.$eval('#panel-wire', (p) => { p.scrollTop = 1500; p.dispatchEvent(new Event('scroll')); });
+    await page.waitForSelector('#subnav .wways.stuck .wf-open', { state: 'visible', timeout: 3000 });
+    await page.click('#subnav .wways .wf-open');
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('#subnav .wways-row')).visibility === 'visible');
+    check(!(await ways()).shut, 'the floating Filters brings the row back down the page', '');
+    await page.click('#subnav .wways .wf-open');
+    await page.waitForFunction(() => document.querySelector('#subnav .wways').classList.contains('shut'));
+    await page.click('#subnav .wways .wf-open');
+    await page.click('#subnav .wf-good');
+    await page.waitForSelector('#panel-wire .feed.wire [data-k^="if-"]');
+    const good = await page.evaluate(() => ({ cards: document.querySelectorAll('#panel-wire .feed.wire .card').length, other: document.querySelectorAll('#panel-wire .feed.wire .card:not([data-k^="if-"])').length,
+      day: !!document.querySelector('#panel-wire .wband .wday'), kept: localStorage.getItem('allday-wire-news'), on: document.querySelector('#subnav .wf-good').getAttribute('aria-pressed') }));
+    check(good.cards > 0 && !good.other && !good.day && good.kept === 'good' && good.on === 'true', 'Good news replaces the list and is kept', JSON.stringify(good));
+    await page.click('#panel-wire .feed.wire [data-k^="if-"] .act.star');
+    check(await page.$eval('#panel-wire .feed.wire [data-k^="if-"] .act.star', (b) => b.classList.contains('on')), 'its star works', '');
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-wire .feed.wire [data-k^="if-"]');
+    const row = await page.$(WAYS + ' .wways-row');
+    await row.dispatchEvent('pointerdown');
+    await page.waitForTimeout(4600);
+    check(!(await ways()).shut, 'a touch on the row keeps it out', '');
+    await page.click('#subnav .wf-good');
+    await page.waitForSelector('#panel-wire .wleads');
+    check(await page.evaluate(() => localStorage.getItem('allday-wire-news')) === null, 'tapped again, the paper is back', '');
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.waitForTimeout(100);
+    const narrow = await ways();
+    check(narrow.pageW <= 320, 'at 320 nothing runs off the page', JSON.stringify(narrow));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Feeds: with reduced motion the row hides without a shrink', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const t = await page.$eval('#subnav .wways-row', (r) => getComputedStyle(r).transitionDuration);
+    check(t === '0s', 'no transition on the row', t);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Feeds: targets, focus and contrast', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
     await page.click(BAND + ' .wf-open');
-    await page.waitForSelector(BAND + ' .wf-nopol');
+    await page.waitForSelector('#subnav .wways:not(.shut) .wf-nopol');
     /* what answers a tap, not what the stylesheet says: from the middle of the
        target, how far up and down the control is still the one under the finger */
     const reach = (sel) => page.$eval(sel, (n) => {
@@ -17466,7 +17532,7 @@ async function theFeeds(browser, base) {
       while (down < 30 && hits(down + 0.5)) down += 0.5;
       return Math.round(up + down);
     });
-    const heights = [await reach('#panel-wire .wf-open'), await reach('#panel-wire .wf-nopol')];
+    const heights = [await reach('#panel-wire .wf-open'), await reach('#subnav .wf-nopol'), await reach('#subnav .wf-good'), await reach('#subnav .wnsw-b')];
     check(await page.evaluate(() => document.activeElement.classList.contains('wf-open')), 'Filters keeps focus', '');
     await page.click('#subnav .xcell');
     await page.waitForSelector('#panel-wire .ifeed[data-feed="dogs"]');
@@ -17749,7 +17815,7 @@ async function theExplore(browser, base) {
     await page.click('#subnav .wmode[data-view="news"]');
     await page.waitForSelector(BAND + ' .wf-open');
     await page.click(BAND + ' .wf-open');
-    await page.click(BAND + ' .wf-nopol');
+    await page.click('#subnav .wf-nopol');
     await page.waitForFunction(() => document.querySelector('.wf-open span').textContent.includes('· 1'));
     await page.click(CELL);
     await wallOn(page);
@@ -17904,6 +17970,19 @@ async function theExplore(browser, base) {
     await ctx.close();
   });
 
+  await group('Explore: two feeds take turns', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await withIg(page, [...Array(14).keys()].map((i) => post('dogz' + i, { t: 'dogs', h: 'demo_dogs' + i, c: 'A very good beagle on the lawn ' + i, hours: 1 + i / 10 }))
+      .concat([1, 2, 3].map((i) => post('homey' + i, { t: 'home', h: 'demo_home' + i, c: 'A new porch going up, week ' + i, hours: 200 + i }))), true);
+    await page.goto(base + '/all-day/?demo=1#wire/feed/dogs+home');
+    await page.waitForFunction(async () => (await import('./js/modes/wire-interests.js'))._state().order.some((k) => /Demohomey/.test(k)));
+    const top = (await order(page)).slice(0, 6);
+    const n = (re) => top.filter((k) => re.test(k)).length;
+    check(n(/Demohomey/) >= 2 && n(/Demodogz/) >= 2, 'of the top six, each feed on has at least two', top.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Explore: an offer that has run out', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     const demoNow = Date.parse(JSON.parse(await readFile(path.join(APP, 'data/demo/wire.json'), 'utf8')).now);
@@ -17944,6 +18023,15 @@ async function theExplore(browser, base) {
         turn: isOver(p('Back on Jan 3', 11, 28), new Date(2026, 11, 30).getTime()),
         tonight: [isOver(p('Tonight at the Flynn', 9, 20), at(9, 20, 20)), isOver(p('Tonight at the Flynn', 9, 20), at(9, 21))],
         spooky: isOver(p('Happy Halloween from the shop', 9, 30), at(10, 1)),
+        holiday: {
+          costume: [isOver(p('Costumes on the rack', 9, 28), at(10, 1)), isOver(p('Costumes on the rack', 9, 28), at(9, 31))],
+          deep: isOver(p('x'.repeat(300) + ' halloween', 9, 28), at(10, 1)),
+          words: [isOver({ cp: 'Halloween rack', ts: at(9, 28) / 1000 }, at(10, 1)), isOver({ hd: 'Costume party', ts: at(9, 28) / 1000 }, at(10, 1))],
+          dated: isOver(p('Halloween sale through Nov 15', 9, 28), at(10, 1)),
+          jewelry: isOver(p('Costume jewelry just in', 9, 28), at(10, 1)),
+          friday: [isOver(p('Black Friday deals', 10, 20), at(10, 27)), isOver(p('Black Friday deals', 10, 20), at(10, 28))],
+          xmas: [isOver(p('Christmas trees here', 11, 10), at(11, 25)), isOver(p('Christmas trees here', 11, 10), at(11, 26))],
+        },
         posterKind: [isOver({ kind: 'poster', c: 'A show', ts: at(9, 20) / 1000 }, at(9, 27)), isOver({ kind: 'poster', c: 'A show', ts: at(9, 20) / 1000 }, at(9, 23))],
         doPost: [aged({ s: 'do', ts: at(9, 20) / 1000 }, at(9, 27)), aged({ s: 'do', ts: at(9, 20) / 1000 }, at(9, 23)), isOver({ s: 'do', c: 'A rack of coats', ts: at(9, 20) / 1000 }, at(9, 27))],
         plain: isOver(p('A very good dog', 8, 1), at(10, 1)),
@@ -17955,6 +18043,10 @@ async function theExplore(browser, base) {
     check(!over.later && !over.both && !over.turn, 'a date still to come keeps it, across the new year too', JSON.stringify(over));
     check(!over.year && !over.always, 'history and 24/7 are not dates', JSON.stringify(over));
     check(!over.tonight[0] && over.tonight[1] && over.spooky, 'tonight and Halloween count once the day is past', JSON.stringify(over));
+    const hol = over.holiday;
+    check(hol.costume[0] && !hol.costume[1] && hol.deep && hol.words.every(Boolean), 'Halloween or costumes anywhere in a post are over after Oct 31', JSON.stringify(hol));
+    check(hol.dated && !hol.jewelry, 'a later date does not save it, and costume jewelry is not a costume', JSON.stringify(hol));
+    check(!hol.friday[0] && hol.friday[1] && !hol.xmas[0] && hol.xmas[1], 'Black Friday and Christmas last to their day', JSON.stringify(hol));
     check(over.posterKind[0] && !over.posterKind[1] && !over.plain, 'a flyer ages out; a plain picture does not', JSON.stringify(over));
     check(over.doPost.join() === 'true,false,false', 'a do post ages out of the Wire’s wall, and not out of the shops', JSON.stringify(over.doPost));
     check(!errors.length, 'no console errors', errors.join(' | '));

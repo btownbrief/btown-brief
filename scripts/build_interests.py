@@ -109,8 +109,11 @@ SOURCES = {
         ("UPI Odd News", "https://rss.upi.com/news/odd_news.rss", None),
         ("Seven Days", "https://www.sevendaysvt.com/category/arts-culture/feed/", None),
         ("Seven Days WTF", "https://www.sevendaysvt.com/category/wtf/feed/", None),
+        ("Seven Days", "https://www.sevendaysvt.com/category/food-drink/feed/", None),
         ("Vermont Public", "https://www.vermontpublic.org/local-news.rss", None),
         ("Yankee", "https://newengland.com/feed/", None),
+        ("Google News", GOOGLE + "Burlington+Vermont+festival+OR+community+OR+volunteers+OR+celebrates+when:14d", None),
+        ("Google News", GOOGLE + "Vermont+community+volunteers+OR+festival+OR+celebrates+when:14d", None),
     ],
     "nosy": [
         ("The Smoking Gun", "https://www.thesmokinggun.com/rss.xml", None),

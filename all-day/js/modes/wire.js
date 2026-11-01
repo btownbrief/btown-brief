@@ -158,9 +158,13 @@ const W = {
   ch: 'all',
   topic: 'all',         // or a TOPICS key
   sport: 's:all',       // under Sports: 's:' and a SPORTS key
-  news: readNews(),     // News as the Feed or as Topics' shelves
+  news: readNews(),     // News as the Feed, Topics' shelves or Good news
   nopol: !!store.read(NOPOL_KEY, false),   // Hide politics
   fopen: false,         // News: the Filters row is open
+  wopen: false,         // News: the floating row of ways is out
+  wplayed: false,       // that row has shown itself this app open
+  wleft: 0,             // how far along it the reader had scrolled
+  goodN: -1,            // the Good news rows last seen; -1 until the file answers
   letIn: null,          // a shared card's key, shown past the filters for this visit
   shelves: new Set(),   // the shelves opened past four
   rkind: 'all',         // Recaps: one kind, or all of them
@@ -186,8 +190,8 @@ const W = {
   raw: { outlet: '', q: '', run: null, list: null, until: null, keep: 0 },
   hunt: 0,              // the newest deep-link search; an older one stops
 };
-function readNews() { try { return localStorage.getItem(NEWS_KEY) === 'topics' ? 'topics' : 'feed'; } catch (e) { return 'feed'; } }
-function keepNews(v) { try { if (v === 'topics') localStorage.setItem(NEWS_KEY, v); else localStorage.removeItem(NEWS_KEY); } catch (e) { /* this visit only */ } }
+function readNews() { try { const v = localStorage.getItem(NEWS_KEY); return v === 'topics' || v === 'good' ? v : 'feed'; } catch (e) { return 'feed'; } }
+function keepNews(v) { try { if (v !== 'feed') localStorage.setItem(NEWS_KEY, v); else localStorage.removeItem(NEWS_KEY); } catch (e) { /* this visit only */ } }
 const follows = app.demo ? Object.create(null) : { ...store.read('allday-follows', {}) };
 function setFollow(sid, on) {
   if (on) follows[sid] = 1; else delete follows[sid];
@@ -342,6 +346,9 @@ const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic ==
 /* Sports and Markets read their lanes, the rest the river */
 const lanes = () => W.topic === 't:sports' || W.topic === 't:markets';
 const topicsOn = () => W.news === 'topics' && W.mode === 'news' && W.view === 'paper' && W.ch !== 'instagram';
+/* Good news fills the News list until a source chip, a day or a link asks for
+   the paper; a feed with nothing in it is no Good news at all */
+const goodOn = () => W.news === 'good' && W.mode === 'news' && W.view === 'paper' && !W.wall && W.ch === 'all' && W.topic === 'all' && !W.start && feeds.goodCount() !== 0;
 /* no filter on: the Brief and What matters lead the day */
 const unfiltered = () => W.ch === 'all' && W.topic === 'all';
 /* the paper itself is on screen, not Unfiltered and not the wall */
@@ -478,7 +485,98 @@ function subnav() {
     bar.appendChild(fl);
     requestAnimationFrame(floatCheck);
   }
+  if (waysShown()) {
+    waysArrive();
+    bar.appendChild(waysBox());
+  }
   return bar;
+}
+
+/* ---------------------------------------------------- the row of ways */
+/* Feed | Topics, Good news, Hide politics, floating under the pill (Stephen,
+   2026-11-01: "have it on, but then it disappears after like a few seconds").
+   On arriving at News it shows, then shrinks into the Filters button, which
+   flashes twice, once an app open. A touch on the row keeps it out. Filters
+   brings it back and it stays until Filters closes it. It sits under the
+   banner at the top of the paper and rises with it, and the Filters that
+   floats beside it shows once the banner's own has gone. */
+const WAYS_MS = 4000;       // how long the row shows on arriving
+const FLASH_MS = 1000;      // the two flashes (app.css wf-flash)
+let waysTimer = 0, waysLate = 0;
+const waysShown = () => inPaper() && W.mode === 'news' && W.ch !== 'instagram';
+const waysHost = () => document.querySelector('#subnav .wways');
+function waysList() { return [newsSwitch(), goodBtn(), noPolitics()].filter(Boolean); }
+function waysBox() {
+  const box = el('div', 'wways' + (W.wopen ? '' : ' shut'));
+  const row = el('div', 'wways-row');
+  row.setAttribute('role', 'group');
+  row.setAttribute('aria-label', 'Ways to read the news');
+  row.append(...waysList());
+  row.addEventListener('pointerdown', waysHold);
+  row.addEventListener('focusin', waysHold);
+  row.addEventListener('scroll', () => { W.wleft = row.scrollLeft; waysHold(); }, { passive: true });
+  box.append(filtersBtn(true), row);
+  /* every repaint is a new row: it comes back where the reader left it */
+  if (W.wleft) requestAnimationFrame(() => { row.scrollLeft = W.wleft; });
+  return box;
+}
+function waysArrive() {
+  if (W.wplayed) return;
+  W.wplayed = true;
+  W.wopen = true;
+  waysTimer = setTimeout(waysAway, WAYS_MS);
+}
+function waysHold() { clearTimeout(waysTimer); waysTimer = 0; }
+/* the Filters on screen: the banner's, or the floating one once that has gone */
+function waysFilters() {
+  const box = waysHost();
+  return box && box.classList.contains('stuck') ? box.querySelector('.wf-open') : W.root && W.root.querySelector('.wband .wf-open');
+}
+/* out or in, in place: the page under it is not drawn again */
+function waysSet(on) {
+  waysHold();
+  W.wplayed = true;
+  W.wopen = on;
+  const box = waysHost();
+  if (!box) return;
+  const row = box.querySelector('.wways-row'), to = waysFilters();
+  if (to) {
+    const a = to.getBoundingClientRect(), r = row.getBoundingClientRect();
+    row.style.transformOrigin = Math.round(a.left + a.width / 2 - r.left) + 'px ' + Math.round(a.top + a.height / 2 - r.top) + 'px';
+  }
+  box.classList.toggle('shut', !on);
+  const b = box.querySelector('.wf-open');
+  b.classList.toggle('on', on);
+  b.setAttribute('aria-expanded', on ? 'true' : 'false');
+  waysMeasure();
+}
+function waysAway() {
+  waysSet(false);
+  const on = document.querySelectorAll('#subnav .wf-open, #panel-wire .wband .wf-open');
+  on.forEach((b) => b.classList.add('flash'));
+  setTimeout(() => on.forEach((b) => b.classList.remove('flash')), FLASH_MS);
+}
+/* where the row is: under the banner's chips, or its place in Filters, until
+   those have gone up to the floating line */
+function waysPlace() {
+  waysMeasure();
+  /* the mast comes back on a transition, with no scroll to say so */
+  clearTimeout(waysLate);
+  waysLate = setTimeout(waysMeasure, 320);
+}
+function waysMeasure() {
+  const box = waysHost();
+  if (!box) return;
+  const line = box.parentElement.getBoundingClientRect().top + box.offsetTop;
+  const spot = W.root && W.root.querySelector('.wband .wf-ways');
+  const btn = W.root && W.root.querySelector('.wband .wf-open');
+  const at = spot ? spot.getBoundingClientRect().top + 4 : btn ? btn.getBoundingClientRect().bottom + 6 : 0;
+  const down = Math.max(0, Math.round(at - line));
+  box.style.setProperty('--ways-down', down + 'px');
+  box.classList.toggle('stuck', !down);
+  /* out at the top of the paper it takes its own room, off the first headline */
+  const band = W.root && W.root.querySelector('.wband');
+  if (band) band.classList.toggle('ways-room', !!W.wopen && !!down && !spot);
 }
 
 /* ----------------------------------------------------------- the banner */
@@ -492,7 +590,7 @@ function subnav() {
    scroll"). The wide screen's rail holds the chips instead. Each tap
    applies at once. */
 let FBODY = null;
-const dayRowShown = () => inPaper() && ((W.mode === 'news' && W.ch !== 'instagram') || W.mode === 'recaps');
+const dayRowShown = () => inPaper() && ((W.mode === 'news' && W.ch !== 'instagram' && !goodOn()) || W.mode === 'recaps');
 /* the row that floats: the day and the switch on News, the switch alone on
    Photos (Local is Burlington's pictures, Everything adds the world's), the
    day alone on Recaps (a recap is the whole of X, never local or not), the
@@ -629,6 +727,7 @@ function floatCheck() {
   /* one copy of the two controls in reach at a time */
   const top = W.root && W.root.querySelector('.wband-top');
   if (top) top.inert = on;
+  waysPlace();
 }
 /* something else drew the chips' content anew (Instagram arrived) */
 function paintFilters() {
@@ -653,10 +752,10 @@ function focusKey(n) {
 function changed() {
   W.letIn = null;
   const a = document.activeElement;
-  const host = a && a.closest ? a.closest('.wband, .aside, .wfloat') : null;
+  const host = a && a.closest ? a.closest('.wband, .aside, .wfloat, .wways') : null;
   const was = host ? focusKey(a) : null;
   /* from the floating row too, focus lands in the banner: the paper goes back to its top */
-  const where = host ? (host.classList.contains('aside') ? '#aside' : '#panel-wire .wband') : null;
+  const where = host ? (host.classList.contains('aside') ? '#aside' : host.classList.contains('wways') ? '#subnav .wways' : '#panel-wire .wband') : null;
   app.paintSubnav();
   render();
   app.scrollTop();
@@ -664,6 +763,7 @@ function changed() {
 }
 function pickKind(k) {
   W.ch = k;
+  if (W.news === 'good') { W.news = 'feed'; keepNews('feed'); }
   /* a ranking of the day only reads on the whole paper */
   if (k !== 'all') W.slot = null;
   /* the address holds one thing: on an earlier day, the day */
@@ -681,19 +781,39 @@ function clearFilters() {
   changed();
 }
 /* News' one button for everything past the source row */
-function filtersBtn() {
-  const n = (W.topic !== 'all' ? 1 : 0) + (W.slot ? 1 : 0) + (W.nopol && W.ch !== 'instagram' ? 1 : 0) + (topicsOn() ? 1 : 0);
-  const b = el('button', 'wf-open' + (W.fopen ? ' on' : ''), ICON.filter + '<span>Filters' + (n ? ' · ' + n : '') + '</span>');
+function filtersBtn(floats) {
+  const n = (W.topic !== 'all' ? 1 : 0) + (W.slot ? 1 : 0) + (W.nopol && W.ch !== 'instagram' ? 1 : 0) + (topicsOn() || goodOn() ? 1 : 0);
+  const out = floats ? W.wopen : W.fopen;
+  const b = el('button', 'wf-open' + (out ? ' on' : ''), ICON.filter + '<span>Filters' + (n ? ' · ' + n : '') + '</span>');
   b.type = 'button';
-  b.setAttribute('aria-expanded', W.fopen ? 'true' : 'false');
+  b.setAttribute('aria-expanded', out ? 'true' : 'false');
+  /* the floating one only moves the row; the banner's opens the rest too */
+  if (floats) {
+    b.setAttribute('aria-label', 'Filters');
+    b.addEventListener('click', () => waysSet(!W.wopen));
+    return b;
+  }
   b.addEventListener('click', () => {
     W.fopen = !W.fopen;
     /* Show all lives in what Filters opens, and closes with it */
     if (!W.fopen) W.fwrap = false;
+    waysSet(W.fopen);
     render();
     const again = W.root.querySelector('.wf-open');
     if (again) again.focus({ preventScroll: true });
   });
+  return b;
+}
+/* Good news, between Feed | Topics and Hide politics (Stephen, 2026-11-01:
+   "uplifting news or good news"; Ashley wants the cool stuff going on) */
+function goodBtn() {
+  if (!feeds.goodCount()) return null;
+  const on = W.news === 'good';
+  const b = el('button', 'wf-good' + (on ? ' on' : ''), 'Good news');
+  b.type = 'button';
+  b.dataset.news = 'good';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.addEventListener('click', () => setNews(on ? 'feed' : 'good'));
   return b;
 }
 function noPolitics() {
@@ -760,11 +880,12 @@ function filtersUI(band) {
   /* the Instagram list has no shelves and no politics: neither would do anything */
   if (W.ch !== 'instagram') {
     const ways = el('div', 'wf-ways');
-    ways.append(newsSwitch(), noPolitics());
+    /* the rail holds them here; on the phone they float, and this keeps their place */
+    if (!band) ways.append(...waysList());
     f.appendChild(ways);
   }
   /* Topics view is every topic at once: no topic row there */
-  if (W.ch !== 'instagram' && !topicsOn()) {
+  if (W.ch !== 'instagram' && !topicsOn() && !goodOn()) {
     const n = topicCounts(d);
     const items = TOPICS.filter(([k]) => n[k]).map(([key, label]) => ({ key, label, n: n[key] }));
     if (items.length) {
@@ -787,7 +908,7 @@ function filtersUI(band) {
     }
   }
   /* the day's three rankings (Stephen, 2026-10-17), today only */
-  const tp = !W.start && unfiltered() && !topicsOn() && payloadFor(todayKey());
+  const tp = !W.start && unfiltered() && !topicsOn() && !goodOn() && payloadFor(todayKey());
   const sl = tp ? slotRow(dayOf(tp)) : null;
   if (sl) { h('Top stories as of'); f.appendChild(sl.row); }
   if (!band) {
@@ -1111,7 +1232,7 @@ function landPhoto() {
 feeds.init({
   changed: (was) => feedsChanged(was),
   /* the pill is as it was, and the keyboard may be on it */
-  landed: () => wallLanded(),
+  landed: () => { wallLanded(); goodLanded(); },
   muted: (sid) => !!MUTE[sid],
   stories: () => (W.today ? dayOf(W.today).all.filter(seen).sort((a, b) => b.d - a.d) : []),
   storiesIn: () => !!W.today || W.failed,
@@ -1268,6 +1389,7 @@ function render(opts = {}) {
   if (W.mode === 'recaps') { renderRecaps(); return; }
   if (W.topic !== 'all') { loadMutes(); checkTopic(startDay()); }
   if (W.ch === 'instagram') { renderInstagram(opts); return; }
+  if (goodOn()) { renderGood(); return; }
   if (W.failed && !W.today) {
     root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
     return;
@@ -1363,6 +1485,33 @@ function render(opts = {}) {
   watch(run);
   painted(root);
 }
+/* Good news: the feed's stories as the paper's cards, newest first */
+function renderGood() {
+  const root = W.root;
+  loadMutes();
+  root.innerHTML = '';
+  const feed = el('div', 'feed wire');
+  root.appendChild(feed);
+  paperTop(root);
+  const list = feeds.good();
+  if (list) list.forEach((c) => put(feed, draw(c)));
+  else feed.appendChild(el('p', 'loading', 'Loading…'));
+  app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
+  painted(root);
+}
+/* the feed's file came: the button joins the row, and a list that was waiting
+   draws, unless the reader is well down it. A kept Good news with an empty
+   feed is the Feed for this visit. */
+function goodLanded() {
+  loadMutes();
+  const n = feeds.goodCount();
+  if (n === null || n === W.goodN) return;
+  W.goodN = n;
+  if (!n && W.news === 'good') W.news = 'feed';
+  if (app.activeTab() !== 'wire' || !waysShown()) return;
+  app.paintSubnav();
+  if (W.ch === 'all' && W.topic === 'all' && !W.start && (W.news === 'good' || !n) && (!W.panel || W.panel.scrollTop < 120)) render();
+}
 /* Hide politics on the strip: a bullet is politics by its own words or by the
    story it came from */
 function recapKeep(d) {
@@ -1445,18 +1594,20 @@ function newsSwitch() {
     b.addEventListener('click', () => { if (!on) setNews(key); });
     g.appendChild(b);
   });
-  liquify(g, { key: 'wire-news', idx: W.news === 'topics' ? 1 : 0, colors: ['--liq-news', '--liq-topics'] });
+  if (W.news !== 'good') liquify(g, { key: 'wire-news', idx: W.news === 'topics' ? 1 : 0, colors: ['--liq-news', '--liq-topics'] });
   return g;
 }
 function setNews(key) {
-  W.news = key === 'topics' ? 'topics' : 'feed';
+  W.news = key === 'topics' || key === 'good' ? key : 'feed';
   keepNews(W.news);
   /* Topics shows every topic: a topic chip or a ranking would hide most of it */
-  if (W.news === 'topics') { W.topic = 'all'; W.sport = 's:all'; W.slot = null; }
+  if (W.news !== 'feed') { W.topic = 'all'; W.sport = 's:all'; W.slot = null; }
+  /* Good news is no one day's and no one kind's */
+  if (W.news === 'good') { W.ch = 'all'; W.start = null; history.replaceState(history.state, '', hashNow()); }
   W.shelves.clear();
   app.paintSubnav(); render(); app.scrollTop();
   /* the banner's, or the rail's on a wide screen */
-  const b = [...document.querySelectorAll('.wnsw-b[data-news="' + W.news + '"]')].find((n) => n.offsetParent);
+  const b = [...document.querySelectorAll('[data-news="' + W.news + '"]')].find((n) => n.offsetParent);
   if (b) b.focus({ preventScroll: true });
 }
 

@@ -7,8 +7,8 @@
    (explore.js owns the cell's memory and draws the tiles, two across, each
    with its words under it). Under the pill is a row of chips, each its own
    colour, and they pick what fills it. They live only here: tap one and the
-   wall becomes that feed; tap another and they blend; tap it again and it is
-   undone. What is on stays on the phone (localStorage `allday-wire-feeds`) and
+   wall becomes that feed; tap another and they take turns, tile by tile, the
+   first tapped first; tap it again and it is undone. What is on stays on the phone (localStorage `allday-wire-feeds`) and
    nothing but the chips changes it, so a word, a link or the cell never clears
    Ashley's picks. #wire/feed/dogs+good opens it, for that visit; a chip tapped
    there keeps what is on screen. #wire/feed/dogs.beagle holds the breed too;
@@ -189,34 +189,46 @@ function deal(views) {
   return decks.flatMap((d, at) => d.map((v, i) => ({ v, at, turn: i / d.length }))).sort((a, b) => a.turn - b.turn || a.at - b.at).map((x) => x.v);
 }
 const breedDog = (p) => breedOf(p, 'beagle') || breedOf(p, 'lab');
-function pictures() {
+function pictures(on) {
   /* a breed narrows the dogs, never the plants blended in with them */
   const keeps = (p, k) => inFeed(p, k) && (k !== 'dogs' || S.breed === 'all' || breedOf(p, S.breed));
-  const posts = (S.ig || []).filter((p) => heard(p) && [...S.on].some((k) => keeps(p, k)));
+  const posts = (S.ig || []).filter((p) => heard(p) && on.some((k) => keeps(p, k)));
   /* Beagles and Labs first: the other dogs are there for a reader who keeps
      going (Ashley: "beagles and labs, not every dog") */
-  const later = (p) => S.on.has('dogs') && inFeed(p, 'dogs') && !breedDog(p) && ![...S.on].some((k) => k !== 'dogs' && inFeed(p, k));
+  const later = (p) => on.includes('dogs') && inFeed(p, 'dogs') && !breedDog(p) && !on.some((k) => k !== 'dogs' && inFeed(p, k));
   return dealt(posts.filter((p) => !later(p))).concat(dealt(posts.filter(later)));
 }
 /* posts as they lead: one of each set, dealt, those with words before those without */
 const dealt = (posts) => explore.wordsFirst(deal(explore.noTwins(photos.igList(posts))));
-function briefs() {
+function briefs(on) {
   const seen = new Set();
-  return [...S.on].flatMap((k) => textOf(k).map((x) => (k === 'nosy' ? { ...x, i: '' } : x)))
+  return on.flatMap((k) => textOf(k).map((x) => (k === 'nosy' ? { ...x, i: '' } : x)))
     .filter((x) => /^https?:/.test(x.u || '') && x.t && !seen.has(x.u) && seen.add(x.u))
     .sort((a, b) => b.ts - a.ts);
 }
 /* the link is the story's own: a feed headline has no place in the paper to land on */
-function briefView(x) {
+function briefItem(x) {
   const it = { k: 'if-' + x.u, kind: 'article', href: x.u, shareUrl: x.u, title: x.t, src: x.s, sid: 'if:' + x.s, ch: 'feed', ago: x.ts ? agoShort(x.ts) : '', thumb: x.i || '' };
   app.know([it]);
+  return it;
+}
+function briefView(x) {
+  const it = briefItem(x);
   return { ...explore.storyView(it), sid: it.sid, d: x.ts || 0 };
 }
+/* Good news on News: the same rows, newest first, as the paper's cards. Both
+   null until the file has answered. */
+const goodRows = () => {
+  const seen = new Set();
+  return textOf('good').filter((x) => /^https?:/.test(x.u || '') && x.t && !seen.has(x.u) && seen.add(x.u));
+};
+export const goodCount = () => (S.text === null ? null : goodRows().length);
+export const good = () => (S.text === null ? null : goodRows().sort((a, b) => b.ts - a.ts).map(briefItem));
 /* A feed's headlines, every source taking its turn so one paper never fills a
    screen, each source in its own colour so a feed of nothing but headlines has
    a rhythm. */
-function headlines() {
-  const views = deal(briefs().map(briefView));
+function headlines(on) {
+  const views = deal(briefs(on).map(briefView));
   const tints = new Map();
   views.forEach((v) => { if (!tints.has(v.src)) tints.set(v.src, FEED_TINTS[tints.size % FEED_TINTS.length]); });
   return views.map((v) => (v.media ? v : { ...v, tint: tints.get(v.src) }));
@@ -298,8 +310,16 @@ function interleave(pics, text, gap, run) {
   for (let p = 0, t = 0; p < a.length || t < b.length; p += gap, t += run) out.push(...a.slice(p, p + gap), ...b.slice(t, t + run));
   return explore.sink(out.concat(pics.filter((v) => S.seen[v.k]), text.filter((v) => S.seen[v.k])), S.seen);
 }
-/* a run of pictures, a run of headlines */
-const feedViews = () => interleave(pictures(), headlines(), GRID, BRIEFS);
+/* A run of pictures, a run of headlines. Each feed deals its own, what this
+   phone has not seen first, and with two or more on they take turns one tile
+   at a time, so a second chip never buries the first. A tile in two feeds goes
+   out once. */
+function feedViews() {
+  const decks = [...S.on].map((k) => interleave(pictures([k]), headlines([k]), GRID, BRIEFS));
+  const out = new Map();
+  for (let i = 0; decks.some((d) => d.length > i); i += 1) decks.forEach((d) => { if (d[i] && !out.has(d[i].k)) out.set(d[i].k, d[i]); });
+  return [...out.values()];
+}
 /* no chip on: a few pictures, a story, a few pictures, a story, until the
    day's stories run out and the pictures go on. The colours take turns, and
    the politics waits past the top. */

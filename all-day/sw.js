@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v124';   // Explore, phase one: the cell, the walls on the Wire and Vintage, the tiles with words
+const VERSION = 'all-day-v125';   // Explore, phase one, plus the floating filters, Good news, the rolling name and Latest's jump rows
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

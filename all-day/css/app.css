@@ -64,15 +64,33 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wordmark {
   flex: 0 1 auto; min-width: 0; font-family: var(--serif); font-size: var(--fs-wordmark);
   font-weight: 500; line-height: 1; letter-spacing: .005em; color: var(--ink);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-block: .2em;
 }
 /* the apps, from the name: Stephen moved them to the pill's hold on
    2026-10-29; a stranger never found that, so both ways stay */
-.appsbtn { flex: 0 0 auto; position: relative; display: grid; place-items: center; width: 28px; height: var(--hit); margin-left: -6px; color: inherit; }
-/* a 44px target in a 28px place: it takes the gap toward the logo's link, so
-   a thumb a little wide opens the bubble and doesn't leave the app */
+.appsbtn { flex: 0 1 auto; min-width: 0; position: relative; display: flex; align-items: center; height: var(--hit); margin-right: var(--am-slack, 0px); color: inherit; }
+/* it takes the gap toward the logo's link, so a thumb a little wide opens the
+   bubble and doesn't leave the app */
 .appsbtn::after { content: ""; position: absolute; inset: 0 -8px; }
-.appsbtn .i { width: 18px; height: 18px; opacity: .8; }
+.appsbtn .i { flex: 0 0 auto; width: 18px; height: 18px; margin: 0 5px 0 -1px; opacity: .8; }
+/* the roll: the name turns over through the other apps and back, on a reel
+   laid over it; the chevron pulses and steps aside for a wider name, inside
+   the room reserve() in switcher.js kept. Then a slow pulse until it is used. */
+.am-reel { position: absolute; top: 0; left: 0; height: 100%; overflow: hidden; visibility: hidden; pointer-events: none; color: var(--ink); white-space: nowrap; }
+.am-track { display: grid; justify-items: start; }
+.am-line { height: var(--hit); font-family: var(--serif); font-size: var(--fs-wordmark); font-weight: 500; line-height: var(--hit); letter-spacing: .005em; }
+.appsbtn.nudge .i { animation: am-breathe 2.6s ease-in-out infinite; }
+.appsbtn.rolling .wordmark { visibility: hidden; }
+.appsbtn.rolling .am-reel { visibility: visible; }
+.appsbtn.rolling .am-track { animation: am-roll 1.6s cubic-bezier(.3, 1.25, .5, 1) both; }
+.appsbtn.rolling .am-home { animation: am-home 1.6s linear both; }
+.appsbtn.rolling .i { animation: am-slide 1.6s ease-in-out both, am-pulse .53s ease-in-out 3; }
+@keyframes am-roll { 0%, 6% { translate: 0 0; } 28%, 40% { translate: 0 calc(var(--hit) * -1); } 62%, 74% { translate: 0 calc(var(--hit) * -2); } 96%, 100% { translate: 0 calc(var(--hit) * -3); } }
+@keyframes am-home { from, 88% { color: var(--am-lit); } }
+@keyframes am-slide { 0%, 6%, 96%, 100% { translate: 0 0; } 28%, 40% { translate: var(--am-1, 0) 0; } 62%, 74% { translate: var(--am-2, 0) 0; } }
+@keyframes am-pulse { 50% { opacity: 1; scale: 1.35; } }
+@keyframes am-breathe { 50% { opacity: 1; scale: 1.2; } }
+@media (prefers-reduced-motion: reduce) { .appsbtn.nudge .i, .appsbtn.rolling .i { animation: none; } }
 /* the Btown Brief logo beside the wordmark, a clear step away from it
    (Stephen, 2026-10-22); it opens btownbrief.com. The faint rim keeps the
    logo's cream corner from melting into cream paper on the wide rail. */
@@ -1887,7 +1905,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
   border: 1.5px solid var(--l, var(--c)); color: var(--ink); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
 /* 44px, as .wf .chip: ::after sits inside the border, so it reaches past it too */
 .ifeed::after { content: ""; position: absolute; inset: -3.5px -1.5px; }
-.wf-open::after, .wf-nopol::after, .ibreeds .chip::after { content: ""; position: absolute; inset: -3px -1px; }
+.wf-open::after, .wf-nopol::after, .wf-good::after, .ibreeds .chip::after { content: ""; position: absolute; inset: -3px -1px; }
 .ifeed.on { background: var(--c); border-color: var(--c); color: var(--i); }
 .ifeed-home { --c: var(--feed-home); --i: var(--feed-home-ink); --l: var(--feed-home-line); }
 .ifeed-plants { --c: var(--feed-plants); --i: var(--feed-plants-ink); --l: var(--feed-plants-line); }
@@ -1967,9 +1985,44 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
   border: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
 .wf-open .i { width: 16px; height: 16px; }
 .wf-open.on { background: var(--paper-2); color: var(--ink); }
-.wf-ways { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: var(--s1) var(--gutter); }
-.wf-nopol { position: relative; height: 40px; padding: 0 var(--s3); border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
+.wf-ways { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2); padding: var(--s1) var(--gutter); }
+.wband .wf-ways { height: 52px; padding: 0; }
+.wf-nopol, .wf-good { position: relative; height: 40px; padding: 0 var(--s3); border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-button); font-weight: 600; white-space: nowrap; }
 .wf-nopol.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.wf-good.on { background: var(--feed-good); color: var(--feed-good-ink); border-color: var(--feed-good); }
+/* the row of ways floats under the pill, a line below the day: Filters, then
+   Feed | Topics, Good news and Hide politics in one pill of glass that scrolls
+   sideways inside itself when the phone is narrow */
+.wways { position: absolute; top: calc(100% + 48px); left: var(--s2); right: var(--s2); display: flex; align-items: center; gap: 6px;
+  pointer-events: none; transform: translateY(var(--ways-down, 0)); }
+.wways-row { flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 2px; height: calc(var(--hit) + 2px); padding: 0 3px; border-radius: var(--r-pill);
+  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; pointer-events: auto;
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass); backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); }
+.wways-row::-webkit-scrollbar { display: none; }
+.wband.ways-room { margin-bottom: calc(var(--hit) + var(--s3)); }
+.wways .wf-open { display: none; flex: 0 0 auto; justify-content: center; height: var(--hit); padding: 0 var(--s3); pointer-events: auto;
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass); backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); color: var(--dock-ink); }
+.wways.stuck .wf-open { display: inline-flex; }
+.wways:not(.shut) .wf-open { width: var(--hit); padding: 0; }
+.wways:not(.shut) .wf-open span { display: none; }
+.wways.shut .wways-row { transform: scale(.08); opacity: 0; visibility: hidden; pointer-events: none; }
+.wways .wnsw { flex: 0 0 auto; padding: 3px 0; background: none; border: 0; }
+.wways .wnsw-b { padding: 0 var(--s3); color: var(--dock-ink); }
+.wways .wnsw-b::after { content: ""; position: absolute; inset: -3px 0; }
+.wways .wf-good, .wways .wf-nopol { flex: 0 0 auto; height: 38px; padding: 0 var(--s2); border: 0; color: var(--dock-ink); }
+.wways .wf-good.on { color: var(--feed-good-ink); }
+.wways .wf-nopol.on { background: var(--dock-ink); color: var(--dock-solid); }
+@media (prefers-reduced-motion: no-preference) {
+  .wband { transition: margin-bottom .4s cubic-bezier(.4, 0, .2, 1); }
+  .wways-row { transition: transform .4s cubic-bezier(.4, 0, .2, 1), opacity .4s ease, visibility 0s; }
+  .wways.shut .wways-row { transition: transform .4s cubic-bezier(.4, 0, .2, 1), opacity .4s ease, visibility 0s linear .4s; }
+  body.pill-small .wways.stuck { transform: translateY(-5px); }
+  .wf-open.flash { animation: wf-flash .5s ease-in-out 2; }
+}
+@keyframes wf-flash { 50% { background: var(--feed-good); color: var(--feed-good-ink); border-color: var(--feed-good); } }
+@media (min-width: 1280px) { body.has-aside .wways { display: none; } }
 .wband .wf .chips { padding: 2px var(--gutter) 6px; }
 .wband .wf .wm-slots { padding: 2px var(--gutter) 6px; }
 .wband-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: 0 var(--s2); }
@@ -3202,9 +3255,18 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .tf-caught { display: flex; align-items: center; gap: 12px; padding: 12px 4px; color: var(--ink-3); font: 600 var(--fs-button)/1 var(--sans); }
 .tf-caught::before, .tf-caught::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 
+/* the jump row in a feed (ui.js jumpRow) */
+.jumprow { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: var(--hit); padding: 10px 18px; border: 0; border-radius: var(--r-pill); background: var(--jr, var(--ink)); color: var(--jr-ink, var(--paper)); font: 700 var(--fs-button)/1 var(--sans); cursor: pointer; }
+.jumprow .i { width: 18px; height: 18px; flex: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .jumprow .i { animation: jumprow-nudge 1.5s ease-in-out infinite paused; }
+  .jumprow.on .i { animation-play-state: running; }
+}
+@keyframes jumprow-nudge { 0%, 55%, 100% { transform: translateX(0); } 25% { transform: translateX(5px); } }
+
 @media (min-width: 900px) {
   .tf-wrap { max-width: 1080px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; padding-top: 16px; }
-  .tf-hero, .tf-caught { grid-column: 1 / -1; }
+  .tf-hero, .tf-caught, .tf-wrap > .jumprow { grid-column: 1 / -1; }
   .tf-hero { min-height: 240px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3218,15 +3280,6 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
   background: var(--app-body-pop); box-shadow: -8px 0 0 var(--app-all-day-pop), 8px 0 0 var(--app-town-pop); pointer-events: none; }
 .ab-row.hot { background: var(--paper-2); }
 @media (min-width: 1024px) { .holdcell::after { display: none; } }
-/* the first three opens: a soft press settles on the cell, and the bubble rises and drops back */
-.holdghost { position: fixed; z-index: 71; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: var(--r-round);
-  background: var(--dock-ink); opacity: .34; pointer-events: none; animation: holdghost-in .3s ease-out both; }
-@keyframes holdghost-in { from { opacity: 0; transform: scale(1.6); } }
-.appbubble.ab-rise { animation: ab-rise .2s ease-out both; }
-.appbubble.ab-rise.ab-drop { animation: ab-drop .18s ease-in both; }
-@keyframes ab-rise { from { opacity: 0; transform: translateY(10px); } }
-@keyframes ab-drop { to { opacity: 0; transform: translateY(10px); } }
-@media (prefers-reduced-motion: reduce) { .holdghost, .appbubble.ab-rise, .appbubble.ab-rise.ab-drop { animation: none; } }
 
 /* ---------------------------------------- Town's other tabs, in Now's look */
 /* One colour per tab, the same rounded tiles, bigger type, alternating shades. */
@@ -3500,6 +3553,7 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .lg-go .i { width: 18px; height: 18px; }
 @media (min-width: 900px) {
   .lg-wrap { max-width: 1080px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; padding-top: 16px; }
+  .lg-wrap > .jumprow { grid-column: 1 / -1; }
 }
 
 /* ------------------------------------------------------------- Social */

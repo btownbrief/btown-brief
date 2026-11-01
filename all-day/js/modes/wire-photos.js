@@ -351,17 +351,22 @@ function igView(p) {
    national list. */
 export const notFeed = (posts) => (posts || []).filter((p) => !p.t);
 /* A post that has run out: it names a date that has gone ("October 31st",
-   "10/30", "Oct 29 and 30"), says "today only" or Halloween once that day is
-   over, or is a flyer more than a few days old. Every date it names has to be
-   past; one with an older year is history, not a date. Read from the words the
-   tile can show, and the top of the caption, where a flyer says when. */
+   "10/30", "Oct 29 and 30"), says "today only" once that day is over, is a
+   flyer more than a few days old, or is about a holiday that has been. Every
+   date it names has to be past; one with an older year is history, not a date.
+   Read from the words the tile can show, and the top of the caption, where a
+   flyer says when. A holiday counts anywhere in the post. */
 const WHEN_DAYS = 5;       // a flyer lasts this long, and on the Wire's wall a do post
 const MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
 const DATE_DAY = '(\\d{1,2})(?:st|nd|rd|th)?';
 const NAMED_DATE = new RegExp('\\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\\.?\\s+' + DATE_DAY + '(?:\\s*(?:-|–|—|&|and|to|through|thru)\\s*' + DATE_DAY + ')?(?:,?\\s+(\\d{4}))?(?![\\d:])', 'gi');
 const SLASH_DATE = /(?<![\d/])(\d{1,2})\/(\d{1,2})(?:\/(\d{2}|\d{4}))?(?![\d/])/g;
 const ONE_DAY = /\b(?:today only|one day only|tonight)\b/i;
-const HALLOWEEN = /\bhalloween\b/i;
+const HOLIDAYS = [           // words, month, its day in a given year
+  [/\bhalloween\b|\bcostumes?\b(?!\s+jewel)/i, 9, () => 31],
+  [/\bblack friday\b/i, 10, (y) => 23 + (11 - new Date(y, 10, 1).getDay()) % 7],
+  [/\b(?:christmas|xmas)\b/i, 11, () => 25],
+];
 const whenText = (p) => [p.hd, p.cp, String(p.c || '').slice(0, 200)].filter(Boolean).join(' · ');
 /* the end of that day, in the year that puts it nearest the post */
 function endOf(month, day, posted, year) {
@@ -381,14 +386,19 @@ function datesIn(text, posted) {
   for (const m of text.matchAll(SLASH_DATE)) take(Number(m[1]) - 1, Number(m[2]), m[3] ? (m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3])) : 0);
   return ends;
 }
+/* the holiday nearest the post is over, by Burlington's date wherever the phone is */
+function pastHoliday(p, posted, now) {
+  const text = [p.c, p.cp, p.hd].filter(Boolean).join(' ');
+  const here = new Date(new Date(now).toLocaleString('en-US', { timeZone: 'America/New_York' })).getTime();
+  return HOLIDAYS.some(([words, month, day]) => words.test(text) && endOf(month, day(new Date(posted).getFullYear()), posted) < here);
+}
 export function isOver(p, now = clockNow()) {
   const posted = Number(p.ts) * 1000;
   if (!posted) return false;
-  if (p.kind === 'poster' && now - posted > WHEN_DAYS * 86400000) return true;
+  if ((p.kind === 'poster' && now - posted > WHEN_DAYS * 86400000) || pastHoliday(p, posted, now)) return true;
   const text = whenText(p);
   const ends = datesIn(text, posted);
   if (ONE_DAY.test(text)) ends.push(new Date(posted).setHours(23, 59, 59));
-  if (HALLOWEEN.test(text)) ends.push(endOf(9, 31, posted));
   return ends.length > 0 && Math.max(...ends) < now;
 }
 /* A paid post, a sad one or one that has run out is left off a wall and out of

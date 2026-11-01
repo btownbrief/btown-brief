@@ -275,12 +275,30 @@ export async function townCases(h) {
     await page.goto(base + '/town/?demo=1');
     await settle(page);
     await page.waitForSelector('.tf-wrap');
-    const order = await page.$$eval('.tf-wrap > *', (n) => n.map((x) => (x.classList.contains('tf-caught') ? 'caught' : x.classList.contains('tf-hero') ? 'hero' : x.querySelector('.tf-new') ? 'new' : 'old')));
+    const order = await page.$$eval('.tf-wrap > :not(.jumprow)', (n) => n.map((x) => (x.classList.contains('tf-caught') ? 'caught' : x.classList.contains('tf-hero') ? 'hero' : x.querySelector('.tf-new') ? 'new' : 'old')));
     const at = order.indexOf('caught');
     check(at > 0 && !order.slice(at + 1).includes('new') && order.slice(3, at).every((x) => x === 'new'), 'New tiles first, then “You’re caught up”, then the rest', order.join());
     const hot = await page.$$eval('.tf-wrap > .tf', (n) => n.slice(1, 3).map((x) => x.querySelector('.tf-tag').textContent));
     check(hot[1] === 'Most talked about', 'the busiest thread sits under the day’s house', hot.join());
     const pills = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent.trim()));
+    const jumps = await page.$$eval('.tf-wrap > .jumprow', (n) => n.map((x) => ({ text: x.textContent, h: x.getBoundingClientRect().height, after: x.previousElementSibling.classList.contains('tf') })));
+    const kindsNow = pills.slice(1);
+    const wanted = (k) => (k === 'News' ? 'Read more news' : 'More ' + k);
+    check(jumps.length >= 1 && jumps.every((j, i) => j.text === wanted(kindsNow[i % kindsNow.length])), 'Latest has jump rows, in the pill’s order', JSON.stringify(jumps) + ' ' + pills.join());
+    check(jumps.every((j) => j.h >= 44 && j.after), 'a jump row is a full tap target that follows a tile', JSON.stringify(jumps));
+    check(!(await page.$('.tf.jumprow')) && !(await page.$('.jumprow[data-k]')), 'a jump row is not a tile', '');
+    const first = await page.$eval('.tf-wrap > .jumprow', (x) => { const n = [...x.parentNode.children]; const kept = n.slice(0, n.indexOf(x)).filter((c) => c.classList.contains('tf') && !c.classList.contains('tf-tonight')).length; return kept; });
+    check(first >= 8, 'the first jump row comes after eight tiles of the list', String(first));
+    const target = jumps[0].text;
+    await page.evaluate(() => { document.querySelector('.tf-wrap > .jumprow').scrollIntoView(); });
+    await page.waitForTimeout(150);
+    await page.click('.tf-wrap > .jumprow');
+    await page.waitForTimeout(250);
+    const landed = await page.evaluate(() => ({ top: document.querySelector('#panel-feed').scrollTop, hero: !!document.querySelector('.tf-hero'), jumps: document.querySelectorAll('.jumprow').length,
+      lit: document.querySelector('#subnav .secpill .chip.on, #subnav .secpill .chip[aria-pressed="true"]')?.textContent.trim() }));
+    check(!landed.top && !landed.hero && !landed.jumps && wanted(landed.lit) === target, 'a jump row opens its kind at the top, the pill follows, and no rows there', JSON.stringify(landed) + ' ' + target);
+    await page.click('#subnav .secpill .chip:has-text("Latest")');
+    await page.waitForTimeout(250);
     check(pills[0] === 'Latest' && pills.includes('Homes') && pills.includes('Jobs') && pills.includes('Pictures') && pills.includes('News'), 'the pill: Latest first, then the kinds', pills.join());
     const top = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.tf-hero .tf-chip:not([hidden])')].map((c) => c.textContent), cam: document.querySelectorAll('.tf-cam').length,
       night: [...document.querySelectorAll('.tf-tonight .tf-rows .n')].length, title: document.querySelector('.tf-tonight .tf-title').textContent, rollup: document.querySelector('.tf-calendar .tf-count').innerText,

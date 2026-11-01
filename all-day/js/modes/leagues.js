@@ -3,7 +3,8 @@
    data/body/leagues.json holds them by organizer, read from each organizer's
    own pages. An organizer is a tile. Its sports are small rows inside it, and a
    row opens to that sport's leagues: when, what it costs, how to sign up. The
-   pill filters by sport, the most-offered first. Whatever closes for signups
+   pill filters by sport, the most-offered first, and sits still on All, so
+   jump rows in that list go to the sports. Whatever closes for signups
    soonest sits on top: the organizer, and the sport inside it. A league leaves the tab the
    day after its `ends` date; one with no `ends` stays. The link says Sign up
    only when `signup_open` is true and today in Burlington is not past
@@ -12,7 +13,7 @@
    Every reader-facing word of the tab is in COPY. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, safeHref, button } from '../ui.js';
+import { el, esc, ICON, safeHref, button, jumpRow, jumpAt } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { data, today } from './body-kit.js';
 
@@ -26,6 +27,7 @@ const COPY = {
   nodates: 'Dates not posted',
   signup: 'Sign up',
   details: 'Details',
+  jump: (l) => 'More ' + l.label,
   count: (n) => (n === 1 ? '1 league' : n + ' leagues'),
 };
 
@@ -58,6 +60,12 @@ function tile(o) {
       (list.length > 1 ? '<span class="lg-n">' + esc(COPY.count(list.length)) + '</span>' : '') + '</summary>' + list.map(league).join('') + '</details>').join('');
   return c;
 }
+/* the pill's sports, the most-offered first */
+function sports() {
+  const n = new Map();
+  S.orgs.forEach((o) => running(o).forEach((x) => n.set(x.sport, (n.get(x.sport) || 0) + 1)));
+  return [...n.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([key]) => ({ key, label: key }));
+}
 function draw() {
   const root = S.root;
   if (!root) return;
@@ -72,7 +80,13 @@ function draw() {
   }
   const wrap = el('div', 'lg-wrap');
   const shown = (o) => running(o).filter((x) => S.filter === 'all' || x.sport === S.filter);
-  S.orgs.filter((o) => shown(o).length).sort((a, b) => closes(shown(a)).localeCompare(closes(shown(b)))).forEach((o) => wrap.appendChild(tile(o)));
+  const list = S.orgs.filter((o) => shown(o).length).sort((a, b) => closes(shown(a)).localeCompare(closes(shown(b))));
+  const kinds = S.filter === 'all' ? sports() : [];
+  list.forEach((o, i) => {
+    wrap.appendChild(tile(o));
+    const l = jumpAt(i, list.length, kinds);
+    if (l) wrap.appendChild(jumpRow({ label: COPY.jump(l), color: '--tf-jobs', onPick: () => setFilter(l.key) }));
+  });
   root.appendChild(wrap);
   root.appendChild(el('div', 'spacer'));
 }
@@ -103,10 +117,7 @@ app.register('leagues', {
   refresh() { draw(); },
   subnav() {
     if (!S.loaded || S.failed) return null;
-    const n = new Map();
-    S.orgs.forEach((o) => running(o).forEach((x) => n.set(x.sport, (n.get(x.sport) || 0) + 1)));
-    const items = [...n.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([key]) => ({ key, label: key }));
-    return sectionBar({ key: 'body-leagues', title: COPY.label, color: '--tf-jobs', current: S.filter, onPick: setFilter, items: [{ key: 'all', label: COPY.all }].concat(items) });
+    return sectionBar({ key: 'body-leagues', title: COPY.label, color: '--tf-jobs', current: S.filter, onPick: setFilter, items: [{ key: 'all', label: COPY.all }].concat(sports()) });
   },
   keepSubnav: true,
   newSince() { return 0; },
