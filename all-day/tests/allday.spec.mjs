@@ -6961,7 +6961,7 @@ async function theWatch(browser, base) {
     const doors = await page.$$eval(wPanel + ' [data-door]', (a) => a.map((x) => [x.dataset.door, x.getAttribute('href')]));
     check(JSON.stringify(doors) === JSON.stringify([['telegram', WATCH_TELEGRAM], ['community', WATCH_CHAT]]), 'Watch chat: Talk opens the Telegram watch chat first, the community second', JSON.stringify(doors));
     const talk = await page.$$eval(wPanel + ' [data-door]', (a) => a.map((x) => [x.textContent.trim(), x.className, x.target]));
-    check(talk[0][0] === 'Talk' && !/ghost/.test(talk[0][1]) && /ghost sm/.test(talk[1][1]) && talk.every((t) => t[2] === '_blank'), 'Talk is the big button; the community is the smaller one', JSON.stringify(talk));
+    check(talk[0][0] === 'Chat' && !/ghost/.test(talk[0][1]) && /ghost sm/.test(talk[1][1]) && talk.every((t) => t[2] === '_blank'), 'Chat is the big button; the community is the smaller one', JSON.stringify(talk));
     check(!(await page.$eval(wPanel + ' [data-slot="chat"]', (s) => s.querySelector('p'))), 'and no paragraph', '');
     check(await page.$(wPanel + ' [data-chat] input, ' + wPanel + ' [data-chat] textarea') === null, 'no chat is built here', '');
     const town = await page.$eval(wPanel + ' [data-slot="town"]', (s) => s.innerText);
