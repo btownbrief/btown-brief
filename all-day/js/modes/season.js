@@ -4,10 +4,12 @@
    beside the habit tracker. The tracker is what people open every day;
    the season is what they join.
 
-   - The top: before kickoff, the countdown and Join; once it is live and
-     you have a goal, the goal tile: the goal, its habit, one big Done (the
-     whole reward: it fills, settles, and the streak ticks up), the streak,
-     the days to the party, and your pod's streaks.
+   - The top: with no season scheduled, the pitch, a way into Habits and the
+     races coming up (data/town/races.json, the file Today's tile reads);
+     before kickoff, the countdown and Join; once it is live and you have a
+     goal, the goal tile: the goal, its habit, one big Done (the whole
+     reward: it fills, settles, and the streak ticks up), the streak, the
+     days to the party, and your pod's streaks.
    - Goal: declare it (the goal, the finish line, what you'll show, the
      category, the goal habit, three milestones), saved as you type, until
      kickoff; then it is locked, and only the milestones tick. After
@@ -26,13 +28,15 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON, button, pills } from '../ui.js';
+import { el, esc, ICON, button, pills, moreGrid } from '../ui.js';
 import { HABIT_RULES, dayKey, addDays, streak, streakUnit, daysUntil } from '../habits-core.js';
 import { DEMO_ME } from '../boards-fake.js';
-import { page, row, para, links, ext, section, field, input, select, stat, shortDay, plural, pill } from './body-kit.js';
+import { page, row, para, links, ext, tabLink, section, field, input, select, stat, shortDay, plural, pill } from './body-kit.js';
 
 const KEY = 'season';
 const CITY = 'burlington';
+const RACES_URL = '../data/town/races.json';
+const RACES_AHEAD = 90;                   // days, as on Today's tile
 const CATS = [['fitness', 'Fitness'], ['creative', 'Creative'], ['business', 'Work'], ['life_admin', 'Life admin'], ['learn', 'Learning']];
 const FREQ = [['daily', 'Daily'], ['weekdays', 'Weekdays'], ['n_per_week', 'N a week']];
 const EVENT_WORD = { kickoff: 'Kickoff', midway: 'Midway', party: 'The party' };
@@ -211,20 +215,34 @@ async function loadAll() {
     const mine = ctx.board && (ctx.board.rows || []).find((r) => r.me);
     ctx.myTaps = new Set(mine ? mine.taps : []);
   }
+  if (!ctx.season) ctx.races = await fetch(RACES_URL).then((r) => r.json()).then((j) => (Array.isArray(j.races) ? j.races : []), () => []);
   return ctx;
 }
 const live = (c) => !!(c.season && Date.parse(c.season.kickoff_at) <= Date.now() && c.season.status !== 'done');
 const weekOf = (c) => (c.season && c.season.week) || 0;
 
 /* ------------------------------------------------------------------ top */
+function drawRaces(box, c) {
+  const from = dayKey(Date.now()), to = addDays(from, RACES_AHEAD);
+  const rows = (c.races || []).filter((r) => r.day >= from && r.day <= to && /^https?:/i.test(r.url || '')).sort((a, b) => a.day.localeCompare(b.day));
+  if (!rows.length) return;
+  const head = section(box, 'Races');
+  const cells = rows.map((r) => {
+    const [mo, d] = shortDay(r.day).split(' ');
+    return row({ k: 'race-' + r.id, tile: { big: d, small: mo }, title: r.name, lines: [r.town], right: ext('Sign up', r.url) });
+  });
+  moreGrid(box, { name: 'season-races', label: 'Races', head, cells }).classList.add('frrows');
+}
 function drawTop(box, c) {
   const s = c.season;
   if (!s) {
-    /* no season yet: what one is, and nothing to press */
+    /* no season yet: what one is, where to start, and the races ahead */
     const t = el('section', 'hb-tile');
     t.dataset.k = 'season-none';
     t.innerHTML = '<p class="hb-kicker">' + esc('No season scheduled yet') + '</p><h2 class="hb-big">' + esc('Eight weeks, one goal, and a party at the end.') + '</h2>';
+    t.appendChild(tabLink('Start a habit', 'habits', 'btn hb-go'));
     box.appendChild(t);
+    drawRaces(box, c);
     return;
   }
   if (live(c) && c.goal && c.goal.habit) { goalTile(box, c); return; }
