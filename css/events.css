@@ -539,7 +539,7 @@
 }
 .ev-ongoing-row:hover .ev-ongoing-title { color: var(--ember); }
 .ev-ongoing-title { color: var(--ink); font-weight: 500; }
-.ev-ongoing-meta { color: var(--ink-3); text-align: right; flex-shrink: 0; }
+.ev-ongoing-meta { min-width: 0; max-width: 55%; color: var(--ink-3); text-align: right; }
 
 /* ---------------- map ---------------- */
 
