@@ -1874,8 +1874,8 @@ function drawChat(host) {
   const row = el('div', 'linkrow');
   row.style.padding = '0 var(--gutter)';
   row.style.alignItems = 'center';
-  const tg = el('a', 'btn', 'Talk ' + ICON.ext);
-  tg.setAttribute('aria-label', 'Talk, in the Telegram watch chat');
+  const tg = el('a', 'btn', 'Chat ' + ICON.ext);
+  tg.setAttribute('aria-label', 'Chat, in the Telegram watch chat');
   tg.href = safeHref(TELEGRAM_URL);
   tg.target = '_blank';
   tg.rel = 'noopener';

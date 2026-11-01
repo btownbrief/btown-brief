@@ -4910,7 +4910,7 @@ async function theWhatNow(browser, base) {
     check(today.tiles.join(', ') === 'd-pm1 4:30 pm, |Tonight, d-tn4 5:45 pm, d-tn3 6 pm, d-tn1 8 pm, d-tn2 9:30 pm, d-tn5 11:30 pm',
       'the rest of today in time order, the morning’s gone, then tonight’s under a Tonight mark', today.tiles.join(', '));
     check(today.href === '#whatnow/e-pm1', 'a tile opens its own listing', today.href);
-    check(/^Full events calendar/.test(today.full) && /\/events\.html$/.test(today.fullHref), 'and a link to the full events calendar', JSON.stringify(today));
+    check(/^Full calendar/.test(today.full) && /\/events\.html$/.test(today.fullHref), 'and a link to the full calendar', JSON.stringify(today));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-390.png') });
     await ctx.close();
@@ -11787,7 +11787,7 @@ async function thePeople(browser, base) {
     const help = await page.$eval(peoplePanel + ' [data-sec="mix"] .mixlinks [data-help-host]', (a) => [a.textContent.trim(), a.getAttribute('href')]);
     check(help[0] === 'Interested in helping host events?' && help[1] === 'mailto:btownbrief@gmail.com', 'beside the calendar link, the ask to help host, an email to btownbrief@gmail.com', JSON.stringify(help));
     const cal = await page.$eval(peoplePanel + ' [data-sec="mix"] [data-calendar]', (a) => ({ href: a.href, text: a.textContent.trim() }));
-    check(cal.href === base + '/events.html' && /^Full events calendar/.test(cal.text), 'a clear Full events calendar link to the guide’s events page', JSON.stringify(cal));
+    check(cal.href === base + '/events.html' && /^Full calendar/.test(cal.text), 'a clear Full calendar link to the guide’s events page', JSON.stringify(cal));
     const host = await page.$eval(peoplePanel + ' [data-host]', (c) => ({ text: c.innerText, mail: c.querySelector('a.btn').getAttribute('href'), ps: c.querySelectorAll('p').length }));
     check(/Host something with the crew/.test(host.text) && /^mailto:btownbrief@gmail\.com\?subject=/.test(host.mail) && host.ps === 2, 'the host card: a title, two short lines and a prefilled email to Stephen', JSON.stringify(host));
     const order = await page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));

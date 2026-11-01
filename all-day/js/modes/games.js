@@ -604,8 +604,8 @@ function drawChat(host) {
   const card = el('div', 'textcard');
   card.dataset.chat = '1';
   const row = el('div', 'row');
-  const ch = extLink('Talk ' + ICON.ext, CHAT_URL);
-  ch.setAttribute('aria-label', 'Talk, in the Btown Arcade channel');
+  const ch = extLink('Chat ' + ICON.ext, CHAT_URL);
+  ch.setAttribute('aria-label', 'Chat, in the Btown Arcade channel');
   ch.dataset.door = 'community';
   const tg = el('a', 'btn ghost', 'Telegram');
   tg.href = TELEGRAM_URL;
@@ -858,7 +858,7 @@ function drawWeb(host) {
   if (!G.web) return false;
   const total = G.web.games.length;
   G.webDay = todayKey();
-  sec(host, 'Daily picks from around the web', esc('Free puzzles on other sites. A few new ones every day.'), 'picks');
+  sec(host, 'Daily picks from around the web', null, 'picks');
   if (G.webOpen) {
     const wrap = el('div', 'expwrap');
     wrap.dataset.webList = String(total);

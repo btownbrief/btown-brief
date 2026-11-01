@@ -1421,7 +1421,7 @@ function drawWeek() {
       s.appendChild(more);
     }
   }
-  const full = linkBtn('Full events calendar', EVENTS_PAGE);
+  const full = linkBtn('Full calendar', EVENTS_PAGE);
   full.dataset.calendar = '1';
   const help = el('a', 'btn ghost sm', esc(WORDS.helpHost));
   help.href = HELP_HOST_MAIL;

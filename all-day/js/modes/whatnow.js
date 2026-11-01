@@ -819,7 +819,7 @@ function renderToday() {
     late.forEach((e) => track.appendChild(todayTile(e, now)));
   } else root.appendChild(el('p', 'note pad', esc('Nothing else today.')));
   const links = el('div', 'linkrow todaylinks');
-  links.appendChild(openLink('Full events calendar', EVENTS_URL, true));
+  links.appendChild(openLink('Full calendar', EVENTS_URL, true));
   root.appendChild(links);
 }
 

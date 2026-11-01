@@ -535,7 +535,7 @@ const MORE = [
   ['The newsletter', 'https://www.btownbrief.com/'],
   ['The hub', 'https://hub.btownbrief.com/'],
   ['Weather', '../weather.html'],
-  ['The board', '../live.html'],
+  ['Pulse Live', '../live.html'],
   ['The arcade', 'https://play.btownbrief.com/'],
   ['Telegram chat', '../telegram.html'],
 ];
