@@ -1448,6 +1448,15 @@ document.addEventListener('error', (e) => {
   else img.remove();
 }, true);
 
+/* YouTube answers for a video taken down with a grey 120x90 picture, not an
+   error, and hqdefault is never that small: the video's card goes with it. */
+document.addEventListener('load', (e) => {
+  const img = e.target;
+  if (!img || img.tagName !== 'IMG' || img.naturalWidth !== 120 || img.naturalHeight !== 90 || !/i\.ytimg\.com\/vi\/[^/]+\/hqdefault/.test(img.src)) return;
+  const card = img.closest('[data-k]');
+  if (card) card.remove();
+}, true);
+
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   if (lbEl) closeLightbox();
