@@ -363,7 +363,7 @@ const NAMED_DATE = new RegExp('\\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|d
 const SLASH_DATE = /(?<![\d/])(\d{1,2})\/(\d{1,2})(?:\/(\d{2}|\d{4}))?(?![\d/])/g;
 const ONE_DAY = /\b(?:today only|one day only|tonight)\b/i;
 const HOLIDAYS = [           // words, month, its day in a given year
-  [/\bhalloween\b|\bcostumes?\b(?!\s+jewel)/i, 9, () => 31],
+  [/\bhalloween\b|\bcostumes?\b(?!\s+jewel)|\bspooky\b|\btrick[- ]or[- ]treat|\bmonster bash\b/i, 9, () => 31],
   [/\bblack friday\b/i, 10, (y) => 23 + (11 - new Date(y, 10, 1).getDay()) % 7],
   [/\b(?:christmas|xmas)\b/i, 11, () => 25],
 ];

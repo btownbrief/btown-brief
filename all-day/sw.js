@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v125';   // Explore, phase one, plus the floating filters, Good news, the rolling name and Latest's jump rows
+const VERSION = 'all-day-v126';   // Explore on Watch, On Air, Food and Social
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

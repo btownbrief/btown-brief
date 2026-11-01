@@ -4,7 +4,7 @@
 
    The cell chooses the layout and nothing else. A word or a section leaves
    the wall and goes there; Local, National and Everything keep working on it.
-   Wire and Vintage have one. Watch, On Air, Food and Social come later, and
+   Wire, Vintage, Social, Watch and On Air have one. Food comes later, and
    Town and Body have none.
 
    What is here:
@@ -35,6 +35,9 @@
      media       a picture, or nothing for a coloured headline tile
      line, src   the words under it, and the source in small dim type
      poster      a picture full of type: it keeps its own shape, not the stagger
+     tall        a film poster: every one 2:3, and nothing cropped
+     shape, dur  a set shape instead of the stagger (r169, r11), and the running
+                 time on the picture
      tint        a headline tile's colour: reddit, facebook, x, newsletters, news
      vu, ve      a reel's video link and when it lapses
      url         the original
@@ -215,7 +218,7 @@ function ownShape(box, shape) {
   box.style.aspectRatio = '1 / ' + Math.min(Math.max(shape, OWN_SHAPE[0]), OWN_SHAPE[1]);
 }
 function headTile(v, i, chars) {
-  const a = shell(v, 'xt-head ' + STAGGER[i % STAGGER.length] + ' xt-' + v.tint);
+  const a = shell(v, 'xt-head ' + (v.shape || STAGGER[i % STAGGER.length]) + ' xt-' + v.tint);
   a.innerHTML = '<b class="xt-t">' + esc(fitWords(v.line || '', Math.round(chars * HEAD_SHARE))) + '</b><span class="xt-s">' + esc(v.src) + '</span>';
   return a;
 }
@@ -233,7 +236,7 @@ function tile(v, i, chars) {
   const a = shell(v);
   const line = fitWords(v.line || '', chars);
   /* the mark says it plays here, so only while its video link is good */
-  a.innerHTML = '<span class="xt-p ' + (v.poster ? 'r11' : STAGGER[i % STAGGER.length]) + '">' + art(v.media) + (playable(v) ? '<span class="iplay">' + ICON.play + '</span>' : '') + '</span>' +
+  a.innerHTML = '<span class="xt-p ' + (v.shape || (v.tall ? 'r23' : v.poster ? 'r11' : STAGGER[i % STAGGER.length])) + '">' + art(v.media) + (v.dur ? '<span class="dur">' + esc(v.dur) + '</span>' : '') + (playable(v) ? '<span class="iplay">' + ICON.play + '</span>' : '') + '</span>' +
     (line ? '<span class="xt-h">' + esc(line) + '</span>' : '') + '<span class="xt-s">' + esc(v.src) + '</span>';
   const pic = a.querySelector('img');
   if (!pic) return a;

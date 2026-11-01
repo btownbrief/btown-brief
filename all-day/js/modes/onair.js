@@ -67,6 +67,14 @@
    so its episodes open Spotify's embed in place, built once and never
    rebuilt (rebuilding the frame is what silently stops playback).
 
+   The cell at the end of the top row is the tab's Explore wall (explore.js),
+   the same one from all four sides: everything here that plays, in one
+   scroll. Videos at their wide shape with the running time on the picture,
+   episodes and playlists square, or coloured when they have no art. The sides
+   take turns down it, so the wall is the tab in one place and not one side in
+   bigger tiles. A tap plays it in the player, the dock or the service's own
+   frame. #onair/explore opens it; any word leaves it and goes there.
+
    ?demo=1 runs exactly this file on data/demo/onair.json, which holds the
    same payloads in the real shapes, re-dated to the reader's clock. */
 
@@ -75,9 +83,10 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
-import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, geoKeeps, setGeo, agoShort, listRail } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, geoKeeps, setGeo, agoShort, listRail, gridCell } from '../ui.js';
 import { liquify } from '../liquid.js';
 import { pill } from '../sections.js';
+import * as explore from '../explore.js';
 import * as sports from './onair-sports.js';
 
 const KEY = 'onair';
@@ -223,6 +232,11 @@ const O = {
   sports: null,                // data/onair-sports.json
   wtoday: null,                // the Wire's wire-today.json: Grok's Sports recap and the sports lanes
   lg: 'nba',                   // the Sports side's league: nba | nfl | hoops, for the visit
+  wall: false, byLink: false,  // the Explore wall is up, and came by a link
+  host: null, grid: null,      // its element, and its grid while drawn
+  seen: {},                    // explore.seen(), read as a fresh wall is drawn
+  run: [],                     // the wall's videos in order, for the player's Next
+  place: {},                   // the panel's scroll on each layout
 };
 
 /* TV reactions: the store's (tv.html's key, and the Supabase calls that
@@ -489,6 +503,21 @@ function moreSheet(it) {
   });
 }
 
+/* share and the star in a sheet, as a card has them: bindFeed answers both */
+function keepRow(it) {
+  const r = el('div', 'linkrow oa-keep');
+  r.dataset.k = it.k;
+  const share = el('button', 'btn ghost', ICON.share + ' Share');
+  share.dataset.act = 'share';
+  const on = store.isSaved(it.k);
+  const star = el('button', 'act star sheet-star' + (on ? ' on' : ''), ICON.star);
+  star.dataset.act = 'save';
+  star.setAttribute('aria-label', 'Save');
+  star.setAttribute('aria-pressed', on ? 'true' : 'false');
+  r.append(share, star);
+  return r;
+}
+
 /* ------------------------------------------------------------ the player */
 /* On Air's own player (Stephen, 2026-10-19, on Clipsboard: "its built in
    media player is WOW"). A sheet with the video in YouTube's or Vimeo's own
@@ -520,6 +549,7 @@ function openPlayer(list, start, title) {
     next.hidden = true;
     const queue = el('div', 'oa-queue');
     body.append(stage, now, next, ctl, queue);
+    app.bindFeed(now);
     const unreg = app.registerForeign(() => { if (P.frame) P.frame.removeAttribute('src'); });
     const cancel = () => { clearInterval(P.timer); P.timer = 0; next.hidden = true; };
     /* the sheet empties #sheet when it closes, however it closes (×, scrim,
@@ -595,6 +625,8 @@ function openPlayer(list, start, title) {
         P.frame = f;
       }
       now.innerHTML = '<h3 class="t">' + esc(it.title) + '</h3><p class="s">' + esc(metaOf(it)) + '</p>' + (it.why ? '<p class="why">' + esc(it.why) + '</p>' : '');
+      app.know([it]);
+      now.appendChild(keepRow(it));
       ctl.innerHTML = '';
       const prev = el('button', 'btn ghost sm', ICON.left + ' Previous');
       prev.dataset.prev = '1';
@@ -708,10 +740,13 @@ function nightItem(v, date) {
   return it;
 }
 /* what "Pick a vid" and a chosen length draw from: tonight first, then the shelf */
-function pool_() {
+function everyLength() {
   const nights = tvNights();
   const tonight = nights.length ? nightList(nights[0].ed).map((x) => nightItem(x.v, nights[0].date)).filter((it) => it && it.len) : [];
-  const all = tonight.concat(library());
+  return tonight.concat(library());
+}
+function pool_() {
+  const all = everyLength();
   return O.len ? all.filter((it) => it.len === O.len) : all;
 }
 
@@ -1134,12 +1169,12 @@ function vcard(it, w, list) {
   return c;
 }
 
+const liveItems = () => arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && geoKeeps(isLocalCam(v))).map((v) => videoItem(v, { live: true })).filter(Boolean);
 function drawLive(host) {
-  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && geoKeeps(isLocalCam(v)));
-  if (!live.length) return false;
+  const items = liveItems();
+  if (!items.length) return false;
   sec(host, 'Live', '', 'live');
   const r = videoRail(host, 'live');
-  const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
   items.forEach((it) => r.appendChild(vcard(it, 'w170', items)));
   app.know(items);
   return true;
@@ -1446,10 +1481,13 @@ function drawPodsHead(host) {
   sec(host, geo() === 'local' ? 'Local podcasts' : 'Podcasts', '', 'pods');
 }
 
-function drawPods(host) {
+/* the shows the switch keeps */
+function podShows() {
   const list = shows();
-  const local = geo() === 'national' ? [] : list.filter((s) => s.local);
-  const away = geo() === 'local' ? [] : list.filter((s) => !s.local).slice(0, NATIONAL);
+  return { local: geo() === 'national' ? [] : list.filter((s) => s.local), away: geo() === 'local' ? [] : list.filter((s) => !s.local).slice(0, NATIONAL) };
+}
+function drawPods(host) {
+  const { local, away } = podShows();
   const add = (s, opts) => {
     host.appendChild(showRow(s, opts));
     if (O.open[s.id]) host.appendChild(showEpisodes(s));
@@ -1603,7 +1641,7 @@ function playlistSheet(it) {
   app.sheet(it.title, (body) => {
     if (app.demo) {
       body.appendChild(el('p', 'sheet-note', esc('Opens ' + it.svc.name + '’s player for this playlist in the real build.')));
-    } else {
+    } else if (it.svc.embed) {
       app.stop();
       app.closeVideo();
       app.silenceForeign();
@@ -1623,6 +1661,8 @@ function playlistSheet(it) {
     if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the playlist on ' + it.svc.name + ' in the real build'); });
     row.appendChild(a);
     body.appendChild(row);
+    body.appendChild(keepRow(it));
+    app.bindFeed(body);
   });
 }
 
@@ -1676,7 +1716,7 @@ function loadBoard() {
     return boards.list('playlists', { kind: 'playlist', limit: RULES.limits.listMax }).then((r) => {
       if (r.ok) { O.board = true; O.posts = r.posts; } else if (r.error === 'bad_board' || r.error === 'off') O.board = false;
     });
-  }).then(() => { if (O.built) { drawListsSide(); app.paintPlayButtons(); } });
+  }).then(() => { if (O.built) { drawListsSide(); app.paintPlayButtons(); wallSoon(); } });
 }
 
 /* The video playlists: the latest Btown TV night that has one, then
@@ -1804,12 +1844,13 @@ const SIDES = { tv: '', pods: 'podcasts', lists: 'playlists', sports: 'sports' }
 const SIDE_KEYS = ['tv', 'pods', 'lists', 'sports'];
 /* a league is its own address: #onair/nfl, #onair/hoops (NBA is #onair/sports) */
 const LG_PARAM = { nba: 'sports', nfl: 'nfl', hoops: 'hoops' };
+const sideParam = () => (O.side === 'sports' ? LG_PARAM[O.lg] : SIDES[O.side]);
 function setSide(side, quiet) {
   O.side = SIDES[side] != null ? side : 'tv';
   const S = O.slots;
   if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; S.listSide.hidden = O.side !== 'lists'; S.sportSide.hidden = O.side !== 'sports'; }
   if (!quiet) {
-    const param = O.side === 'sports' ? LG_PARAM[O.lg] : SIDES[O.side];
+    const param = sideParam();
     try { history.replaceState(null, '', '#onair' + (param ? '/' + param : '')); } catch (e) { /* a sandboxed frame */ }
     app.scrollTop();
   }
@@ -1868,6 +1909,7 @@ function drawTVSide() {
 function render() {
   const root = O.root;
   if (!root) return;
+  drawWall();
   if (!FEEDS.some((k) => O.settled[k])) { root.innerHTML = '<p class="loading">Tuning in…</p>'; return; }
   if (FEEDS.every((k) => O.failed[k])) {
     O.built = false; O.own = null;
@@ -1907,6 +1949,155 @@ function render() {
   app.paintPlayButtons();
   if (app.activeTab() === KEY) app.paintSubnav();
   land();
+}
+
+/* ------------------------------------------------------------ the wall */
+const WALL_WATER = '--liq-photos';
+const wallReady = () => FEEDS.every((k) => O.settled[k]) && O.settled.playlists && O.settled.finds && O.settled.news && O.settled.sports;
+/* the first of each, then the second of each: a long list never buries a short one */
+function turns(lanes) {
+  const out = [];
+  for (let i = 0; lanes.some((l) => i < l.length); i++) lanes.forEach((l) => { if (l[i]) out.push(l[i]); });
+  return out;
+}
+/* The Brief's own show plays in Spotify's frame, so its item carries the id. */
+function ownEpisodes() {
+  const P = O.podcast;
+  const name = String(P && P.show || 'Btown Arts Presents');
+  return arr(P && P.episodes).filter((e) => e && e.title && (SPOTIFY_ID.test(String(e.id || '')) || /^https?:/i.test(String(e.url || '')))).map((e) => ({
+    k: 'ep:' + (e.id || e.url), kind: 'audio', title: String(e.title), show: name, src: name, sid: 'btown-brief', media: SHOW_ART,
+    spotify: SPOTIFY_ID.test(String(e.id || '')) ? e.id : '', href: /^https?:/i.test(String(e.url || '')) ? e.url : 'https://open.spotify.com/episode/' + e.id,
+    ago: isDate(e.date) ? dayName(e.date).split(', ')[1] : '' }));
+}
+const episodesOf = (list) => turns(list.map((s) => s.eps.map((ep) => episodeItem(ep, s))));
+function wallAudio() {
+  const c = geo() === 'national' ? null : currentClip();
+  const { local, away } = podShows();
+  return (c ? [clipItem(c)] : []).concat(turns([ownEpisodes(), episodesOf(local.concat(away))]));
+}
+/* a Clipsboard board is one tile, and plays straight through */
+function wallLists() {
+  const { own, readers } = playlists();
+  const tv = tvPlaylist();
+  return (tv ? [tv] : []).concat(boardsList(), own, readers);
+}
+/* the covers, as they come: a tile is coloured until then */
+const gotCover = new Map();
+function coverFor(it) {
+  if (it.svc && !it.covers) coverOf(it).then((u) => { if (u && !gotCover.has(it.href)) { gotCover.set(it.href, u); wallSoon(); } });
+  return gotCover.get(it.href) || (it.covers && it.covers[0]) || '';
+}
+const videoView = (it) => ({ k: it.k, it, media: it.media, line: it.title, src: it.src, shape: 'r169', dur: it.live ? 'Live' : it.dur, url: it.href,
+  open: () => openPlayer(O.run, O.run.findIndex((x) => x.k === it.k), 'On Air') });
+const audioView = (it) => ({ k: it.k, it, media: it.media, line: it.title, src: it.src, shape: 'r11', tint: 'newsletters', sheet: it, url: it.href, open: () => audioSheet(it, true) });
+function listView(it) {
+  if (it.clips) return { k: it.k, it, media: it.clips[0].media, line: it.title, src: it.src, shape: 'r169', dur: plural(it.clips.length, 'video', 'videos'), url: it.href, open: () => openPlayer(it.clips, 0, it.title) };
+  return { k: it.k, it, media: coverFor(it), line: it.title, src: it.svc.name, shape: it.covers ? 'r169' : 'r11', tint: 'lists', sheet: it, url: it.href, dur: it.n ? plural(it.n, 'video', 'videos') : '', open: () => playlistSheet(it) };
+}
+function wallViews() {
+  const seen = new Set();
+  const lane = (list) => list.filter((it) => it && !seen.has(it.k) && !store.isMuted(it.sid) && (seen.add(it.k), true));
+  const sport = sports.items(O.sports).sort((a, b) => b.d - a.d);
+  const recapList = lane(recaps().concat(turns([newsPool(), sport])));
+  const tv = lane(liveItems().concat(everyLength()));
+  const audio = lane(wallAudio());
+  const lists = lane(wallLists());
+  app.know([...recapList, ...tv, ...audio, ...lists]);
+  const views = turns([tv.map(videoView), recapList.map(videoView), audio.map(audioView), lists.map(listView)]);
+  return explore.sink(views, O.seen);
+}
+/* a draw when there is nothing yet is a fresh one, and tiles already shown
+   sink; a redraw under the reader keeps the order and the place */
+function drawWall() {
+  if (!O.wall || !O.host) return;
+  /* nothing can be measured while the tab is away: it draws on the way back */
+  if (app.activeTab() !== KEY) { app.markStale(KEY); return; }
+  const p = wallPanel();
+  const y = p ? p.scrollTop : 0;
+  const upto = O.grid ? O.grid.drawn() : 0;
+  if (O.grid) O.grid.stop();
+  else O.seen = explore.seen();
+  O.grid = null;
+  O.host.innerHTML = '';
+  const list = wallReady() ? wallViews() : [];
+  O.run = list.map((v) => v.it).filter((it) => it.yt || it.vimeo);
+  if (list.length) O.grid = explore.grid(O.host, list, { upto, end: 'That’s the wall' });
+  else if (wallReady()) O.host.appendChild(el('p', 'rd-empty', 'Nothing here yet'));
+  else explore.waiting(O.host);
+  if (p && upto) p.scrollTop = y;
+}
+let wallT = 0;
+function wallSoon() { clearTimeout(wallT); wallT = setTimeout(drawWall); }
+const wallPanel = () => (O.root ? O.root.closest('.panel') : null);
+function showWall(on) {
+  const p = wallPanel();
+  if (p) O.place[O.wall ? 'wall' : 'page'] = p.scrollTop;
+  O.wall = on;
+  O.root.hidden = on;
+  O.host.hidden = !on;
+  if (on && !O.grid) drawWall();
+  app.paintSubnav();
+  app.scrollTop();
+  if (p) p.scrollTop = O.place[on ? 'wall' : 'page'] || 0;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  O.byLink = false;
+  explore.visit(KEY);
+  showWall(false);
+}
+const sayWhere = () => { const param = O.wall ? 'explore' : sideParam(); app.rewrite(location.search + '#' + KEY + (param ? '/' + param : '')); };
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  O.byLink = false;
+  explore.flip(KEY, !O.wall);
+  showWall(!O.wall);
+  sayWhere();
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
+}
+/* a word: on the wall it leaves first, and the keyboard stays on the word */
+function pickSide(side) {
+  const off = O.wall;
+  if (off) leaveWall();
+  setSide(side);
+  const b = off && document.querySelector('#subnav .oa-sideswitch [data-side="' + side + '"]');
+  if (b) b.focus({ preventScroll: true });
+}
+
+/* An episode's sheet. A tap on a tile plays it in the dock (or, for the
+   Brief's own show, in Spotify's frame here, which goes with the sheet); a
+   link only opens the sheet, because nothing plays until it is tapped. */
+function audioSheet(it, start) {
+  if (start && !it.spotify && app.nowPlaying() !== it.k) app.play(it);
+  app.sheet(it.title, (body) => {
+    if (it.media) {
+      const media = el('span', 'c-media r11', art(it.media));
+      body.appendChild(media);
+    }
+    body.appendChild(el('p', 'sheet-note', esc([it.show || it.src, it.when || it.ago].filter(Boolean).join(' · '))));
+    const row = el('div', 'linkrow');
+    if (it.spotify && !app.demo) {
+      const frame = el('iframe', 'embed spotify');
+      frame.title = it.title;
+      frame.loading = 'lazy';
+      frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+      frame.src = 'https://open.spotify.com/embed/episode/' + encodeURIComponent(it.spotify) + '?theme=0';
+      if (start) { app.stop(); app.closeVideo(); app.silenceForeign(); }
+      body.insertBefore(frame, body.firstChild);
+      registerEmbed(frame);
+    } else if (!it.spotify) {
+      const b = el('button', 'btn', ICON.play + ' Play');
+      b.dataset.pk = it.k;
+      b.dataset.label = 'Play';
+      b.addEventListener('click', () => app.play(it));
+      row.appendChild(b);
+    }
+    if (row.children.length) body.appendChild(row);
+    body.appendChild(keepRow(it));
+    app.bindFeed(body);
+  });
+  app.paintPlayButtons();
 }
 
 /* ------------------------------------------------------------ the clicks */
@@ -2029,6 +2220,9 @@ function land() {
     hit = findHit(k);
   }
   if (hit) { const sd = hit.closest('[data-side]'); setSide(sd ? sd.dataset.side : 'tv', true); }
+  /* a shared episode: its sheet, on the Podcasts side, playing nothing yet */
+  const ep = (!hit || !hit.offsetParent) && episodesOf(shows()).concat(ownEpisodes()).find((x) => x.k === k);
+  if (ep) { setSide('pods', true); if (app.activeTab() === KEY) app.paintSubnav(); audioSheet(ep, false); return; }
   if (app.activeTab() === KEY) app.paintSubnav();
   if (!app.flashHit(O.root, k)) app.toast('That one has moved on. Here’s what’s on now.');
 }
@@ -2036,6 +2230,13 @@ function land() {
 /* ----------------------------------------------------------------- the tab */
 function mount(root) {
   O.root = root;
+  /* the saved view, from the first paint; a link to somewhere is a visit */
+  const link = location.hash.startsWith('#' + KEY + '/') ? location.hash.slice(KEY.length + 2) : '';
+  O.wall = link ? link === 'explore' : explore.kept(KEY);
+  O.host = el('div', 'xwall oa-wall');
+  root.after(O.host);
+  root.hidden = O.wall;
+  O.host.hidden = !O.wall;
   sports.init({ sec, openable, row, feature, openPlayer, todayKey, etDay, addDays, weekday, clock: (ms) => clock(ms) });
   render();
   root.addEventListener('click', onClick);
@@ -2077,6 +2278,11 @@ app.register(KEY, {
   promise: '',
   mount,
   activate(param) {
+    /* a link is a visit: the wall opens, or steps aside, and the phone's choice stays */
+    if (param === 'explore') { O.pending = null; if (!O.wall) { O.byLink = true; showWall(true); } return; }
+    /* the bare address under a wall's link: back steps off it. Otherwise the
+       tab came back to its wall, and the address says so. */
+    if (O.wall) { if (param || O.byLink) leaveWall(); else sayWhere(); }
     if (param === 'local' || param === 'national' || param === 'everything') {
       /* a link can set the shared switch: #onair/everything */
       O.pending = null;   // an explicit route replaces a link still waiting for its data
@@ -2092,7 +2298,7 @@ app.register(KEY, {
     land();
   },
   refresh() { if (O.root) render(); },
-  deactivate() { app.closePeek(); },
+  deactivate() { O.byLink = false; explore.settle(); app.closePeek(); },
   subnav() {
     if (!O.root) return null;
     /* two rows, floating over the paper like the Wire's (Stephen,
@@ -2102,15 +2308,24 @@ app.register(KEY, {
        lengths, or the podcast sections, which follow the scroll */
     const wrap = el('div', 'secbar oa-sub');
     const top = el('div', 'secrow oa-sidesrow');
-    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists'], ['sports', 'Sports']], O.side, (v) => setSide(v), 'oa-sideswitch');
+    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists'], ['sports', 'Sports']], O.wall ? null : O.side, pickSide, 'oa-sideswitch oa-sides');
     sw.setAttribute('role', 'group');
     sw.setAttribute('aria-label', 'TV, podcasts, playlists or sports');
-    [...sw.children].forEach((b, i) => { b.dataset.side = SIDE_KEYS[i]; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
+    [...sw.children].forEach((b, i) => { b.dataset.side = SIDE_KEYS[i]; b.setAttribute('aria-pressed', String(!O.wall && b.dataset.side === O.side)); });
+    /* there on every side, one wall from all of them; on it the words are
+       drained and the water pours into it */
+    sw.appendChild(gridCell(O.wall, flipWall));
     /* the side you are on sits in poured water, its own colour (2026-10-19) */
-    liquify(sw, { key: 'oa-side', idx: SIDE_KEYS.indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists', '--liq-sports'] });
+    liquify(sw, { key: 'oa-side', idx: O.wall ? SIDE_KEYS.length : SIDE_KEYS.indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists', '--liq-sports', WALL_WATER] });
     top.appendChild(sw);
     wrap.appendChild(top);
     const band = el('div', 'secrow');
+    /* Local, National and Everything keep working on the wall */
+    if (O.wall) {
+      band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
+      wrap.appendChild(band);
+      return wrap;
+    }
     /* Sports has no Local switch (its local is its own league): the leagues */
     if (O.side === 'sports') {
       band.appendChild(pill({ key: 'sec-onair-sports', title: 'Leagues', items: sports.LEAGUES.map(([key, label]) => ({ key, label })), current: O.lg, color: '--liq-sports', onPick: (k) => setLeague(k) }));

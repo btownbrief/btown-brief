@@ -1934,6 +1934,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wbar .wmodes.liquid .xcell.on { background: transparent; }
 .secpill .xcell { height: 100%; margin-left: var(--s1); }
 .secpill .xcell::after { content: ""; position: absolute; inset: -4px -3px; }
+.wt-sub .secpill .xcell::after { inset: -6px -3px; }   /* Watch's pill is the small second row */
 .secpill .xcell.on { background: var(--secpill-water, var(--sunset)); color: var(--secpill-ink, var(--sunset-ink)); }
 /* two uneven columns of tiles (explore.js), a tile's words under its picture */
 .xgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); padding: var(--s2) var(--s3) 0; align-items: start; }
@@ -1946,6 +1947,10 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .xt-p.r45 { aspect-ratio: 4 / 5; }
 .xt-p.r11 { aspect-ratio: 1; }
 .xt-p.r34 { aspect-ratio: 3 / 4; }
+.xt-p.r23 { aspect-ratio: 2 / 3; }
+.xt-p.r23 + .xt-h { min-height: 2.5em; }   /* a one-line title holds the row, so the two columns stay level */
+.xt-p.r169 { aspect-ratio: 16 / 9; }
+.xt-p .dur { right: 6px; bottom: 6px; }
 .xt-p.xt-fit img { object-fit: contain; }   /* wider or taller than its box: all of it, on paper */
 .xt-p img, .xt-p .ph { display: block; width: 100%; height: 100%; object-fit: cover; }
 .xt-h { padding: 0 2px; font-size: var(--fs-w-meta); font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1963,6 +1968,8 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .xt-facebook { --c: var(--liq-square); --i: var(--liq-square-ink); }
 .xt-x { --c: var(--liq-sports); --i: var(--liq-sports-ink); }
 .xt-newsletters { --c: var(--liq-pods); --i: var(--liq-pods-ink); }
+.xt-lists { --c: var(--liq-lists); --i: var(--liq-lists-ink); }
+.oa-wall .xt-head { aspect-ratio: 1; min-height: 0; overflow: hidden; }
 .xt-feed-nosy { --c: var(--feed-nosy); --i: var(--feed-nosy-ink); }
 .xt-feed-wild { --c: var(--feed-wild); --i: var(--feed-wild-ink); }
 .xt-feed-laughs { --c: var(--feed-laughs); --i: var(--feed-laughs-ink); }
@@ -2458,6 +2465,12 @@ body.desk { overflow: auto; }
 .oa-sidesrow .oa-sideswitch { flex: 1 1 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-right: var(--gutter); }
 .oa-sideswitch button { padding: 0 var(--s2); min-height: var(--hit); font-size: var(--fs-button); font-weight: 600; }
 .oa-sideswitch.bd-sideswitch button { padding: 0; }
+/* On Air's four words size to themselves, and the Explore cell has the end */
+.oa-sidesrow .oa-sides { grid-template-columns: repeat(4, auto) var(--hit); }
+.oa-sides .xcell { width: var(--hit); padding: 0; }
+.mast .oa-sides .xcell { color: var(--dock-ink); }
+.mast .oa-sides .xcell.on { background: var(--liq-photos); color: var(--liq-photos-ink); }
+.mast .oa-sides.liquid .xcell.on { background: transparent; }
 .mast .oa-sideswitch button { color: var(--lake-muted); }
 .mast .oa-sideswitch button.on { background: var(--sunset); color: var(--sunset-ink); box-shadow: none; }
 /* On Air's sides and Feed | Topics, poured like the Wire's words */
@@ -2527,6 +2540,8 @@ body.desk { overflow: auto; }
 .oa-now .t { font-size: var(--fs-title); font-weight: 600; line-height: 1.3; }
 .oa-now .s { font-size: var(--fs-meta); color: var(--ink-3); margin-top: 4px; }
 .oa-now .why { font-size: var(--fs-body); color: var(--ink-2); margin-top: 6px; line-height: 1.45; }
+.oa-keep { align-items: center; padding-bottom: 0; }
+.oa-now .oa-keep { padding-top: var(--s2); }
 .oa-ctl { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) 0; flex-wrap: wrap; }
 .oa-ctl .oa-pos { flex: 1; text-align: center; font-size: var(--fs-meta); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .oa-upnext { display: flex; align-items: center; gap: var(--s3); padding: var(--s3); margin-top: var(--s3); border-radius: var(--r-box); background: var(--paper-2); font-size: var(--fs-meta); }

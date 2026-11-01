@@ -75,6 +75,13 @@
      review queue as category `dish`; nothing appears until Stephen
      approves it.
 
+   The cell at the end of the pill is the tab's Explore wall (explore.js): one
+   scroll of Burlington's food on Instagram (kind or category food, the
+   national accounts and the feeds left out), with today's deals and the year's
+   openings that have a picture of the place's among them, each with its line
+   and its name. Drawn beside the page, not over it. #food/explore opens it;
+   any section leaves it and goes there.
+
    ?demo=1 runs this same file on data/demo/food.json, which holds every
    payload in its real shape, its times moved to the reader's day. */
 
@@ -84,6 +91,8 @@ import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, art, mark, section, moreGrid, collapseBar, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 import { sectionBar } from '../sections.js';
+import * as explore from '../explore.js';
+import * as photos from './wire-photos.js';
 import * as Rank from './rank.js';
 
 const KEY = 'food';
@@ -125,6 +134,8 @@ const STALE_MS = 5 * 60000;                // the clock-driven parts redraw on t
 const ASKS_STALE = 15 * 60000;             // the Reddit asks are fetched again on the way back in after this
 const DEAL_DAYS = 60;                      // a deal last verified longer ago than this is not shown
 const Q_FIRST = 12;                        // Best of r/burlington opens in place past these
+const NEW_MONTHS = 12;                     // the wall calls a place new for this long after it opened
+const MIX_EVERY = 3;                       // on the wall, a deal or an opening before every third post
 
 const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['rank', 'Rank'], ['asks', 'Reddit'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
 const FRESH_ASK_DAYS = 3;                  // an ask this young is fresh enough to lead the tab
@@ -140,9 +151,10 @@ const S = {
   dir: null, igBy: new Map(), dishBy: new Map(),
   me: null,                  // [lat, lon] once the reader allows it; memory only
   menusFailed: false, igFailed: false, drawn: 0,
+  wall: false, byLink: false, run: null, seen: {}, place: { wall: 0, page: 0 },
 };
 let F = null;                // window.BTFood, the hours engine
-let root = null, slots = null, pending = null, ready = false;
+let root = null, slots = null, pending = null, ready = false, wallHost = null;
 
 /* ---------------------------------------------------------------- loading */
 const libs = Object.create(null);
@@ -539,6 +551,93 @@ function render() {
   root.appendChild(el('div', 'spacer'));
   placeSlots();
   S.drawn = Date.now();
+  drawWall();
+}
+
+/* ------------------------------------------------------------ the wall */
+const wallReady = () => !!F && !!S.dir && (S.posts !== null || S.igFailed) && S.dish !== undefined;
+const isWallFood = (p) => (p.kind === 'food' || p.category === 'food') && !p.n && !S.dir.notFood.has(handle(p.h));
+/* a tile of the tab's own: the place's newest picture, its name, and the line.
+   Its sheet says the rest; swiping it mutes the place's account. */
+function placeView(k, r, media, line, ago, text) {
+  const h = handlesOf(r)[0];
+  const it = { k, kind: 'image', href: (r.links && /^https?:/i.test(r.links.website || '') && r.links.website) || googleUrl(r), media, ratio: 'r45', title: line, text,
+    src: r.name, ago, open: 'The place', shareTab: KEY, ...(h ? { sid: 'ig:' + h } : {}) };
+  return { k, it, media, line, src: r.name, alt: line, url: it.href, sheet: it };
+}
+/* One tile a place, a deal before an opening, so the same picture is never
+   on the wall twice. */
+function placeViews() {
+  const t = now(), places = new Set();
+  const pic = (r) => (r && !places.has(r.id) ? thumbOf(foodOf(r)) : '');
+  const out = [];
+  const add = (r, make) => { const media = pic(r); if (!media) return; places.add(r.id); out.push(make(media)); };
+  deck(t).forEach((x) => add(x.r, (media) => placeView('d-' + x.d.id, x.r, media, x.d.title, eyebrowOf(x), '')));
+  const since = new Date(Date.now() - NEW_MONTHS * 30.4 * 86400000).toISOString().slice(0, 7);
+  S.places.filter((r) => /^\d{4}-\d{2}/.test(r.opened || '') && r.opened >= since)
+    .sort((a, b) => b.opened.localeCompare(a.opened))
+    .forEach((r) => add(r, (media) => { const line = openedText(r.opened); return placeView('r-' + r.id, r, media, line.charAt(0).toUpperCase() + line.slice(1), '', cleanBlurb(r)); }));
+  return out.filter((v) => !store.isMuted(v.it.sid || v.it.src));
+}
+function wallViews() {
+  const own = placeViews();
+  const used = new Set(own.map((v) => v.media));
+  const posts = explore.noTwins(photos.igList((S.posts || []).filter((p) => isWallFood(p) && !p.t && photos.forWall(p) && !store.isMuted('ig:' + p.h) && !used.has(p.i))));
+  app.know(own.map((v) => v.it));
+  const all = [];
+  for (let i = 0, j = 0; i < posts.length || j < own.length; i += 1) {
+    if (j < own.length && (i % MIX_EVERY === 0 || i >= posts.length)) all.push(own[j++]);
+    if (i < posts.length) all.push(posts[i]);
+  }
+  return explore.sink(explore.wordsFirst(all), S.seen);
+}
+/* a draw when there is nothing yet is a fresh one, and tiles already shown
+   sink; a redraw under the reader keeps the order and the place */
+function drawWall() {
+  if (!S.wall || !wallHost) return;
+  /* nothing can be measured while the tab is away: it draws on the way back */
+  if (app.activeTab() !== KEY) { app.markStale(KEY); return; }
+  const p = panel();
+  const y = p ? p.scrollTop : 0;
+  const upto = S.run ? S.run.drawn() : 0;
+  if (S.run) S.run.stop();
+  else S.seen = explore.seen();
+  S.run = null;
+  wallHost.innerHTML = '';
+  const list = wallReady() ? wallViews() : [];
+  if (list.length) S.run = explore.grid(wallHost, list, { upto, end: 'That’s the wall' });
+  else if (wallReady()) wallHost.appendChild(el('p', 'rd-empty', 'Nothing here yet'));
+  else explore.waiting(wallHost);
+  if (p && upto) p.scrollTop = y;
+}
+let wallT = 0;
+function wallSoon() { clearTimeout(wallT); wallT = setTimeout(drawWall); }
+function showWall(on) {
+  const p = panel();
+  if (p) S.place[S.wall ? 'wall' : 'page'] = p.scrollTop;
+  S.wall = on;
+  root.hidden = on;
+  wallHost.hidden = !on;
+  if (on && !S.run) drawWall();
+  app.paintSubnav();
+  app.scrollTop();
+  if (p) p.scrollTop = S.place[on ? 'wall' : 'page'] || 0;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  S.byLink = false;
+  explore.visit(KEY);
+  showWall(false);
+}
+const sayWhere = () => app.rewrite(location.search + '#' + KEY + (S.wall ? '/explore' : ''));
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  S.byLink = false;
+  explore.flip(KEY, !S.wall);
+  showWall(!S.wall);
+  sayWhere();
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
 }
 
 /* The freshest thing leads (Stephen, 2026-10-18: "when someone opens a tab,
@@ -576,6 +675,7 @@ function paint(k) {
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
   if ((k === 'asks' || k === 'kitchens') && placeSlots()) resettle();
   if (k === 'open' || k === 'deals' || k === 'rank' || k === 'asks' || k === 'kitchens') app.paintSubnav();
+  if (k === 'deals' || k === 'kitchens') wallSoon();
 }
 
 /* ------------------------------------------------------- the Weekly Bite */
@@ -1297,6 +1397,9 @@ function resettle() {
    flashes its Reddit ask. */
 function land() {
   if (!pending || !ready) return;
+  /* a link is a visit: the wall opens, or steps aside, and the phone's choice stays */
+  if (pending === 'explore') { pending = null; if (!S.wall) { S.byLink = true; showWall(true); } return; }
+  if (S.wall) leaveWall();
   const k = pending; pending = null;
   if (SECTIONS.some(([s]) => s === k) && k !== 'open') { jump(k); return; }
   if (k === 'map') { jump('open'); openMap(); return; }
@@ -1352,16 +1455,27 @@ app.register(KEY, {
   promise: 'Where to eat right now, the deals worth crossing town for, what Burlington recommends, and the kitchens in their own words.',
   mount(r) {
     root = r;
+    /* the saved view, from the first paint; a link to somewhere is a visit */
+    const link = location.hash.startsWith('#' + KEY + '/') ? location.hash.slice(KEY.length + 2) : '';
+    S.wall = link ? link === 'explore' : explore.kept(KEY);
+    wallHost = el('div', 'xwall');
+    r.after(wallHost);
+    r.hidden = S.wall;
+    wallHost.hidden = !S.wall;
     r.innerHTML = '<p class="loading">Checking who’s open…</p>';
+    drawWall();
     load().then(() => {
       ready = true;
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Food didn’t load.</b></div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Food didn’t load.</b></div>'; if (S.wall) showWall(false); });
   },
   activate(param) {
     pending = param || null;
+    /* the bare address under a wall's link: back steps off it. Otherwise the
+       tab came back to its wall, and the address says so. */
+    if (!pending && S.wall) { if (S.byLink) leaveWall(); else sayWhere(); }
     /* the list is about this minute: coming back later redraws it */
     if (ready && Date.now() - S.drawn > STALE_MS) { paint('open'); paint('deals'); S.drawn = Date.now(); }
     if (ready) placeSlots();            // a thread may have turned three days old while the tab was away
@@ -1369,15 +1483,23 @@ app.register(KEY, {
     if (ready) Rank.revisit();
     land();
   },
-  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('rank'); paint('asks'); paint('best'); paint('kitchens'); } },
-  deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
+  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('rank'); paint('asks'); paint('best'); paint('kitchens'); drawWall(); } },
+  deactivate() { S.byLink = false; explore.settle(); app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     placeSlots();                        // the chips and the page share one order
     const t = now();
     const next = nothingOpen(t);
     /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
-    return sectionBar({ key: 'sec-food', title: 'Food', color: '--liq-food', find: (k) => slots && slots[k], onPick: (k) => jump(k),
+    return sectionBar({ key: 'sec-food', title: 'Food', color: '--liq-food', find: (k) => slots && slots[k], cell: { on: S.wall, flip: flipWall },
+      onPick: (k) => {
+        const off = S.wall;
+        if (off) { leaveWall(); sayWhere(); }
+        jump(k);
+        /* the pill was drawn again under the keyboard */
+        const b = off && document.querySelector('#subnav .secpill .chip[data-chip="' + k + '"]');
+        if (b) b.focus({ preventScroll: true });
+      },
       items: order().filter((k) => k !== 'rank' || Rank.hasLists()).map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
         key, label: key === 'open' && next ? 'Opening next' : label,
         n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,

@@ -89,6 +89,11 @@
      next) screening's card.
    - Watch chat: Talk opens the Telegram watch chat; the community channel
      is the second, smaller door. The talk lives there; nothing is built here.
+   - The wall: the cell at the end of the pill (explore.js). Every poster the
+     tab holds, either side, either kind, each title once at its full 2:3,
+     the nearest day first, with one fact under it: the theater and its next
+     show, the service, the date, or the year and genre. A tap opens the film
+     sheet. #watch/explore opens it. A word leaves it and goes there.
 
    One number per title. A film is its TMDB film id. A show is TV_BASE plus
    its TMDB TV id, because TMDB numbers films and shows separately and the
@@ -114,6 +119,7 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
+import * as explore from '../explore.js';
 import { sectionBar } from '../sections.js';
 import { liquify } from '../liquid.js';
 import { RULES, expiresAt } from '../boards-core.js';
@@ -222,6 +228,8 @@ const slots = Object.create(null);
 const V = { side: 'up', kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false };
 const P = { state: 'loading', ratings: [], picks: [], agg: new Map() };
 let L = null;               // this device's dots, partner, want list, own ratings
+const W = { on: false, byLink: false, run: null, seen: {}, place: { wall: 0, page: 0 } };   // the wall
+let wallHost = null;
 
 /* ------------------------------------------------------------ the titles */
 function film(raw, extra, kind) {
@@ -1009,16 +1017,18 @@ function swipeable(box) {
 
 /* --------------------------------------------------------------- next up */
 /* every screening still to come at every open theater, soonest first */
-function nextShows() {
+function allShows() {
   const today = todayKey(), hm = nowHM();
   const rows = [];
   theaters().filter((t) => t.ok).forEach((t) => {
     Object.keys(t.days).filter((day) => day >= today && (!t.closed || (t.back && day >= t.back))).forEach((day) => {
-      t.days[day].forEach((x) => x.times.filter((h) => day > today || h >= hm).forEach((h) => rows.push({ day, h, t: (x.id && byId.has(x.id) && byId.get(x.id).t) || x.t, th: t, f: (x.id && byId.get(x.id)) || byTitle.get(norm(x.t)) })));
+      t.days[day].forEach((x) => x.times.filter((h) => day > today || h >= hm).forEach((h) => rows.push({ day, h, t: (x.id && byId.has(x.id) && byId.get(x.id).t) || x.t, th: t, x, f: (x.id && byId.get(x.id)) || byTitle.get(norm(x.t)) })));
     });
   });
-  return rows.sort((a, b) => a.day.localeCompare(b.day) || a.h.localeCompare(b.h) || a.t.localeCompare(b.t)).slice(0, NEXT_UP);
+  return rows.sort((a, b) => a.day.localeCompare(b.day) || a.h.localeCompare(b.h) || a.t.localeCompare(b.t));
 }
+const nextShows = () => allShows().slice(0, NEXT_UP);
+const showWhen = (x) => (x.day === todayKey() ? '' : dayName.format(new Date(x.day + 'T12:00:00Z')).slice(0, 3) + ' ') + timesLabel([x.h]);
 function drawNext(host) {
   if (V.kind !== 'movie') return;
   const rows = nextShows();
@@ -1030,8 +1040,7 @@ function drawNext(host) {
   box.appendChild(el('div', 'eyebrow', esc(WORDS.nextUp)));
   const row = el('div', 'wt-next-row');
   rows.forEach((x) => {
-    const when = (x.day === todayKey() ? '' : dayName.format(new Date(x.day + 'T12:00:00Z')).slice(0, 3) + ' ') + timesLabel([x.h]);
-    const b = el('button', 'wt-next-i', '<span class="h">' + esc(when) + '</span><span class="t">' + esc(x.t) + '</span><span class="s">' + esc(x.th.name) + '</span>' + tomato(x.f));
+    const b = el('button', 'wt-next-i', '<span class="h">' + esc(showWhen(x)) + '</span><span class="t">' + esc(x.t) + '</span><span class="s">' + esc(x.th.name) + '</span>' + tomato(x.f));
     b.type = 'button';
     b.dataset.nextTheater = x.th.id;
     b.addEventListener('click', () => {
@@ -1489,6 +1498,8 @@ function drawList(host) {
 }
 
 /* -------------------------------------------------------- the sheets */
+/* a title as the shell saves and shares it: its link lands on it */
+const filmItem = (f) => ({ k: f.k, kind: 'film', title: f.t, media: posterUrl(f, 'w342'), href: '#watch/' + f.k });
 /* "On Netflix from Oct 24", "Season 3 on Hulu from Nov 2", "Streaming from Oct 30" */
 function streamSheet(f) {
   const what = f.kind === 'tv' ? (f.ns === 1 ? 'New series' : f.ns ? 'Season ' + f.ns : 'New season') + (f.on ? ' on ' + f.on : '')
@@ -1521,6 +1532,18 @@ function filmSheet(f) {
       b.dataset.trailer = '1';
       tr.appendChild(b);
     } else tr.appendChild(el('span', 'sheet-note', 'No trailer yet.'));
+    const it = app.know([filmItem(f)])[0], saved = store.isSaved(it.k);
+    tr.dataset.k = it.k;
+    const sh = el('button', 'act sh sheet-star', ICON.share);
+    sh.type = 'button';
+    sh.setAttribute('aria-label', WORDS.share);
+    sh.addEventListener('click', () => app.share(KEY, it.k, f.t));
+    const star = el('button', 'act star sheet-star' + (saved ? ' on' : ''), ICON.star);
+    star.type = 'button';
+    star.setAttribute('aria-label', WORDS.save);
+    star.setAttribute('aria-pressed', saved ? 'true' : 'false');
+    star.addEventListener('click', () => app.toggleSave(it));
+    tr.append(sh, star);
     facts.appendChild(tr);
     top.append(pic, facts);
     body.appendChild(top);
@@ -1904,6 +1927,93 @@ function drawChat(host) {
   host.appendChild(row);
 }
 
+/* ------------------------------------------------------------ the wall */
+const panel = () => root && root.closest('.panel');
+const wallReady = () => ready && extras && trailersIn;
+/* the one fact under a poster: the next show, the service, the date; a title
+   long out says its year and genre */
+function wallFact(f, show) {
+  if (show) return show.th.name + ' · ' + showWhen(show);
+  if (f.shelf === 'stream' || f.shelf === 'air') return railLabel(f);
+  if (!atHome(f)) {
+    if (f.shelf === 'now') return nowLabel(f);
+    if (f.shelf === 'soon') return railLabel(f);
+    if (f.dated) return dateLabel(f.dated) + ' · ' + (f.on || f.where || 'theaters');
+  }
+  const home = homeLine(f), year = String(f.y || '');
+  return home !== year ? home : [year, f.g[0]].filter(Boolean).join(' · ');
+}
+/* a film's day is when it reached home, once it has */
+const wallDay = (f, show) => (show ? show.day : f.kind === 'movie' && atHome(f) && homeDay(f) ? homeDay(f) : f.d);
+/* every section's titles, each once, the nearest day first and the one still
+   ahead before the one just gone, as Out this week reads */
+function wallViews() {
+  const shows = new Map();
+  allShows().forEach((x) => {
+    const f = x.f || film({ id: x.x.id, t: x.x.t, p: x.x.p, art: x.x.art }, null, 'movie');
+    if (f && !shows.has(f.id)) shows.set(f.id, { ...x, f });
+  });
+  const months = TM ? TM.months.flatMap((m) => [...m.movie, ...m.tv]) : [];
+  /* the shelves that can say something first, so a title keeps its best fact */
+  const titles = uniq([...[...shows.values()].map((x) => x.f), ...F.stream, ...F.tvStream, ...F.tvAir, ...F.soon, ...F.now, ...(T ? [...T.fresh, ...T.past] : []),
+    ...F.trend, ...F.tvTrend, ...F.top, ...F.tvTop, ...months].filter((f) => posterUrl(f, 'w500')));
+  const today = dayNum(todayKey());
+  const views = titles.map((f) => {
+    const show = shows.get(f.id), day = wallDay(f, show), it = filmItem(f);
+    return { k: f.k, it, media: posterUrl(f, 'w500'), tall: true, line: f.t, src: wallFact(f, show), url: it.href, day, away: day ? Math.abs(dayNum(day) - today) : Infinity, open: () => filmSheet(f) };
+  });
+  app.know(views.map((v) => v.it));
+  return explore.sink(views.sort((a, b) => (a.away === b.away ? 0 : a.away - b.away) || b.day.localeCompare(a.day)), W.seen);
+}
+/* a draw when there is nothing yet is a fresh one, and tiles already shown
+   sink; a redraw under the reader keeps the order and the place */
+function drawWall() {
+  if (!W.on || !wallHost) return;
+  /* nothing can be measured while the tab is away: it draws on the way back */
+  if (app.activeTab() !== KEY) { app.markStale(KEY); return; }
+  const p = panel();
+  const y = p ? p.scrollTop : 0;
+  const upto = W.run ? W.run.drawn() : 0;
+  if (W.run) W.run.stop();
+  else W.seen = explore.seen();
+  W.run = null;
+  wallHost.innerHTML = '';
+  const list = wallReady() ? wallViews() : [];
+  /* a hold opens the sheet too: a film's page is here, not at a link */
+  const feed = { onPeek: (it) => { const v = list.find((x) => x.k === it.k); if (v) v.open(); } };
+  if (list.length) W.run = explore.grid(wallHost, list, { upto, feed, end: 'That’s the wall' });
+  else if (wallReady()) wallHost.appendChild(el('p', 'rd-empty', 'Nothing here yet'));
+  else explore.waiting(wallHost);
+  if (p && upto) p.scrollTop = y;
+}
+function showWall(on) {
+  const p = panel();
+  if (p) W.place[W.on ? 'wall' : 'page'] = p.scrollTop;
+  W.on = on;
+  root.hidden = on;
+  wallHost.hidden = !on;
+  if (on && !W.run) drawWall();
+  app.paintSubnav();
+  app.scrollTop();
+  if (p) p.scrollTop = W.place[on ? 'wall' : 'page'] || 0;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  W.byLink = false;
+  explore.visit(KEY);
+  showWall(false);
+}
+const sayWhere = () => app.rewrite(location.search + '#' + KEY + (W.on ? '/explore' : ''));
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  W.byLink = false;
+  explore.flip(KEY, !W.on);
+  showWall(!W.on);
+  sayWhere();
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
+}
+
 /* ------------------------------------------------------------ landing */
 const TOC = () => (V.side === 'past' ? [['back', 'Back then'], ['town', 'Town'], ['list', 'The list'], ['chat', 'Chat']]
   : [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : weekList().length ? WORDS.weekChip : WORDS.soonChip], ['stream', 'Streaming'], ['vote', 'Next screening'], ['chat', 'Chat']]);
@@ -1920,6 +2030,9 @@ function land() {
   if (!pending || !ready) return;
   const k = pending;
   pending = null;
+  /* a link is a visit: the wall opens, or steps aside, and the phone's choice stays */
+  if (k === 'explore') { if (!W.on) { W.byLink = true; showWall(true); } return; }
+  if (W.on) leaveWall();
   /* #watch/upcoming and #watch/past pick the side, #watch/tv and #watch/movies the kind */
   if (k === 'upcoming' || k === 'past') { setSide(k === 'past' ? 'past' : 'up', true); app.scrollTop(); return; }
   if (k === 'tv' || k === 'movies') { setKind(k === 'tv' ? 'tv' : 'movie'); app.scrollTop(); return; }
@@ -1985,6 +2098,14 @@ app.register(KEY, {
   promise: 'Trailers, the list you and your person are working through, and what the town thought of it.',
   mount(r) {
     root = r;
+    /* the saved view, from the first paint; a link to somewhere is a visit */
+    const link = location.hash.startsWith('#' + KEY + '/') ? location.hash.slice(KEY.length + 2) : '';
+    W.on = link ? link === 'explore' : explore.kept(KEY);
+    wallHost = el('div', 'xwall');
+    r.after(wallHost);
+    r.hidden = W.on;
+    wallHost.hidden = !W.on;
+    drawWall();
     r.innerHTML = '<p class="loading">Loading…</p>';
     /* the first card should be a new trailer, so the page holds a moment for
        the file; a slow file swaps in when it lands, unless the reader has
@@ -2003,7 +2124,7 @@ app.register(KEY, {
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
-      if (trailers && !trailersIn) trailers.then((j) => { gotTrailers(j); draw('drop'); land(); });
+      if (trailers && !trailersIn) trailers.then((j) => { gotTrailers(j); draw('drop'); drawWall(); land(); });
       loadExtras(got).then(() => {
         extras = true;
         V.month = defaultMonth();
@@ -2013,22 +2134,26 @@ app.register(KEY, {
         draw('next');
         draw('back');
         if (app.activeTab() === KEY) app.paintSubnav();
+        drawWall();
         land();
       });
       loadPosts().then(land);
       pullSeen();
     }).catch(() => {
-      r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b></div>';
+      r.innerHTML = wallHost.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b></div>';
     });
   },
   activate(param) {
     pending = param || null;
     if (ready && awayFromTab && !pending && V.side === 'up') freshenTop();
     awayFromTab = false;
+    /* the bare address under a wall's link: back steps off it. Otherwise the
+       tab came back to its wall, and the address says so. */
+    if (!pending && W.on) { if (W.byLink) leaveWall(); else sayWhere(); }
     land();
   },
-  refresh() { if (ready && root) render(); },
-  deactivate() { awayFromTab = true; },
+  refresh() { if (ready && root) { render(); drawWall(); } },
+  deactivate() { awayFromTab = true; W.byLink = false; explore.settle(); },
   /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   /* two rows floating over the paper, like Build | Habits: Upcoming |
      Past poured in water, then the side's sections as the small pill */
@@ -2036,17 +2161,31 @@ app.register(KEY, {
     if (!ready || !root) return null;
     const bar = el('div', 'secbar wt-sub');
     const top = el('div', 'secrow oa-sidesrow wt-sidesrow');
-    const sw = pills([['up', 'Upcoming'], ['past', 'Past']], V.side, (v) => setSide(v), 'oa-sideswitch wt-sideswitch');
+    /* on the wall the words are drained: none is on, and a tap leaves it for that word */
+    const leave = () => { if (W.on) { leaveWall(); sayWhere(); return true; } return false; };
+    const sw = pills([['up', 'Upcoming'], ['past', 'Past']], W.on ? null : V.side, (v) => {
+      const off = leave();
+      setSide(v);
+      const b = off && document.querySelector('#subnav [data-side="' + v + '"]');
+      if (b) b.focus({ preventScroll: true });
+    }, 'oa-sideswitch wt-sideswitch');
     sw.setAttribute('role', 'group');
     sw.setAttribute('aria-label', 'Upcoming or past');
     sw.dataset.sides = '1';
-    [...sw.children].forEach((b, i) => { b.dataset.side = ['up', 'past'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === V.side)); });
-    liquify(sw, { key: 'wt-side', idx: V.side === 'past' ? 1 : 0, colors: ['--liq-watch', '--liq-pods'] });
+    [...sw.children].forEach((b, i) => { b.dataset.side = ['up', 'past'][i]; b.setAttribute('aria-pressed', String(!W.on && b.dataset.side === V.side)); });
+    liquify(sw, { key: 'wt-side', idx: W.on ? -1 : V.side === 'past' ? 1 : 0, colors: ['--liq-watch', '--liq-pods'] });
     top.appendChild(sw);
     bar.appendChild(top);
     const sec = (key) => root.querySelector('[data-sec="' + key + '"]');
     const toc = TOC().filter(([key]) => sec(key)).map(([key, label]) => ({ key, label }));
-    const p = sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, onPick: (key) => app.jumpTo(sec(key)) });
+    const p = sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, cell: { on: W.on, flip: flipWall },
+      onPick: (key) => {
+        const off = leave();
+        app.jumpTo(sec(key));
+        /* the pill was drawn again under the keyboard */
+        const b = off && document.querySelector('#subnav .secpill .chip[data-chip="' + key + '"]');
+        if (b) b.focus({ preventScroll: true });
+      } });
     /* the pill straight under the bar, as Habits' sits, so it settles smaller on the way down */
     if (p) [...p.children].forEach((k) => bar.appendChild(k));
     return bar;

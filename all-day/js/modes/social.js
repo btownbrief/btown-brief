@@ -22,11 +22,21 @@
    X and Facebook are the bots' files (pulse.json's inbox: x, voices, facebook
    and free), Instagram is all-day/data/instagram.json, Reddit is the shared
    intake. A paused source keeps its held posts, each with its honest age.
-   Every reader-facing word of the tab is in COPY. */
+   Every reader-facing word of the tab is in COPY.
+
+   The cell at the end of the pill is the tab's Explore wall (explore.js): every
+   post of every platform on one scroll, each freshest first and dealt so one
+   platform never runs on. Instagram and X are
+   their pictures, each with its words; Reddit, Facebook and The Board are
+   coloured headlines, a Reddit tile only its title and its subreddit. It is
+   drawn beside the page, not over it. #social/explore opens it. Any section
+   leaves it and goes there; Local, National and Everything keep working on it. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
+import * as explore from '../explore.js';
+import * as photos from './wire-photos.js';
 import { el, esc, ICON, agoShort, localSwitch, geo, geoKeeps } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { freshFrom } from '../reddit-lib.js';
@@ -42,6 +52,8 @@ const COPY = {
   empty: 'Nothing here yet',
   free: 'Free right now',
   got: (n) => (n === 1 ? '1 new post' : n + ' new posts'),
+  wallEnd: 'That’s the wall',
+  share: 'Share',
 };
 const PLATS = [['reddit', 'Reddit'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['x', 'X'], ['board', 'The Board']];
 const BOARD_LINK = '#people/board';
@@ -58,7 +70,11 @@ const LONG = 140;   // past this a post reads as a paragraph, not a headline
 const DESKS = new Set(['abc', 'cbsnews', 'nbcnews', 'reuters', 'business', 'wsj', 'washingtonpost', 'axios', 'nytimes']);
 
 const SOURCES = 3;
-const S = { sections: [], open: {}, dead: new Set(), loaded: false, tried: 0, base: 0, root: null, pulse: null, ig: null, reddit: null, board: null };
+const S = { sections: [], open: {}, dead: new Set(), loaded: false, tried: 0, base: 0, root: null, pulse: null, ig: null, reddit: null, board: null, boardIn: false,
+  wall: false, byLink: false, seen: {}, place: {}, run: null };
+let wallHost = null;
+const KEY = 'social';
+const panel = () => (S.root ? S.root.closest('.panel') : null);
 const seenAt = () => Number(store.read(SEEN_KEY, 0)) || Date.now() - FIRST_LOOK;
 
 /* --------------------------------------------------------------- the blocks */
@@ -103,6 +119,7 @@ function rebuild() {
 const stamp = (ts) => (Date.now() - ts < 2 * 86400000 ? agoShort(ts / 1000) : new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
 const link = (href, cls, inner) => '<a class="' + cls + '" href="' + esc(href) + '" target="_blank" rel="noopener" data-open>' + inner + '</a>';
 const picture = (src) => '<img src="' + esc(src) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">';
+const itemOf = (b, p) => ({ k: p.k, kind: 'post', title: p.text || b.name, text: '', href: p.href, src: b.name, sid: b.key, ago: stamp(p.ts), open: 'Open on ' + NAME[b.plat], thumb: p.pic, shareTab: p.shareTab });
 function acts(it) {
   const on = store.isSaved(it.k);
   return '<button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
@@ -124,7 +141,7 @@ function boardBlock(b) {
 function block(b, i) {
   if (b.plat === 'board') return boardBlock(b);
   const top = b.posts[0];
-  const it = { k: top.k, kind: 'post', title: top.text || b.name, text: '', href: top.href, src: b.name, sid: b.key, ago: stamp(top.ts), open: 'Open on ' + NAME[b.plat], thumb: top.pic, shareTab: top.shareTab };
+  const it = itemOf(b, top);
   app.know([it]);
   const own = b.home[0] === '#';
   const c = el('article', 'card ' + (own ? '' : 'fi ') + 'so-block so-' + b.plat + (i % 2 ? ' alt' : '') + (wideShade(i) ? ' alt-w' : '') + (store.isRead(it.k) ? ' is-read' : ''));
@@ -171,12 +188,113 @@ function section({ plat, blocks }) {
   sec.appendChild(all);
   return sec;
 }
+
+/* ----------------------------------------------------------------- the wall */
+/* a late file would move what is on the screen, so the wall waits for all of them */
+const wallReady = () => S.tried >= SOURCES && S.boardIn;
+/* a post as a tile: its picture only on X; a paragraph titles its sheet with its source */
+function postView(b, p) {
+  const it = itemOf(b, p);
+  app.know([it]);
+  const v = explore.storyView({ ...it, ch: b.plat, title: p.text });
+  const long = v.line.length > LONG;
+  return { ...v, it, sid: b.key, d: p.ts / 1000, media: b.plat === 'x' ? v.media : '',
+    sheet: { ...v.sheet, title: long || !v.line ? b.name : v.line, text: long ? v.line : '' } };
+}
+/* The Board lives here in the app, so its sheet goes there, not to a platform */
+function boardSheet(it, tease) {
+  app.sheet(it.title, (body) => {
+    const on = store.isSaved(it.k);
+    const box = el('div', '', tease.map((t) => '<p class="c-text">' + esc(t) + '</p>').join('') +
+      '<div class="linkrow"><button class="btn ghost" data-act="share">' + ICON.share + ' ' + esc(COPY.share) + '</button>' +
+      '<button class="act star sheet-star' + (on ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + on + '">' + ICON.star + '</button>' +
+      '<a class="btn" href="' + BOARD_LINK + '">' + esc(NAME.board) + '</a></div>');
+    box.dataset.k = it.k;
+    body.appendChild(box);
+    app.bindFeed(body);
+  });
+}
+function boardView(b) {
+  const top = b.posts[0];
+  /* the key follows the prompt, so a new one has not been seen */
+  const it = { ...itemOf(b, top), k: 'so-board-' + hash(top.text), kind: 'talk', title: top.text };
+  app.know([it]);
+  return { ...explore.storyView({ ...it, ch: b.plat }), it, sid: b.key, d: top.ts / 1000, open: () => boardSheet(it, top.tease) };
+}
+const PICS_A_POST = 2;
+function wallViews() {
+  const blocks = gather();
+  const posts = blocks.filter((b) => b.plat !== 'instagram' && b.plat !== 'board')
+    .flatMap((b) => b.posts.filter((p) => (p.text || p.pic) && geoKeeps(p.local) && !explore.weakStory({ ch: b.plat, title: p.text })).map((p) => postView(b, p)));
+  const ig = photos.igList(((S.ig && S.ig.posts) || []).filter((x) => !x.t && photos.forWall(x))).filter((v) => geoKeeps(v.local));
+  const board = blocks.filter((b) => b.plat === 'board' && geoKeeps(b.posts[0].local)).map(boardView);
+  /* an account's run of posts is one tile; a group's and a subreddit's are different people's */
+  const account = (v) => /^(x|ig):/.test(v.sid);
+  const all = explore.noTwins(posts.concat(ig).filter(account)).concat(posts.filter((v) => !account(v)), board).filter((v) => !store.isMuted(v.sid));
+  /* two pictures, then a post in words, each freshest first; the words take
+     turns by platform, so Reddit's morning is not one colour down the screen */
+  const fresh = explore.wordsFirst(all.sort((a, b) => b.d - a.d));
+  const pics = fresh.filter((v) => v.media), said = explore.apart(fresh.filter((v) => !v.media), (v) => v.tint);
+  const out = [];
+  for (let p = 0, t = 0; p < pics.length || t < said.length; p += PICS_A_POST, t += 1) out.push(...pics.slice(p, p + PICS_A_POST), ...said.slice(t, t + 1));
+  return explore.sink(out, S.seen);
+}
+/* Free and The Board are not sources to mute */
+const wallFeed = { onMute: (sid, it) => { if (it.href[0] !== '#' && sid !== 'facebook:free') app.mute(sid, it); } };
+/* a draw when there is nothing yet is a fresh one, and tiles already shown
+   sink; a redraw under the reader keeps the order and the place */
+function drawWall() {
+  if (!S.wall || !wallHost) return;
+  /* nothing can be measured while the tab is away: it draws on the way back */
+  if (app.activeTab() !== KEY) { app.markStale(KEY); return; }
+  const p = panel();
+  const y = p ? p.scrollTop : 0;
+  const upto = S.run ? S.run.drawn() : 0;
+  if (S.run) S.run.stop();
+  else S.seen = explore.seen();
+  S.run = null;
+  wallHost.innerHTML = '';
+  const list = wallReady() ? wallViews() : [];
+  if (list.length) S.run = explore.grid(wallHost, list, { upto, end: COPY.wallEnd, feed: wallFeed });
+  else if (wallReady()) wallHost.appendChild(el('p', 'rd-empty', esc(COPY.empty)));
+  else explore.waiting(wallHost);
+  if (p && upto) p.scrollTop = y;
+}
+function showWall(on) {
+  const p = panel();
+  if (p) S.place[S.wall ? 'wall' : 'page'] = p.scrollTop;
+  S.wall = on;
+  S.root.hidden = on;
+  wallHost.hidden = !on;
+  if (on && !S.run) drawWall();
+  app.paintSubnav();
+  app.scrollTop();
+  if (p) p.scrollTop = S.place[on ? 'wall' : 'page'] || 0;
+}
+/* a word or a link leaves it: a visit, which writes no memory */
+function leaveWall() {
+  S.byLink = false;
+  explore.visit(KEY);
+  showWall(false);
+}
+const sayWhere = () => app.rewrite(location.search + '#' + KEY + (S.wall ? '/explore' : ''));
+/* the cell: the layout, and nothing else */
+function flipWall() {
+  S.byLink = false;
+  explore.flip(KEY, !S.wall);
+  showWall(!S.wall);
+  sayWhere();
+  const b = document.querySelector('#subnav .xcell');
+  if (b) b.focus({ preventScroll: true });
+}
+
 function draw() {
   if (!S.root) return;
   rebuild();
   S.root.innerHTML = '';
   if (S.sections.length) S.sections.forEach((sec) => S.root.appendChild(section(sec)));
   else S.root.appendChild(el('p', 'rd-empty', esc(S.loaded || S.tried >= SOURCES ? COPY.empty : COPY.loading)));
+  drawWall();
   if (app.activeTab() === 'social') app.paintSubnav();
 }
 
@@ -214,21 +332,47 @@ app.register('social', {
   mount(root) {
     S.root = root;
     S.base = seenAt();
+    /* the saved view, from the first paint; a link to somewhere is a visit */
+    const link = location.hash.startsWith('#' + KEY + '/') ? location.hash.slice(KEY.length + 2) : '';
+    S.wall = link ? link === 'explore' : explore.kept(KEY);
+    wallHost = el('div', 'xwall');
+    root.after(wallHost);
+    root.hidden = S.wall;
+    wallHost.hidden = !S.wall;
     draw();
-    freshest().then((b) => { S.board = b; draw(); }).catch(() => {});
+    freshest().then((b) => { S.board = b; }).catch(() => {}).then(() => { S.boardIn = true; draw(); });
     if (app.demo) loadDemo();
     else {
       data.load('pulse', (j) => { S.pulse = j; loaded(); }, loaded);
       data.load('instagram', (j) => { S.ig = j; loaded(); }, loaded);
       loadReddit();
     }
-    window.addEventListener('allday-geo', () => { draw(); if (app.activeTab() === 'social') app.scrollTop(false); });
+    window.addEventListener('allday-geo', () => {
+      if (S.run) { S.run.stop(); S.run = null; }
+      draw();
+      if (app.activeTab() === 'social') app.scrollTop(false);
+    });
   },
-  activate() {},
+  activate(param) {
+    /* a link is a visit: the wall opens, or steps aside, and the phone's choice stays */
+    if (param === 'explore') { if (!S.wall) { S.byLink = true; showWall(true); } return; }
+    if (param) { if (S.wall) leaveWall(); return; }
+    /* the bare address under a wall's link: back steps off it. Otherwise the
+       tab came back to its wall, and the address says so. */
+    if (S.wall) { if (S.byLink) leaveWall(); else sayWhere(); }
+  },
   refresh() { draw(); },
-  deactivate() { store.write(SEEN_KEY, Date.now()); },
+  deactivate() { S.byLink = false; explore.settle(); store.write(SEEN_KEY, Date.now()); },
   subnav() {
-    const row = sectionBar({ key: 'social-sec', title: COPY.label, color: '--liq-reddit', find: sectionNode, onPick: (k) => app.jumpTo(sectionNode(k)),
+    const row = sectionBar({ key: 'social-sec', title: COPY.label, color: '--liq-reddit', find: sectionNode, cell: { on: S.wall, flip: flipWall },
+      onPick: (k) => {
+        const off = S.wall;
+        if (off) { leaveWall(); sayWhere(); }
+        app.jumpTo(sectionNode(k));
+        /* the pill was drawn again under the keyboard */
+        const b = off && document.querySelector('#subnav .secpill .chip[data-chip="' + k + '"]');
+        if (b) b.focus({ preventScroll: true });
+      },
       items: S.sections.map(({ plat }) => ({ key: plat, label: NAME[plat] })) }) || el('div', 'secbar lead');
     row.appendChild(localSwitch());
     return row;
@@ -255,4 +399,4 @@ app.register('social', {
 });
 
 /* for tests */
-export const _state = () => ({ sections: S.sections.map((sec) => sec.plat), blocks: S.sections.reduce((n, sec) => n + sec.blocks.length, 0) });
+export const _state = () => ({ sections: S.sections.map((sec) => sec.plat), blocks: S.sections.reduce((n, sec) => n + sec.blocks.length, 0), wall: wallReady() ? wallViews() : [] });

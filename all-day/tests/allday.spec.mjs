@@ -2810,7 +2810,7 @@ async function onAir(browser, base) {
     await settle(page);
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
-    const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
+    const sw = await page.$$eval('#subnav .oa-sideswitch button[data-side]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
     check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false', 'Sports|false']), 'a TV | Podcasts | Playlists | Sports switch at the top, TV first and on (Stephen, 2026-10-19 and 10-22)', JSON.stringify(sw));
     const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.secrow').querySelector('.localsw'),
       cut: [...g.children].some((b) => b.getBoundingClientRect().right > innerWidth || b.getBoundingClientRect().height < 36) }; });
@@ -13671,7 +13671,7 @@ async function railsHaveList(browser, base) {
         const out = [];
         document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
           if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
-          if (n.classList.contains('chips') || n.classList.contains('ifeeds')) return;   // filters and tables of contents, not content
+          if (n.classList.contains('chips') || n.classList.contains('ifeeds') || n.classList.contains('wways-row')) return;   // filters and tables of contents, not content
           /* a section pill (sections.js): its own All button lists every section, so it must show */
           if (n.classList.contains('secpill-scroll')) { const all = n.parentElement.querySelector(':scope > .secpill-all'); if (all && getComputedStyle(all).display !== 'none') return; }
           const wrap = n.closest('.rail-wrap');
@@ -14064,7 +14064,7 @@ async function onAirSports(browser, base) {
     await page.goto(base + '/all-day/?demo=1#onair/sports');
     await settle(page);
     await page.waitForSelector('#panel-onair [data-side="sports"] [data-sec="sp-games"]', { timeout: 8000 });
-    const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
+    const sw = await page.$$eval('#subnav .oa-sideswitch button[data-side]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
     check(sw[3] === 'Sports|true', '#onair/sports opens the Sports side', JSON.stringify(sw));
     const lg = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim() + '|' + c.classList.contains('on')));
     check(JSON.stringify(lg) === JSON.stringify(['NBA|true', 'NFL|false', 'Local hoops|false']), 'its pill: NBA (on), NFL, Local hoops', JSON.stringify(lg));
@@ -17612,7 +17612,7 @@ async function theExplore(browser, base) {
     check(!(await page.$('#subnav .wmode.on')) && await page.$$eval('#subnav .wmode', (b) => b.every((x) => x.getAttribute('aria-pressed') === 'false')), 'and no word is on the wall', '');
     await page.waitForFunction(() => document.activeElement.classList.contains('xcell'));
     check(true, 'the keyboard stays on the cell', '');
-    for (const tab of ['watch', 'food', 'people', 'whatnow', 'social', 'onair', 'games']) {
+    for (const tab of ['people', 'whatnow', 'games']) {
       await page.evaluate((t) => { location.hash = t; }, tab);
       await page.waitForFunction((t) => location.hash === '#' + t, tab);
       await page.waitForTimeout(250);
@@ -17635,6 +17635,49 @@ async function theExplore(browser, base) {
       check(!(await o.page.$(CELL)), app + ' has no cell', '');
       await o.ctx.close();
     }
+  });
+
+  await group('Explore: Watch, every poster in one place', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await settle(page);
+    await page.waitForSelector(CELL);
+    const c = await page.$eval(CELL, (b) => {
+      const r = b.getBoundingClientRect(), hit = getComputedStyle(b, '::after');
+      return { w: parseFloat(hit.width), h: parseFloat(hit.height), last: b.parentElement.lastElementChild === b, pill: b.parentElement.classList.contains('secpill') };
+    });
+    check(c.w >= 44 && c.h >= 44 && c.last && c.pill, 'a 44px target, last in the pill', JSON.stringify(c));
+    const watchKept = () => page.evaluate(async () => (await import('./js/explore.js')).kept('watch'));
+    check(await pressed(page) === 'false', 'off by default', '');
+    await page.click(CELL);
+    await page.waitForSelector('#panel-watch .xwall .xt');
+    check(await watchKept(), 'remembered', '');
+    check(await page.evaluate(() => location.hash) === '#watch/explore', 'the address says so', '');
+    const w = await page.$$eval('#panel-watch .xwall .xt', (ts) => ts.map((t) => {
+      const r = t.querySelector('.xt-p').getBoundingClientRect();
+      return { k: t.dataset.k, shape: r.height / r.width, title: t.querySelector('.xt-h').textContent, fact: t.querySelector('.xt-s').textContent };
+    }));
+    check(w.length >= 16 && new Set(w.map((t) => t.k)).size === w.length, 'tiles, each title once', String(w.length));
+    check(w.every((t) => Math.abs(t.shape - 1.5) < 0.02), 'every poster its full 2:3', JSON.stringify(w[0]));
+    check(w.every((t) => t.title && t.fact), 'a title and a fact under each', JSON.stringify(w.find((t) => !t.fact) || ''));
+    check(await page.$$eval('#panel-watch .xwall .xcol', (n) => n.length) === 2, 'two across', '');
+    check(!(await page.$('#subnav .secpill .chip.on')) && !(await page.$('#subnav [data-sides] button.on')), 'the words are drained', '');
+    check(await page.$eval('#panel-watch .xwall', (x) => x.previousElementSibling.hidden), 'the page steps aside', '');
+    await page.click('#panel-watch .xwall .xt');
+    await page.waitForSelector('#sheet:not([hidden]) .act.star');
+    const k = await page.$eval('#panel-watch .xwall .xt', (t) => t.dataset.k);
+    check(!!(await page.$('#sheet .act.sh')), 'the sheet has share', '');
+    await page.click('#sheet .act.star');
+    check(await page.evaluate(async (key) => (await import('./js/store.js')).isSaved(key), k), 'and the star saves the title', k);
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    await page.click('#subnav .secpill .chip');
+    await page.waitForFunction(() => document.querySelector('#panel-watch .xwall').hidden);
+    check(!(await watchKept()), 'a word leaves it, and a look is undone', '');
+    check(await page.evaluate(() => location.hash) === '#watch', 'the address says so', '');
+    check(await pressed(page) === 'false' && !!(await page.$('#subnav .secpill .chip.on')), 'the water is back', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('Explore: the cell chooses the layout and nothing else', async () => {
@@ -17666,6 +17709,49 @@ async function theExplore(browser, base) {
     await page.waitForSelector('#subnav .chip.on[data-chip="fit"]');
     check(await pressed(page) === 'false' && !(await page.$eval('#panel-vintage .panel-body', (b) => b.hidden)) && await page.$eval('#panel-vintage .xwall', (b) => b.hidden), 'a section leaves it and goes there', '');
     check(/#vintage$/.test(page.url()), 'and the address says so', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: Social, one scroll across the platforms', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#social');
+    await settle(page);
+    await page.waitForSelector(CELL);
+    const c = await page.$eval(CELL, (b) => {
+      const r = b.getBoundingClientRect();
+      return { w: r.width, h: r.height, scroller: !!b.closest('.secpill-scroll'), last: b.parentElement.lastElementChild === b, pill: b.parentElement.classList.contains('secpill') };
+    });
+    check(c.w >= 44 && c.h >= 44 && c.pill && !c.scroller && c.last, 'the right end of its pill, outside the scroller', JSON.stringify(c));
+    check(await pressed(page) === 'false', 'off by default', '');
+    await page.click(CELL);
+    await page.waitForSelector('#panel-social .xwall .xt');
+    const socialKept = () => page.evaluate(async () => (await import('./js/explore.js')).kept('social'));
+    check(await socialKept() && /#social\/explore$/.test(page.url()), 'the wall draws, is written, and the address says so', page.url());
+    const wall = await page.$$eval('#panel-social .xwall .xt', (ts) => ts.map((t) => ({ cls: t.className, pic: !!t.querySelector('img'), src: t.querySelector('.xt-s').textContent })));
+    for (const tint of ['reddit', 'facebook']) check(wall.some((t) => t.cls.includes('xt-' + tint) && !t.pic), tint + ' is a coloured headline', JSON.stringify(wall.slice(0, 4)));
+    const whole = await page.evaluate(async () => (await import('./js/modes/social.js'))._state().wall.map((v) => ({ sid: v.sid, tint: v.tint, media: !!v.media })));
+    check(whole.some((v) => v.sid.startsWith('ig:') && v.media && !v.tint), 'Instagram is a picture', '');
+    check(whole.some((v) => v.tint === 'x' && v.media) && whole.some((v) => v.tint === 'x' && !v.media), 'X is its picture, or its headline without one', '');
+    check(wall.filter((t) => t.cls.includes('xt-reddit')).every((t) => /^r\//.test(t.src)), 'a Reddit tile names its subreddit', '');
+    const dates = await page.evaluate(async () => (await import('./js/modes/social.js'))._state().wall.filter((v) => v.line && v.tint === 'reddit').map((v) => v.d));
+    check(dates.length > 1 && dates.every((d, i) => !i || dates[i - 1] >= d), 'each platform freshest first', dates.join());
+    const tints = whole.slice(0, 6).map((v) => v.tint);
+    check(tints.every((t, i) => !i || t !== tints[i - 1]), 'no platform runs on', tints.join());
+    await page.click('#panel-social .xwall .xt-reddit');
+    await page.waitForSelector('[data-k] .sheet-star');
+    check(await page.evaluate(() => !!document.querySelector('.sheet-star')?.parentElement.querySelector('[data-act="share"]')), 'a tile opens to a sheet with star and share', '');
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('.sheet-star'));
+    const drained = await page.evaluate(async () => (await import('./js/sections.js'))._state('social-sec').drained);
+    check(drained && !(await page.$('#subnav .chip.on')), 'the words are drained', '');
+    await page.click('#subnav .chip[data-chip="facebook"]');
+    await page.waitForSelector('#subnav .chip.on[data-chip="facebook"]');
+    check(await pressed(page) === 'false' && await page.$eval('#panel-social .xwall', (b) => b.hidden) && /#social$/.test(page.url()), 'a word leaves it and goes there', page.url());
+    check(!(await socialKept()), 'and a flip left by a word in the same sitting is undone', '');
+    await page.evaluate(() => { location.hash = 'social/explore'; });
+    await page.waitForSelector('#panel-social .xwall:not([hidden]) .xt');
+    check(await pressed(page) === 'true' && !(await socialKept()), '#social/explore opens it and writes no memory', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -17821,6 +17907,58 @@ async function theExplore(browser, base) {
     await wallOn(page);
     const quiet = await order(page);
     check(!quiet.includes('w3') && !quiet.includes('w22') && !quiet.includes('ig:Demopolone') && quiet.includes('w1'), 'Hide politics holds on the wall, pictures too', quiet.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Explore: On Air’s wall', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const WALL = '#panel-onair .xwall';
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector(CELL);
+    const c = await page.$eval(CELL, (b) => { const r = b.getBoundingClientRect(), p = b.parentElement, q = p.getBoundingClientRect(); return { w: r.width, h: r.height, last: p.lastElementChild === b, words: p.classList.contains('oa-sideswitch'), inside: r.right <= q.right + 1 && q.right <= innerWidth }; });
+    check(c.w >= 44 && c.h >= 44 && c.last && c.words && c.inside, 'the cell, last in the top row, 44px, on screen', JSON.stringify(c));
+    const widths = await page.$$eval('#subnav .oa-sideswitch button[data-side]', (b) => b.map((x) => { const r = document.createRange(); r.selectNodeContents(x); return { box: x.clientWidth, text: r.getBoundingClientRect().width }; }));
+    check(widths[0].box < widths[1].box && widths.every((w) => w.text <= w.box), 'the four words size to their words, none cut', JSON.stringify(widths));
+    check(await pressed(page) === 'false' && !(await page.$eval('#panel-onair .panel-body', (b) => b.hidden)), 'off by default', '');
+    for (const side of ['pods', 'lists', 'sports']) {
+      await page.click('#subnav .oa-sideswitch [data-side="' + side + '"]');
+      await page.waitForSelector('#subnav .oa-sideswitch [data-side="' + side + '"][aria-pressed="true"]');
+      check(!!(await page.$(CELL)), 'it stays on ' + side, '');
+    }
+    await page.click(CELL);
+    await page.waitForSelector(WALL + ' .xt');
+    check(await pressed(page) === 'true' && /#onair\/explore$/.test(page.url()) && await page.$eval('#panel-onair .panel-body', (b) => b.hidden), 'from Sports it opens the wall, with the page under it hidden', page.url());
+    check(!(await page.$('#subnav .oa-sideswitch button[data-side].on')) && await page.$$eval('#subnav .oa-sideswitch button[data-side]', (b) => b.every((x) => x.getAttribute('aria-pressed') === 'false')), 'the words are drained', '');
+    check(!!(await page.$('#subnav .localsw')), 'the Local switch stays on the wall', '');
+    const tiles = await page.$$eval(WALL + ' .xt', (t) => t.map((x) => { const p = x.querySelector('.xt-p'), r = (p || x).getBoundingClientRect(); return { k: x.dataset.k, ratio: r.height / r.width, dur: (x.querySelector('.dur') || {}).textContent || '', line: (x.querySelector('.xt-h, .xt-t') || {}).textContent || '', src: x.querySelector('.xt-s').textContent, head: x.classList.contains('xt-head') }; }));
+    const vids = tiles.filter((t) => /^(yt|vm):/.test(t.k)), audio = tiles.filter((t) => !/^(yt|vm|pl|board):/.test(t.k)), lists = tiles.filter((t) => /^(pl|board):/.test(t.k));
+    check(vids.length && audio.length && lists.length, 'videos, episodes and playlists, on one wall', JSON.stringify([vids.length, audio.length, lists.length]));
+    check(vids.every((t) => Math.abs(t.ratio - 9 / 16) < 0.03) && vids.some((t) => /^\d+:\d\d/.test(t.dur)), 'a video keeps its wide shape, with its running time on the picture', JSON.stringify(vids[0]));
+    check(audio.every((t) => Math.abs(t.ratio - 1) < 0.03), 'an episode is square, with art or coloured', JSON.stringify(audio.filter((t) => Math.abs(t.ratio - 1) >= 0.03)));
+    check(tiles.every((t) => t.line && t.src), 'every tile has a title and a show', JSON.stringify(tiles.find((t) => !t.line || !t.src) || {}));
+    const first = await page.$$eval(WALL + ' .xt', (t) => t.slice(0, 8).map((x) => x.dataset.k));
+    check(first.some((k) => /^yt:/.test(k)) && first.some((k) => !/^(yt|vm):/.test(k)), 'the sides are mixed from the top', first.join());
+    await page.click(WALL + ' .xt[data-k^="yt:"]');
+    await page.waitForSelector('.sheet-card.oa-player .sheet-star');
+    check(!!(await page.$('.oa-player [data-act="share"]')), 'a video plays in the player, with star and share', '');
+    await page.click('.oa-player [data-act="save"]');
+    check(await page.$eval('.oa-player .act.star', (b) => b.getAttribute('aria-pressed')) === 'true', 'the star takes', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(WALL + ' .xt:not([data-k^="yt:"]):not([data-k^="vm:"]):not([data-k^="pl:"]):not([data-k^="board:"])');
+    await page.waitForSelector('.sheet-card .sheet-star');
+    check(!(await page.$eval('#player', (d) => d.hidden).catch(() => true)) && !!(await page.$('.sheet-card [data-act="share"]')), 'an episode plays in the dock, its sheet has star and share', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click('#subnav .oa-sideswitch [data-side="pods"]');
+    await page.waitForSelector('#subnav .oa-sideswitch [data-side="pods"][aria-pressed="true"]');
+    check(await pressed(page) === 'false' && await page.$eval(WALL, (b) => b.hidden) && !(await page.$eval('#panel-onair [data-side="pods"]', (b) => b.hidden)) && /#onair\/podcasts$/.test(page.url()), 'a word leaves it and goes there', page.url());
+    check(!(await kept(page)).onair, 'in the same sitting that undoes the flip', JSON.stringify(await kept(page)));
+    await page.click(CELL);
+    await page.waitForSelector(WALL + ':not([hidden]) .xt');
+    await page.click(CELL);
+    await page.waitForSelector(WALL, { state: 'hidden' });
+    check(/#onair\/podcasts$/.test(page.url()), 'the cell goes back to the side it came from', page.url());
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -18451,6 +18589,52 @@ async function theExplore(browser, base) {
     check(!(await page.$('#panel-vintage .xt.fi[data-k^="b-"]')) && !!(await page.$('#panel-vintage .xt.fi[data-k^="ig:"]')), 'a fit check has no mute to offer; a shop’s post does', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  await group('Explore: Food’s wall', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#food');
+    await page.waitForSelector(CELL);
+    const c = await page.$eval(CELL, (b) => {
+      const r = b.getBoundingClientRect();
+      return { w: r.width, h: r.height, scroller: !!b.closest('.secpill-scroll'), last: b.parentElement.lastElementChild === b };
+    });
+    check(c.w >= 44 && c.h >= 44 && !c.scroller && c.last, 'the cell, last in the pill, outside the scroller', JSON.stringify(c));
+    check(await pressed(page) === 'false' && !(await page.$eval('#panel-food .panel-body', (b) => b.hidden)), 'off by default', '');
+    await page.click(CELL);
+    await page.waitForSelector('#panel-food .xwall .xt');
+    check(await pressed(page) === 'true' && /#food\/explore$/.test(page.url()) && await page.$eval('#panel-food .panel-body', (b) => b.hidden), 'the cell opens the wall and the address says so', page.url());
+    const tiles = await page.$$eval('#panel-food .xwall .xt', (t) => t.map((x) => ({ k: x.dataset.k, line: (x.querySelector('.xt-h') || {}).textContent || '', src: (x.querySelector('.xt-s') || {}).textContent || '' })));
+    const keys = tiles.map((t) => t.k);
+    check(keys.some((k) => k.startsWith('ig:')) && keys.some((k) => /^(d|r)-/.test(k)), 'kitchens’ posts and the tab’s own places, in one scroll', keys.join());
+    check(tiles.every((t) => t.src) && tiles.some((t) => t.line), 'each tile has its name, and its line', JSON.stringify(tiles));
+    check(!tiles.some((t) => /sunsets|podcast/i.test(t.src)), 'no account that is not food, no post without the kind', JSON.stringify(tiles));
+    check(!(await page.$('#subnav .chip.on')), 'the words are drained', '');
+    const own = keys.find((k) => /^(d|r)-/.test(k));
+    await page.click('#panel-food .xwall .xt[data-k="' + own + '"]');
+    await page.waitForSelector('.sheet-star');
+    check(!!(await page.$('#sheet [data-act="share"]')) && !!(await page.$('#sheet [data-act="save"]')), 'a tile opens to a sheet with star and share', own);
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('.sheet-star'));
+    await page.click('#subnav .chip[data-chip="deals"]');
+    await page.waitForSelector('#subnav .chip.on[data-chip="deals"]');
+    check(await pressed(page) === 'false' && !(await page.$eval('#panel-food .panel-body', (b) => b.hidden)) && await page.$eval('#panel-food .xwall', (b) => b.hidden) && /#food$/.test(page.url()), 'a word leaves it', page.url());
+    await page.goto(base + '/all-day/?demo=1#food/explore');
+    await page.waitForSelector('#panel-food .xwall .xt');
+    check(await pressed(page) === 'true', '#food/explore opens the wall', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const live = await newPage(browser, base);
+    await live.page.goto(base + '/all-day/#food');
+    await live.page.waitForSelector(CELL, { timeout: 15000 });
+    await live.page.click(CELL);
+    await live.page.click('#subnav .chip[data-chip="deals"]');
+    await hide(live.page);
+    check(!(await kept(live.page)).food, 'a flip left by a word is undone', JSON.stringify(await kept(live.page)));
+    await live.page.click(CELL);
+    await hide(live.page);
+    check((await kept(live.page)).food === true, 'a flip kept to the end of the sitting stays, per tab', JSON.stringify(await kept(live.page)));
+    await live.ctx.close();
   });
 
   await group('Explore: 320 and 390, light and dark', async () => {
