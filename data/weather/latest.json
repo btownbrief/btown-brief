@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-01T16:21:10+00:00",
+ "updated": "2026-11-01T16:37:59+00:00",
  "sections_updated": {
-  "now": "2026-11-01T16:21:10+00:00",
-  "forecast": "2026-11-01T16:21:10+00:00",
-  "hourly": "2026-11-01T16:21:10+00:00",
-  "alerts": "2026-11-01T16:21:10+00:00",
-  "afd": "2026-11-01T16:21:10+00:00",
-  "lake_forecast": "2026-11-01T16:21:10+00:00",
-  "lake_gage": "2026-11-01T16:21:10+00:00",
-  "air": "2026-11-01T16:21:10+00:00",
-  "sun": "2026-11-01T16:21:10+00:00",
-  "models": "2026-11-01T16:21:10+00:00"
+  "now": "2026-11-01T16:37:59+00:00",
+  "forecast": "2026-11-01T16:37:59+00:00",
+  "hourly": "2026-11-01T16:37:59+00:00",
+  "alerts": "2026-11-01T16:37:59+00:00",
+  "afd": "2026-11-01T16:37:59+00:00",
+  "lake_forecast": "2026-11-01T16:37:59+00:00",
+  "lake_gage": "2026-11-01T16:37:59+00:00",
+  "air": "2026-11-01T16:37:59+00:00",
+  "sun": "2026-11-01T16:37:59+00:00",
+  "models": "2026-11-01T16:37:59+00:00"
  },
  "now": {
   "observed_at": "2026-11-01T15:55:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-01T09:00:00-05:00",
+    "start": "2026-11-01T11:00:00-05:00",
     "is_day": true,
     "temp_f": 57,
     "pop": 0,
-    "wind": "S 8 to 12 mph",
+    "wind": "S 12 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 57. South wind 8 to 12 mph."
+    "detailed": "Sunny, with a high near 57. South wind around 12 mph."
    },
    {
     "name": "Tonight",
@@ -964,7 +964,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "11/01/26 11:00",
@@ -1040,7 +1040,7 @@
  },
  "brief": {
   "date": "2026-11-01",
-  "generated": "2026-11-01T16:21:14+00:00",
+  "generated": "2026-11-01T16:38:04+00:00",
   "text": "Sunny today, high 57. Partly cloudy tonight, low 40. Monday, mostly sunny and warmer, high 62.",
   "periods": [
    {
@@ -1049,7 +1049,7 @@
     "is_day": true,
     "temp_f": 57,
     "sky": "sunny",
-    "start": "2026-11-01T16:00:00+00:00",
+    "start": "2026-11-01T11:00:00-05:00",
     "end": "2026-11-01T18:00:00-05:00",
     "precip": null,
     "wind": null,
