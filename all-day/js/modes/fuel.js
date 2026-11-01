@@ -159,7 +159,6 @@ function drawBasics(box, f) {
     if ((s.simple_rules || []).length) bullets(box, s.simple_rules, 'Simple rules');
     sources(box, s.sources);
   });
-  para(box, f.doctor_line, 'note');
 }
 function calculator(c) {
   const box = el('div', 'hb-gate fu-calc');
