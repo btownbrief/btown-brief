@@ -50,7 +50,7 @@
      next day it has shows, or "Back Oct 30" while it is closed. Partizanfilm
      is picked first (Stephen, 2026-10-18: the local one). Every theater
      keeps its Showtimes button to its own page. Back then opened as a list,
-     and the list once "Show more" has grown it, carry a Collapse bar that
+     and the list once "See more" has grown it, carry a Collapse bar that
      stays in reach while the list is on screen.
    - Back then: the time machine. ‹ October 2021 › and a row of years; the
      month's big titles (scripts/build_time_machine.py, monthly: what Rotten
@@ -158,7 +158,7 @@ const ROWS = 40;            // trailer rows drawn at a time
 const WORDS = {
   dropped: 'Just dropped', inTheaters: 'In theaters', onTv: 'On TV now', comingSoon: 'Coming soon', newHome: 'New at home', newTv: 'New on TV', everything: 'All',
   play: 'Play the trailer for ', prev: 'Previous trailer', next: 'Next trailer', save: 'Save', share: 'Share', fresh: 'New', trailer: ' trailer',
-  list: 'See as a list', listOf: 'Trailers', allGenres: 'All', surprise: 'Surprise me', more: 'Show more',
+  list: 'See as a list', listOf: 'Trailers', allGenres: 'All', surprise: 'Surprise me', more: 'See more',
   nextUp: 'Next up', week: 'Out this week', weekChip: 'This week', theaters: 'Coming to theaters', soonChip: 'Coming soon', home: 'at home',
 };
 const YT = /^[A-Za-z0-9_-]{11}$/;
@@ -765,7 +765,8 @@ function oneTrailerEach(list) {
 /* Movies: this week's new trailers in the file's order, or what is coming
    soon when there is no file, then the rest of what's in theaters or on its
    way, shuffled. TV: new shows and seasons, then what is airing. */
-const plays = (f) => hasTrailer(f) && !(T && T.skip.has(f.yt));
+const gone = new Set();                  // trailers YouTube has taken down, found as the hero tries them
+const plays = (f) => hasTrailer(f) && !(T && T.skip.has(f.yt)) && !gone.has(f.yt);
 function trailerList(kind) {
   if (kind === 'tv') return oneTrailerEach(uniq([...F.tvStream, ...F.tvAir]).filter(plays));
   const first = (T ? T.fresh.filter(isFresh) : F.soon).filter(plays);
@@ -815,6 +816,16 @@ function ageTag(f) {
   const h = Math.max(1, Math.floor((Date.now() - f.at * 1000) / 3600000));
   return WORDS.fresh + ' · ' + (h < 24 ? h + 'h' : Math.floor(h / 24) + 'd');
 }
+/* a trailer taken down leaves the walk, and the hero moves on to the next */
+function dropTrailer(f) {
+  gone.add(f.yt);
+  const q = walk();
+  const at = q.list.indexOf(f);
+  if (at < 0) return;
+  q.list.splice(at, 1);
+  q.at = Math.max(0, Math.min(q.at > at ? q.at - 1 : q.at, q.list.length - 1));
+  draw('drop');
+}
 function stepTrailer(by) {
   const q = walk();
   const at = q.at + by;
@@ -851,12 +862,16 @@ function drawDrop(host) {
   /* a film with no 1280 picture has the 480 one. YouTube answers a missing
      1280 with a 404 that carries a real 120-wide grey image, so that case
      loads rather than fails. Its own class, because the shell takes a failed
-     .pic off the page before this could try again. */
+     .pic off the page before this could try again. A 120 by 90 hqdefault is
+     YouTube's picture for a video taken down. */
   const img = c.querySelector('.wt-drop-img');
   if (img) {
     const big = () => /maxresdefault/.test(img.src);
     const smaller = () => { img.src = img.src.replace('maxresdefault', 'hqdefault'); };
-    img.addEventListener('load', () => { if (big() && img.naturalWidth <= 120) smaller(); });
+    img.addEventListener('load', () => {
+      if (big() && img.naturalWidth <= 120) smaller();
+      else if (!big() && img.naturalWidth === 120 && img.naturalHeight === 90) dropTrailer(f);
+    });
     img.addEventListener('error', () => { if (big()) smaller(); else img.remove(); });
   }
   c.querySelector('.wt-drop-pic').addEventListener('click', (e) => { e.preventDefault(); playCard(); });
@@ -1874,8 +1889,8 @@ function drawChat(host) {
   const row = el('div', 'linkrow');
   row.style.padding = '0 var(--gutter)';
   row.style.alignItems = 'center';
-  const tg = el('a', 'btn', 'Talk ' + ICON.ext);
-  tg.setAttribute('aria-label', 'Talk, in the Telegram watch chat');
+  const tg = el('a', 'btn', 'Chat ' + ICON.ext);
+  tg.setAttribute('aria-label', 'Chat, in the Telegram watch chat');
   tg.href = safeHref(TELEGRAM_URL);
   tg.target = '_blank';
   tg.rel = 'noopener';

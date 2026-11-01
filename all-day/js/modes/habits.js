@@ -20,16 +20,15 @@
      Under them, the last sixteen weeks as a heat map, a square a day. Last,
      the goal tile: with no goal live it says when the next season starts,
      with a sign-up button, or that none is scheduled.
-   - Goal, Season and Wall are chips that say Season 0 is coming.
+   - Goal, Season and Wall live in Season (modes/season.js); their old links go there.
 
    - Round three (2026-10-19): every habit is a tree, a leaf for each day
      done and a flower for each streak milestone (forest.js); together they
      stand over the list as your forest, and a tap grows its tree a leaf in
      the same click. Share the forest from its Share button (any name,
      habit names or just the trees, which habits); everyone's public forests
-     are under the Forests chip (sz-FOREST.sql). A first visit opens on what
-     the page does; the "?" by the forest shows it again. An empty Today
-     offers three starter habits.
+     are under the Forests chip (sz-FOREST.sql). The "?" by the forest says
+     what the page does. An empty Today offers three starter habits.
 
    Signed out, it just works: the same Today, every habit and tap kept on
    this phone (habits-local.js, the same doors and rules as the server),
@@ -69,8 +68,7 @@ import { DEMO_ME } from '../boards-fake.js';
 import { sectionBar } from '../sections.js';
 
 const KEY = 'habits';
-const VIEWS = [['today', 'Today'], ['forests', 'Forests'], ['goal', 'Goal'], ['season', 'Season'], ['wall', 'Wall']];
-const HELP = 'allday-habits-help';   // the first-visit card was dismissed
+const VIEWS = [['today', 'Today'], ['forests', 'Forests']];
 /* one tap each on an empty Today: a habit, and its tree, at once */
 const STARTERS = [
   { text: 'Walk outside', frequency: 'daily', n: null },
@@ -153,7 +151,6 @@ const S = {
   forestOff: false,     // sz-FOREST.sql is not pasted yet: sharing and the gallery stay hidden
   gallery: undefined,   // the public forests, undefined while asking
   galleryFailed: null,  // the gallery did not load, as its sentence
-  helpSeen: app.demo ? false : !!store.read(HELP, false),
 };
 let root = null, body = null, gen = 0, dayTimer = 0, flashKey = null;
 
@@ -408,17 +405,10 @@ function paint() {
   if (!body) return;
   body.innerHTML = '';
   if (S.view === 'forests') { paintForests(); app.paintSubnav(); return; }
-  if (S.view !== 'today') {
-    body.appendChild(el('div', 'hb-soon', '<p>' + esc('Season 0 is coming') + '</p>'));
-    app.paintSubnav();
-    return;
-  }
-  /* a first visit opens on what this page is; then the day's own things:
-     today, your forest, your habits, the weeks behind them; the season
+  /* the day's own things: today, your forest, your habits, the weeks behind them; the season
      tile, which changes once a season, under them, and only when there is
      a season to show */
   const t = () => [tile()].filter(Boolean);
-  if (!S.helpSeen) body.appendChild(helpCard());
   if (S.phase === 'loading') { body.append(skeleton(), ...t()); return; }
   if (S.off && S.uid) { body.append(el('p', 'hb-empty', esc(message('off'))), ...t()); return; }
   if (S.failed) {
@@ -864,9 +854,8 @@ function forestHead() {
 }
 
 /* ------------------------------------------------------------- the help */
-/* What this page does, in four lines: on top of a first visit until "Got
-   it", and behind the "?" any time after (Stephen: "a help thing that pops
-   up that explains what this habits page does"). */
+/* What this page does, in four lines, behind the "?" (Stephen: "a help thing
+   that pops up that explains what this habits page does"). */
 const HELP_LINES = [
   'Add a habit and a tree is planted.',
   'Tap the check each day you do it, and a leaf grows.',
@@ -874,16 +863,6 @@ const HELP_LINES = [
   'Share your forest under any name, or keep it to yourself.',
 ];
 const helpList = () => '<ul class="hb-helpl">' + HELP_LINES.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>';
-function helpCard() {
-  const w = el('section', 'hb-help', '<h2 class="hb-big">' + esc('Grow a forest') + '</h2>' + helpList());
-  w.dataset.k = 'help';
-  w.appendChild(button('Got it', 'hb-go', () => {
-    S.helpSeen = true;
-    if (!app.demo) store.write(HELP, true);
-    w.remove();
-  }));
-  return w;
-}
 function helpSheet() {
   app.sheet('How Habits works', (sheetBody) => {
     sheetBody.innerHTML = helpList() + '<p class="sheet-note">' + esc('Seasons with a small group, and a party at the end, are coming.') + '</p>';
@@ -1293,6 +1272,8 @@ app.register(KEY, {
     load();
   },
   activate(param) {
+    /* an old link: replaced, not followed, so Back does not land here again */
+    if (param === 'season' || param === 'goal' || param === 'wall') { location.replace('#season' + (param === 'season' ? '' : '/' + param)); return; }
     const v = VIEWS.find(([k]) => k === param);
     const was = S.view;
     const forestLink = /^f-[\w-]{1,64}$/.test(param || '');

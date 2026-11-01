@@ -510,7 +510,8 @@ function fitDay(row) {
   const t = row.querySelector('.t');
   delete row.dataset.fit;
   if (!t || !t.clientWidth || t.scrollWidth <= t.clientWidth + 1) return;
-  for (const f of ['m', 's', 'x']) {
+  /* xx: the bare date, and the back arrow gives up its word for it */
+  for (const f of ['m', 's', 'x', 'xx']) {
     row.dataset.fit = f;
     if (t.scrollWidth <= t.clientWidth + 1) return;
   }
@@ -529,14 +530,14 @@ function banner() {
     raw.setAttribute('aria-label', 'Every headline, unfiltered');
     foot.appendChild(raw);
   }
-  const all = el('button', 'wband-all', '<span>' + (W.fwrap ? 'Show less' : 'Show all') + '</span>' + ICON.down);
+  const all = el('button', 'wband-all', '<span>' + (W.fwrap ? 'Collapse' : 'Show all') + '</span>' + ICON.down);
   all.type = 'button';
   all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
   all.addEventListener('click', () => {
     W.fwrap = !W.fwrap;
     band.classList.toggle('wrap', W.fwrap);
     all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
-    all.firstChild.textContent = W.fwrap ? 'Show less' : 'Show all';
+    all.firstChild.textContent = W.fwrap ? 'Collapse' : 'Show all';
     fits(band);
     if (band.classList.contains('fits')) { const h = W.root && W.root.querySelector('.whead h2'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
   });
@@ -580,6 +581,7 @@ function floatCheck() {
   if (fl && fl.getAttribute('aria-hidden') !== (on ? 'false' : 'true')) {
     fl.setAttribute('aria-hidden', on ? 'false' : 'true');
     fl.querySelectorAll('button').forEach((b) => { b.tabIndex = on ? 0 : -1; });
+    fl.querySelectorAll('.wday').forEach(fitDay);
   }
   /* one copy of the two controls in reach at a time */
   const top = W.root && W.root.querySelector('.wband-top');

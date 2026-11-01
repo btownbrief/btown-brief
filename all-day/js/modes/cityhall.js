@@ -5,11 +5,13 @@
      data/town/council.json (scripts/council_summaries.py writes it from the
      city's minutes and checks every bullet against them). Each block is the
      date, the one line to read, two bullets with the rest behind Show all,
-     what's next, and the minutes and video. Three meetings, then See more.
+     what's next on the newest (an older one's next has been and gone), and
+     the minutes and video. Three meetings, then See more and Collapse.
      The section is gone when the file is.
    - Meetings. The civic calendar civic.html reads (data/civic.json, from
      the city's CivicClerk portal): what meets next, with its agenda,
-     packet and video, then the last week's meetings with their minutes.
+     packet and video, then the last week's meetings with their minutes; a council
+     meeting there opens its summary above.
      A time the portal gave in a doubtful form says "check agenda", as the
      full page does.
    - Votes. A short page on how a vote reaches the council, the council and
@@ -29,7 +31,7 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import * as store from '../store.js';
-import { el, esc, safeHref, ICON, divider } from '../ui.js';
+import { el, esc, safeHref, ICON, divider, collapseBar } from '../ui.js';
 import { townMode, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money, tile } from './town-kit.js';
 
 const VOTEY = /\b(vote|voting|votes|election|elections|results|ballot|debate|town meeting|watch party|candidate|mayor|council)\b/i;
@@ -63,18 +65,18 @@ function when(m) {
   const h = new Date(t).getUTCHours();
   return WALL_T.format(new Date(t)) + (h < 7 || h > 22 ? ' (check agenda)' : '');
 }
-function meetingRow(m, i, past) {
+function meetingRow(m, i, past, summary) {
   const docs = [['Agenda', m.agenda_url], ['Packet', m.packet_url], ['Minutes', m.minutes_url], ['Video', m.video_url]].filter((x) => x[1])
     .map(([t, u]) => '<a href="' + esc(safeHref(u)) + '" target="_blank" rel="noopener">' + t + '</a>').join(' · ');
   const key = wallDay(m.start);
-  return row({ k: 'mtg-' + (past ? 'p' : 'u') + i + '-' + key, href: m.agenda_url || m.video_url || PORTAL, date: key, title: m.title,
+  return row({ k: 'mtg-' + (past ? 'p' : 'u') + i + '-' + key, href: summary || m.agenda_url || m.video_url || PORTAL, date: key, title: m.title,
     sub: esc([fmtDay(key) + ', ' + when(m), String(m.venue || '').replace(/,?\s*Burlington,?\s*VT,?\s*\d{0,5}\s*$/i, '')].filter(Boolean).join(' · ')) + (docs ? '<br>' + docs : ''),
     tag: !past && key === today() ? ['Today', 'live'] : null });
 }
 
 /* -------------------------------------------------------------- Council */
 const councilMeetings = (d) => ((d.council || {}).meetings || []).filter((m) => m && m.top && typeof m.date === 'string').sort((a, b) => b.date.localeCompare(a.date));
-function councilBlock(m) {
+function councilBlock(m, i) {
   const k = 'council-' + m.id;
   app.know([{ k, kind: 'post', title: m.top, text: '', href: m.minutes_url || '#cityhall/' + k, src: COUNCIL.source, ago: fmtDay(m.date), open: COUNCIL.open }]);
   const saved = store.isSaved(k);
@@ -83,7 +85,7 @@ function councilBlock(m) {
   block.dataset.k = k;
   block.innerHTML = '<div class="cc-top">' + tile(m.date) + '<span class="eyebrow">' + esc(COUNCIL.one) + '</span><h3>' + esc(m.top) + '</h3></div>' +
     '<ul class="cc-list">' + bullets.map((b, i) => '<li' + (i >= BULLETS_SHOWN ? ' hidden' : '') + '><b>' + esc(b.head) + '</b> ' + esc(b.text) + '</li>').join('') + '</ul>' +
-    (m.next ? '<p class="cc-next"><b>' + esc(COUNCIL.next) + '</b> ' + esc(m.next) + '</p>' : '');
+    (m.next && !i ? '<p class="cc-next"><b>' + esc(COUNCIL.next) + '</b> ' + esc(m.next) + '</p>' : '');
   if (bullets.length > BULLETS_SHOWN) {
     const all = el('button', 'cc-all', esc(COUNCIL.all(bullets.length)));
     all.type = 'button';
@@ -105,8 +107,16 @@ function drawCouncil(box, d) {
   if (blocks.length > COUNCIL_SHOWN) {
     const more = el('button', 'btn ghost more', esc(COUNCIL.more));
     more.dataset.more = 'council';
-    more.addEventListener('click', () => { blocks.forEach((b) => { b.hidden = false; }); more.remove(); });
-    box.appendChild(more);
+    const fold = collapseBar('the council', () => {
+      blocks.forEach((b, i) => { b.hidden = i >= COUNCIL_SHOWN; });
+      more.hidden = false;
+      fold.hidden = true;
+      app.jumpTo(box);
+    });
+    fold.classList.add('foot');
+    fold.hidden = true;
+    more.addEventListener('click', () => { blocks.forEach((b) => { b.hidden = false; }); more.hidden = true; fold.hidden = false; });
+    box.append(more, fold);
   }
 }
 
@@ -120,7 +130,11 @@ function drawMeetings(box, d) {
   else line(box, 'No meetings posted yet.');
   if (past.length) {
     divider(box, 'Recent meetings');
-    list(box, past.map((m, i) => meetingRow(m, i, true)), 4);
+    const said = new Map(councilMeetings(d).map((m) => [m.date, m.id]));
+    const summary = (m) => (/^city council meeting/i.test(m.title) && said.has(wallDay(m.start)) ? '#cityhall/council-' + said.get(wallDay(m.start)) : null);
+    /* the newest meeting with a summary shows, however far down the week it is */
+    const first = past.findIndex(summary);
+    list(box, past.map((m, i) => meetingRow(m, i, true, summary(m))), first >= 4 ? 3 : 4, first);
   }
   box.appendChild(links([{ label: 'Civic calendar', href: '../civic.html' }, { label: 'City meeting portal', href: PORTAL }]));
 }

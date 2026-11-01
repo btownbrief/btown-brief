@@ -130,10 +130,11 @@ export function stats(host, list) {
 /* a grey line in a section: what is true, said plainly */
 export const line = (host, text) => host.appendChild(el('p', 'note pad', esc(text)));
 
-/* rows, the first n showing and the rest behind "Show all" */
-export function list(host, rows, n) {
+/* rows, the first n showing and the rest behind "Show all"; `keep` is one row
+   further down that shows anyway, in its place */
+export function list(host, rows, n, keep) {
   const box = el('div', 'plist');
-  rows.forEach((r, i) => { if (i >= n) r.hidden = true; box.appendChild(r); });
+  rows.forEach((r, i) => { if (i >= n && i !== keep) r.hidden = true; box.appendChild(r); });
   host.appendChild(box);
   if (rows.length > n) {
     const b = el('button', 'btn ghost more', esc('Show all ' + rows.length));

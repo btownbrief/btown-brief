@@ -7,7 +7,7 @@
      sits right under it.
    - This week. The Calendar leads it (calendar.js, without its seven days:
      the section's own strip is right below). Then one list across the
-     coming seven days, a label on each day, about ten rows and then Show more in steps. Stephen's own events are
+     coming seven days, a label on each day, about ten rows and then See more in steps. Stephen's own events are
      pinned first in their day (the newsletter's golden rule: never missed,
      with no Meetup interest counts), then every mixer on the guide's events
      calendar (all-day/data/whatnow.json, which refresh-allday rebuilds daily:
@@ -121,7 +121,7 @@ const EVENTS_PAGE = '../events.html';   // the guide's full events calendar
 const HOST_MAIL = 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('I’d like to host something with the crew') + '&body=' +
   encodeURIComponent('Hi Steve,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
 const HELP_HOST_MAIL = 'mailto:btownbrief@gmail.com';
-const WORDS = { irl: 'Btown Brief IRL', helpHost: 'Interested in helping host events?', more: 'Show more', clubs: 'Run clubs', clubWeek: 'See the club week' };
+const WORDS = { irl: 'Btown Brief IRL', helpHost: 'Interested in helping host events?', more: 'See more', collapse: 'Collapse', clubs: 'Run clubs', clubWeek: 'See the club week' };
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 /* Dating and Pets: the ways to meet someone, dating news, the dog parks and their rules, checked by hand */
 const DP_URL = '../data/dating-pets.json';
@@ -151,7 +151,7 @@ const STORE_KEY = 'allday-people';
 const DAY = 86400000;
 const MIX_DAYS = 14;          // Stephen's events this far ahead, every one of them
 const CAL_DAYS = 7;           // the calendar's mixers: today and the six days after
-const WEEK_ROWS = 10;         // This week's rows at first, and how many more each Show more adds
+const WEEK_ROWS = 10;         // This week's rows at first, and how many more each See more adds
 const IRL_SHOWN = 3;          // his next events in the big block, before Show all
 const PAST_GRACE = 3 * 3600000;   // a plan stays up this long after its start
 const CLUBS_SHOWN = 6;
@@ -1326,7 +1326,7 @@ function drawIrl() {
     const many = own.length > IRL_SHOWN;
     if (!many) S.ownAll = false;
     if (many) {
-      const t = button(S.ownAll ? 'Show less' : 'Show all ' + own.length, 'ghost sm', () => {
+      const t = button(S.ownAll ? WORDS.collapse : 'Show all ' + own.length, 'ghost sm', () => {
         S.ownAll = !S.ownAll;
         drawIrl();
         if (!S.ownAll) jumpBack();
@@ -1421,7 +1421,7 @@ function drawWeek() {
       s.appendChild(more);
     }
   }
-  const full = linkBtn('Full events calendar', EVENTS_PAGE);
+  const full = linkBtn('Full calendar', EVENTS_PAGE);
   full.dataset.calendar = '1';
   const help = el('a', 'btn ghost sm', esc(WORDS.helpHost));
   help.href = HELP_HOST_MAIL;
@@ -1874,7 +1874,7 @@ function drawDir() {
   if (!s) return;
   s.innerHTML = '';
   const d = S.dir;
-  const count = d && !d.error ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
+  const count = d && !d.error && d.count ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
   sec(s, 'People here', count);
   const tc = el('div', 'textcard');
   tc.dataset.dir = !d ? 'loading' : !app.user() ? 'out' : d.error ? 'error' : d.me ? 'in' : 'join';
@@ -2112,7 +2112,14 @@ function land() {
   if (/^t-/.test(k)) {
     pending = null;
     jump('talk');
-    talk.open(k.slice(2)).then((found) => { if (!found) app.toast('That one has passed.'); });
+    talk.open(k.slice(2)).then((found) => {
+      if (found) return;
+      /* a saved card that has left the paper: its story, and Back lands on Talk */
+      const url = (store.saved().find((s) => s.k === k) || {}).url;
+      if (!url) { app.toast('That one has passed.'); return; }
+      history.replaceState(null, '', '#' + KEY + '/talk');
+      location.href = safeHref(url);
+    });
     return;
   }
   /* a question's own link lands on its Board block */

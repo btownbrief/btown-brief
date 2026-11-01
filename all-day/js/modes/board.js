@@ -11,7 +11,7 @@
 
    Each block is a prompt, its count and last answer, and the tease; tapping
    opens the answers component in place (answers.js holds the reveal). Eight
-   show, then See more. It is not r/burlington, which stays a read-only feed.
+   show, then See more, and Collapse once it has grown. It is not r/burlington, which stays a read-only feed.
 
    Demo reads the real prompts and data/demo/answers.json. */
 
@@ -19,7 +19,7 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as answers from '../answers.js';
-import { el, esc, ICON, button, agoShort, section } from '../ui.js';
+import { el, esc, ICON, button, agoShort, section, collapseBar } from '../ui.js';
 import * as talk from './talk.js';
 
 const TAB = 'people';
@@ -30,7 +30,7 @@ const CATALOG_WAIT_MS = 2500;
 const WORDS = { title: 'The Board', steve: 'Steve asks', more: 'See more', share: 'Share', star: 'Save', first: 'Be the first.', answer: 'Answer', answers: 'Answers' };
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-let box = null, list = null, more = null, loading = null, failed = false, settle = null;
+let box = null, list = null, more = null, fold = null, loading = null, failed = false, settle = null;
 let shown = SHOW, prompts = [], known = new Map(), catalog = null;
 const nodes = new Map();                 // qid -> a block's node, kept so an open block survives a move
 
@@ -149,6 +149,7 @@ function place(lead) {
   });
   while (list.children.length > keep.length) list.lastChild.remove();
   more.hidden = keep.length >= all.length;
+  fold.hidden = shown <= SHOW;
   box.hidden = !all.length;
   const hit = lead && nodes.get(lead) && nodes.get(lead).querySelector('.ans') ? nodes.get(lead) : null;
   if (hit) app.jumpTo(hit, true);
@@ -169,7 +170,10 @@ export function render(host, onHeight) {
   list = el('div', 'tb-list');
   more = button(esc(WORDS.more), 'ghost more tb-more', () => { shown += SHOW; place(); });
   more.hidden = true;
-  box.append(list, more);
+  fold = collapseBar(WORDS.title, () => { shown = SHOW; place(); app.jumpTo(box); });
+  fold.classList.add('foot');
+  fold.hidden = true;
+  box.append(list, more, fold);
   host.appendChild(box);
   load().then(() => {
     place();

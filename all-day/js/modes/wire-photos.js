@@ -608,16 +608,14 @@ const near = (run) => {
 
 /* Draw into root: the empty state, or the feed in chunks of ten as the
    reader nears the bottom. `until` draws on until that key is on the page. */
-/* The header: what this is, in one line, and the way to post to it
-   (Stephen's girlfriend, 2026-10-17: "I don't even know that this is like,
-   add photo to the feed"). */
+/* The header: a heading and the way to post to it (Stephen's girlfriend,
+   2026-10-17: "I don't even know that this is like, add photo to the feed"). */
 function header() {
   const h = el('div', 'pm-head');
   if (ctx.national()) { h.innerHTML = '<h2>' + esc(NATIONAL_TITLE) + '</h2>'; return h; }
   /* on Everything, and only when something from away came */
   const world = P.away;
-  h.innerHTML = world ? '<h2>Burlington and the world in photos</h2><p>' + esc('Local Instagram, photos people post here, and the day’s best pictures from everywhere.') + '</p>'
-    : '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
+  h.innerHTML = world ? '<h2>Burlington and the world in photos</h2>' : '<h2>Burlington in photos</h2>';
   const b = button(ICON.plus + ' Post a photo to the Burlington feed', 'pm-post', () => wall.compose('photo'));
   b.dataset.post = 'photo';
   h.appendChild(b);

@@ -51,7 +51,7 @@ const COPY = {
   closes: (d) => 'Signups close ' + d,
   signupOpen: 'Open',
   inDays: (n) => (n <= 0 ? 'Today' : n === 1 ? 'Tomorrow' : n + ' days'),
-  more: 'Show more',
+  more: 'See more',
   share: 'Share',
   save: 'Save',
   source: 'Body',
@@ -70,7 +70,7 @@ const CLUBS_URL = '../data/run-clubs.json';
 const MOVE_DAYS = 7;
 const SOON_DAYS = 90;                     // a race shows this close
 const COUNTDOWN = 14;                     // inside this many days a row counts down; past it, the date
-const STEP = { moves: 8, soon: 6 };       // rows that show, and how many Show more adds
+const STEP = { moves: 8, soon: 6 };       // rows that show, and how many See more adds
 const RELOAD = 15 * 60000;                // the outside files are this old before a tab change refetches them
 const HOUR = 3600000;
 const TZ = 'America/New_York';
