@@ -16834,6 +16834,71 @@ async function theRank(browser, base) {
   });
 }
 
+/* What the walk of the whole product found (2026-10-31): a pill at the foot of
+   a page, Season's tile, a saved Talk card, the Board and Council's Collapse,
+   and the comment bubble with nothing behind it. */
+async function theWalk(browser, base) {
+  await group('Walk: a tapped pill stays on at the foot of a page', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/town/#cityhall');
+    await settle(page);
+    await page.click('#subnav .chip[data-chip="money"]');
+    await page.waitForTimeout(2800);
+    check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'money', 'Money stays lit though it can’t reach the top', await page.$eval('#subnav .chip.on', (c) => c.dataset.chip));
+    await page.evaluate(() => document.querySelector('#panel-cityhall').scrollBy(0, -900));
+    await page.waitForTimeout(900);
+    check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) !== 'money', 'and the pill follows again once the page moves', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: Season with no season scheduled', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/body/#season');
+    await settle(page);
+    const bg = await page.$eval('#panel-season .hb-tile', (n) => getComputedStyle(n).backgroundColor);
+    check(bg !== 'rgba(0, 0, 0, 0)', 'the tile has its colour under its white words', bg);
+    check(!(await page.$('#subnav .secpill .chip[data-chip="now"]')), 'one section: no pill of one', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: Talk and the Board end somewhere (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/talk');
+    await page.waitForSelector('#panel-people .tk-card .star', { timeout: 15000 });
+    await page.$eval('#panel-people .tk-card .star', (b) => b.click());
+    await page.$eval('#saved-btn', (b) => b.click());
+    await page.waitForSelector('#sheet a.t', { timeout: 4000 });
+    check(/#people\/t-/.test(await page.$eval('#sheet a.t', (a) => a.getAttribute('href'))), 'a saved card comes back to the card', await page.$eval('#sheet a.t', (a) => a.getAttribute('href')));
+    await page.$eval('#sheet [aria-label="Close"]', (b) => b.click());
+    await page.waitForSelector('#panel-people .tb-more', { timeout: 8000 });
+    await page.$eval('#panel-people .tb-more', (b) => b.click());
+    const grown = await page.$$eval('#panel-people .tb', (n) => n.length);
+    check(grown > 8 && await page.$eval('#panel-people .tb-sec .collapsebar', (n) => !n.hidden), 'See more on the Board brings Collapse', String(grown));
+    await page.$eval('#panel-people .tb-sec [data-collapse]', (b) => b.click());
+    check((await page.$$eval('#panel-people .tb', (n) => n.length)) === 8, 'and Collapse folds it back to eight', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Walk: Tonight and the Council', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow/tonight');
+    await settle(page);
+    check(!(await page.$('#panel-whatnow .card.event [data-act="comment"]')), 'an event has no comment bubble', '');
+    await page.goto(base + '/town/#cityhall');
+    await page.reload();
+    await settle(page);
+    await page.$eval('[data-more="council"]', (b) => b.click());
+    check((await page.$$eval('#panel-cityhall .cc-next', (n) => n.length)) === 1, 'only the newest summary says what’s next', '');
+    await page.$eval('#panel-cityhall [data-sec="council"] [data-collapse]', (b) => b.click());
+    check((await page.$$eval('#panel-cityhall .cc', (n) => n.filter((x) => !x.hidden).length)) === 3, 'Collapse folds the Council back to three', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ONLY=shellFixes,boards runs just those groups while iterating; the full
    matrix is the one that counts. */
 const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
@@ -16887,6 +16952,7 @@ try {
   await run(theFree);
   await run(theRank);
   await run(theCalendar);
+  await run(theWalk);
 } finally {
   await browser.close();
   proc.kill();

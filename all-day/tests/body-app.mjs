@@ -170,7 +170,7 @@ export async function bodyTests(browser, base, h) {
     const shown = (sel) => long.page.$$eval(sel + ' li:not([hidden]) .n', (n) => n.map((x) => x.firstChild.textContent));
     const board = await scoreBoard(long.page);
     check((await long.page.$$('.dy-moves li')).length === 19, 'the same thing listed twice shows once, punctuation or no', '');
-    check((await shown('.dy-moves')).length === 8 && (await long.page.$eval('.dy-moves [data-more]', (b) => b.textContent)) === 'Show more', 'Moving: eight rows, then Show more', (await shown('.dy-moves')).join());
+    check((await shown('.dy-moves')).length === 8 && (await long.page.$eval('.dy-moves [data-more]', (b) => b.textContent)) === 'See more', 'Moving: eight rows, then See more', (await shown('.dy-moves')).join());
     const tall = await long.page.$eval('.dy-moves [data-more]', (b) => b.getBoundingClientRect().height);
     check(tall >= 44, 'Show more is a real target', String(tall));
     await long.page.click('.dy-moves [data-more]');
