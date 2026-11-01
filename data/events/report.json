@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-31T19:43:35-04:00",
+ "generated": "2026-11-01T11:17:52-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.9
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 79,
-   "seconds": 3.9
+   "count": 76,
+   "seconds": 4.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 94,
-   "seconds": 3.7
+   "seconds": 6.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 191,
-   "seconds": 3.5
+   "count": 183,
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 68,
-   "seconds": 1.6
+   "count": 66,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-31&end_date=2026-12-30&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-01&end_date=2026-12-31&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,23 +43,23 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 1,
+   "count": 0,
    "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 74.8
+   "seconds": 74.6
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 12,
-   "seconds": 0.4
+   "count": 11,
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 30.7
+   "count": 11,
+   "seconds": 31.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 583,
-   "seconds": 33.5
+   "seconds": 33.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,28 +78,29 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 45.7
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 402,
-   "seconds": 72.6
+   "count": 395,
+   "seconds": 72.2
   },
   "meetup": {
    "label": "Meetup",
    "count": 51,
-   "seconds": 94.7
+   "seconds": 102.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 24,
-   "seconds": 0.5
+   "count": 23,
+   "seconds": 1.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 74,
-   "seconds": 16.0
+   "count": 75,
+   "seconds": 16.1
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,8 +109,8 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 70,
-   "seconds": 2.1
+   "count": 67,
+   "seconds": 4.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
@@ -118,8 +119,8 @@
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2824,
-   "seconds": 2.7
+   "count": 2780,
+   "seconds": 22.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -128,18 +129,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 426,
-   "seconds": 21.4
+   "count": 417,
+   "seconds": 33.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 260,
-   "seconds": 0.3
+   "count": 251,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 47,
-   "seconds": 62.9
+   "count": 51,
+   "seconds": 70.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -147,112 +148,12 @@
    "seconds": 0.3
   }
  },
- "gathered": 5495,
- "afterDedup": 2462,
- "duplicatesMerged": 3033,
- "final": 2541,
- "firecrawlCalls": 1,
+ "gathered": 5409,
+ "afterDedup": 2427,
+ "duplicatesMerged": 2982,
+ "final": 2487,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Literacy policy, practice, and partnerships: Building on our shared strengths",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Wednesday Write-Ins",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Pub Quiz",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-03"
-  },
   {
    "kept": {
     "title": "Ariel Elias",
@@ -1452,12 +1353,45 @@
   },
   {
    "kept": {
+    "title": "5K Fun Run/Walk: Ugly Sweater Run Adult Registration 2026",
+    "source": "sbrec"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sbrec"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
    "merged_sources": [
     "helloburlington",
     "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Sensory-Friendly Sunday",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "J. Wail",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-12-13"
   },
@@ -1492,6 +1426,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-12-14"
   },
@@ -2402,44 +2347,95 @@
     "sevendays"
    ],
    "date": "2026-12-30"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
+    "title": "Trivia",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-31"
   }
  ],
  "changes": [
   {
+   "id": "a30cae310133",
+   "title": "Industry Day",
+   "date": "2026-12-14",
+   "change": "time",
+   "was": "2026-12-14",
+   "now": "2026-12-14T11:30:00-05:00"
+  },
+  {
    "id": "312019d1b490",
-   "title": "J.WAIL",
+   "title": "J. Wail",
    "date": "2026-12-13",
    "change": "time",
-   "was": "2026-12-13T19:00:00-05:00",
-   "now": "2026-12-13T19:30:00-05:00"
+   "was": "2026-12-13T19:30:00-05:00",
+   "now": "2026-12-13T19:00:00-05:00"
   },
   {
-   "id": "d5cbac38854a",
-   "title": "Aging in Place With Pets Volunteer Day",
-   "date": "2026-10-31",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "d74ff56a591a",
-   "title": "BTown Coffee Club",
-   "date": "2026-10-31",
-   "change": "missing",
-   "lastSeen": "2026-10-31T11:29:08-04:00"
-  },
-  {
-   "id": "782e919eb2b6",
+   "id": "6d052f739578",
    "title": "Kathleen Schneider",
-   "date": "2026-10-31",
+   "date": "2026-11-01",
    "change": "missing",
-   "lastSeen": "2026-10-30T20:03:30-04:00"
+   "lastSeen": "2026-10-31T19:43:35-04:00"
   },
   {
-   "id": "a03f7ee1ee84",
+   "id": "aa48e08dcc8f",
    "title": "Trystan Bates",
-   "date": "2026-10-31",
+   "date": "2026-11-01",
    "change": "missing",
-   "lastSeen": "2026-10-30T20:03:30-04:00"
+   "lastSeen": "2026-10-31T19:43:35-04:00"
   },
   {
    "id": "0a26f10a3701",
@@ -2487,50 +2483,43 @@
    "id": "962b68f217da",
    "title": "Saint Michael's College presents: \"The Ballad of Maria Marten\"",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "7f855af00ac8",
    "title": "VTIFF Screening of Naza",
    "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "3039dd4c78f3",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "fd7948ea656b",
    "title": "Saint Michael's College presents: \"The Ballad of Maria Marten\"",
    "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "e36e1669230b",
    "title": "Dad Guild's Friday Hang",
    "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "0717544c823d",
    "title": "VTIFF Screening of Naza",
    "date": "2026-11-07",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "4d8c3757e584",
    "title": "Saint Michael's College presents: \"The Ballad of Maria Marten\"",
    "date": "2026-11-07",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "22b8d9a6662a",
@@ -2542,13 +2531,6 @@
   {
    "id": "9e678114a202",
    "title": "Lieder by the Lake - Burlington Schumann Recital",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "4f8c37eb4077",
-   "title": "Parks Department w/ Jordan Meeker",
    "date": "2026-11-08",
    "change": "dropped"
   },
@@ -2570,15 +2552,13 @@
    "id": "f2728deb6183",
    "title": "Vets Town Hall: Charlotte, VT",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "3ea322f1b98d",
    "title": "Book Group: Antifascist Dad",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "387245928682",
@@ -2598,8 +2578,7 @@
    "id": "59d25cfef555",
    "title": "Me2 Orchestra, \"Autumn Leaves\"",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "7ea7e41af17a",
@@ -2630,12 +2609,6 @@
    "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
-   "id": "7cdbafc8d9b1",
-   "title": "Sierra Hotel w/ New Speaker",
-   "date": "2026-11-11",
-   "change": "dropped"
-  },
-  {
    "id": "202168631b0f",
    "title": "MATH Help Sessions",
    "date": "2026-11-12",
@@ -2646,8 +2619,7 @@
    "id": "fcb30887d346",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "b0ed80c97d2a",
@@ -2709,8 +2681,7 @@
    "id": "d34520a0a140",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "d8eeeddcfef8",
@@ -2814,8 +2785,7 @@
    "id": "8a7cf013c8ee",
    "title": "Dad Guild's Friday Hang",
    "date": "2026-12-04",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "b76ed9662bc1",
@@ -2842,8 +2812,7 @@
    "id": "3c9b12adf259",
    "title": "Book Group: Antifascist Dad",
    "date": "2026-12-07",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "39eaab89d2b8",
@@ -2867,25 +2836,11 @@
    "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
-   "id": "8495d7635778",
-   "title": "Acoustic Brunch",
-   "date": "2026-12-13",
-   "change": "missing",
-   "lastSeen": "2026-10-31T11:29:08-04:00"
-  },
-  {
    "id": "0033ee661172",
    "title": "Public Skate",
    "date": "2026-12-13",
    "change": "missing",
    "lastSeen": "2026-10-30T20:03:30-04:00"
-  },
-  {
-   "id": "2afe93de28fc",
-   "title": "Karaoke Sundays!",
-   "date": "2026-12-13",
-   "change": "missing",
-   "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
    "id": "15062797b05e",
