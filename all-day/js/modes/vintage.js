@@ -111,7 +111,6 @@ const NOTE_MAX = 140;
 const DAY = 86400000;
 const NEW_IN_DAYS = 14;
 const NEW_IN_MAX = 48;       // New in grows down on purpose now, so it holds more than a row
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const SECTIONS = [['free', WORDS.free], ['newin', 'New in'], ['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['tees', 'Make a tee'], ['shops', 'Shops']];
 /* the slots, in page order: `sent` is the designs neighbors sent in, as Top
@@ -515,10 +514,6 @@ app.onAct('vgot', (it) => {
 });
 
 /* ---------------------------------------------------------- the shop guide */
-function monthOf(ym) {
-  const m = /^(\d{4})-(\d{2})/.exec(String(ym || ''));
-  return m ? MONTHS[Number(m[2]) - 1] + ' ' + m[1] : '';
-}
 function mapUrl(s) {
   const where = s.address || [s.neighborhood, 'Vermont'].filter(Boolean).join(', ');
   return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.name + ', ' + where);
@@ -571,7 +566,7 @@ function shopRow(s, i, next, inSheet) {
   const hood = (s.after_walk || inSheet) && s.neighborhood ? ' · ' + esc(s.neighborhood) : '';
   // each run of days ("Thu–Fri 10am to 8pm") stays on one line at phone width
   const runs = s.hours ? s.hours.split(' · ').map((r) => '<span style="white-space:nowrap">' + esc(r) + '</span>').join(' · ') : '';
-  const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+  const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '')
     : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
   const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
   const leg = inSheet ? '' : legText(s, next);

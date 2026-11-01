@@ -42,8 +42,8 @@
    - Deals. data/deals.json as a story deck: today's deals that carry a
      verified date from the last 60 days and no open conflict between sources, happening-now first,
      then later today, then the untimed ones. Tap the right side (or the ›)
-     for the next card, the left for the previous. The verified date is on
-     every card, and the place's own food picture behind it when it has one.
+     for the next card, the left for the previous, with the place's own food
+     picture behind it when it has one.
    - Rank. Burlington's own rankings, Rank What You Know brought in: a block
      per food list, the list anyone ranked last on top. modes/rank.js has it
      all; it comes after the sections that change by the hour and before the
@@ -359,10 +359,6 @@ function clock(hhmm) {
   return (hh % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + ' ' + (hh < 12 ? 'am' : 'pm');
 }
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-function verified(dateStr, t) {
-  const [y, m, d] = String(dateStr).split('-').map(Number);
-  return 'Verified ' + MONTHS[m - 1] + ' ' + d + (t && t.dateStr.slice(0, 4) !== String(y) ? ', ' + y : '');
-}
 const mmss = (s) => { const n = Math.max(0, Math.round(Number(s) || 0)); return Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'); };
 const trim = (s, n) => { const v = String(s || '').replace(/\s+/g, ' ').trim(); return v.length > n ? v.slice(0, n - 1).trimEnd() + '…' : v; };
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
@@ -835,7 +831,7 @@ function placeSheet(r) {
       body.appendChild(el('div', 'sheet-h', esc(ds.length === 1 ? 'A deal here' : 'Deals here')));
       ds.forEach((d) => {
         const when = [F.dealDaysLabel(d), F.dealTimeLabel(d)].filter(Boolean).join(' · ').replace(/\b(\d{1,2}(?::\d{2})?) (AM|PM)\b/g, (m0, n, ap) => n + ' ' + ap.toLowerCase());
-        body.appendChild(el('div', 'sheet-row', '<div class="t">' + esc(d.title) + '<div class="d">' + esc([when, verified(d.last_verified, t)].filter(Boolean).join(' · ')) + '</div></div>'));
+        body.appendChild(el('div', 'sheet-row', '<div class="t">' + esc(d.title) + '<div class="d">' + esc(when) + '</div></div>'));
       });
     }
 
@@ -967,7 +963,7 @@ function paintDeals(host) {
       const where = [x.d.business, x.r && x.r.neighborhood].filter(Boolean).join(' · ');
       const pic = x.r ? thumbOf(foodOf(x.r)) : '';
       box.innerHTML = (pic ? art(pic) : tint(x.d.id)) + segs + '<div class="body"><div class="eyebrow">' + esc(eyebrowOf(x)) + '</div><h3>' + esc(x.d.title) + '</h3>' +
-        '<p>' + esc(where) + '</p><p class="verified">' + esc(verified(x.d.last_verified, t)) + '</p><div class="row"></div></div>' + hits;
+        '<p>' + esc(where) + '</p><div class="row"></div></div>' + hits;
       const row = box.querySelector('.row');
       if (x.r) row.appendChild(button('The place', 'ghost sm', () => placeSheet(x.r)));
       if (/^https?:/i.test(x.d.link || '')) row.appendChild(outLink('Details', x.d.link));

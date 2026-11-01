@@ -617,7 +617,7 @@ function header() {
   /* on Everything, and only when something from away came */
   const world = P.away;
   h.innerHTML = world ? '<h2>Burlington and the world in photos</h2><p>' + esc('Local Instagram, photos people post here, and the day’s best pictures from everywhere.') + '</p>'
-    : '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
+    : '<h2>Burlington in photos</h2>';
   const b = button(ICON.plus + ' Post a photo to the Burlington feed', 'pm-post', () => wall.compose('photo'));
   b.dataset.post = 'photo';
   h.appendChild(b);

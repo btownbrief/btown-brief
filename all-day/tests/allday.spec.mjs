@@ -2496,9 +2496,9 @@ async function thePhotos(browser, base) {
     await page.goto(base + '/all-day/?demo=1#wire/photos');
     await settle(page);
     await pmOn(page);
-    const head = await page.$eval(pmPanel + ' .pm-head', (h) => ({ h2: h.querySelector('h2').textContent, p: h.querySelector('p').textContent, b: h.querySelector('[data-post]').textContent.trim() }));
-    check(head.h2 === 'Burlington in photos' && head.p === 'Local Instagram plus photos people post here.' && head.b === 'Post a photo to the Burlington feed',
-      'the feed opens under “Burlington in photos”, one line, and the Post a photo to the Burlington feed button', JSON.stringify(head));
+    const head = await page.$eval(pmPanel + ' .pm-head', (h) => ({ h2: h.querySelector('h2').textContent, p: h.querySelector('p'), b: h.querySelector('[data-post]').textContent.trim() }));
+    check(head.h2 === 'Burlington in photos' && !head.p && head.b === 'Post a photo to the Burlington feed',
+      'the feed opens under “Burlington in photos” and the Post a photo to the Burlington feed button, with no line between', JSON.stringify(head));
     await page.click(pmPanel + ' .pm-head [data-post]');
     await page.waitForSelector('.sheet-card[aria-label="Post a photo"]', { timeout: 4000 }).catch(() => {});
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, the sheet asks for the sign-in', '');
@@ -5866,20 +5866,18 @@ async function theFood(browser, base) {
     await page.goto(base + '/all-day/?demo=1#food/deals');
     await page.waitForSelector(foodPanel + ' .deck', { timeout: 15000 });
     const card = () => page.$eval(foodPanel + ' .deck', (d) => ({ k: d.dataset.k, eyebrow: (d.querySelector('.eyebrow') || {}).textContent || '', h: d.querySelector('h3').textContent,
-      verified: d.querySelector('.verified')?.textContent || '', on: d.querySelectorAll('.segs i.on').length, segs: d.querySelectorAll('.segs i').length }));
+      on: d.querySelectorAll('.segs i.on').length, segs: d.querySelectorAll('.segs i').length }));
     const first = await card();
     check(first.k === 'd-demo-diner-coffee' && /^Happening now/.test(first.eyebrow), 'the deal happening now comes first', JSON.stringify(first));
-    check(first.verified === 'Verified Oct 14', 'the card carries its verified date', first.verified);
     check(first.segs === 7 && first.on === 1, 'progress bars on top: six deals and the end card, the first lit', first.on + '/' + first.segs);
     await page.click(foodPanel + ' .deck .hit.r');
     const second = await card();
     check(second.k === 'd-demo-bistro-oysters' && second.on === 2 && /^Later today · 3 pm–5 pm$/.test(second.eyebrow), 'a tap on the right side turns to the next deal, the next one to start', JSON.stringify(second));
-    check(/^Verified /.test(second.verified), 'its verified date is showing', second.verified);
     await page.click(foodPanel + ' .deck .hit.l');
     check((await card()).k === first.k, 'a tap on the left side goes back', '');
     const seen = [];
     for (let i = 0; i < 6; i++) { const c = await card(); seen.push(c); await page.click(foodPanel + ' .deck .hit.r'); }
-    check(seen.every((c) => /^Verified [A-Z][a-z]{2} \d{1,2}$/.test(c.verified)), 'every deal card has its verified date', seen.map((c) => c.verified).join(', '));
+    check(seen.length === 6, 'six deals, turned one by one', seen.length);
     const end = await card();
     check(end.k === 'deals-end' && await page.$eval('#panel-food .deck h3', (h) => h.textContent) === 'That’s all.', 'after the last deal, the deck says that’s all', JSON.stringify(end));
     await page.click(foodPanel + ' .deck .hit.r');
