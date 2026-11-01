@@ -3341,6 +3341,7 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 #panel-train { --tone: var(--tf-going); }
 #panel-recover { --tone: var(--tf-city); }
 #panel-fuel { --tone: var(--tf-sold); }
+#panel-season { --tone: var(--tf-city); }
 :root[data-app="body"] .body-page .shelf-sec { padding-bottom: 6px; }
 :root[data-app="body"] .body-page .sec { padding: 24px 16px 10px; }
 :root[data-app="body"] .body-page .sec h2 { font-size: var(--fs-tf-title); font-weight: 600; letter-spacing: -.006em; }
