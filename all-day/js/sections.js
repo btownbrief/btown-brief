@@ -90,6 +90,7 @@ export function bindShell(s) { shell = { ...shell, ...s }; }
 const STATE = new WeakMap();
 const lastOn = Object.create(null);   // the segment on, per pill, across rebuilds
 const locks = Object.create(null);    // a tap's scroll in flight, per pill: the water waits for it
+const tapped = Object.create(null);   // where a tap's scroll came to rest: the water stays on that segment until the page moves
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function pill(o) {
@@ -153,7 +154,11 @@ function lock(key, k) {
     if (now - L.t0 < 2500 && (now - L.t0 < 300 || now - L.seen < 180)) { setTimeout(release, 90); return; }
     delete locks[key];
     const live = livePill(key);
-    if (live && shell.panel) follow(live, shell.panel());
+    if (live && shell.panel) {
+      const panel = shell.panel();
+      if (panel) tapped[key] = { k: L.on, y: panel.scrollTop };
+      follow(live, panel);
+    }
   };
   setTimeout(release, 120);
 }
@@ -216,6 +221,10 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => live
    Now's Tonight is a view of its own). */
 function spyPick(P, panel) {
   if (!P.find || !panel || !panel.isConnected) return null;
+  /* a section near the foot can't scroll up to the line: the one tapped stays on */
+  const T = tapped[P.key];
+  if (T && Math.abs(panel.scrollTop - T.y) < 4 && P.keys.includes(T.k)) return T.k;
+  delete tapped[P.key];
   const pr = panel.getBoundingClientRect();
   if (!pr.height) return null;
   /* the pill's foot, or while it is being built, the mast's foot and a pill's height */
