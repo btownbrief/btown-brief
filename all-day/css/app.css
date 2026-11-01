@@ -1835,7 +1835,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 
 /* ---- the Wire, Oct 30: the worded pager, the turn of a day, newsletters in Recaps ---- */
 .wday .t .d-x { display: none; }
-.wday[data-fit="x"] .t .d-x { display: inline; }
+.wday[data-fit="x"] .t .d-x, .wday[data-fit="xx"] .t .d-x { display: inline; }
+.wday[data-fit="xx"] .wday-nav .w { display: none; }
+.wday[data-fit="xx"] .wday-nav.prev { padding-right: 0; }
 .wday-nav.prev { width: auto; min-width: 34px; padding-right: var(--s2); font-size: var(--fs-button); font-weight: 700; }
 .wday-nav.prev .i { margin-right: -2px; }
 .wday-nav.next:disabled { display: none; }

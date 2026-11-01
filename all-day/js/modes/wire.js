@@ -510,7 +510,8 @@ function fitDay(row) {
   const t = row.querySelector('.t');
   delete row.dataset.fit;
   if (!t || !t.clientWidth || t.scrollWidth <= t.clientWidth + 1) return;
-  for (const f of ['m', 's', 'x']) {
+  /* xx: the bare date, and the back arrow gives up its word for it */
+  for (const f of ['m', 's', 'x', 'xx']) {
     row.dataset.fit = f;
     if (t.scrollWidth <= t.clientWidth + 1) return;
   }
@@ -580,6 +581,7 @@ function floatCheck() {
   if (fl && fl.getAttribute('aria-hidden') !== (on ? 'false' : 'true')) {
     fl.setAttribute('aria-hidden', on ? 'false' : 'true');
     fl.querySelectorAll('button').forEach((b) => { b.tabIndex = on ? 0 : -1; });
+    fl.querySelectorAll('.wday').forEach(fitDay);
   }
   /* one copy of the two controls in reach at a time */
   const top = W.root && W.root.querySelector('.wband-top');
