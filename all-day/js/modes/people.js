@@ -1874,7 +1874,7 @@ function drawDir() {
   if (!s) return;
   s.innerHTML = '';
   const d = S.dir;
-  const count = d && !d.error ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
+  const count = d && !d.error && d.count ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
   sec(s, 'People here', count);
   const tc = el('div', 'textcard');
   tc.dataset.dir = !d ? 'loading' : !app.user() ? 'out' : d.error ? 'error' : d.me ? 'in' : 'join';

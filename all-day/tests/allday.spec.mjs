@@ -10469,7 +10469,7 @@ async function theHabits(browser, base) {
       'a first visit opens on what the page does, front and centre', '');
     check(!!(await page.$(hbPanel + ' .hb-forest .fr-tree.is-empty svg')) && !(await page.$(hbPanel + ' .hb-sharebtn')), 'an empty forest: a ghost sapling, and nothing to share yet', '');
     check(!(await page.$(hbPanel + ' .hb-today')) && !(await page.$(hbPanel + ' .hb-heat')), 'no habits, no numbers: no today line and no heat map', '');
-    check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Forests","Goal","Season","Wall"]', 'the chips: Today, Forests, Goal, Season, Wall', '');
+    check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Forests"]', 'the chips: Today, Forests', '');
     await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
     check(!!(await page.$('.sheet-card[aria-label="Settings"]')) && /Sign in to join a season/.test(await page.$eval('#toast', (t) => t.textContent)),
@@ -10779,14 +10779,9 @@ async function theHabits(browser, base) {
     await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForTimeout(150);
     check(!(await page.$('.sheet-card[aria-label="Join Season 0"]')) && (await hbRows(page)).length === 4, 'signed in again: not asked twice', '');
-    /* the tile sits under the habits now, and scrolling down to it tucks the mast away: back up to the chips */
-    await page.evaluate(() => document.querySelector('#panel-habits').scrollTo(0, 0));
-    await page.waitForFunction(() => { const c = document.querySelector('#subnav .chip[data-chip="season"]'); return c && c.getBoundingClientRect().top > 0; }, null, { timeout: 4000 }).catch(() => {});
-    await page.click('#subnav .chip[data-chip="season"]');
-    check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && /#habits\/season$/.test(await page.evaluate(() => location.hash)), 'Season: one line, and the address says where', '');
     await page.goto(base + '/all-day/?demo=1#habits/wall');
     await settle(page);
-    check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'wall', '#habits/wall opens the Wall chip', '');
+    check(/#season\/wall$/.test(await page.evaluate(() => location.hash)), 'an old #habits/wall link lands in Season', await page.evaluate(() => location.hash));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

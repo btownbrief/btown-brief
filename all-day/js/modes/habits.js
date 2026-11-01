@@ -20,7 +20,7 @@
      Under them, the last sixteen weeks as a heat map, a square a day. Last,
      the goal tile: with no goal live it says when the next season starts,
      with a sign-up button, or that none is scheduled.
-   - Goal, Season and Wall are chips that say Season 0 is coming.
+   - Goal, Season and Wall live in Season (modes/season.js); their old links go there.
 
    - Round three (2026-10-19): every habit is a tree, a leaf for each day
      done and a flower for each streak milestone (forest.js); together they
@@ -69,7 +69,7 @@ import { DEMO_ME } from '../boards-fake.js';
 import { sectionBar } from '../sections.js';
 
 const KEY = 'habits';
-const VIEWS = [['today', 'Today'], ['forests', 'Forests'], ['goal', 'Goal'], ['season', 'Season'], ['wall', 'Wall']];
+const VIEWS = [['today', 'Today'], ['forests', 'Forests']];
 const HELP = 'allday-habits-help';   // the first-visit card was dismissed
 /* one tap each on an empty Today: a habit, and its tree, at once */
 const STARTERS = [
@@ -408,11 +408,6 @@ function paint() {
   if (!body) return;
   body.innerHTML = '';
   if (S.view === 'forests') { paintForests(); app.paintSubnav(); return; }
-  if (S.view !== 'today') {
-    body.appendChild(el('div', 'hb-soon', '<p>' + esc('Season 0 is coming') + '</p>'));
-    app.paintSubnav();
-    return;
-  }
   /* a first visit opens on what this page is; then the day's own things:
      today, your forest, your habits, the weeks behind them; the season
      tile, which changes once a season, under them, and only when there is
@@ -1293,6 +1288,7 @@ app.register(KEY, {
     load();
   },
   activate(param) {
+    if (param === 'season' || param === 'goal' || param === 'wall') { app.go('season', param === 'season' ? null : param); return; }
     const v = VIEWS.find(([k]) => k === param);
     const was = S.view;
     const forestLink = /^f-[\w-]{1,64}$/.test(param || '');

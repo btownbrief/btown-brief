@@ -1518,8 +1518,6 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .hb-gate .btn { height: var(--hit); padding: 0 22px; }
 .hb-empty { padding: var(--s4) var(--gutter) 0; color: var(--ink-2); }
 .hb-gate .hb-empty { padding: 0; }
-.hb-soon { padding: var(--s8) var(--gutter); text-align: center; }
-.hb-soon p { font-size: var(--fs-lead); color: var(--ink-2); }
 
 .hb-list { list-style: none; margin-top: var(--s3); border-top: 1px solid var(--line); }
 .hb-row { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--paper); touch-action: pan-y; }

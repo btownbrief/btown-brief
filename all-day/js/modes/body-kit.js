@@ -304,7 +304,7 @@ export function page(o) {
     refresh() { if (S.ready && !S.failed) draw(); },
     deactivate() { if (o.deactivate) o.deactivate(S.ctx); },
     subnav() {
-      if (!S.slots) return null;
+      if (!S.slots || keys().length < 2) return null;
       return sectionBar({ key: 'sec-body-' + o.key, title: o.label, color: o.color || '--app-body-pop',
         find: (k) => S.slots && S.slots[k], onPick: (k) => app.jumpTo(S.slots && S.slots[k]),
         items: keys().map(([key, label]) => ({ key, label })) });
