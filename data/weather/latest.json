@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-02T21:31:45+00:00",
+ "updated": "2026-11-02T22:51:49+00:00",
  "sections_updated": {
-  "now": "2026-11-02T21:31:45+00:00",
-  "forecast": "2026-11-02T21:31:45+00:00",
-  "hourly": "2026-11-02T21:31:45+00:00",
-  "alerts": "2026-11-02T21:31:45+00:00",
-  "afd": "2026-11-02T21:31:45+00:00",
-  "lake_forecast": "2026-11-02T21:31:45+00:00",
-  "lake_gage": "2026-11-02T21:31:45+00:00",
-  "air": "2026-11-02T21:31:45+00:00",
-  "sun": "2026-11-02T21:31:45+00:00",
-  "models": "2026-11-02T21:31:45+00:00"
+  "now": "2026-11-02T22:51:49+00:00",
+  "forecast": "2026-11-02T22:51:49+00:00",
+  "hourly": "2026-11-02T22:51:49+00:00",
+  "alerts": "2026-11-02T22:51:49+00:00",
+  "afd": "2026-11-02T22:51:49+00:00",
+  "lake_forecast": "2026-11-02T22:51:49+00:00",
+  "lake_gage": "2026-11-02T22:51:49+00:00",
+  "air": "2026-11-02T22:51:49+00:00",
+  "sun": "2026-11-02T22:51:49+00:00",
+  "models": "2026-11-02T22:51:49+00:00"
  },
  "now": {
-  "observed_at": "2026-11-02T21:05:00+00:00",
+  "observed_at": "2026-11-02T21:25:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 64,
-  "feels_like_f": 64,
-  "humidity": 39,
+  "temp_f": 63,
+  "feels_like_f": 63,
+  "humidity": 42,
   "dewpoint_f": 39,
-  "wind_mph": 7,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "SW",
+  "wind_dir": "SSW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-02T16:00:00-05:00",
+    "start": "2026-11-02T17:00:00-05:00",
     "is_day": true,
     "temp_f": 68,
     "pop": 5,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-02T18:11:30+00:00",
   "hours": [
-   {
-    "t": "2026-11-02T16:00:00-05:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 5,
-    "humidity": 43,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 37,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-02T17:00:00-05:00",
     "temp_f": 64,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 20
+   },
+   {
+    "t": "2026-11-04T04:00:00-05:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 0,
+    "humidity": 83,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 38,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 20
    }
   ],
   "days": [
@@ -984,17 +984,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-02T16:00:00.000-05:00",
-  "level_ft": 93.86,
-  "level_at": "2026-11-02T16:00:00.000-05:00",
+  "water_temp_at": "2026-11-02T17:00:00.000-05:00",
+  "level_ft": 93.85,
+  "level_at": "2026-11-02T17:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 39,
+  "aqi": 37,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/02/26 16:00",
+  "observed": "11/02/26 17:00",
   "discussion": "On Tuesday, November 3rd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1011,7 +1011,7 @@
     "high_f": {
      "GFS": 67,
      "Euro": 61,
-     "ICON": 66
+     "ICON": 65
     },
     "pop_max": {
      "GFS": 3,
@@ -1030,17 +1030,17 @@
     "high_f": {
      "GFS": 61,
      "Euro": 57,
-     "ICON": 60
+     "ICON": 61
     },
     "pop_max": {
-     "GFS": 39,
-     "Euro": 66,
+     "GFS": 32,
+     "Euro": 45,
      "ICON": 70
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.03,
-     "ICON": 0.15
+     "ICON": 0.09
     },
     "high_spread_f": 4
    },
@@ -1049,11 +1049,11 @@
     "high_f": {
      "GFS": 69,
      "Euro": 67,
-     "ICON": 71
+     "ICON": 73
     },
     "pop_max": {
      "GFS": 8,
-     "Euro": 7,
+     "Euro": 9,
      "ICON": 0
     },
     "precip_in": {
@@ -1061,13 +1061,13 @@
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 6
    }
   ]
  },
  "brief": {
   "date": "2026-11-02",
-  "generated": "2026-11-02T21:31:48+00:00",
+  "generated": "2026-11-02T22:51:54+00:00",
   "text": "Mostly sunny today, high 68. Mostly cloudy tonight, low 52. Tuesday, a chance of showers and cooler from 1 to 5pm, under a tenth of an inch, high 60.",
   "periods": [
    {
@@ -1076,12 +1076,12 @@
     "is_day": true,
     "temp_f": 68,
     "sky": "mostly sunny",
-    "start": "2026-11-02T16:00:00-05:00",
+    "start": "2026-11-02T17:00:00-05:00",
     "end": "2026-11-02T18:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 64,
-    "feels_hi": 66,
+    "feels_hi": 64,
     "text": "Mostly sunny today, high 68."
    },
    {
