@@ -581,48 +581,24 @@
   "zacharyspizzavermont": 1793033915,
   "zerogravitybeer": 1793552063
  },
- "pending": {
-  "handles": [
-   "wakingwindows",
-   "downtownwinooski",
-   "vtcomedy",
-   "helloburlington",
-   "thekwamevibe",
-   "btvcityarts",
-   "foambrewers",
-   "secretdooropenmic",
-   "highergroundmusic",
-   "flynncenter",
-   "golden_hour_social_club",
-   "playintention",
-   "churchstreetmarketplace",
-   "doodle.thebeagle",
-   "snoopygrams"
-  ],
-  "tagged": true,
-  "at": 1793579834,
-  "month": "2026-11",
-  "prev": {
-   "wakingwindows": 1793552063,
-   "downtownwinooski": 1793552063,
-   "vtcomedy": 1793552063,
-   "helloburlington": 1793552063,
-   "thekwamevibe": 1793552063,
-   "btvcityarts": 1793552063,
-   "foambrewers": 1793552063,
-   "secretdooropenmic": 1793552063,
-   "highergroundmusic": 1793552063,
-   "flynncenter": 1793552063,
-   "golden_hour_social_club": 1793552063,
-   "playintention": 1793552063,
-   "churchstreetmarketplace": 1793552063,
-   "doodle.thebeagle": 0,
-   "snoopygrams": 0
-  }
+ "names": {
+  "btvcityarts": "Burlington City Arts",
+  "churchstreetmarketplace": "Church Street Marketplace",
+  "doodle.thebeagle": "Doodle the beagle",
+  "downtownwinooski": "Downtown Winooski",
+  "flynncenter": "The Flynn",
+  "foambrewers": "Foam Brewers",
+  "helloburlington": "Burlington",
+  "playintention": "Play Intention",
+  "secretdooropenmic": "Secret Door Open Mic",
+  "snoopygrams": "Snoopy And The Peanuts Gang",
+  "thekwamevibe": "Kwame Dankwa",
+  "vtcomedy": "Vermont Comedy Club",
+  "wakingwindows": "Waking Windows"
  },
  "ai": {
   "month": "2026-11",
-  "usd": 0.467289,
+  "usd": 0.481991,
   "runs": [
    {
     "at": "2026-11-01T16:54:38+00:00",
@@ -632,6 +608,23 @@
     "in": 40216,
     "out": 2468,
     "usd": 0.005256
+   },
+   {
+    "at": "2026-11-02T00:37:19+00:00",
+    "model": "claude-haiku-5-5",
+    "asked": 5,
+    "looked": 0,
+    "in": 1738,
+    "out": 164,
+    "usd": 0.000256
+   },
+   {
+    "at": "2026-11-02T00:37:19+00:00",
+    "model": "claude-sonnet-5-5",
+    "asked": 5,
+    "in": 6128,
+    "out": 219,
+    "usd": 0.014446
    }
   ]
  }
