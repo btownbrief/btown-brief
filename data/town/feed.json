@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T06:49:04+00:00",
+ "generated": "2026-11-02T17:27:06+00:00",
  "status": {
   "ban": null,
   "ban_url": null,
@@ -88,9 +88,18 @@
  },
  "tiles": [
   {
+   "id": "city-10094-agenda",
+   "kind": "city",
+   "ts": "2026-11-02T17:16:28+00:00",
+   "title": "City Council",
+   "day": "2026-11-09",
+   "agenda": true,
+   "url": "https://burlingtonvt.portal.civicclerk.com/event/10094/overview"
+  },
+  {
    "id": "cityweek",
    "kind": "cityweek",
-   "ts": "2026-11-02T06:29:33+00:00",
+   "ts": "2026-11-02T17:16:28+00:00",
    "rows": [
     [
      "2026-11-02",
@@ -109,16 +118,16 @@
     ],
     [
      "2026-11-04",
-     "Airport Commission",
-     "https://burlingtonvt.portal.civicclerk.com/event/10272/overview"
+     "Ward 3 NPA",
+     "https://burlingtonvt.portal.civicclerk.com/event/10294/overview"
     ],
     [
      "2026-11-04",
-     "Burlington Walk Bike Council",
-     "https://burlingtonvt.portal.civicclerk.com/event/10280/overview"
+     "Airport Commission",
+     "https://burlingtonvt.portal.civicclerk.com/event/10272/overview"
     ]
    ],
-   "n": 12,
+   "n": 15,
    "url": "#cityhall"
   },
   {
@@ -527,15 +536,6 @@
    "url": "https://www.mynbc5.com/article/rat-run-returns/74289763"
   },
   {
-   "id": "city-10094-date",
-   "kind": "city",
-   "ts": "2026-10-30T01:10:50+00:00",
-   "title": "City Council",
-   "day": "2026-11-09",
-   "agenda": false,
-   "url": "https://burlingtonvt.portal.civicclerk.com/event/10094/overview"
-  },
-  {
    "id": "news-american-airlines-flight-from-charlotte-lands-in-burlington-after-mech",
    "kind": "news",
    "ts": "2026-10-30T00:43:29+00:00",
@@ -809,14 +809,6 @@
    "title": "Mayor appoints new Burlington police chief",
    "src": "WCAX",
    "url": "https://www.wcax.com/2026/10/26/mayor-appoints-new-burlington-police-chief/"
-  },
-  {
-   "id": "news-champlain-college-inspires-next-generation-of-women-in-cybersecurity",
-   "kind": "news",
-   "ts": "2026-10-26T13:46:00+00:00",
-   "title": "Champlain College inspires next generation of women in cybersecurity",
-   "src": "NBC5",
-   "url": "https://www.mynbc5.com/article/champlain-college-inspires-next-generation-of-women-in-cybersecurity/74235812"
   },
   {
    "id": "sold-d438ea864efc",
