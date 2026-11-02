@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-01T23:47:39+00:00",
+ "updated": "2026-11-02T01:02:28+00:00",
  "sections_updated": {
-  "now": "2026-11-01T23:47:39+00:00",
-  "forecast": "2026-11-01T23:47:39+00:00",
-  "hourly": "2026-11-01T23:47:39+00:00",
-  "alerts": "2026-11-01T23:47:39+00:00",
-  "afd": "2026-11-01T23:47:39+00:00",
-  "lake_forecast": "2026-11-01T23:47:39+00:00",
-  "lake_gage": "2026-11-01T23:47:39+00:00",
-  "air": "2026-11-01T23:47:39+00:00",
-  "sun": "2026-11-01T23:47:39+00:00",
-  "models": "2026-11-01T23:47:39+00:00"
+  "now": "2026-11-02T01:02:28+00:00",
+  "forecast": "2026-11-02T01:02:28+00:00",
+  "hourly": "2026-11-02T01:02:28+00:00",
+  "alerts": "2026-11-02T01:02:28+00:00",
+  "afd": "2026-11-02T01:02:28+00:00",
+  "lake_forecast": "2026-11-02T01:02:28+00:00",
+  "lake_gage": "2026-11-02T01:02:28+00:00",
+  "air": "2026-11-02T01:02:28+00:00",
+  "sun": "2026-11-02T01:02:28+00:00",
+  "models": "2026-11-02T01:02:28+00:00"
  },
  "now": {
-  "observed_at": "2026-11-01T22:55:00+00:00",
+  "observed_at": "2026-11-01T23:54:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 52,
-  "feels_like_f": 52,
-  "humidity": 50,
-  "dewpoint_f": 34,
-  "wind_mph": 3,
+  "temp_f": 51,
+  "feels_like_f": 51,
+  "humidity": 54,
+  "dewpoint_f": 35,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "WSW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-01T18:00:00-05:00",
+    "start": "2026-11-01T19:00:00-05:00",
     "is_day": false,
     "temp_f": 45,
     "pop": 3,
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-11-01T18:10:09+00:00",
   "hours": [
-   {
-    "t": "2026-11-01T18:00:00-05:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 0,
-    "humidity": 54,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 10,
-    "short": "Mostly Clear",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
-   {
-    "t": "2026-11-01T19:00:00-05:00",
-    "temp_f": 50,
-    "feels_f": 47,
-    "pop": 0,
-    "humidity": 61,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 10,
-    "short": "Mostly Clear",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-01T20:00:00-05:00",
     "temp_f": 48,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 12
+   },
+   {
+    "t": "2026-11-03T06:00:00-05:00",
+    "temp_f": 48,
+    "feels_f": 45,
+    "pop": 5,
+    "humidity": 86,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 70,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 13
+   },
+   {
+    "t": "2026-11-03T07:00:00-05:00",
+    "temp_f": 50,
+    "feels_f": 47,
+    "pop": 5,
+    "humidity": 80,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 76,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-01T18:31:00+00:00",
+  "issued": "2026-11-01T23:55:00+00:00",
   "key_messages": [
    "Temperatures increase this week, and there is the potential for some rain showers Tuesday and Tuesday night.",
    "A late week cold front will bring several days of rain"
   ],
   "what_changed": "As of 124 PM EST Sunday... Confidence has increased slightly in light rain showers Tuesday and Tuesday night. Confidence also continues to increase in warm temperatures on Wednesday, and highs across the St. Lawrence Valley of New York are expected to reach or surpass daily records.",
-  "raw": "\n000\nFXUS61 KBTV 011831\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n131 PM EST Sun Nov 1 2026\n\n.WHAT HAS CHANGED...\nAs of 124 PM EST Sunday...\n\nConfidence has increased slightly in light rain showers Tuesday\nand Tuesday night. Confidence also continues to increase in \nwarm temperatures on Wednesday, and highs across the St. \nLawrence Valley of New York are expected to reach or surpass \ndaily records.\n\n&&\n\n.KEY MESSAGES...\nAs of 124 PM EST Sunday...\n\n1. Temperatures increase this week, and there is the potential \nfor some rain showers Tuesday and Tuesday night.\n\n2. A late week cold front will bring several days of rain\n\n&&\n\n.DISCUSSION...\nAs of 124 PM EST Sunday...\n\nKEY MESSAGE 1: High 1034 mb pressure centered over the Northeast this \nafternoon will shift southeastward over to the mid Atlantic coast, \ndrifting offshore over the next few days. This will turn flow more \nsoutherly to southwesterly across northern New York and Vermont, \nresulting in above average temperatures this week. Highs Monday and \nTuesday afternoons will be widespread 60s. Lows fall only into the \n40s tonight and Monday night. A tilted mid to upper level ridge will \nbe positioned to our west through about Tuesday, moving eastwards \nthis week. Depending on the positioning of an upper level vort max \nand surface boundaries, there could be just enough forcing and lift \nto produce some clouds and light rain, mainly along the \ninternational border and on high terrain on Tuesday and Tuesday \nnight. The odd rain shower is possible Monday night in the Northeast \nKingdom, but generally best convergence is north of the border at \nthis time. Deterministic model solutions continue to vary widely on \nthe position of these features, so uncertainty remains relatively \nhigh, even on Tuesday and Tuesday night. Highest chance of some \nmeasurable precipitation looks to be Tuesday afternoon and evening \nwith 35-55% chance of rain for about the northern half of the \nforecast area, lower chances south. Regardless, temperatures \ncontinue to look warm for this time of year heading into mid and \nlate week with highs likely reaching the upper 60s and lower 70s by \nWednesday afternoon as southerly to southwesterly winds advect in \neven more warmth and 925 mb level temps climb to 11-16 C. Lows are \nexpected to fall into the mid 40s to mid 50s Tuesday and Wednesday \nnights.\n\nKEY MESSAGE 2: Confidence continues to increase that a relatively \nstrong low pressure and associated cold front will sweep through \nnorthern New York and Vermont by the end of the week. A closed low \nwill be over the Upper Great Lakes by Wednesday. While timing is \nstill a bit uncertain, we should see channeled flow keeping \nwinds over Lake Champlain gusting to near 30mph on Thursday with\nrain overtaking the CWA on Friday ahead of the low. As the cold\nfront sweeps through, we'll see high temperatures drop from the\nupper 60s Thursday down to the upper 40s by Saturday. A number \nof model solutions have the system interacting with another low \noff the Atlantic Seaboard, causing the low to partially cutoff \nfrom the main flow and allowing a slight chance of rain to \npersist through next Sunday.\n\n&&\n\n.AVIATION /18Z SUNDAY THROUGH FRIDAY/...\nThrough 18Z Monday...We'll see a quiet TAF period lasting\nthrough the next 24 hours. Mostly clear skies with moderate \nwinds will persist through the day today. Some high clouds move \nin during the overnight hours. Those clouds combined with \nmoderate low level winds will keep any fog formation at bay. \nTomorrow, VFR will continue with cloud decks looking to stay \nabove 8000ft\n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Chance SHRA.\nTuesday Night: VFR. Chance SHRA.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. Chance RA.\nThursday: MVFR. Chance RA.\nThursday Night: Mainly MVFR, with areas IFR possible. Likely RA.\nFriday: MVFR/IFR conditions possible. Chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 72        \nKBTV | 73 (1982) | 70  \n\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Langbauer/Storm\nAVIATION...Langbauer\nCLIMATE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 012355\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n655 PM EST Sun Nov 1 2026\n\n.WHAT HAS CHANGED...\nAs of 124 PM EST Sunday...\n\nConfidence has increased slightly in light rain showers Tuesday\nand Tuesday night. Confidence also continues to increase in \nwarm temperatures on Wednesday, and highs across the St. \nLawrence Valley of New York are expected to reach or surpass \ndaily records.\n\n&&\n\n.KEY MESSAGES...\nAs of 124 PM EST Sunday...\n\n1. Temperatures increase this week, and there is the potential \nfor some rain showers Tuesday and Tuesday night.\n\n2. A late week cold front will bring several days of rain\n\n&&\n\n.DISCUSSION...\nAs of 124 PM EST Sunday...\n\nKEY MESSAGE 1: High 1034 mb pressure centered over the Northeast this \nafternoon will shift southeastward over to the mid Atlantic coast, \ndrifting offshore over the next few days. This will turn flow more \nsoutherly to southwesterly across northern New York and Vermont, \nresulting in above average temperatures this week. Highs Monday and \nTuesday afternoons will be widespread 60s. Lows fall only into the \n40s tonight and Monday night. A tilted mid to upper level ridge will \nbe positioned to our west through about Tuesday, moving eastwards \nthis week. Depending on the positioning of an upper level vort max \nand surface boundaries, there could be just enough forcing and lift \nto produce some clouds and light rain, mainly along the \ninternational border and on high terrain on Tuesday and Tuesday \nnight. The odd rain shower is possible Monday night in the Northeast \nKingdom, but generally best convergence is north of the border at \nthis time. Deterministic model solutions continue to vary widely on \nthe position of these features, so uncertainty remains relatively \nhigh, even on Tuesday and Tuesday night. Highest chance of some \nmeasurable precipitation looks to be Tuesday afternoon and evening \nwith 35-55% chance of rain for about the northern half of the \nforecast area, lower chances south. Regardless, temperatures \ncontinue to look warm for this time of year heading into mid and \nlate week with highs likely reaching the upper 60s and lower 70s by \nWednesday afternoon as southerly to southwesterly winds advect in \neven more warmth and 925 mb level temps climb to 11-16 C. Lows are \nexpected to fall into the mid 40s to mid 50s Tuesday and Wednesday \nnights.\n\nKEY MESSAGE 2: Confidence continues to increase that a relatively \nstrong low pressure and associated cold front will sweep through \nnorthern New York and Vermont by the end of the week. A closed low \nwill be over the Upper Great Lakes by Wednesday. While timing is \nstill a bit uncertain, we should see channeled flow keeping \nwinds over Lake Champlain gusting to near 30mph on Thursday with\nrain overtaking the CWA on Friday ahead of the low. As the cold\nfront sweeps through, we'll see high temperatures drop from the\nupper 60s Thursday down to the upper 40s by Saturday. A number \nof model solutions have the system interacting with another low \noff the Atlantic Seaboard, causing the low to partially cutoff \nfrom the main flow and allowing a slight chance of rain to \npersist through next Sunday.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...VFR conditions will prevail through the\nentire TAF period. Mid-level clouds increase overnight\ntonight, especially in northern areas, as a weak disturbance\nrides just north of the international border. Ceilings to remain\nAOA 5000 ft. Light S/SW winds overnight (except SE at RUT) will\nincrease back to 6-12 kt after 15z Mon. A weak LLJ will bring\nmarginal LLWS to BTV/PBG/EFK 04z-15z. \n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Chance SHRA.\nTuesday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly MVFR, with areas VFR possible. Likely RA.\nThursday Night: Mainly MVFR, with local IFR possible. Likely RA.\nFriday: Mainly MVFR, with areas IFR possible. Chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 72        \nKBTV | 73 (1982) | 70\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Langbauer\nAVIATION...Hastings\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-11-01T18:33:00+00:00",
@@ -983,9 +983,9 @@
  },
  "lake_gage": {
   "water_temp_f": 52,
-  "water_temp_at": "2026-11-01T18:00:00.000-05:00",
-  "level_ft": 93.88,
-  "level_at": "2026-11-01T18:00:00.000-05:00",
+  "water_temp_at": "2026-11-01T19:00:00.000-05:00",
+  "level_ft": 93.89,
+  "level_at": "2026-11-01T19:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -993,7 +993,7 @@
   "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/01/26 18:00",
+  "observed": "11/01/26 19:00",
   "discussion": "On Tuesday, November 2nd, expect moderate levels of fine particle matter in valley locations with nearby air emission sources, expect good air quality elsewhere in Vermont."
  },
  "sun": {
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-11-01",
-  "generated": "2026-11-01T23:47:43+00:00",
+  "generated": "2026-11-02T01:02:33+00:00",
   "text": "Partly cloudy tonight, low 45. Monday, mostly sunny, high 64.",
   "periods": [
    {
@@ -1075,12 +1075,12 @@
     "is_day": false,
     "temp_f": 45,
     "sky": "partly cloudy",
-    "start": "2026-11-01T18:00:00-05:00",
+    "start": "2026-11-02T01:00:00+00:00",
     "end": "2026-11-02T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 41,
-    "feels_hi": 52,
+    "feels_hi": 44,
     "text": "Partly cloudy tonight, low 45."
    },
    {
