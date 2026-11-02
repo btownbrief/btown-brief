@@ -1,21 +1,21 @@
 {
- "updated": "2026-11-02T22:51:49+00:00",
+ "updated": "2026-11-02T23:08:55+00:00",
  "sections_updated": {
-  "now": "2026-11-02T22:51:49+00:00",
-  "forecast": "2026-11-02T22:51:49+00:00",
-  "hourly": "2026-11-02T22:51:49+00:00",
-  "alerts": "2026-11-02T22:51:49+00:00",
-  "afd": "2026-11-02T22:51:49+00:00",
-  "lake_forecast": "2026-11-02T22:51:49+00:00",
-  "lake_gage": "2026-11-02T22:51:49+00:00",
-  "air": "2026-11-02T22:51:49+00:00",
-  "sun": "2026-11-02T22:51:49+00:00",
-  "models": "2026-11-02T22:51:49+00:00"
+  "now": "2026-11-02T23:08:55+00:00",
+  "forecast": "2026-11-02T23:08:55+00:00",
+  "hourly": "2026-11-02T23:08:55+00:00",
+  "alerts": "2026-11-02T23:08:55+00:00",
+  "afd": "2026-11-02T23:08:55+00:00",
+  "lake_forecast": "2026-11-02T23:08:55+00:00",
+  "lake_gage": "2026-11-02T23:08:55+00:00",
+  "air": "2026-11-02T23:08:55+00:00",
+  "sun": "2026-11-02T23:08:55+00:00",
+  "models": "2026-11-02T23:08:55+00:00"
  },
  "now": {
-  "observed_at": "2026-11-02T21:25:00+00:00",
+  "observed_at": "2026-11-02T22:55:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
+  "description": "Partly Cloudy",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 42,
@@ -28,16 +28,6 @@
  "forecast": {
   "updated": "2026-11-02T18:11:30+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-11-02T17:00:00-05:00",
-    "is_day": true,
-    "temp_f": 68,
-    "pop": 5,
-    "wind": "S 9 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 68. South wind around 9 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-11-02T18:00:00-05:00",
@@ -66,7 +56,7 @@
     "pop": 22,
     "wind": "S 13 mph",
     "short": "Slight Chance Rain Showers then Mostly Cloudy",
-    "detailed": "A slight chance of rain showers before 9pm. Mostly cloudy, with a low around 52. South wind around 13 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A slight chance of rain showers before 9pm. Mostly cloudy, with a low around 52. South wind around 13 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Wednesday",
@@ -96,7 +86,7 @@
     "pop": 66,
     "wind": "S 13 to 16 mph",
     "short": "Light Rain Likely",
-    "detailed": "Rain likely after 7am. Mostly cloudy, with a high near 66. South wind 13 to 16 mph. Chance of precipitation is 70%."
+    "detailed": "Rain likely after 7am. Mostly cloudy, with a high near 66. South wind 13 to 16 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday Night",
@@ -167,26 +157,22 @@
     "wind": "SW 5 mph",
     "short": "Slight Chance Light Rain",
     "detailed": "A slight chance of rain. Mostly cloudy, with a low around 36. Southwest wind around 5 mph."
+   },
+   {
+    "name": "Monday",
+    "start": "2026-11-09T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 52,
+    "pop": 31,
+    "wind": "W 7 mph",
+    "short": "Chance Light Rain",
+    "detailed": "A chance of rain. Mostly cloudy, with a high near 52. West wind around 7 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-02T18:11:30+00:00",
   "hours": [
-   {
-    "t": "2026-11-02T17:00:00-05:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 5,
-    "humidity": 46,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 47,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
    {
     "t": "2026-11-02T18:00:00-05:00",
     "temp_f": 62,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 20
+   },
+   {
+    "t": "2026-11-04T05:00:00-05:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 0,
+    "humidity": 83,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 18,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 18
    }
   ],
   "days": [
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-02T17:00:00.000-05:00",
+  "water_temp_at": "2026-11-02T18:00:00.000-05:00",
   "level_ft": 93.85,
-  "level_at": "2026-11-02T17:00:00.000-05:00",
+  "level_at": "2026-11-02T18:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -1033,7 +1033,7 @@
      "ICON": 61
     },
     "pop_max": {
-     "GFS": 32,
+     "GFS": 34,
      "Euro": 45,
      "ICON": 70
     },
@@ -1067,23 +1067,9 @@
  },
  "brief": {
   "date": "2026-11-02",
-  "generated": "2026-11-02T22:51:54+00:00",
-  "text": "Mostly sunny today, high 68. Mostly cloudy tonight, low 52. Tuesday, a chance of showers and cooler from 1 to 5pm, under a tenth of an inch, high 60.",
+  "generated": "2026-11-02T23:09:00+00:00",
+  "text": "Mostly cloudy tonight, low 52. Tuesday, a chance of showers from 1 to 5pm, under a tenth of an inch, high 60.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 68,
-    "sky": "mostly sunny",
-    "start": "2026-11-02T17:00:00-05:00",
-    "end": "2026-11-02T18:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 64,
-    "feels_hi": 64,
-    "text": "Mostly sunny today, high 68."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1097,6 +1083,30 @@
     "feels_lo": 52,
     "feels_hi": 62,
     "text": "Mostly cloudy tonight, low 52."
+   },
+   {
+    "label": "Tuesday",
+    "name": "Tuesday",
+    "is_day": true,
+    "temp_f": 60,
+    "sky": "sunny",
+    "start": "2026-11-03T06:00:00-05:00",
+    "end": "2026-11-03T18:00:00-05:00",
+    "precip": {
+     "kind": "showers",
+     "chance": 50,
+     "say": "a chance of showers",
+     "start": "2026-11-03T13:00:00-05:00",
+     "end": "2026-11-03T17:00:00-05:00",
+     "when": "from 1 to 5pm",
+     "amount_in": 0.03,
+     "snow_in": 0,
+     "amount": "under a tenth of an inch"
+    },
+    "wind": null,
+    "feels_lo": 52,
+    "feels_hi": 60,
+    "text": "Tuesday, a chance of showers from 1 to 5pm, under a tenth of an inch, high 60."
    }
   ]
  }
