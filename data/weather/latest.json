@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-03T15:52:32+00:00",
+ "updated": "2026-11-03T16:32:28+00:00",
  "sections_updated": {
-  "now": "2026-11-03T15:52:32+00:00",
-  "forecast": "2026-11-03T15:52:32+00:00",
-  "hourly": "2026-11-03T15:52:32+00:00",
-  "alerts": "2026-11-03T15:52:32+00:00",
-  "afd": "2026-11-03T15:52:32+00:00",
-  "lake_forecast": "2026-11-03T15:52:32+00:00",
-  "lake_gage": "2026-11-03T15:52:32+00:00",
-  "air": "2026-11-03T15:52:32+00:00",
-  "sun": "2026-11-03T15:52:32+00:00",
-  "models": "2026-11-03T15:52:32+00:00"
+  "now": "2026-11-03T16:32:28+00:00",
+  "forecast": "2026-11-03T16:32:28+00:00",
+  "hourly": "2026-11-03T16:32:28+00:00",
+  "alerts": "2026-11-03T16:32:28+00:00",
+  "afd": "2026-11-03T16:32:28+00:00",
+  "lake_forecast": "2026-11-03T16:32:28+00:00",
+  "lake_gage": "2026-11-03T16:32:28+00:00",
+  "air": "2026-11-03T16:32:28+00:00",
+  "sun": "2026-11-03T16:32:28+00:00",
+  "models": "2026-11-03T16:32:28+00:00"
  },
  "now": {
-  "observed_at": "2026-11-03T14:54:00+00:00",
+  "observed_at": "2026-11-03T15:55:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": 50,
-  "dewpoint_f": 42,
-  "wind_mph": 8,
+  "temp_f": 63,
+  "feels_like_f": 63,
+  "humidity": 48,
+  "dewpoint_f": 43,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "SSW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-03T10:00:00-05:00",
+    "start": "2026-11-03T11:00:00-05:00",
     "is_day": true,
     "temp_f": 61,
     "pop": 69,
-    "wind": "S 10 mph",
+    "wind": "S 9 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Cloudy, with a high near 61. South wind around 10 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain showers likely. Cloudy, with a high near 61. South wind around 9 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-03T13:18:16+00:00",
   "hours": [
-   {
-    "t": "2026-11-03T10:00:00-05:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 39,
-    "humidity": 67,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 90,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
    {
     "t": "2026-11-03T11:00:00-05:00",
     "temp_f": 59,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 20
+   },
+   {
+    "t": "2026-11-04T22:00:00-05:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 43,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 21
    }
   ],
   "days": [
@@ -957,17 +957,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-03T10:00:00.000-05:00",
-  "level_ft": 93.86,
-  "level_at": "2026-11-03T10:00:00.000-05:00",
+  "water_temp_at": "2026-11-03T11:00:00.000-05:00",
+  "level_ft": 93.87,
+  "level_at": "2026-11-03T11:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 34,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/03/26 10:00",
+  "observed": "11/03/26 11:00",
   "discussion": "On Tuesday, November 3rd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1040,7 +1040,7 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T15:52:35+00:00",
+  "generated": "2026-11-03T16:32:34+00:00",
   "text": "Showers likely today from noon to 3pm, under a tenth of an inch, high 61. Mostly cloudy tonight, low 53. Wednesday, mostly sunny and warmer, high 71.",
   "periods": [
    {
@@ -1049,7 +1049,7 @@
     "is_day": true,
     "temp_f": 61,
     "sky": "sunny",
-    "start": "2026-11-03T10:00:00-05:00",
+    "start": "2026-11-03T11:00:00-05:00",
     "end": "2026-11-03T18:00:00-05:00",
     "precip": {
      "kind": "showers",
@@ -1063,7 +1063,7 @@
      "amount": "under a tenth of an inch"
     },
     "wind": null,
-    "feels_lo": 58,
+    "feels_lo": 59,
     "feels_hi": 60,
     "text": "Showers likely today from noon to 3pm, under a tenth of an inch, high 61."
    },
