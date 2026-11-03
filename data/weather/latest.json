@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-03T20:52:39+00:00",
+ "updated": "2026-11-03T21:08:56+00:00",
  "sections_updated": {
-  "now": "2026-11-03T20:52:39+00:00",
-  "forecast": "2026-11-03T20:52:39+00:00",
-  "hourly": "2026-11-03T20:52:39+00:00",
-  "alerts": "2026-11-03T20:52:39+00:00",
-  "afd": "2026-11-03T20:52:39+00:00",
-  "lake_forecast": "2026-11-03T20:52:39+00:00",
-  "lake_gage": "2026-11-03T20:52:39+00:00",
-  "air": "2026-11-03T20:52:39+00:00",
-  "sun": "2026-11-03T20:52:39+00:00",
-  "models": "2026-11-03T20:52:39+00:00"
+  "now": "2026-11-03T21:08:56+00:00",
+  "forecast": "2026-11-03T21:08:56+00:00",
+  "hourly": "2026-11-03T21:08:56+00:00",
+  "alerts": "2026-11-03T21:08:56+00:00",
+  "afd": "2026-11-03T21:08:56+00:00",
+  "lake_forecast": "2026-11-03T21:08:56+00:00",
+  "lake_gage": "2026-11-03T21:08:56+00:00",
+  "air": "2026-11-03T21:08:56+00:00",
+  "sun": "2026-11-03T21:08:56+00:00",
+  "models": "2026-11-03T21:08:56+00:00"
  },
  "now": {
   "observed_at": "2026-11-03T20:25:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-03T15:00:00-05:00",
+    "start": "2026-11-03T16:00:00-05:00",
     "is_day": true,
     "temp_f": 61,
-    "pop": 45,
+    "pop": 33,
     "wind": "S 9 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Cloudy, with a high near 61. South wind around 9 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers. Cloudy, with a high near 61. South wind around 9 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-03T18:40:22+00:00",
   "hours": [
-   {
-    "t": "2026-11-03T15:00:00-05:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 45,
-    "humidity": 64,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 92,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-03T16:00:00-05:00",
     "temp_f": 61,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 28
+   },
+   {
+    "t": "2026-11-05T03:00:00-05:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 0,
+    "humidity": 78,
+    "wind_mph": 17,
+    "wind_dir": "S",
+    "sky": 33,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 26
    }
   ],
   "days": [
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-03T15:00:00.000-05:00",
+  "water_temp_at": "2026-11-03T16:00:00.000-05:00",
   "level_ft": 93.87,
-  "level_at": "2026-11-03T15:00:00.000-05:00",
+  "level_at": "2026-11-03T16:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -1033,7 +1033,7 @@
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 6,
+     "GFS": 4,
      "Euro": 9,
      "ICON": 0
     },
@@ -1052,7 +1052,7 @@
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 75,
+     "GFS": 79,
      "Euro": 100,
      "ICON": 93
     },
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T20:52:43+00:00",
+  "generated": "2026-11-03T21:08:59+00:00",
   "text": "A chance of showers today, under a tenth of an inch, high 61. Mostly cloudy tonight, low 55. Wednesday, mostly sunny and warmer, high 73.",
   "periods": [
    {
@@ -1076,13 +1076,13 @@
     "is_day": true,
     "temp_f": 61,
     "sky": "sunny",
-    "start": "2026-11-03T15:00:00-05:00",
+    "start": "2026-11-03T16:00:00-05:00",
     "end": "2026-11-03T18:00:00-05:00",
     "precip": {
      "kind": "showers",
-     "chance": 40,
+     "chance": 30,
      "say": "a chance of showers",
-     "start": "2026-11-03T15:00:00-05:00",
+     "start": "2026-11-03T16:00:00-05:00",
      "end": "2026-11-03T18:00:00-05:00",
      "when": "",
      "amount_in": 0.01,
