@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-03T17:19:35+00:00",
+ "updated": "2026-11-03T18:04:36+00:00",
  "sections_updated": {
-  "now": "2026-11-03T17:19:35+00:00",
-  "forecast": "2026-11-03T17:19:35+00:00",
-  "hourly": "2026-11-03T17:19:35+00:00",
-  "alerts": "2026-11-03T17:19:35+00:00",
-  "afd": "2026-11-03T17:19:35+00:00",
-  "lake_forecast": "2026-11-03T17:19:35+00:00",
-  "lake_gage": "2026-11-03T17:19:35+00:00",
-  "air": "2026-11-03T17:19:35+00:00",
-  "sun": "2026-11-03T17:19:35+00:00",
-  "models": "2026-11-03T17:19:35+00:00"
+  "now": "2026-11-03T18:04:36+00:00",
+  "forecast": "2026-11-03T18:04:36+00:00",
+  "hourly": "2026-11-03T18:04:36+00:00",
+  "alerts": "2026-11-03T18:04:36+00:00",
+  "afd": "2026-11-03T18:04:36+00:00",
+  "lake_forecast": "2026-11-03T18:04:36+00:00",
+  "lake_gage": "2026-11-03T18:04:36+00:00",
+  "air": "2026-11-03T18:04:36+00:00",
+  "sun": "2026-11-03T18:04:36+00:00",
+  "models": "2026-11-03T18:04:36+00:00"
  },
  "now": {
-  "observed_at": "2026-11-03T16:50:00+00:00",
+  "observed_at": "2026-11-03T17:20:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 64,
-  "feels_like_f": 64,
-  "humidity": 42,
-  "dewpoint_f": 41,
-  "wind_mph": null,
-  "wind_gust_mph": 21,
-  "wind_dir": null,
+  "description": "Light Rain",
+  "temp_f": 63,
+  "feels_like_f": 63,
+  "humidity": 48,
+  "dewpoint_f": 43,
+  "wind_mph": 10,
+  "wind_gust_mph": null,
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-03T12:00:00-05:00",
+    "start": "2026-11-03T13:00:00-05:00",
     "is_day": true,
     "temp_f": 61,
     "pop": 69,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-03T13:18:16+00:00",
   "hours": [
-   {
-    "t": "2026-11-03T12:00:00-05:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 59,
-    "humidity": 67,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 87,
-    "short": "Rain Showers Likely",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-11-03T13:00:00-05:00",
     "temp_f": 59,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 21
+   },
+   {
+    "t": "2026-11-05T00:00:00-05:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 78,
+    "wind_mph": 14,
+    "wind_dir": "S",
+    "sky": 42,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 22
    }
   ],
   "days": [
@@ -975,7 +975,7 @@
   "sunset": "2026-11-03T16:39-05:00",
   "sunrise_tomorrow": "2026-11-04T06:34-05:00",
   "sunset_tomorrow": "2026-11-04T16:37-05:00",
-  "uv_max": 1.4
+  "uv_max": 1.35
  },
  "models": {
   "days": [
@@ -987,8 +987,8 @@
      "ICON": 62
     },
     "pop_max": {
-     "GFS": 40,
-     "Euro": 51,
+     "GFS": 43,
+     "Euro": 37,
      "ICON": 63
     },
     "precip_in": {
@@ -1007,7 +1007,7 @@
     },
     "pop_max": {
      "GFS": 7,
-     "Euro": 7,
+     "Euro": 9,
      "ICON": 0
     },
     "precip_in": {
@@ -1026,11 +1026,11 @@
     },
     "pop_max": {
      "GFS": 75,
-     "Euro": 96,
+     "Euro": 100,
      "ICON": 93
     },
     "precip_in": {
-     "GFS": 0.1,
+     "GFS": 0.09,
      "Euro": 0.17,
      "ICON": 0.16
     },
@@ -1040,7 +1040,7 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T17:19:40+00:00",
+  "generated": "2026-11-03T18:04:43+00:00",
   "text": "Showers likely today until 3pm, under a tenth of an inch, high 61. Mostly cloudy tonight, low 53. Wednesday, mostly sunny and warmer, high 71.",
   "periods": [
    {
@@ -1049,16 +1049,16 @@
     "is_day": true,
     "temp_f": 61,
     "sky": "sunny",
-    "start": "2026-11-03T12:00:00-05:00",
+    "start": "2026-11-03T13:00:00-05:00",
     "end": "2026-11-03T18:00:00-05:00",
     "precip": {
      "kind": "showers",
      "chance": 70,
      "say": "showers likely",
-     "start": "2026-11-03T12:00:00-05:00",
+     "start": "2026-11-03T13:00:00-05:00",
      "end": "2026-11-03T15:00:00-05:00",
      "when": "until 3pm",
-     "amount_in": 0.02,
+     "amount_in": 0.01,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
