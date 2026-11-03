@@ -1,49 +1,49 @@
 {
- "updated": "2026-11-03T13:12:16+00:00",
+ "updated": "2026-11-03T14:32:23+00:00",
  "sections_updated": {
-  "now": "2026-11-03T13:12:16+00:00",
-  "forecast": "2026-11-03T13:12:16+00:00",
-  "hourly": "2026-11-03T13:12:16+00:00",
-  "alerts": "2026-11-03T13:12:16+00:00",
-  "afd": "2026-11-03T13:12:16+00:00",
-  "lake_forecast": "2026-11-03T13:12:16+00:00",
-  "lake_gage": "2026-11-03T13:12:16+00:00",
-  "air": "2026-11-03T13:12:16+00:00",
-  "sun": "2026-11-03T13:12:16+00:00",
-  "models": "2026-11-03T13:12:16+00:00"
+  "now": "2026-11-03T14:32:23+00:00",
+  "forecast": "2026-11-03T14:32:23+00:00",
+  "hourly": "2026-11-03T14:32:23+00:00",
+  "alerts": "2026-11-03T14:32:23+00:00",
+  "afd": "2026-11-03T14:32:23+00:00",
+  "lake_forecast": "2026-11-03T14:32:23+00:00",
+  "lake_gage": "2026-11-03T14:32:23+00:00",
+  "air": "2026-11-03T14:32:23+00:00",
+  "sun": "2026-11-03T14:32:23+00:00",
+  "models": "2026-11-03T14:32:23+00:00"
  },
  "now": {
-  "observed_at": "2026-11-03T12:55:00+00:00",
+  "observed_at": "2026-11-03T14:10:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 71,
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": 63,
   "dewpoint_f": 45,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "E",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-11-03T07:08:59+00:00",
+  "updated": "2026-11-03T13:18:16+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-03T08:00:00-05:00",
+    "start": "2026-11-03T09:00:00-05:00",
     "is_day": true,
     "temp_f": 61,
-    "pop": 42,
+    "pop": 69,
     "wind": "S 10 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers after 10am. Cloudy, with a high near 61. South wind around 10 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Rain Showers Likely",
+    "detailed": "Rain showers likely. Cloudy, with a high near 61. South wind around 10 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
     "start": "2026-11-03T18:00:00-05:00",
     "is_day": false,
     "temp_f": 53,
-    "pop": 17,
+    "pop": 22,
     "wind": "S 13 mph",
     "short": "Slight Chance Rain Showers then Mostly Cloudy",
     "detailed": "A slight chance of rain showers before 9pm. Mostly cloudy, with a low around 53. South wind around 13 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
@@ -171,33 +171,19 @@
   ]
  },
  "hourly": {
-  "updated": "2026-11-03T07:08:59+00:00",
+  "updated": "2026-11-03T13:18:16+00:00",
   "hours": [
-   {
-    "t": "2026-11-03T08:00:00-05:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 11,
-    "humidity": 71,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 86,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
    {
     "t": "2026-11-03T09:00:00-05:00",
     "temp_f": 56,
     "feels_f": 56,
-    "pop": 11,
+    "pop": 36,
     "humidity": 69,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 85,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 14
    },
@@ -205,13 +191,13 @@
     "t": "2026-11-03T10:00:00-05:00",
     "temp_f": 58,
     "feels_f": 58,
-    "pop": 15,
+    "pop": 39,
     "humidity": 67,
     "wind_mph": 10,
     "wind_dir": "S",
     "sky": 90,
-    "short": "Slight Chance Rain Showers",
-    "qpf_in": 0.0,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 15
    },
@@ -219,13 +205,13 @@
     "t": "2026-11-03T11:00:00-05:00",
     "temp_f": 59,
     "feels_f": 59,
-    "pop": 16,
+    "pop": 49,
     "humidity": 64,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 92,
-    "short": "Slight Chance Rain Showers",
-    "qpf_in": 0.0,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 15
    },
@@ -233,13 +219,13 @@
     "t": "2026-11-03T12:00:00-05:00",
     "temp_f": 59,
     "feels_f": 59,
-    "pop": 21,
+    "pop": 59,
     "humidity": 67,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 87,
-    "short": "Slight Chance Rain Showers",
-    "qpf_in": 0.0,
+    "short": "Rain Showers Likely",
+    "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 16
    },
@@ -247,12 +233,12 @@
     "t": "2026-11-03T13:00:00-05:00",
     "temp_f": 59,
     "feels_f": 59,
-    "pop": 36,
+    "pop": 69,
     "humidity": 67,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 92,
-    "short": "Chance Rain Showers",
+    "short": "Rain Showers Likely",
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 15
@@ -261,12 +247,12 @@
     "t": "2026-11-03T14:00:00-05:00",
     "temp_f": 60,
     "feels_f": 60,
-    "pop": 42,
+    "pop": 57,
     "humidity": 64,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 94,
-    "short": "Chance Rain Showers",
+    "short": "Rain Showers Likely",
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 15
@@ -275,7 +261,7 @@
     "t": "2026-11-03T15:00:00-05:00",
     "temp_f": 60,
     "feels_f": 60,
-    "pop": 39,
+    "pop": 45,
     "humidity": 64,
     "wind_mph": 9,
     "wind_dir": "S",
@@ -303,12 +289,12 @@
     "t": "2026-11-03T17:00:00-05:00",
     "temp_f": 59,
     "feels_f": 59,
-    "pop": 21,
+    "pop": 27,
     "humidity": 67,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 90,
-    "short": "Slight Chance Rain Showers",
+    "short": "Chance Rain Showers",
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 14
@@ -317,7 +303,7 @@
     "t": "2026-11-03T18:00:00-05:00",
     "temp_f": 58,
     "feels_f": 58,
-    "pop": 17,
+    "pop": 22,
     "humidity": 69,
     "wind_mph": 10,
     "wind_dir": "S",
@@ -676,17 +662,26 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 18
+   },
+   {
+    "t": "2026-11-04T20:00:00-05:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 0,
+    "humidity": 72,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 67,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 20
    }
   ],
   "days": [
    {
-    "date": "2026-11-02",
-    "precip_in": 0.0,
-    "snow_in": 0.0
-   },
-   {
     "date": "2026-11-03",
-    "precip_in": 0.02,
+    "precip_in": 0.03,
     "snow_in": 0.0
    },
    {
@@ -710,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-03T11:48:00+00:00",
+  "issued": "2026-11-03T13:21:00+00:00",
   "key_messages": [
    "Warm temperatures continue through Wednesday with potential for exceeding a few daily records Wednesday afternoon.",
    "Light rain showers are possible this afternoon and evening, then widespread rain is expected Thursday into Friday.",
    "Some beneficial rain remains likely over the weekend, although chances for heavier amounts have trended downward."
   ],
-  "what_changed": "As of 221 AM EST Tuesday... Precipitation onset has shifted earlier for Thusday's rainfall while amounts for the frontal system have decreased. Otherwise, minimal changes were made.",
-  "raw": "\n000\nFXUS61 KBTV 031148\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n648 AM EST Tue Nov 3 2026\n\n.WHAT HAS CHANGED...\nAs of 221 AM EST Tuesday...\n\nPrecipitation onset has shifted earlier for Thusday's rainfall\nwhile amounts for the frontal system have decreased. Otherwise,\nminimal changes were made.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 AM EST Tuesday...\n\n1. Warm temperatures continue through Wednesday with potential \nfor exceeding a few daily records Wednesday afternoon.\n\n2. Light rain showers are possible this afternoon and evening, \nthen widespread rain is expected Thursday into Friday.\n\n3. Some beneficial rain remains likely over the weekend, \nalthough chances for heavier amounts have trended downward.\n\n&&\n\n.DISCUSSION...\nAs of 221 AM EST Tuesday...\n\nKEY MESSAGE 1: Breezes will remain southerly today and \ntomorrow, but will be increasing. Gusts 15 to 25 mph can be \nexpected today, especially in the northern Champlain Valley and \nSt. Lawrence Valley. Wednesday will see a surge of warm air \nadvection as southerly flow deepens and the pressure gradient \ntightens. Gusts to around 30 mph are probable for channeled \nlocations with 15 to 20 mph gusts expected elsewhere.\nTemperatures  will sharply rise over today's highs in the \nlow/mid 60s to the upper 60s to mid 70s by Wednesday afternoon.\nAs the front and rainfall moves in Thursday, temperatures will\nbegin to trend cooler with highs back in the 60s. \n\nKEY MESSAGE 2: Light radar returns are evident across the \nCanadian border with stronger returns evident in the vicinity of\nLake Huron. These returns will track eastward through the day as\na weak wave moves along the northern periphery of high pressure\ncentered over the mid Atlantic states. Best chances for rain\nremain towards the Canadian border this afternoon and overnight\nwith only a few hundredths to around 0.12\" of rain. \n\nThe next chances of rain will be on Thursday as the front moves\ninto the region. Models are showing more of a consensus that the\nonset of precipitation will be earlier than previous forecasts\nbeginning in the early morning hours across northern New York\nand by daybreak in Vermont. The biggest change has been in QPF\nwhich has sharply lowered as strongest forcing shifts south of\nthe region. Chances are decreasing on amounts and most likely\namounts falling below 0.25\" Thursday. There are still a few\nensemble members that have more forcing farther north, but those\nhave been dwindling each run. \n\nKEY MESSAGE 3: At least a couple of chances for showers remains\non track Friday through Monday; however, uncertainty in timing \nis large. As of now, the most likely scenario for precipitation \nforcing relates to a wave of low pressure developing to our \nsoutheast by Friday evening and working its way northeastward \nSaturday, while a trailing upper level low slowly crosses our \nregion from the west. The potential for rainfall exceeding an \ninch has decreased with the latest ensemble guidance, as fewer \nmembers are supporting the idea of this low track retrograding \nto the northwest quickly enough to bring a conveyor belt of \nheavier rain this far north and west (as opposed to eastern New \nEngland). Instead, much of the rain over the weekend may be tied\nsimply to showers that swing through in cyclonic, upslope flow.\n\nIn general, the GEFS supports a faster progression of the upper \nlevel trough with weaker downstream blocking compared to the ENS, \nsupporting a Friday night into Saturday timing as opposed to showers \ncoming through later in the weekend into Monday. While there is \nplenty of uncertainty in the details, the shift to troughing will \nlead to a cooler and unsettled weather pattern into early next week \neven if there are extended dry periods for a given location. For \nthose looking forward to winter weather, temperatures aloft may cool \nenough for mountain snow chances, with about a 30-50% chance snow \nlevels fall to 3000 feet Sunday night into Monday.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...VFR will prevail throughout much of the\nTAF period, although ceilings will lower resulting in at least \nsome MVFR at most terminals. Scattered showers are beginning to spill\nout from our west, with initial activity mainly sprinkles but \nexpected to be a little heavier by 18Z as they cross the \nnorthern portions of the airspace. Showers will wind down by \nroughly 00Z, with primarily no visibility restrictions.\n\nCeilings are more likely to drive flight conditions given the \nlight intensity of rain, with greatest chances of cloud bases \nlowering expected to fall below 3000 ft after 18z Tue at \nMSS/SLK, and towards 00Z at EFK. Chances of MVFR has trended \nhigher at PBG and BTV, although confidence is relatively low.\n\nWinds are currently calm at most terminals, but will pick up out\nof the south/southwest mainly 5 to 10 knots during the day. As southwesterly\nflow aloft becomes marginally strong (30-35 knots at 2000 feet)\ntonight, LLWS will develop at MSS/SLK/PBG/EFK. \n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly VFR, with local MVFR possible. Chance RA.\nFriday Night: Mainly MVFR, with local IFR possible. Chance RA.\nSaturday: MVFR. Chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 73        \nKBTV | 73 (1982) | 72\nKPBG | 72 (1990) | 69\nKMPV | 72 (2022) | 72\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Kutikoff/Storm\nAVIATION...Kutikoff\nCLIMATE...NWS BTV\n"
+  "what_changed": "As of 820 AM EST Tuesday... Quick update to increase pops acrs our central/northern cwa this morning into the aftn hours. This will be a high pops/low qpf type of an event with greatest probability of measurable precip acrs the mtns of northern NY and VT.",
+  "raw": "\n000\nFXUS61 KBTV 031321\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n821 AM EST Tue Nov 3 2026\n\n.WHAT HAS CHANGED...\nAs of 820 AM EST Tuesday...\n\nQuick update to increase pops acrs our central/northern cwa this\nmorning into the aftn hours. This will be a high pops/low qpf\ntype of an event with greatest probability of measurable precip\nacrs the mtns of northern NY and VT. \n\n&&\n\n.KEY MESSAGES...\nAs of 221 AM EST Tuesday...\n\n1. Warm temperatures continue through Wednesday with potential \nfor exceeding a few daily records Wednesday afternoon.\n\n2. Light rain showers are possible this afternoon and evening, \nthen widespread rain is expected Thursday into Friday.\n\n3. Some beneficial rain remains likely over the weekend, \nalthough chances for heavier amounts have trended downward.\n\n&&\n\n.DISCUSSION...\nAs of 221 AM EST Tuesday...\n\nKEY MESSAGE 1: Breezes will remain southerly today and \ntomorrow, but will be increasing. Gusts 15 to 25 mph can be \nexpected today, especially in the northern Champlain Valley and \nSt. Lawrence Valley. Wednesday will see a surge of warm air \nadvection as southerly flow deepens and the pressure gradient \ntightens. Gusts to around 30 mph are probable for channeled \nlocations with 15 to 20 mph gusts expected elsewhere.\nTemperatures  will sharply rise over today's highs in the \nlow/mid 60s to the upper 60s to mid 70s by Wednesday afternoon.\nAs the front and rainfall moves in Thursday, temperatures will\nbegin to trend cooler with highs back in the 60s. \n\nKEY MESSAGE 2: Light radar returns are evident across the \nCanadian border with stronger returns evident in the vicinity of\nLake Huron. These returns will track eastward through the day as\na weak wave moves along the northern periphery of high pressure\ncentered over the mid Atlantic states. Best chances for rain\nremain towards the Canadian border this afternoon and overnight\nwith only a few hundredths to around 0.12\" of rain. \n\nThe next chances of rain will be on Thursday as the front moves\ninto the region. Models are showing more of a consensus that the\nonset of precipitation will be earlier than previous forecasts\nbeginning in the early morning hours across northern New York\nand by daybreak in Vermont. The biggest change has been in QPF\nwhich has sharply lowered as strongest forcing shifts south of\nthe region. Chances are decreasing on amounts and most likely\namounts falling below 0.25\" Thursday. There are still a few\nensemble members that have more forcing farther north, but those\nhave been dwindling each run. \n\nKEY MESSAGE 3: At least a couple of chances for showers remains\non track Friday through Monday; however, uncertainty in timing \nis large. As of now, the most likely scenario for precipitation \nforcing relates to a wave of low pressure developing to our \nsoutheast by Friday evening and working its way northeastward \nSaturday, while a trailing upper level low slowly crosses our \nregion from the west. The potential for rainfall exceeding an \ninch has decreased with the latest ensemble guidance, as fewer \nmembers are supporting the idea of this low track retrograding \nto the northwest quickly enough to bring a conveyor belt of \nheavier rain this far north and west (as opposed to eastern New \nEngland). Instead, much of the rain over the weekend may be tied\nsimply to showers that swing through in cyclonic, upslope flow.\n\nIn general, the GEFS supports a faster progression of the upper \nlevel trough with weaker downstream blocking compared to the ENS, \nsupporting a Friday night into Saturday timing as opposed to showers \ncoming through later in the weekend into Monday. While there is \nplenty of uncertainty in the details, the shift to troughing will \nlead to a cooler and unsettled weather pattern into early next week \neven if there are extended dry periods for a given location. For \nthose looking forward to winter weather, temperatures aloft may cool \nenough for mountain snow chances, with about a 30-50% chance snow \nlevels fall to 3000 feet Sunday night into Monday.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...VFR will prevail throughout much of the\nTAF period, although ceilings will lower resulting in at least \nsome MVFR at most terminals. Scattered showers are beginning to spill\nout from our west, with initial activity mainly sprinkles but \nexpected to be a little heavier by 18Z as they cross the \nnorthern portions of the airspace. Showers will wind down by \nroughly 00Z, with primarily no visibility restrictions.\n\nCeilings are more likely to drive flight conditions given the \nlight intensity of rain, with greatest chances of cloud bases \nlowering expected to fall below 3000 ft after 18z Tue at \nMSS/SLK, and towards 00Z at EFK. Chances of MVFR has trended \nhigher at PBG and BTV, although confidence is relatively low.\n\nWinds are currently calm at most terminals, but will pick up out\nof the south/southwest mainly 5 to 10 knots during the day. As southwesterly\nflow aloft becomes marginally strong (30-35 knots at 2000 feet)\ntonight, LLWS will develop at MSS/SLK/PBG/EFK. \n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly VFR, with local MVFR possible. Chance RA.\nFriday Night: Mainly MVFR, with local IFR possible. Chance RA.\nSaturday: MVFR. Chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 73        \nKBTV | 73 (1982) | 72\nKPBG | 72 (1990) | 69\nKMPV | 72 (2022) | 72\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Boyd/Taber\nDISCUSSION...Kutikoff/Boyd\nAVIATION...Kutikoff\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-11-03T07:10:00+00:00",
@@ -962,17 +957,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-03T08:00:00.000-05:00",
-  "level_ft": 93.86,
-  "level_at": "2026-11-03T08:00:00.000-05:00",
+  "water_temp_at": "2026-11-03T09:00:00.000-05:00",
+  "level_ft": 93.84,
+  "level_at": "2026-11-03T09:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 37,
+  "aqi": 35,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/03/26 7:00",
+  "observed": "11/03/26 9:00",
   "discussion": "On Tuesday, November 3rd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -992,7 +987,7 @@
      "ICON": 62
     },
     "pop_max": {
-     "GFS": 24,
+     "GFS": 30,
      "Euro": 51,
      "ICON": 68
     },
@@ -1011,7 +1006,7 @@
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 7,
+     "GFS": 8,
      "Euro": 7,
      "ICON": 0
     },
@@ -1030,7 +1025,7 @@
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 55,
+     "GFS": 60,
      "Euro": 96,
      "ICON": 72
     },
@@ -1045,8 +1040,8 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T13:12:21+00:00",
-  "text": "A chance of showers today from 1 to 5pm, under a tenth of an inch, high 61. Mostly cloudy tonight, low 53. Wednesday, mostly sunny and warmer, high 71.",
+  "generated": "2026-11-03T14:32:28+00:00",
+  "text": "Showers likely today from noon to 3pm, under a tenth of an inch, high 61. Mostly cloudy tonight, low 53. Wednesday, mostly sunny and warmer, high 71.",
   "periods": [
    {
     "label": "Today",
@@ -1054,23 +1049,23 @@
     "is_day": true,
     "temp_f": 61,
     "sky": "sunny",
-    "start": "2026-11-03T08:00:00-05:00",
+    "start": "2026-11-03T09:00:00-05:00",
     "end": "2026-11-03T18:00:00-05:00",
     "precip": {
      "kind": "showers",
-     "chance": 40,
-     "say": "a chance of showers",
-     "start": "2026-11-03T13:00:00-05:00",
-     "end": "2026-11-03T17:00:00-05:00",
-     "when": "from 1 to 5pm",
-     "amount_in": 0.01,
+     "chance": 70,
+     "say": "showers likely",
+     "start": "2026-11-03T12:00:00-05:00",
+     "end": "2026-11-03T15:00:00-05:00",
+     "when": "from noon to 3pm",
+     "amount_in": 0.02,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
     "wind": null,
-    "feels_lo": 54,
+    "feels_lo": 56,
     "feels_hi": 60,
-    "text": "A chance of showers today from 1 to 5pm, under a tenth of an inch, high 61."
+    "text": "Showers likely today from noon to 3pm, under a tenth of an inch, high 61."
    },
    {
     "label": "Tonight",
