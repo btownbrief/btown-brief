@@ -1,77 +1,95 @@
 {
  "v": 1,
- "updated": "2026-11-03T03:52:02+00:00",
+ "updated": "2026-11-03T10:06:28+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 61,
+  "temp": 54,
   "sky": "Cloudy",
   "from": "airport",
-  "hi": 60,
+  "hi": 61,
   "lo": 52,
-  "rain": "A chance of showers Tuesday from 1 to 5pm",
+  "rain": "A chance of showers today from 1 to 5pm",
   "obs": {
-   "temp": 61,
+   "temp": 54,
    "sky": "Cloudy",
-   "at": "2026-11-03T03:30:00+00:00"
+   "at": "2026-11-03T09:40:00+00:00"
   },
   "hours": [
    {
-    "t": "2026-11-02T22:00:00-05:00",
-    "temp": 55,
-    "sky": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-11-02T23:00:00-05:00",
+    "t": "2026-11-03T05:00:00-05:00",
     "temp": 54,
     "sky": "Mostly Cloudy"
    },
    {
-    "t": "2026-11-03T00:00:00-05:00",
+    "t": "2026-11-03T06:00:00-05:00",
     "temp": 53,
     "sky": "Mostly Cloudy"
    },
    {
-    "t": "2026-11-03T01:00:00-05:00",
-    "temp": 53,
+    "t": "2026-11-03T07:00:00-05:00",
+    "temp": 54,
+    "sky": "Cloudy"
+   },
+   {
+    "t": "2026-11-03T08:00:00-05:00",
+    "temp": 54,
     "sky": "Mostly Cloudy"
    },
    {
-    "t": "2026-11-03T02:00:00-05:00",
-    "temp": 53,
-    "sky": "Cloudy"
+    "t": "2026-11-03T09:00:00-05:00",
+    "temp": 56,
+    "sky": "Mostly Cloudy"
    },
    {
-    "t": "2026-11-03T03:00:00-05:00",
-    "temp": 53,
-    "sky": "Cloudy"
+    "t": "2026-11-03T10:00:00-05:00",
+    "temp": 58,
+    "sky": "Slight Chance Rain Showers"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
- "wire": [
+ "wire": [],
+ "tonight": [
   {
-   "title": "Live results: Vermont's 2026 general election",
-   "src": "Vermont Public",
-   "url": "https://www.vermontpublic.org/local-news/2026-11-02/live-results-vermonts-2026-general-election",
-   "link": "https://guide.btownbrief.com/all-day/#wire/7cf110364b8e"
+   "title": "Clutch, Slomosa, Blood Vulture",
+   "time": "7 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-03T19:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/clutch-slomosa-blood-vulture-45635605",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "New poll shows Janoo ahead of Scott in Vermont governor’s race",
-   "src": "WCAX",
-   "url": "https://www.wcax.com/2026/11/02/new-poll-shows-janoo-ahead-scott-vermont-governors-race/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/5fc2573af70e"
+   "title": "Giles Corey, Kathryn Mohr, Val Acton Loper",
+   "time": "7:30 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-03T19:30:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/giles-corey-kathryn-mohr-val-acton-loper-45635606",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "Vermont Crafters Expo brings hands-on creativity to Essex Junction November 7–8",
-   "src": "Vermont Biz",
-   "url": "https://vermontbiz.com/news/2026/november/04/vermont-crafters-expo-brings-hands-creativity-essex-junction-november-7-8",
-   "link": "https://guide.btownbrief.com/all-day/#wire/3b5155e178bc"
+   "title": "Blood Vulture",
+   "time": "7 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-03T19:00:00-05:00",
+   "end": null,
+   "url": "https://www.mychamplainvalley.com/calendar/#/details/blood-vulture/20306494/2026-11-03T19",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "CNC Router Training",
+   "time": "5:30 pm",
+   "venue": "Generator Makerspace",
+   "start": "2026-11-03T17:30:00-05:00",
+   "end": "2026-11-03T20:30:00-05:00",
+   "url": "https://app.glueup.com/event/cnc-router-training-186752/",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
- "tonight": [],
  "game": {
   "title": "UVM Field Hockey at UMass Lowell",
-  "when": "Tomorrow 1 pm",
+  "when": "Today 1 pm",
   "start": "2026-11-03T18:00:00+00:00",
   "all_day": false,
   "home": false,
