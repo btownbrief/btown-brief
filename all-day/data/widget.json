@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-03T10:52:09+00:00",
+ "updated": "2026-11-03T11:12:10+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 54,
-  "sky": "Light Rain",
+  "temp": 52,
+  "sky": "Cloudy",
   "from": "airport",
   "hi": 61,
-  "lo": 52,
+  "lo": 53,
   "rain": "A chance of showers today from 1 to 5pm",
   "obs": {
-   "temp": 54,
-   "sky": "Light Rain",
-   "at": "2026-11-03T10:15:00+00:00"
+   "temp": 52,
+   "sky": "Cloudy",
+   "at": "2026-11-03T10:45:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-03T05:00:00-05:00",
-    "temp": 54,
-    "sky": "Mostly Cloudy"
-   },
    {
     "t": "2026-11-03T06:00:00-05:00",
     "temp": 53,
@@ -44,11 +39,35 @@
     "t": "2026-11-03T10:00:00-05:00",
     "temp": 58,
     "sky": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-11-03T11:00:00-05:00",
+    "temp": 59,
+    "sky": "Slight Chance Rain Showers"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
- "wire": [],
+ "wire": [
+  {
+   "title": "Live updates: Vermont votes in the general election",
+   "src": "Vermont Public",
+   "url": "https://www.vermontpublic.org/live-updates/live-updates-vermont-general-election-2026",
+   "link": "https://guide.btownbrief.com/all-day/#wire/ce1713e9eebd"
+  },
+  {
+   "title": "It’s Election Day. We’ll Have Top State Results Right Here.",
+   "src": "Seven Days",
+   "url": "https://www.sevendaysvt.com/news/its-election-day-well-have-top-state-results-right-here/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/1325f29b9e23"
+  },
+  {
+   "title": "Vermont pens deal with Nova Scotia to explore offshore wind",
+   "src": "Vermont Public",
+   "url": "https://www.vermontpublic.org/local-news/2026-11-03/vermont-pens-deal-nova-scotia-explore-offshore-wind",
+   "link": "https://guide.btownbrief.com/all-day/#wire/f96f40e01fc5"
+  }
+ ],
  "tonight": [
   {
    "title": "Clutch, Slomosa, Blood Vulture",

@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-03T10:52:05+00:00",
+ "updated": "2026-11-03T11:12:07+00:00",
  "sections_updated": {
-  "now": "2026-11-03T10:52:05+00:00",
-  "forecast": "2026-11-03T10:52:05+00:00",
-  "hourly": "2026-11-03T10:52:05+00:00",
-  "alerts": "2026-11-03T10:52:05+00:00",
-  "afd": "2026-11-03T10:52:05+00:00",
-  "lake_forecast": "2026-11-03T10:52:05+00:00",
-  "lake_gage": "2026-11-03T10:52:05+00:00",
-  "air": "2026-11-03T10:52:05+00:00",
-  "sun": "2026-11-03T10:52:05+00:00",
-  "models": "2026-11-03T10:52:05+00:00"
+  "now": "2026-11-03T11:12:07+00:00",
+  "forecast": "2026-11-03T11:12:07+00:00",
+  "hourly": "2026-11-03T11:12:07+00:00",
+  "alerts": "2026-11-03T11:12:07+00:00",
+  "afd": "2026-11-03T11:12:07+00:00",
+  "lake_forecast": "2026-11-03T11:12:07+00:00",
+  "lake_gage": "2026-11-03T11:12:07+00:00",
+  "air": "2026-11-03T11:12:07+00:00",
+  "sun": "2026-11-03T11:12:07+00:00",
+  "models": "2026-11-03T11:12:07+00:00"
  },
  "now": {
-  "observed_at": "2026-11-03T10:15:00+00:00",
+  "observed_at": "2026-11-03T10:45:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 71,
-  "dewpoint_f": 45,
+  "description": "Cloudy",
+  "temp_f": 52,
+  "feels_like_f": 52,
+  "humidity": 82,
+  "dewpoint_f": 46,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -962,9 +962,9 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-03T05:00:00.000-05:00",
-  "level_ft": 93.88,
-  "level_at": "2026-11-03T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-03T06:00:00.000-05:00",
+  "level_ft": 93.86,
+  "level_at": "2026-11-03T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -987,21 +987,21 @@
    {
     "date": "2026-11-03",
     "high_f": {
-     "GFS": 65,
+     "GFS": 66,
      "Euro": 60,
      "ICON": 62
     },
     "pop_max": {
-     "GFS": 29,
+     "GFS": 22,
      "Euro": 51,
      "ICON": 68
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.02,
      "Euro": 0.05,
      "ICON": 0.07
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    },
    {
     "date": "2026-11-04",
@@ -1011,7 +1011,7 @@
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 8,
+     "GFS": 7,
      "Euro": 7,
      "ICON": 0
     },
@@ -1045,23 +1045,9 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T10:52:08+00:00",
-  "text": "Mostly cloudy overnight, low 52. A chance of showers today from 1 to 5pm, under a tenth of an inch, high 61.",
+  "generated": "2026-11-03T11:12:10+00:00",
+  "text": "A chance of showers today from 1 to 5pm, under a tenth of an inch, high 61. Mostly cloudy tonight, low 53. Wednesday, mostly sunny and warmer, high 71.",
   "periods": [
-   {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 52,
-    "sky": "mostly cloudy",
-    "start": "2026-11-03T05:00:00-05:00",
-    "end": "2026-11-03T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 54,
-    "feels_hi": 54,
-    "text": "Mostly cloudy overnight, low 52."
-   },
    {
     "label": "Today",
     "name": "Tuesday",
@@ -1085,6 +1071,20 @@
     "feels_lo": 53,
     "feels_hi": 60,
     "text": "A chance of showers today from 1 to 5pm, under a tenth of an inch, high 61."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tuesday Night",
+    "is_day": false,
+    "temp_f": 53,
+    "sky": "mostly cloudy",
+    "start": "2026-11-03T18:00:00-05:00",
+    "end": "2026-11-04T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 54,
+    "feels_hi": 59,
+    "text": "Mostly cloudy tonight, low 53."
    }
   ]
  }
