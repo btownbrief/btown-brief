@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-04T11:36:21+00:00",
+ "updated": "2026-11-04T12:53:16+00:00",
  "sections_updated": {
-  "now": "2026-11-04T11:36:21+00:00",
-  "forecast": "2026-11-04T11:36:21+00:00",
-  "hourly": "2026-11-04T11:36:21+00:00",
-  "alerts": "2026-11-04T11:36:21+00:00",
-  "afd": "2026-11-04T11:36:21+00:00",
-  "lake_forecast": "2026-11-04T11:36:21+00:00",
-  "lake_gage": "2026-11-04T11:36:21+00:00",
-  "air": "2026-11-04T11:36:21+00:00",
-  "sun": "2026-11-04T11:33:13+00:00",
-  "models": "2026-11-04T11:33:13+00:00"
+  "now": "2026-11-04T12:53:16+00:00",
+  "forecast": "2026-11-04T12:53:16+00:00",
+  "hourly": "2026-11-04T12:53:16+00:00",
+  "alerts": "2026-11-04T12:53:16+00:00",
+  "afd": "2026-11-04T12:53:16+00:00",
+  "lake_forecast": "2026-11-04T12:53:16+00:00",
+  "lake_gage": "2026-11-04T12:53:16+00:00",
+  "air": "2026-11-04T12:53:16+00:00",
+  "sun": "2026-11-04T12:53:16+00:00",
+  "models": "2026-11-04T12:53:16+00:00"
  },
  "now": {
-  "observed_at": "2026-11-04T10:55:00+00:00",
+  "observed_at": "2026-11-04T12:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 59,
-  "feels_like_f": 59,
-  "humidity": 67,
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 63,
   "dewpoint_f": 48,
-  "wind_mph": 3,
+  "wind_mph": 8,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
   "precip_last_hr_in": null
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-04T06:00:00-05:00",
+    "start": "2026-11-04T07:00:00-05:00",
     "is_day": true,
     "temp_f": 72,
-    "pop": 6,
-    "wind": "S 8 to 12 mph",
+    "pop": 2,
+    "wind": "S 12 mph",
     "short": "Partly Sunny",
-    "detailed": "Partly sunny. High near 72, with temperatures falling to around 66 in the afternoon. South wind 8 to 12 mph, with gusts as high as 22 mph."
+    "detailed": "Partly sunny. High near 72, with temperatures falling to around 66 in the afternoon. South wind around 12 mph, with gusts as high as 22 mph."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-04T06:39:20+00:00",
   "hours": [
-   {
-    "t": "2026-11-04T06:00:00-05:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 6,
-    "humidity": 75,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 33,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-04T07:00:00-05:00",
     "temp_f": 57,
@@ -676,6 +662,20 @@
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 21
+   },
+   {
+    "t": "2026-11-05T18:00:00-05:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 35,
+    "humidity": 84,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 57,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 17
    }
   ],
   "days": [
@@ -962,17 +962,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-04T06:00:00.000-05:00",
-  "level_ft": 93.83,
-  "level_at": "2026-11-04T06:00:00.000-05:00",
+  "water_temp_at": "2026-11-04T07:00:00.000-05:00",
+  "level_ft": 93.82,
+  "level_at": "2026-11-04T07:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/04/26 6:00",
+  "observed": "11/04/26 7:00",
   "discussion": "On Wednesday November 4th, expect moderate air quality in southern Vermont and mountain valley locations, as the region continues to be subject to overnight thermal inversions, and slightly elevated levels of PM25 to our south in the Philadelphia area on Tuesday makes its way into southern Vermont."
  },
  "sun": {
@@ -987,7 +987,7 @@
    {
     "date": "2026-11-04",
     "high_f": {
-     "GFS": 72,
+     "GFS": 71,
      "Euro": 68,
      "ICON": 72
     },
@@ -1011,7 +1011,7 @@
      "ICON": 64
     },
     "pop_max": {
-     "GFS": 70,
+     "GFS": 69,
      "Euro": 100,
      "ICON": 88
     },
@@ -1025,7 +1025,7 @@
    {
     "date": "2026-11-06",
     "high_f": {
-     "GFS": 65,
+     "GFS": 64,
      "Euro": 61,
      "ICON": 63
     },
@@ -1035,17 +1035,17 @@
      "ICON": 13
     },
     "precip_in": {
-     "GFS": 0.01,
+     "GFS": 0.0,
      "Euro": 0.13,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    }
   ]
  },
  "brief": {
   "date": "2026-11-04",
-  "generated": "2026-11-04T11:36:23+00:00",
+  "generated": "2026-11-04T12:53:19+00:00",
   "text": "Partly sunny today, high 72. Mostly cloudy tonight, low 57. Thursday, showers and cooler from 8am to 1pm, about a tenth of an inch, high 66.",
   "periods": [
    {
@@ -1054,7 +1054,7 @@
     "is_day": true,
     "temp_f": 72,
     "sky": "partly sunny",
-    "start": "2026-11-04T06:00:00-05:00",
+    "start": "2026-11-04T07:00:00-05:00",
     "end": "2026-11-04T18:00:00-05:00",
     "precip": null,
     "wind": null,
