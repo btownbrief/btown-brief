@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-04T16:33:33+00:00",
+ "updated": "2026-11-04T17:29:32+00:00",
  "sections_updated": {
-  "now": "2026-11-04T16:33:33+00:00",
-  "forecast": "2026-11-04T16:33:33+00:00",
-  "hourly": "2026-11-04T16:33:33+00:00",
-  "alerts": "2026-11-04T16:33:33+00:00",
-  "afd": "2026-11-04T16:33:33+00:00",
-  "lake_forecast": "2026-11-04T16:33:33+00:00",
-  "lake_gage": "2026-11-04T16:33:33+00:00",
-  "air": "2026-11-04T16:33:33+00:00",
-  "sun": "2026-11-04T16:33:33+00:00",
-  "models": "2026-11-04T16:33:33+00:00"
+  "now": "2026-11-04T17:29:32+00:00",
+  "forecast": "2026-11-04T17:29:32+00:00",
+  "hourly": "2026-11-04T17:29:32+00:00",
+  "alerts": "2026-11-04T17:29:32+00:00",
+  "afd": "2026-11-04T17:29:32+00:00",
+  "lake_forecast": "2026-11-04T17:29:32+00:00",
+  "lake_gage": "2026-11-04T17:29:32+00:00",
+  "air": "2026-11-04T17:29:32+00:00",
+  "sun": "2026-11-04T17:29:32+00:00",
+  "models": "2026-11-04T17:29:32+00:00"
  },
  "now": {
-  "observed_at": "2026-11-04T16:00:00+00:00",
+  "observed_at": "2026-11-04T16:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 70,
   "feels_like_f": 70,
-  "humidity": 46,
-  "dewpoint_f": 48,
+  "humidity": 49,
+  "dewpoint_f": 50,
   "wind_mph": null,
   "wind_gust_mph": null,
   "wind_dir": null,
@@ -29,8 +29,8 @@
   "updated": "2026-11-04T06:39:20+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-11-04T11:00:00-05:00",
+    "name": "This Afternoon",
+    "start": "2026-11-04T12:00:00-05:00",
     "is_day": true,
     "temp_f": 72,
     "pop": 2,
@@ -961,10 +961,10 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 53,
-  "water_temp_at": "2026-11-04T11:00:00.000-05:00",
-  "level_ft": 93.84,
-  "level_at": "2026-11-04T11:00:00.000-05:00",
+  "water_temp_f": 54,
+  "water_temp_at": "2026-11-04T12:00:00.000-05:00",
+  "level_ft": 93.82,
+  "level_at": "2026-11-04T12:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -972,7 +972,7 @@
   "aqi": 33,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/04/26 11:00",
+  "observed": "11/04/26 12:00",
   "discussion": "On Wednesday November 4th, expect moderate air quality in southern Vermont and mountain valley locations, as the region continues to be subject to overnight thermal inversions, and slightly elevated levels of PM25 to our south in the Philadelphia area on Tuesday makes its way into southern Vermont."
  },
  "sun": {
@@ -980,7 +980,7 @@
   "sunset": "2026-11-04T16:37-05:00",
   "sunrise_tomorrow": "2026-11-05T06:35-05:00",
   "sunset_tomorrow": "2026-11-05T16:36-05:00",
-  "uv_max": 3.25
+  "uv_max": 3.2
  },
  "models": {
   "days": [
@@ -989,7 +989,7 @@
     "high_f": {
      "GFS": 72,
      "Euro": 68,
-     "ICON": 72
+     "ICON": 73
     },
     "pop_max": {
      "GFS": 3,
@@ -1001,64 +1001,64 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    },
    {
     "date": "2026-11-05",
     "high_f": {
      "GFS": 67,
      "Euro": 63,
-     "ICON": 64
+     "ICON": 66
     },
     "pop_max": {
-     "GFS": 63,
+     "GFS": 74,
      "Euro": 100,
-     "ICON": 88
+     "ICON": 95
     },
     "precip_in": {
      "GFS": 0.04,
      "Euro": 0.09,
-     "ICON": 0.35
+     "ICON": 0.25
     },
     "high_spread_f": 4
    },
    {
     "date": "2026-11-06",
     "high_f": {
-     "GFS": 64,
+     "GFS": 66,
      "Euro": 62,
-     "ICON": 63
+     "ICON": 64
     },
     "pop_max": {
      "GFS": 50,
      "Euro": 78,
-     "ICON": 13
+     "ICON": 23
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.11,
-     "ICON": 0.0
+     "ICON": 0.04
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    }
   ]
  },
  "brief": {
   "date": "2026-11-04",
-  "generated": "2026-11-04T16:33:35+00:00",
+  "generated": "2026-11-04T17:29:35+00:00",
   "text": "Mostly sunny today, high 72. Mostly cloudy tonight, low 57. Thursday, showers and cooler from 8am to 1pm, about a tenth of an inch, high 66.",
   "periods": [
    {
     "label": "Today",
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 72,
     "sky": "mostly sunny",
-    "start": "2026-11-04T11:00:00-05:00",
+    "start": "2026-11-04T12:00:00-05:00",
     "end": "2026-11-04T18:00:00-05:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 64,
+    "feels_lo": 66,
     "feels_hi": 72,
     "text": "Mostly sunny today, high 72."
    },
