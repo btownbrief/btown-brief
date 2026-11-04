@@ -1,30 +1,30 @@
 {
- "generated": "2026-11-03T19:53:39-05:00",
+ "generated": "2026-11-04T12:28:27-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 8,
-   "seconds": 5.8
+   "count": 11,
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 4.3
+   "count": 76,
+   "seconds": 6.1
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 89,
-   "seconds": 3.0
+   "count": 88,
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 183,
-   "seconds": 4.4
+   "count": 180,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 69,
-   "seconds": 2.0
+   "count": 68,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-03&end_date=2027-01-02&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-04&end_date=2027-01-03&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 216,
-   "seconds": 65.5
+   "count": 208,
+   "seconds": 65.9
   },
   "flynn": {
    "label": "The Flynn",
@@ -58,8 +58,8 @@
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 30.9
+   "count": 12,
+   "seconds": 31.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 558,
-   "seconds": 29.6
+   "count": 581,
+   "seconds": 33.4
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 14.5
+   "seconds": 17.0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 400,
-   "seconds": 73.1
+   "count": 420,
+   "seconds": 75.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 59,
-   "seconds": 129.7
+   "seconds": 112.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 0.3
+   "count": 21,
+   "seconds": 1.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 71,
-   "seconds": 15.6
+   "count": 70,
+   "seconds": 16.6
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,8 +108,8 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 66,
-   "seconds": 2.0
+   "count": 65,
+   "seconds": 2.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
@@ -118,8 +118,8 @@
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2755,
-   "seconds": 3.4
+   "count": 2783,
+   "seconds": 23.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -128,191 +128,34 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 414,
-   "seconds": 19.7
+   "count": 404,
+   "seconds": 45.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 255,
+   "count": 242,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 69.4
+   "seconds": 67.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 44,
-   "seconds": 0.5
+   "count": 43,
+   "seconds": 0.3
   }
  },
- "gathered": 5378,
- "afterDedup": 2493,
- "duplicatesMerged": 2885,
- "final": 2555,
- "firecrawlCalls": 1,
+ "gathered": 5412,
+ "afterDedup": 2499,
+ "duplicatesMerged": 2913,
+ "final": 2559,
+ "firecrawlCalls": 5,
  "mergeLog": [
   {
    "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Holiday Bazaar and Food Drive",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "RSENR Research Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Wednesday Write-Ins",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Pub Quiz",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-03"
-  },
-  {
-   "kept": {
-    "title": "Ariel Elias",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "vcc"
-   ],
-   "date": "2026-12-03"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-03"
-  },
-  {
-   "kept": {
-    "title": "Spotlight 802: Laura Sorkin - CEO of Runamok Maple",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sbrec"
-   ],
-   "date": "2026-12-03"
-  },
-  {
-   "kept": {
-    "title": "Chemistry Graduate Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-03"
-  },
-  {
-   "kept": {
-    "title": "\"Seeding Change: Farming Beyond Neonics\" documentary screening",
+    "title": "\"Seeding Change\" Documentary Screening",
     "source": "uvm"
    },
    "merged_sources": [
@@ -379,6 +222,17 @@
   },
   {
    "kept": {
+    "title": "Trivia",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-03"
+  },
+  {
+   "kept": {
     "title": "Ariel Elias",
     "source": "vcc"
    },
@@ -424,17 +278,6 @@
   {
    "kept": {
     "title": "UVM Libraries AI Fridays",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-04"
-  },
-  {
-   "kept": {
-    "title": "STAT@UVM Colloquium Series: Nianqiao (Phyllis) Ju",
     "source": "uvm"
    },
    "merged_sources": [
@@ -544,6 +387,17 @@
     "sevendays"
    ],
    "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "LEGO Time at the NNE Branch",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-05"
   },
   {
    "kept": {
@@ -957,6 +811,17 @@
   },
   {
    "kept": {
+    "title": "Stories & Songs for Library Littles",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-09"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "sblibrary"
    },
@@ -1079,6 +944,17 @@
   },
   {
    "kept": {
+    "title": "GROW Preschool Yoga",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -1086,6 +962,17 @@
     "fletcherfree",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "Minecraft Meet-up",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-10"
   },
@@ -1148,6 +1035,17 @@
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "Trivia",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -1633,6 +1531,17 @@
   },
   {
    "kept": {
+    "title": "Stories & Songs for Library Littles",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
     "title": "Puzzle Swap",
     "source": "sblibrary"
    },
@@ -1689,6 +1598,17 @@
   },
   {
    "kept": {
+    "title": "GROW Preschool Yoga",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -1696,6 +1616,17 @@
     "fletcherfree",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "Minecraft Meet-up",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-17"
   },
@@ -1736,6 +1667,17 @@
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "Trivia",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2071,6 +2013,17 @@
   },
   {
    "kept": {
+    "title": "Trivia",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2341,6 +2294,17 @@
   },
   {
    "kept": {
+    "title": "Trivia",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
     "title": "Library Closed: New Year's Day",
     "source": "fletcherfree"
    },
@@ -2398,6 +2362,29 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-02"
+  },
+  {
+   "kept": {
+    "title": "Kitchen Dwellers",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-02"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2406,72 +2393,33 @@
     "sevendays"
    ],
    "date": "2027-01-02"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-03"
   }
  ],
  "changes": [
   {
-   "id": "a9d93d33a7b8",
-   "title": "Paul Winter’s Winter Solstice Celebration",
-   "date": "2026-12-05",
-   "change": "time",
-   "was": "2026-12-05T19:30:00-05:00",
-   "now": "2026-12-05T15:00:00-05:00"
+   "id": "661faf74c1e4",
+   "title": "Public Skate",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
-   "id": "7321e50365c8",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-11-03",
+   "id": "fd8e4eae7847",
+   "title": "Stick & Puck",
+   "date": "2026-11-04",
    "change": "missing",
-   "lastSeen": "2026-11-02T21:38:16-05:00"
-  },
-  {
-   "id": "626085954493",
-   "title": "Very Eric Carle: A Very Hungry, Quiet, Lonely, Clumsy, Busy Exhibit",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-03T12:18:11-05:00"
-  },
-  {
-   "id": "33e669d88480",
-   "title": "Campfire - Stories that Teach: Using Emotion to Deepen Student Learning",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-02T21:38:16-05:00"
-  },
-  {
-   "id": "9d51387cb892",
-   "title": "Co-creation of Knowledge for Transformative Agroecology ft. V. Ernesto Méndez",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-02T21:38:16-05:00"
-  },
-  {
-   "id": "b7eb149a3de2",
-   "title": "Giles Corey",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-03T12:18:11-05:00"
-  },
-  {
-   "id": "e92e269cd1b9",
-   "title": "Clutch",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-03T12:18:11-05:00"
-  },
-  {
-   "id": "5e35c7c5af0a",
-   "title": "Trystan Bates",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-02T21:38:16-05:00"
-  },
-  {
-   "id": "37b61780fd7b",
-   "title": "Kathleen Schneider",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-11-02T21:38:16-05:00"
+   "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
    "id": "c15c1678f58f",
@@ -2491,15 +2439,7 @@
    "id": "6cbb1a8e1a73",
    "title": "3D Printer Training 201 (Bambu)",
    "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-11-01T11:17:52-05:00"
-  },
-  {
-   "id": "bfb6fcb32bf3",
-   "title": "Cooking with First-Gen",
-   "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-11-03T12:18:11-05:00"
+   "change": "dropped"
   },
   {
    "id": "af0f4e97d6db",
@@ -2507,6 +2447,20 @@
    "date": "2026-11-04",
    "change": "missing",
    "lastSeen": "2026-11-03T12:18:11-05:00"
+  },
+  {
+   "id": "4ed818c197b4",
+   "title": "Trystan Bates",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
+  },
+  {
+   "id": "f1f0241a3a71",
+   "title": "Kathleen Schneider",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
    "id": "f4fb5f868a0b",
@@ -2535,6 +2489,27 @@
    "date": "2026-11-06",
    "change": "missing",
    "lastSeen": "2026-11-03T12:18:11-05:00"
+  },
+  {
+   "id": "cfd9b18e86c4",
+   "title": "All Night Boogie Band",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
+  },
+  {
+   "id": "4dcbc08339f7",
+   "title": "Fruit Bats",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
+  },
+  {
+   "id": "bea79e0d596d",
+   "title": "Kristin Daelyn",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
    "id": "fd7948ea656b",
@@ -2691,6 +2666,13 @@
    "lastSeen": "2026-11-01T18:53:29-05:00"
   },
   {
+   "id": "c0c49dc190a4",
+   "title": "Advanced and Beginner Irish Language Conversation Groups",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
+  },
+  {
    "id": "db239f609d55",
    "title": "Kingston’s Autism Swagger Studio VT™",
    "date": "2026-11-18",
@@ -2754,18 +2736,18 @@
    "lastSeen": "2026-11-03T12:18:11-05:00"
   },
   {
-   "id": "0e04a2cba071",
-   "title": "Literacy policy, practice, and partnerships: Building on our shared strengths",
-   "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-11-03T12:18:11-05:00"
-  },
-  {
    "id": "73dadd860053",
    "title": "Pick-up Basketball",
    "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-11-02T14:46:10-05:00"
+  },
+  {
+   "id": "05a1084a6e4e",
+   "title": "\"Seeding Change: Farming Beyond Neonics\" documentary screening",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
    "id": "5a53b4b8622a",
