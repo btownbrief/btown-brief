@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T08:04:18+00:00",
+ "generated": "2026-11-04T16:34:44+00:00",
  "sources_file": "data/town/alerts-sources.json",
  "sections": {
   "recycling": {
@@ -3928,7 +3928,7 @@
    "stale": false
   },
   "parking_ban": {
-   "verified": "2026-11-03",
+   "verified": "2026-11-04",
    "status": "none_posted_72h",
    "status_note": "Read from the city's own web channels. The official signal is the overhead parking-ban lights plus 802-658-SNOW, VT-Alert texts and DPW social media, which this script cannot read; show the headline, not a verdict.",
    "rules": {
@@ -3939,12 +3939,11 @@
     "surface_lots": "No overnight parking in municipal surface lots 2:30 to 6 AM, Dec 1 to Mar 15",
     "sign_up": "https://www.burlingtonvt.gov/btv-alerts (VT-Alert text and email)",
     "source_url": "https://www.burlingtonvt.gov/628/Winter-Parking",
-    "verified": "2026-11-03"
+    "verified": "2026-11-04"
    },
    "items": [],
-   "ok": false,
-   "stale": true,
-   "error": "GET https://www.burlingtonvt.gov/RSSFeed.aspx?ModID=63&CID=All-0 failed: The read operation timed out"
+   "ok": true,
+   "stale": false
   },
   "greenway": {
    "verified": "2026-11-04",
@@ -4013,12 +4012,11 @@
    "stale": false
   },
   "shelters": {
-   "verified": "2026-11-03",
+   "verified": "2026-11-04",
    "notes": "Announcements only, last 14 days. Standing year-round shelters and the state's adverse-weather motel rule are listed in alerts-sources.json; call 2-1-1 or COTS 802-864-7402 to confirm a bed.",
    "items": [],
-   "ok": false,
-   "stale": true,
-   "error": "GET https://www.burlingtonvt.gov/RSSFeed.aspx?ModID=63&CID=All-0 failed: The read operation timed out"
+   "ok": true,
+   "stale": false
   }
  }
 }
