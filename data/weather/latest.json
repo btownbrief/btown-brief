@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-03T23:42:53+00:00",
+ "updated": "2026-11-04T00:46:52+00:00",
  "sections_updated": {
-  "now": "2026-11-03T23:42:53+00:00",
-  "forecast": "2026-11-03T23:42:53+00:00",
-  "hourly": "2026-11-03T23:42:53+00:00",
-  "alerts": "2026-11-03T23:42:53+00:00",
-  "afd": "2026-11-03T23:42:53+00:00",
-  "lake_forecast": "2026-11-03T23:42:53+00:00",
-  "lake_gage": "2026-11-03T23:42:53+00:00",
-  "air": "2026-11-03T23:42:53+00:00",
-  "sun": "2026-11-03T23:42:53+00:00",
-  "models": "2026-11-03T23:42:53+00:00"
+  "now": "2026-11-04T00:46:52+00:00",
+  "forecast": "2026-11-04T00:46:52+00:00",
+  "hourly": "2026-11-04T00:46:52+00:00",
+  "alerts": "2026-11-04T00:46:52+00:00",
+  "afd": "2026-11-04T00:46:52+00:00",
+  "lake_forecast": "2026-11-04T00:46:52+00:00",
+  "lake_gage": "2026-11-04T00:46:52+00:00",
+  "air": "2026-11-04T00:46:52+00:00",
+  "sun": "2026-11-04T00:46:52+00:00",
+  "models": "2026-11-04T00:46:52+00:00"
  },
  "now": {
-  "observed_at": "2026-11-03T23:05:00+00:00",
+  "observed_at": "2026-11-03T23:55:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
+  "description": "Cloudy",
   "temp_f": 55,
   "feels_like_f": 55,
   "humidity": 94,
   "dewpoint_f": 54,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "SE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-03T18:00:00-05:00",
+    "start": "2026-11-03T19:00:00-05:00",
     "is_day": false,
     "temp_f": 55,
-    "pop": 22,
+    "pop": 17,
     "wind": "S 7 to 10 mph",
     "short": "Slight Chance Rain Showers then Mostly Cloudy",
-    "detailed": "A slight chance of rain showers before 8pm. Mostly cloudy, with a low around 55. South wind 7 to 10 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A slight chance of rain showers before 8pm. Mostly cloudy, with a low around 55. South wind 7 to 10 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Wednesday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-03T18:40:22+00:00",
   "hours": [
-   {
-    "t": "2026-11-03T18:00:00-05:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 22,
-    "humidity": 69,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 88,
-    "short": "Slight Chance Rain Showers",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
    {
     "t": "2026-11-03T19:00:00-05:00",
     "temp_f": 58,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 25
+   },
+   {
+    "t": "2026-11-05T06:00:00-05:00",
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 31,
+    "humidity": 90,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 66,
+    "short": "Partly Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 25
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-03T19:06:00+00:00",
+  "issued": "2026-11-03T23:40:00+00:00",
   "key_messages": [
    "Near record high temperatures are expected on Wednesday with mostly sunny conditions and some localized fire weather concerns.",
    "A weak cold front will produce scattered showers on Thursday, but precipitation amounts will be light with highest amounts in the mountains.",
    "Repeated chances for showers this weekend and early next week with temperatures gradually decreasing towards seasonal levels."
   ],
   "what_changed": "As of 204 PM EST Tuesday... No significant changes made.",
-  "raw": "\n000\nFXUS61 KBTV 031906\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n206 PM EST Tue Nov 3 2026\n\n.WHAT HAS CHANGED...\nAs of 204 PM EST Tuesday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 204 PM EST Tuesday...\n\n1. Near record high temperatures are expected on Wednesday with \nmostly sunny conditions and some localized fire weather concerns.\n\n2. A weak cold front will produce scattered showers on \nThursday, but precipitation amounts will be light with highest \namounts in the mountains. \n  \n\n3. Repeated chances for showers this weekend and early next \nweek with temperatures gradually decreasing towards seasonal levels.\n\n&&\n\n.DISCUSSION...\nAs of 204 PM EST Tuesday...\n\nKEY MESSAGE 1: Sfc analysis shows a warm frnt draped along the \nInternational Border this aftn with some scattered rain showers acrs \nnorthern NY into central/northern VT. Rainfall amounts have been \n<0.10\" thru 2 PM. Warm frnt wl lift north of cwa this evening with \nlatest RAP ua showing building mid/upper lvl ridge over the Ohio \nValley into western PA. GOES-19 mid lvl water vapor imagery\nindicates well defined dry slot with strong subsidence, which \nis progged to be acrs our fa on Weds, resulting in partly to \nmostly sunny skies. This combined with progged 925mb temps btwn \n15-18C with south/southwest downslope flow wl support highs \nupper 60s to mid 70s with a few warmer valleys reaching the \nupper 70s possible. The localized fire weather concerns would be\nacrs the Champlain Valley and northern slopes of the Dacks, \nwhere gusts of 15 to 20 mph and minimal humidity values will \ndrop btwn 35 and 45%. Elsewhere, winds will be lighter east of \nthe Green and humidities slightly higher. \n\nA very warm night is anticipated on Weds night, with southerly flow \nand increasing clouds ahead of our approaching cold frnt. Based on \nsounding analysis feel some deeper/protected valleys east of the \nGreens may decouple, resulting in localized cooler spots and \nsupporting a wide range in temps. Similar type idea is anticipated \nin the valleys of the dacks too. Lows generally in the upper 30s to \nmid/upper 50s, warmest in the CPV and downslope areas of the \nnorthern Dacks near Malone. 925mb winds increase 25-35 knots \novernight with some localized gusts in the trrn up to 40 mph \npossible. Still some uncertainty on mixing profiles over the cooler \nLake Champlain waters on Weds night into Thurs for the potential \nneed of a lake wind advisory. Sounding data at CLCR is very stable \nin the bl over the cooler lake waters, resulting in minimal mixing \nof stronger winds to the sfc.\n\nKEY MESSAGE 2: Mid/upper lvl trof wl be weakening acrs the \nMidwest/western Great Lakes on Thurs, while pre-frontal trof and \nassociated narrow axis of 700-500mb moisture moves from west to east \nacrs our cwa. Given the dampening upper lvl dynamics and out of \nphased energy, feel this precip on Thurs wl be another high pops/low \nqpf event. In addition, developing southwest flow of 35 to 45 knots \nwl produce localized downslope shadowing acrs the CPV, which is \nhighlighted nicely in the latest GFS precip fields. Pw values with \ndeep southwest flow surge btwn 1.0 to 1.4\" ahead of dampening trof \non Thurs, which are 3 to 4 STD above normal, so thinking everybody \nshould at least measure precip. QPF amounts wl range from a few \nhundredths to a quarter inch over the dacks/parts of the SLV. \nProgged 925mb temps btwn 14-12C with more clouds support highs upper \n50s to mid/upper 60s depending upon elevation. Thursday night into \nFriday is relatively quiet with slowly cooling thermal profiles, \nsupporting highs in the mid 50s to mid 60s on Friday, which is 5 to \n10 degrees above normal for early Nov. The cooler weather, higher \nhumidities and some precipitation wl help mitigating the fire wx \nconcerns.\n\nKEY MESSAGE 3: Multi-level closed low pressure over the Great Lakes and \nsurface low pressure driving northward along the Northeast Coast \nthis weekend will bring increased chances for precipitation, about \n45-75% in Vermont and 25-55% across northern New York Friday night. \nNighttime temperatures will remain well above seasonal normals with \nprojected lows in the mid 30s to mid 40s with plenty of cloud cover \naround. Chances for precipitation decrease on Saturday as surface \nforcing pulls northeastward away from the area, but rain shower \nchances still remain around 35-65% throughout the day as upper level \ntroughing stalls overhead. Temperatures will continue to be warmer \nthan normal values, but should feel cool compared to the week's \nrecord warmth. Highs Saturday are expected to be only in the 50s and \nlower 60s. Upper low pressure will head away from the region \nSaturday night, lowering precip chances on Saturday night, and to \nfollow Sunday daytime chances decrease further in brief weak \nridging. Low temperatures during this period are expected to fall \neach night, from the 30s and lower 40s Saturday night down to the \n20s and lower 30s early next week, which could mean snow mixing in \nwith the rain at higher elevations and colder spots. Highs will also \nfollow a decreasing trend, though more gradual, with temperatures \nhitting the mid 40s and 50s each afternoon through early next week \nand shower chances each day under cyclonic flow.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Light rain showers continue this \nafternoon and evening, primarily north of site KRUT. VFR will \nprevail throughout much of the TAF period, although ceilings are\nexpected to lower over the next few hours, resulting in some \nsites seeing MVFR level cigs and visibilities in showers. \nShowers will wind down by roughly 00Z-04Z Wednesday. Widespread\nVFR conditions anticipated to return around 00Z-08Z Wednesday. \nBreezes will be southerly and southwesterly tonight and tomorrow\nand are expected to increase, gusting 15-20 knots in the \nChamplain Valley by 00Z Wednesday. A low level jet out of the \nsouthwest and west 30-35 knots is likely to cause some LLWS at \nthe New York sites around 22Z Tuesday onwards.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: VFR. Chance RA.\nFriday Night: MVFR. Chance RA.\nSaturday: Mainly MVFR, with areas IFR possible. Chance RA.\nSaturday Night: MVFR. Chance RA.\nSunday: Mainly MVFR, with areas IFR possible. Slight chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 75        \nKBTV | 73 (1982) | 74\nKPBG | 72 (1990) | 73\nKMPV | 72 (2022) | 73\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Taber/Storm\nAVIATION...Storm\nCLIMATE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 032340\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n640 PM EST Tue Nov 3 2026\n\n.WHAT HAS CHANGED...\nAs of 204 PM EST Tuesday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 204 PM EST Tuesday...\n\n1. Near record high temperatures are expected on Wednesday with \nmostly sunny conditions and some localized fire weather concerns.\n\n2. A weak cold front will produce scattered showers on \nThursday, but precipitation amounts will be light with highest \namounts in the mountains. \n  \n\n3. Repeated chances for showers this weekend and early next \nweek with temperatures gradually decreasing towards seasonal levels.\n\n&&\n\n.DISCUSSION...\nAs of 204 PM EST Tuesday...\n\nKEY MESSAGE 1: Sfc analysis shows a warm frnt draped along the \nInternational Border this aftn with some scattered rain showers acrs \nnorthern NY into central/northern VT. Rainfall amounts have been \n<0.10\" thru 2 PM. Warm frnt wl lift north of cwa this evening with \nlatest RAP ua showing building mid/upper lvl ridge over the Ohio \nValley into western PA. GOES-19 mid lvl water vapor imagery\nindicates well defined dry slot with strong subsidence, which \nis progged to be acrs our fa on Weds, resulting in partly to \nmostly sunny skies. This combined with progged 925mb temps btwn \n15-18C with south/southwest downslope flow wl support highs \nupper 60s to mid 70s with a few warmer valleys reaching the \nupper 70s possible. The localized fire weather concerns would be\nacrs the Champlain Valley and northern slopes of the Dacks, \nwhere gusts of 15 to 20 mph and minimal humidity values will \ndrop btwn 35 and 45%. Elsewhere, winds will be lighter east of \nthe Green and humidities slightly higher. \n\nA very warm night is anticipated on Weds night, with southerly flow \nand increasing clouds ahead of our approaching cold frnt. Based on \nsounding analysis feel some deeper/protected valleys east of the \nGreens may decouple, resulting in localized cooler spots and \nsupporting a wide range in temps. Similar type idea is anticipated \nin the valleys of the dacks too. Lows generally in the upper 30s to \nmid/upper 50s, warmest in the CPV and downslope areas of the \nnorthern Dacks near Malone. 925mb winds increase 25-35 knots \novernight with some localized gusts in the trrn up to 40 mph \npossible. Still some uncertainty on mixing profiles over the cooler \nLake Champlain waters on Weds night into Thurs for the potential \nneed of a lake wind advisory. Sounding data at CLCR is very stable \nin the bl over the cooler lake waters, resulting in minimal mixing \nof stronger winds to the sfc.\n\nKEY MESSAGE 2: Mid/upper lvl trof wl be weakening acrs the \nMidwest/western Great Lakes on Thurs, while pre-frontal trof and \nassociated narrow axis of 700-500mb moisture moves from west to east \nacrs our cwa. Given the dampening upper lvl dynamics and out of \nphased energy, feel this precip on Thurs wl be another high pops/low \nqpf event. In addition, developing southwest flow of 35 to 45 knots \nwl produce localized downslope shadowing acrs the CPV, which is \nhighlighted nicely in the latest GFS precip fields. Pw values with \ndeep southwest flow surge btwn 1.0 to 1.4\" ahead of dampening trof \non Thurs, which are 3 to 4 STD above normal, so thinking everybody \nshould at least measure precip. QPF amounts wl range from a few \nhundredths to a quarter inch over the dacks/parts of the SLV. \nProgged 925mb temps btwn 14-12C with more clouds support highs upper \n50s to mid/upper 60s depending upon elevation. Thursday night into \nFriday is relatively quiet with slowly cooling thermal profiles, \nsupporting highs in the mid 50s to mid 60s on Friday, which is 5 to \n10 degrees above normal for early Nov. The cooler weather, higher \nhumidities and some precipitation wl help mitigating the fire wx \nconcerns.\n\nKEY MESSAGE 3: Multi-level closed low pressure over the Great Lakes and \nsurface low pressure driving northward along the Northeast Coast \nthis weekend will bring increased chances for precipitation, about \n45-75% in Vermont and 25-55% across northern New York Friday night. \nNighttime temperatures will remain well above seasonal normals with \nprojected lows in the mid 30s to mid 40s with plenty of cloud cover \naround. Chances for precipitation decrease on Saturday as surface \nforcing pulls northeastward away from the area, but rain shower \nchances still remain around 35-65% throughout the day as upper level \ntroughing stalls overhead. Temperatures will continue to be warmer \nthan normal values, but should feel cool compared to the week's \nrecord warmth. Highs Saturday are expected to be only in the 50s and \nlower 60s. Upper low pressure will head away from the region \nSaturday night, lowering precip chances on Saturday night, and to \nfollow Sunday daytime chances decrease further in brief weak \nridging. Low temperatures during this period are expected to fall \neach night, from the 30s and lower 40s Saturday night down to the \n20s and lower 30s early next week, which could mean snow mixing in \nwith the rain at higher elevations and colder spots. Highs will also \nfollow a decreasing trend, though more gradual, with temperatures \nhitting the mid 40s and 50s each afternoon through early next week \nand shower chances each day under cyclonic flow.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...A few low clouds are hanging on at SLK this\nevening and it remains MVFR. Elsewhere terminals are VFR. BY the end\nof the evening conditions are expected to return to VFR at SLK and\nVFR conditions are expected to continue at all terminals through\ntomorrow. A few showers will be around this evening but they will be\ntoo light to cause significant visibility reductions. Winds will\ngenerally be under 10 KT tonight, but strong westerly winds aloft\nwill cause LLWS, especially across northern New York and northern\nVermont. During the day tomorrow, LLWS will end but surface winds\nwill increase. While most terminals should see southerly to\nsouthwesterly winds around 10 KT, BTV, MSS and PBG will likely have\ngusts up to 20 KT.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Chance RA.\nSaturday: Mainly MVFR, with areas IFR possible. Chance RA.\nSaturday Night: Mainly MVFR, with areas IFR possible. Chance RA.\nSunday: Mainly MVFR, with local IFR possible. Slight chance RA.\n\n&&\n\n.CLIMATE...\nTemperatures could approach record highs on November 4th, with\nthe greatest chance of surpassing the record at KMSS.\n\nSite | Record    | Forecast \nKMSS | 71 (2022) | 75        \nKBTV | 73 (1982) | 74\nKPBG | 72 (1990) | 73\nKMPV | 72 (2022) | 73\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Storm/Taber\nAVIATION...Myskowski\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-11-03T18:29:00+00:00",
@@ -984,17 +984,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-03T18:00:00.000-05:00",
-  "level_ft": 93.86,
-  "level_at": "2026-11-03T18:00:00.000-05:00",
+  "water_temp_at": "2026-11-03T19:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-03T19:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 33,
+  "aqi": 34,
   "category": "Good",
-  "pollutant": "OZONE",
-  "observed": "11/03/26 18:00",
+  "pollutant": "PM2.5",
+  "observed": "11/03/26 19:00",
   "discussion": "On Wednesday November 4th, expect moderate air quality in southern Vermont and mountain valley locations, as the region continues to be subject to overnight thermal inversions, and slightly elevated levels of PM25 to our south in the Philadelphia area on Tuesday makes its way into southern Vermont."
  },
  "sun": {
@@ -1047,7 +1047,7 @@
    {
     "date": "2026-11-05",
     "high_f": {
-     "GFS": 66,
+     "GFS": 64,
      "Euro": 64,
      "ICON": 67
     },
@@ -1057,7 +1057,7 @@
      "ICON": 93
     },
     "precip_in": {
-     "GFS": 0.12,
+     "GFS": 0.21,
      "Euro": 0.21,
      "ICON": 0.24
     },
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-03",
-  "generated": "2026-11-03T23:42:55+00:00",
+  "generated": "2026-11-04T00:46:55+00:00",
   "text": "Mostly cloudy tonight, low 55. Wednesday, mostly sunny, high 73.",
   "periods": [
    {
@@ -1076,7 +1076,7 @@
     "is_day": false,
     "temp_f": 55,
     "sky": "mostly cloudy",
-    "start": "2026-11-03T18:00:00-05:00",
+    "start": "2026-11-03T19:00:00-05:00",
     "end": "2026-11-04T06:00:00-05:00",
     "precip": null,
     "wind": null,
