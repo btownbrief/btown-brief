@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-04T10:53:14+00:00",
+ "updated": "2026-11-04T11:13:10+00:00",
  "sections_updated": {
-  "now": "2026-11-04T10:53:14+00:00",
-  "forecast": "2026-11-04T10:53:14+00:00",
-  "hourly": "2026-11-04T10:53:14+00:00",
-  "alerts": "2026-11-04T10:53:14+00:00",
-  "afd": "2026-11-04T10:53:14+00:00",
-  "lake_forecast": "2026-11-04T10:53:14+00:00",
-  "lake_gage": "2026-11-04T10:53:14+00:00",
-  "air": "2026-11-04T10:53:14+00:00",
-  "sun": "2026-11-04T10:53:14+00:00",
-  "models": "2026-11-04T10:53:14+00:00"
+  "now": "2026-11-04T11:13:10+00:00",
+  "forecast": "2026-11-04T11:13:10+00:00",
+  "hourly": "2026-11-04T11:13:10+00:00",
+  "alerts": "2026-11-04T11:13:10+00:00",
+  "afd": "2026-11-04T11:13:10+00:00",
+  "lake_forecast": "2026-11-04T11:13:10+00:00",
+  "lake_gage": "2026-11-04T11:13:10+00:00",
+  "air": "2026-11-04T11:13:10+00:00",
+  "sun": "2026-11-04T11:13:10+00:00",
+  "models": "2026-11-04T11:13:10+00:00"
  },
  "now": {
-  "observed_at": "2026-11-04T10:35:00+00:00",
+  "observed_at": "2026-11-04T10:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": 63,
+  "temp_f": 59,
+  "feels_like_f": 59,
+  "humidity": 67,
   "dewpoint_f": 48,
-  "wind_mph": 7,
+  "wind_mph": 3,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
   "precip_last_hr_in": null
@@ -29,17 +29,7 @@
   "updated": "2026-11-04T06:39:20+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-04T05:00:00-05:00",
-    "is_day": false,
-    "temp_f": 56,
-    "pop": 7,
-    "wind": "S 8 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 56. South wind around 8 mph."
-   },
-   {
-    "name": "Wednesday",
+    "name": "Today",
     "start": "2026-11-04T06:00:00-05:00",
     "is_day": true,
     "temp_f": 72,
@@ -49,7 +39,7 @@
     "detailed": "Partly sunny. High near 72, with temperatures falling to around 66 in the afternoon. South wind 8 to 12 mph, with gusts as high as 22 mph."
    },
    {
-    "name": "Wednesday Night",
+    "name": "Tonight",
     "start": "2026-11-04T18:00:00-05:00",
     "is_day": false,
     "temp_f": 57,
@@ -167,26 +157,22 @@
     "wind": "SW 7 to 10 mph",
     "short": "Chance Light Rain",
     "detailed": "A chance of rain after 7am. Partly sunny, with a high near 51. Southwest wind 7 to 10 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Tuesday Night",
+    "start": "2026-11-10T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 32,
+    "pop": 34,
+    "wind": "W 8 mph",
+    "short": "Chance Light Rain",
+    "detailed": "A chance of rain before 1am. Mostly cloudy, with a low around 32. West wind around 8 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-04T06:39:20+00:00",
   "hours": [
-   {
-    "t": "2026-11-04T05:00:00-05:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 7,
-    "humidity": 77,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 53,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-04T06:00:00-05:00",
     "temp_f": 57,
@@ -676,6 +662,20 @@
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 22
+   },
+   {
+    "t": "2026-11-05T17:00:00-05:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 24,
+    "humidity": 84,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 50,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 21
    }
   ],
   "days": [
@@ -962,9 +962,9 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-04T05:00:00.000-05:00",
-  "level_ft": 93.82,
-  "level_at": "2026-11-04T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-04T06:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-04T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -1045,26 +1045,12 @@
  },
  "brief": {
   "date": "2026-11-04",
-  "generated": "2026-11-04T10:53:18+00:00",
-  "text": "Mostly cloudy overnight, low 56. Partly sunny today, high 72.",
+  "generated": "2026-11-04T11:13:13+00:00",
+  "text": "Partly sunny today, high 72. Mostly cloudy tonight, low 57. Thursday, showers and cooler from 8am to 1pm, about a tenth of an inch, high 66.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 56,
-    "sky": "mostly cloudy",
-    "start": "2026-11-04T05:00:00-05:00",
-    "end": "2026-11-04T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 56,
-    "feels_hi": 56,
-    "text": "Mostly cloudy overnight, low 56."
-   },
-   {
     "label": "Today",
-    "name": "Wednesday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 72,
     "sky": "partly sunny",
@@ -1075,6 +1061,20 @@
     "feels_lo": 56,
     "feels_hi": 72,
     "text": "Partly sunny today, high 72."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 57,
+    "sky": "mostly cloudy",
+    "start": "2026-11-04T18:00:00-05:00",
+    "end": "2026-11-05T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 57,
+    "feels_hi": 65,
+    "text": "Mostly cloudy tonight, low 57."
    }
   ]
  }
