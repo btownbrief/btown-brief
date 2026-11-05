@@ -1,55 +1,45 @@
 {
- "updated": "2026-11-05T11:14:09+00:00",
+ "updated": "2026-11-05T11:34:11+00:00",
  "sections_updated": {
-  "now": "2026-11-05T11:14:09+00:00",
-  "forecast": "2026-11-05T11:14:09+00:00",
-  "hourly": "2026-11-05T11:14:09+00:00",
-  "alerts": "2026-11-05T11:14:09+00:00",
-  "afd": "2026-11-05T11:14:09+00:00",
-  "lake_forecast": "2026-11-05T11:14:09+00:00",
-  "lake_gage": "2026-11-05T11:14:09+00:00",
-  "air": "2026-11-05T11:14:09+00:00",
-  "sun": "2026-11-05T11:14:09+00:00",
-  "models": "2026-11-05T11:14:09+00:00"
+  "now": "2026-11-05T11:34:11+00:00",
+  "forecast": "2026-11-05T11:34:11+00:00",
+  "hourly": "2026-11-05T11:34:11+00:00",
+  "alerts": "2026-11-05T11:34:11+00:00",
+  "afd": "2026-11-05T11:34:11+00:00",
+  "lake_forecast": "2026-11-05T11:34:11+00:00",
+  "lake_gage": "2026-11-05T11:34:11+00:00",
+  "air": "2026-11-05T11:34:11+00:00",
+  "sun": "2026-11-05T11:34:11+00:00",
+  "models": "2026-11-05T11:34:11+00:00"
  },
  "now": {
-  "observed_at": "2026-11-05T10:40:00+00:00",
+  "observed_at": "2026-11-05T11:05:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
+  "description": "Cloudy",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 68,
   "dewpoint_f": 52,
-  "wind_mph": null,
-  "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_mph": 13,
+  "wind_gust_mph": 22,
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-11-05T06:24:28+00:00",
+  "updated": "2026-11-05T10:50:09+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-05T01:00:00-05:00",
-    "is_day": false,
-    "temp_f": 60,
-    "pop": 4,
-    "wind": "S 17 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 60. South wind around 17 mph, with gusts as high as 29 mph."
-   },
-   {
-    "name": "Thursday",
+    "name": "Today",
     "start": "2026-11-05T06:00:00-05:00",
     "is_day": true,
     "temp_f": 68,
-    "pop": 59,
+    "pop": 82,
     "wind": "S 13 to 17 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 68. South wind 13 to 17 mph, with gusts as high as 28 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Rain Showers",
+    "detailed": "Rain showers. Mostly cloudy, with a high near 68. South wind 13 to 17 mph, with gusts as high as 28 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
-    "name": "Thursday Night",
+    "name": "Tonight",
     "start": "2026-11-05T18:00:00-05:00",
     "is_day": false,
     "temp_f": 51,
@@ -96,7 +86,7 @@
     "pop": 63,
     "wind": "NW 10 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Cloudy, with a low around 38. Northwest wind around 10 mph, with gusts as high as 21 mph. Chance of precipitation is 60%."
+    "detailed": "Rain showers likely. Cloudy, with a low around 38. Northwest wind around 10 mph, with gusts as high as 21 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Sunday",
@@ -167,6 +157,16 @@
     "wind": "NW 6 to 9 mph",
     "short": "Slight Chance Rain And Snow Showers",
     "detailed": "A slight chance of rain and snow showers before 1pm. Partly sunny, with a high near 48. Northwest wind 6 to 9 mph."
+   },
+   {
+    "name": "Wednesday Night",
+    "start": "2026-11-11T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 27,
+    "pop": 10,
+    "wind": "NW 7 mph",
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 27. Northwest wind around 7 mph."
    }
   ]
  },
@@ -710,14 +710,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-05T07:16:00+00:00",
+  "issued": "2026-11-05T11:18:00+00:00",
   "key_messages": [
    "Showers will be widespread through early afternoon, and then more scattered towards evening when a rumble of thunder is possible.",
    "Some additional showers are expected over the weekend as temperatures gradually return closer to normal.",
    "Somewhat unsettled weather is expected for much of next week."
   ],
   "what_changed": "As of 216 AM EST Thursday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 050716\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n216 AM EST Thu Nov 5 2026\n\n.WHAT HAS CHANGED...\nAs of 216 AM EST Thursday...\n\nNo significant changes. \n\n&&\n\n.KEY MESSAGES...\nAs of 216 AM EST Thursday...\n\n1. Showers will be widespread through early afternoon, and then\nmore scattered towards evening when a rumble of thunder is\npossible.\n\n2. Some additional showers are expected over the weekend as \ntemperatures gradually return closer to normal. \n\n3. Somewhat unsettled weather is expected for much of next \nweek. \n\n&&\n\n.DISCUSSION...\nAs of 216 AM EST Thursday...\n\nKEY MESSAGE 1: Anomalous moisture, with PWAT more than 200% of normal, \nand likely near record for the date per Albany, NY sounding \nclimatology, will be present today as a slug of showers slides \nnortheastward across the region this morning. Despite this\nimpressive moisture and very warm air in place, rainfall looks \nmeager as forcing for ascent is weak given a lagging shortwave \ntrough and lack of frontogenesis. That said, low to mid-level \nlapse rates look to be sufficient for some instability and brief\ndownpours in some of the showers, especially towards midday \nwhich helps southern and eastern portions of Vermont have better\nodds of these heavier showers. Think these will be brief such \nthat total rainfall amounts in a given hour will at most be \nabout 0.25\" and mainly up to 0.1\". \n\nAfter this swath of showers and deep moisture exits to our \neast, partial clearing will support some warm season type of \nheating and skinny CAPE profiles that bring us a non-zero chance\nof thunderstorms towards evening. HRRR/RRFS guidance has been \nconsistent in showing a broken line of showers forming in \nnorthern New York and gradually translating eastward with \nincreasing MUCAPE, progged to reach about 200-300 J/kg. Chances \nof thunder in the calibrated REFS data is surprisingly high in \nfar northern Vermont (around 30-40%) based on this CAPE. \nGreatest chances of a rumble of thunder appears to be during the\nmid- afternoon near Route 11 in northern New York and then \nduring the evening in eastern Franklin County in Vermont. Most\nof the remainder of the night, aside from this possible cluster\nof showers exiting to the east, will be dry and mild. Much of\nFriday continues to look dry and unseasonably warm despite being\na bit cooler than today.\n\nKEY MESSAGE 2: We continue to expect an unsettled weather \npattern for the weekend, as a closed upper level low ambles \neastward from the eastern Great Lakes Friday night into the Gulf\nof Maine by Sunday afternoon. Its slow movement will provide a \nprolonged period of shower chances across the region, but it \nremains hard to pinpoint where/when rain showers will pivot \nacross a particular location. Generally Saturday afternoon \nthrough Saturday night looks like the timeframe where showers \nshould be most abundant over northern New York and Vermont given\nthe proximity of this system, and the track will favor southern\nportions of our region with regards to rainfall amounts. \n\nWhile a big soaking rain is not expected, a wetting rainfall of\n0.25\" through the weekend has increased a bit to a 50-65% \nchance, while rainfall in excess of 1\" is now about 10-15%, \nexcept 20-25% in portions of western Vermont in the Winooski and\nMad River Valleys and the western Adirondack region. With the \nexpected low pressure track, we also should see some increasing \nnortherly flow towards late Saturday but there isn't much cold \nair to advect in. Most guidance shows 850 millibar temperatures \ntoo warm for snow, but at this point have indicated marginally \ncold conditions for some snow to mix in with the rain at our \nhigher elevations in New York before precipitation ends given \nuncertainty in the upper level low track/strength.\n\nKEY MESSAGE 3: Although there remains differences in model solutions, \noverall we look to remain under cyclonic flow for much of next week. \nThe GFS does try to build ridging in briefly for Mon/Mon night, but \nthis is not supported by either the ECMWF or CMC deterministic \nsolutions, which have multiple shortwaves rotating around upper low \npressure centered to our north. Timing of these differ as well, so \nwhile there will likely be some dry days, have stayed with WPC/NBM \nPoPs which give chances for showers through much of the week, \nespecially over the higher terrain. Highs in the 40s/50s mean \nshowers should be rain during the day, but overnight lows near or \nbelow freezing could allow rain to mix with/change over to snow \novernight, especially in the mountains.\n\n&&\n\n.AVIATION /00Z THURSDAY THROUGH MONDAY/...\nThrough 00Z Friday...VFR conditions are expected to last through the\nnight. An organized round of showers will move through from west to\neast, starting at MSS around 11Z. They will then reach EFK by around\n14-15Z. They will last a couple hours and then exit, with a\nlingering isolated shower or two possible behind. For most cases,\nthey will not be heavy enough to significantly reduce the\nvisibility, though a brief occurrence of MVFR will still be\npossible. As the showers move in, ceilings will begin to lower. By\naround 18-21Z, they should be MVFR for most terminals. LLWS is\nexpected at MSS and RUT for periods of the night, and while it may\nnot hit formal criteria elsewhere, it will still be strong. Winds\nwill generally be around and under 10 KT tonight from the south and\nsouthwest. During the day tomorrow, they will increase into the\n10-20 KT range for most terminals, with gusts to 25 KT possible at\nBTV, PBG and MSS.\n\nOutlook...\n\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. Chance RA.\nSaturday: Mainly MVFR, with local IFR possible. Chance RA.\nSaturday Night: Mainly MVFR, with local IFR possible. Likely\nSHRA.\nSunday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: VFR. Chance SHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for today on the broad lake. \nSouth winds currently are likely 20 to 30 knots, expected to\npeak early this morning prior to rain arriving. After a lull\nduring the rain, winds will likely pick up again for a few\nhours, likely after 2 PM and before 7 PM, when winds could \noccasionally be near 25 knots. Waves will tend to be 2 to 4 \nfeet during the period.\n\n&&\n\n.CLIMATE...\nAs of 216 AM EST Thursday...\n\nFollowing records set on Wednesday, a high minimum temperature\nis possible at BTV today. \n\nForecast: 58 \nRecord: 60 in 2022\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Hastings\nAVIATION...Hastings\nMARINE...Kutikoff\nCLIMATE...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 051118\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n618 AM EST Thu Nov 5 2026\n\n.WHAT HAS CHANGED...\nAs of 216 AM EST Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 216 AM EST Thursday...\n\n1. Showers will be widespread through early afternoon, and then\nmore scattered towards evening when a rumble of thunder is\npossible.\n\n2. Some additional showers are expected over the weekend as \ntemperatures gradually return closer to normal. \n\n3. Somewhat unsettled weather is expected for much of next \nweek.\n\n&&\n\n.DISCUSSION...\nAs of 216 AM EST Thursday...\n\nKEY MESSAGE 1: Anomalous moisture, with PWAT more than 200% of normal, \nand likely near record for the date per Albany, NY sounding \nclimatology, will be present today as a slug of showers slides \nnortheastward across the region this morning. Despite this\nimpressive moisture and very warm air in place, rainfall looks \nmeager as forcing for ascent is weak given a lagging shortwave \ntrough and lack of frontogenesis. That said, low to mid-level \nlapse rates look to be sufficient for some instability and brief\ndownpours in some of the showers, especially towards midday \nwhich helps southern and eastern portions of Vermont have better\nodds of these heavier showers. Think these will be brief such \nthat total rainfall amounts in a given hour will at most be \nabout 0.25\" and mainly up to 0.1\". \n\nAfter this swath of showers and deep moisture exits to our \neast, partial clearing will support some warm season type of \nheating and skinny CAPE profiles that bring us a non-zero chance\nof thunderstorms towards evening. HRRR/RRFS guidance has been \nconsistent in showing a broken line of showers forming in \nnorthern New York and gradually translating eastward with \nincreasing MUCAPE, progged to reach about 200-300 J/kg. Chances \nof thunder in the calibrated REFS data is surprisingly high in \nfar northern Vermont (around 30-40%) based on this CAPE. \nGreatest chances of a rumble of thunder appears to be during the\nmid- afternoon near Route 11 in northern New York and then \nduring the evening in eastern Franklin County in Vermont. Most\nof the remainder of the night, aside from this possible cluster\nof showers exiting to the east, will be dry and mild. Much of\nFriday continues to look dry and unseasonably warm despite being\na bit cooler than today.\n\nKEY MESSAGE 2: We continue to expect an unsettled weather \npattern for the weekend, as a closed upper level low ambles \neastward from the eastern Great Lakes Friday night into the Gulf\nof Maine by Sunday afternoon. Its slow movement will provide a \nprolonged period of shower chances across the region, but it \nremains hard to pinpoint where/when rain showers will pivot \nacross a particular location. Generally Saturday afternoon \nthrough Saturday night looks like the timeframe where showers \nshould be most abundant over northern New York and Vermont given\nthe proximity of this system, and the track will favor southern\nportions of our region with regards to rainfall amounts. \n\nWhile a big soaking rain is not expected, a wetting rainfall of\n0.25\" through the weekend has increased a bit to a 50-65% \nchance, while rainfall in excess of 1\" is now about 10-15%, \nexcept 20-25% in portions of western Vermont in the Winooski and\nMad River Valleys and the western Adirondack region. With the \nexpected low pressure track, we also should see some increasing \nnortherly flow towards late Saturday but there isn't much cold \nair to advect in. Most guidance shows 850 millibar temperatures \ntoo warm for snow, but at this point have indicated marginally \ncold conditions for some snow to mix in with the rain at our \nhigher elevations in New York before precipitation ends given \nuncertainty in the upper level low track/strength.\n\nKEY MESSAGE 3: Although there remains differences in model solutions, \noverall we look to remain under cyclonic flow for much of next week. \nThe GFS does try to build ridging in briefly for Mon/Mon night, but \nthis is not supported by either the ECMWF or CMC deterministic \nsolutions, which have multiple shortwaves rotating around upper low \npressure centered to our north. Timing of these differ as well, so \nwhile there will likely be some dry days, have stayed with WPC/NBM \nPoPs which give chances for showers through much of the week, \nespecially over the higher terrain. Highs in the 40s/50s mean \nshowers should be rain during the day, but overnight lows near or \nbelow freezing could allow rain to mix with/change over to snow \novernight, especially in the mountains.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...VFR conditions early in the period will \ngive way to MVFR as rain showers spread from west to east. The \nbulk of the precipitation will occur through roughly 18z Thu, \nwith scattered showers to persist through 00z Fri. Visibility \ngenerally 5-6SM in any rain, with ceilings lowering to 1500-2500\nft during the daylight hours. There could be some improvement \nafter 00z, but generally anticipate MVFR conditions to prevail\nmuch of the night. South winds will remain gusty at KBTV \nthrough much of the period. Elsewhere, S/SE winds will remain \nless than 8 kt through early this morning, then becoming gusty \nto 18 kt after 14z. Gusts will abate after sunset with winds \ntrending more toward S/SW. A 30+ kt LLJ will bring periods of \nLLWS through 18z, particularly at KRUT/KSLK/KMPV.\n\n\nOutlook...\n\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA.\nSunday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA,\nChance SHSN.\nMonday: Mainly VFR, with areas MVFR possible. Slight chance SHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for today on the broad lake. \nSouth winds currently are likely 20 to 30 knots, expected to\npeak early this morning prior to rain arriving. After a lull\nduring the rain, winds will likely pick up again for a few\nhours, likely after 2 PM and before 7 PM, when winds could \noccasionally be near 25 knots. Waves will tend to be 2 to 4 \nfeet during the period.\n\n&&\n\n.CLIMATE...\nAs of 216 AM EST Thursday...\n\nFollowing records set on Wednesday, a high minimum temperature\nis possible at BTV today. \n\nForecast: 58 \nRecord: 60 in 2022\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Hastings\nAVIATION...Hastings\nMARINE...Kutikoff\nCLIMATE...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-11-05T06:34:00+00:00",
@@ -980,7 +980,7 @@
   "aqi": 39,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/05/26 5:00",
+  "observed": "11/05/26 6:00",
   "discussion": "On Thursday, November 5th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -988,14 +988,14 @@
   "sunset": "2026-11-05T16:36-05:00",
   "sunrise_tomorrow": "2026-11-06T06:37-05:00",
   "sunset_tomorrow": "2026-11-06T16:35-05:00",
-  "uv_max": 2.35
+  "uv_max": 1.4
  },
  "models": {
   "days": [
    {
     "date": "2026-11-05",
     "high_f": {
-     "GFS": 68,
+     "GFS": 67,
      "Euro": 65,
      "ICON": 69
     },
@@ -1005,7 +1005,7 @@
      "ICON": 95
     },
     "precip_in": {
-     "GFS": 0.27,
+     "GFS": 0.19,
      "Euro": 0.24,
      "ICON": 0.21
     },
@@ -1033,7 +1033,7 @@
    {
     "date": "2026-11-07",
     "high_f": {
-     "GFS": 52,
+     "GFS": 51,
      "Euro": 53,
      "ICON": 53
     },
@@ -1047,18 +1047,18 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  },
  "brief": {
   "date": "2026-11-05",
-  "generated": "2026-11-05T11:14:13+00:00",
+  "generated": "2026-11-05T11:34:13+00:00",
   "text": "Showers today from 7 to 11am, about a tenth of an inch, high 68. A chance of showers tonight until 11pm, under a tenth of an inch, low 51. Friday, partly sunny, high 64.",
   "periods": [
    {
     "label": "Today",
-    "name": "Thursday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 68,
     "sky": "sunny",
@@ -1082,7 +1082,7 @@
    },
    {
     "label": "Tonight",
-    "name": "Thursday Night",
+    "name": "Tonight",
     "is_day": false,
     "temp_f": 51,
     "sky": "mostly cloudy",
