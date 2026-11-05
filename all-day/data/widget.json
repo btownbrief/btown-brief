@@ -1,21 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-05T16:35:03+00:00",
+ "updated": "2026-11-05T17:37:29+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 62,
-  "sky": "Scattered Rain Showers",
-  "from": "forecast",
+  "temp": 64,
+  "sky": "Partly Cloudy",
+  "from": "airport",
   "hi": 68,
   "lo": 51,
   "rain": "A chance of showers today on and off",
-  "obs": null,
+  "obs": {
+   "temp": 64,
+   "sky": "Partly Cloudy",
+   "at": "2026-11-05T17:00:00+00:00"
+  },
   "hours": [
-   {
-    "t": "2026-11-05T11:00:00-05:00",
-    "temp": 62,
-    "sky": "Scattered Rain Showers"
-   },
    {
     "t": "2026-11-05T12:00:00-05:00",
     "temp": 64,
@@ -40,28 +39,33 @@
     "t": "2026-11-05T16:00:00-05:00",
     "temp": 67,
     "sky": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-11-05T17:00:00-05:00",
+    "temp": 66,
+    "sky": "Chance Rain Showers"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
  "wire": [
   {
-   "title": "Colchester Brings Home D1 Championship",
-   "src": "MCV Sports",
-   "url": "https://www.mychamplainvalley.com/local-sports/colchester-brings-home-d1-championship/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/71346be8d3f7"
+   "title": "Council president to announce bid for mayor of Burlington",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/05/council-president-announce-bid-mayor-burlington/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/ed2582cf7145"
   },
   {
-   "title": "Two new contenders for Hamilton champion tree roster",
-   "src": "The Charlotte News",
-   "url": "https://www.charlottenewsvt.org/2026/11/05/two-new-contenders-for-hamilton-champion-tree-roster/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/4ea35cd71c6f"
+   "title": "Richmond Fed president said more interest rate hikes are coming — but gradually",
+   "src": "Quartz",
+   "url": "https://qz.com/richmond-fed-barkin-interest-rate-hikes-gradual-110526",
+   "link": "https://guide.btownbrief.com/all-day/#wire/cb96ec6f689e"
   },
   {
-   "title": "301 acres in Newbury will be conserved forever",
-   "src": "Vermont Public",
-   "url": "https://www.vermontpublic.org/local-news/2026-11-05/301-acres-newbury-conserved-forever",
-   "link": "https://guide.btownbrief.com/all-day/#wire/8af78dd2e2bf"
+   "title": "Vermont invested in her. Now she’s coming back.",
+   "src": "VTDigger",
+   "url": "https://vtdigger.org/2026/11/05/vermont-invested-in-her-now-shes-coming-back/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/5bb7aa1325b9"
   }
  ],
  "tonight": [
