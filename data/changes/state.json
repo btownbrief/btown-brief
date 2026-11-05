@@ -431,43 +431,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10292": {
-    "name": "Open Space Subcommittee",
-    "start": "2026-11-02T16:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Agenda V1",
-     "Open Space Subcommittee minutes"
-    ]
-   },
-   "10278": {
-    "name": "Conservation Board",
-    "start": "2026-11-02T17:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Agenda V1",
-     "Packet V1",
-     "Draft Conservation Board minutes"
-    ]
-   },
-   "10143": {
-    "name": "Public Forum on Tax Fairness Proposals",
-    "start": "2026-11-02T18:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Public Forum on Tax Fairness Proposals Agenda 11/2/26",
-     "Public Forum on Tax Fairness Proposals Agenda Packet 11/2/26"
-    ]
-   },
-   "10258": {
-    "name": "Housing Board of Review Meeting",
-    "start": "2026-11-02T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Housing Board of Review Agenda 11.02",
-     "Housing Board of Review Agenda Packet 11.02"
-    ]
-   },
    "10272": {
     "name": "Airport Commission",
     "start": "2026-11-04T16:00:00+00:00",
@@ -553,6 +516,35 @@
     "name": "Local Control Commission Meeting",
     "start": "2026-11-09T18:15:00+00:00",
     "hasAgenda": true,
+    "files": []
+   },
+   "10295": {
+    "name": "City Council With Mayor Presiding Meeting",
+    "start": "2026-11-09T18:20:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
+   "10279": {
+    "name": "Design Advisory Board Meeting",
+    "start": "2026-11-10T15:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "DAB Agenda V1",
+     "Packet V1"
+    ]
+   },
+   "10025": {
+    "name": "Burlington Electric Commission",
+    "start": "2026-11-10T17:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "11.10.2026 Agenda"
+    ]
+   },
+   "8686": {
+    "name": "Retirement Board Meeting",
+    "start": "2026-11-16T09:30:00+00:00",
+    "hasAgenda": false,
     "files": []
    }
   }
@@ -938,6 +930,13 @@
    "wcax": {
     "items": [
      {
+      "id": "XM3EP4WZ35GZDHYKWPPDPEBLAM",
+      "title": "VTrans prepares plow trucks for winter, with drivers on call starting Dec. 1",
+      "link": "https://www.wcax.com/2026/11/05/vtrans-prepares-plow-trucks-winter-with-drivers-call-starting-dec-1/",
+      "ts": "2026-11-05T03:08:08+00:00",
+      "summary": "Vermont Agency of Transportation staff from across the state are preparing for snowfall, even after warm weather this week."
+     },
+     {
       "id": "EK36BHGRWVBHJF5CGPPT2VYV7E",
       "title": "Despite $928 Million Spent, Lake Champlain Cleanup Is Falling Behind",
       "link": "https://www.wcax.com/2026/11/04/despite-928-million-spent-lake-champlain-cleanup-is-falling-behind/",
@@ -1279,157 +1278,150 @@
       "link": "https://www.wcax.com/2026/11/03/election-day-polls-being-monitored-by-doj-across-region/",
       "ts": "2026-11-03T15:27:52+00:00",
       "summary": "Department of Justice officials are monitoring elections in all 50 states Tuesday, including those in our region."
-     },
-     {
-      "id": "7Z3M3JQSAZGHZIP3KOQL47V6KU",
-      "title": "Trespasser arrested on St. Michael’s College campus",
-      "link": "https://www.wcax.com/2026/11/03/trespasser-arrested-st-michaels-college-campus/",
-      "ts": "2026-11-03T12:33:47+00:00",
-      "summary": "Colchester police responded to reports of a man causing a disturbance on the St. Michael’s College campus Monday."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "74338703",
-      "title": "John Nicks, legendary figure skating coach and champion maker, dies at 97",
-      "link": "https://www.mynbc5.com/article/figure-skating-coach-john-nicks-dies/74338703",
-      "ts": "2026-11-04T23:41:00+00:00",
-      "summary": "John Nicks, a renowned figure skating coach and former world pairs champion, died Monday at 97"
+      "id": "74325335",
+      "title": "Google will let schools turn off AI, but they may lose Search",
+      "link": "https://www.mynbc5.com/article/google-to-let-schools-turn-off-ai-may-lose-search/74325335",
+      "ts": "2026-11-05T06:36:00+00:00",
+      "summary": "Google is rolling out new controls for schools to limit students’ access to the company’s AI tools. But if schools opt out of AI altogether, they’ll also lose access to Google Search."
+     },
+     {
+      "id": "74337032",
+      "title": "Plattsburgh State men's soccer advances to first home SUNYAC championship since 2012",
+      "link": "https://www.mynbc5.com/article/plattsburgh-state-mens-soccer-advances-to-first-home-sunyac-championship-since-2012/74337032",
+      "ts": "2026-11-05T05:55:00+00:00",
+      "summary": "Cardinals blank the Buffalo State Bengals in SUNYAC semifinals 4-0, women's soccer falls to Fredonia 2-0"
+     },
+     {
+      "id": "74339704",
+      "title": "Northern Adirondack boys' soccer advances to NYSPHSAA Class C Regional Finals",
+      "link": "https://www.mynbc5.com/article/northern-adirondack-boys-soccer-advances-to-nysphsaa-class-c-regional-finals/74339704",
+      "ts": "2026-11-05T05:54:00+00:00",
+      "summary": "Bobcats down the Section X champions Brushton-Moira Panthers 3-1 in Class C Regional Semifinals"
+     },
+     {
+      "id": "74340372",
+      "title": "US contractor admits passing US top-secret information to Ethiopia",
+      "link": "https://www.mynbc5.com/article/contractor-admits-passing-secret-information-ethiopia/74340372",
+      "ts": "2026-11-05T05:17:00+00:00",
+      "summary": "The U.S. Justice Department said Tuesday that Abraham Teklu Lemma supplied secrets to Ethiopian officials for over two years, urging drone deployment against government fighters."
+     },
+     {
+      "id": "74279522",
+      "title": "NFL Week 8 schedule, predictions and more",
+      "link": "https://www.mynbc5.com/article/nfl-week-8-schedule-predictions/74279522",
+      "ts": "2026-11-05T05:06:00+00:00",
+      "summary": "The calendar is turning to a new month, and as we're approaching the halfway point of the 2026 season, it's also time for NFL trade deadline preparations to begin."
+     },
+     {
+      "id": "74340280",
+      "title": "Dodge announces its return to the NASCAR Cup Series",
+      "link": "https://www.mynbc5.com/article/dodge-return-nascar-cup-series/74340280",
+      "ts": "2026-11-05T04:50:00+00:00",
+      "summary": "Dodge is returning to the NASCAR Cup Series in 2027, a year earlier than initially expected."
+     },
+     {
+      "id": "74339742",
+      "title": "New study links energy drinks to reports of heart attacks and cardiac arrest in young adults",
+      "link": "https://www.mynbc5.com/article/energy-drinks-stimulants-heart-risks-young-adults/74339742",
+      "ts": "2026-11-05T03:13:00+00:00",
+      "summary": "A cardiologist recommends moderation as well as healthier options after new research raises concerns about the potential heart risks associated with caffeinated energy drinks and stimulant supplements, particularly among younger adults."
+     },
+     {
+      "id": "74338077",
+      "title": "GOP House member says he will trigger impeachment vote against Defense Secretary Hegseth",
+      "link": "https://www.mynbc5.com/article/thomas-massie-impeachment-defense-secretary-hegseth/74338077",
+      "ts": "2026-11-05T03:04:00+00:00",
+      "summary": "The House could vote as soon as next week to impeach the Pentagon’s top leader."
+     },
+     {
+      "id": "74339778",
+      "title": "The 2028 election season begins as both parties navigate midterm fallout",
+      "link": "https://www.mynbc5.com/article/2028-presidential-election-season-underway/74339778",
+      "ts": "2026-11-05T02:51:00+00:00",
+      "summary": "The final midterm votes are still being counted, but make no mistake: The next election season has already begun."
+     },
+     {
+      "id": "74323144",
+      "title": "Melania Trump to bring Russian and Ukrainian representatives to White House this week",
+      "link": "https://www.mynbc5.com/article/melania-trump-russian-ukrainian-representatives-white-house/74323144",
+      "ts": "2026-11-05T02:02:00+00:00",
+      "summary": "First lady Melania Trump will bring representatives from Russia and Ukraine to the White House on Thursday, after announcing a ceasefire in the city of Oleshky last month."
+     },
+     {
+      "id": "74339133",
+      "title": "Lockheed Martin to pay $29.5 million to settle federal claims it discriminated against white workers",
+      "link": "https://www.mynbc5.com/article/lockheed-martin-pay-295-million-settle-federal-claims-discriminated-against-white-workers/74339133",
+      "ts": "2026-11-05T01:43:00+00:00",
+      "summary": "Lockheed Martin will pay $29.5 million to settle Trump administration claims that its diversity program discriminated against white workers."
+     },
+     {
+      "id": "74330721",
+      "title": "Expecting a new grandchild? Here’s why you may want to see your doctor before their birth",
+      "link": "https://www.mynbc5.com/article/grandparent-vaccines-before-visiting-newborn/74330721",
+      "ts": "2026-11-05T01:37:00+00:00",
+      "summary": "Having a new grandbaby? With respiratory viruses and measles circulating, doctors say grandparents, caretakers, and other families should check if these vaccines are up to date before the first visit"
+     },
+     {
+      "id": "74339098",
+      "title": "Will Democrats impeach Trump? Party leaders lay out priorities after winning control of Congress",
+      "link": "https://www.mynbc5.com/article/will-democrats-impeach-trump-party-leaders-lay-out-priorities-after-winning-control-of-congress/74339098",
+      "ts": "2026-11-05T01:29:00+00:00",
+      "summary": "Democrats say they're focused on affordability and accountability, with mixed views on impeachment."
+     },
+     {
+      "id": "74339378",
+      "title": "2026 Section VII Football Playoff Brackets",
+      "link": "https://www.mynbc5.com/article/2026-section-vii-football-playoff-brackets/74339378",
+      "ts": "2026-11-05T01:28:00+00:00",
+      "summary": "Scores and results from the 2026 Section VII football playoffs!"
+     },
+     {
+      "id": "74338997",
+      "title": "Leon Black sues US Rep. Robert Garcia for defamation over Epstein comments",
+      "link": "https://www.mynbc5.com/article/leon-black-sues-robert-garcia-defamation-epstein/74338997",
+      "ts": "2026-11-05T00:25:00+00:00",
+      "summary": "Billionaire Leon Black on Wednesday filed a federal defamation lawsuit against California Rep. Robert Garcia for public comments the Democratic congressman made tying him to Jeffrey Epstein."
+     },
+     {
+      "id": "74338884",
+      "title": "3 executions scheduled for the same day in Indiana, Florida and Alabama",
+      "link": "https://www.mynbc5.com/article/3-executions-scheduled-for-the-same-day-in-indiana-florida-and-alabama/74338884",
+      "ts": "2026-11-05T00:14:00+00:00",
+      "summary": "Florida, Indiana and Alabama are scheduled to carry out executions Thursday. Their guilt in murders has not been disputed, though lawyers and other advocates have cited reasons they should be given life sentences instead."
      },
      {
       "id": "74336276",
       "title": "Mississippi Senate race is still too close to call",
       "link": "https://www.mynbc5.com/article/mississippi-senate-race-colom-hyde-smith/74336276",
-      "ts": "2026-11-04T23:30:00+00:00",
+      "ts": "2026-11-05T00:02:00+00:00",
       "summary": "The U.S. Senate race in Mississippi between Democrat Scott Colom and Republican Sen. Cindy Hyde-Smith is still too close to call as officials count provisional ballots."
      },
      {
-      "id": "74336945",
-      "title": "16 midterm races are within 1%. What could happen next?",
-      "link": "https://www.mynbc5.com/article/16-midterm-races-are-within-1-what-could-happen-next/74336945",
-      "ts": "2026-11-04T23:25:00+00:00",
-      "summary": "Just 65 votes separate the two candidates in the closest race."
-     },
-     {
-      "id": "74337735",
-      "title": "After midterm victories for Democrats, what comes next? We speak with Vermont party leaders",
-      "link": "https://www.mynbc5.com/article/vermont-congress-balance-of-power/74337735",
-      "ts": "2026-11-04T23:23:00+00:00",
-      "summary": "There was a major shift in Washington following Tuesday's midterm elections. What could it mean for President Trump's agenda and the issues facing Vermonters? We speak with local leaders."
-     },
-     {
-      "id": "74335794",
-      "title": "From party control to voter turnout: These charts explain the 2026 midterm election results",
-      "link": "https://www.mynbc5.com/article/8-charts-explain-2026-midterms/74335794",
-      "ts": "2026-11-04T23:21:00+00:00",
-      "summary": "Democrats swept Tuesday’s midterms, winning control of the House and Senate and flipping five governors’ races."
-     },
-     {
-      "id": "74336862",
-      "title": "Constantino declares victory in NY-21 as race still to close to call",
-      "link": "https://www.mynbc5.com/article/republican-anthony-constantino-victory-new-york-21/74336862",
-      "ts": "2026-11-04T23:21:00+00:00",
-      "summary": "Republican Anthony Constantino has declared victory over his Democratic opponent, Blake Gendebien, as the race remains too close to call due to a thin margin separating the two candidates in New York's 21st Congressional District Race."
-     },
-     {
-      "id": "74338391",
-      "title": "Report: LIV Golf's financial backer dropping plan for new league in 2027",
-      "link": "https://www.mynbc5.com/article/report-livs-financial-backer-dropping-plan-new-league-2027/74338391",
-      "ts": "2026-11-04T23:16:00+00:00",
-      "summary": "LIV Golf's future is in doubt after a Financial Times report that its main investor is dropping plans for LIV 2.0. The report says the focus could shift to LIV liquidating its assets."
-     },
-     {
-      "id": "74337898",
-      "title": "Balance of power to shift in Montpelier with the return of a supermajority",
-      "link": "https://www.mynbc5.com/article/balance-of-power-to-shift-in-montpelier-with-the-return-of-a-supermajority/74337898",
-      "ts": "2026-11-04T23:14:00+00:00",
-      "summary": "Gov. Phil Scott is the only Republican to win statewide office in Vermont as Democrats regain supermajority in the legislature."
-     },
-     {
-      "id": "74338317",
-      "title": "Canadian authorities say multiple grizzlies may have attacked mother and daughter found dead",
-      "link": "https://www.mynbc5.com/article/canada-possible-grizzly-attack-mother-daughter/74338317",
-      "ts": "2026-11-04T23:13:00+00:00",
-      "summary": "More than one grizzly may have been involved in a bear attack that relatives say left a mother and daughter dead in British Columbia, an official said."
-     },
-     {
-      "id": "74337708",
-      "title": "President Trump says he'll work with Democrats as White House warns against investigations",
-      "link": "https://www.mynbc5.com/article/president-trump-says-work-with-democrats-as-white-house-warns-against-investigations/74337708",
-      "ts": "2026-11-04T23:10:00+00:00",
-      "summary": "As Democrats prepare to take control of Congress, the White House is warning against investigations into President Donald Trump's administration. Democrats are also preparing to challenge his policies on healthcare and the war in Iran."
-     },
-     {
-      "id": "74326120",
-      "title": "Brent Davison beats David Favro for Clinton County Sheriff",
-      "link": "https://www.mynbc5.com/article/clinton-county-sheriff-race-results/74326120",
-      "ts": "2026-11-04T23:08:00+00:00",
-      "summary": "Former state police commander unseats longtime incumbent."
-     },
-     {
-      "id": "74337667",
-      "title": "Eight young artists bring Burlington's water systems to life through new mural",
-      "link": "https://www.mynbc5.com/article/new-mural-unveiled-protecting-lake-champlain/74337667",
-      "ts": "2026-11-04T23:05:00+00:00",
-      "summary": "Four weeks of hard work now on display as a new mural called Our Water, Our Future was unveiled on Wednesday at the Burlington Water Resources building."
-     },
-     {
-      "id": "74110779",
-      "title": "New York Attorney General Letita James wins third term",
-      "link": "https://www.mynbc5.com/article/new-york-attorney-general-election-results-2026/74110779",
-      "ts": "2026-11-04T22:52:00+00:00",
-      "summary": "New York Attorney General's race: See the latest polling data as election results begin coming in."
-     },
-     {
-      "id": "74335939",
-      "title": "Republican redistricting failed to flip most targeted districts",
-      "link": "https://www.mynbc5.com/article/results-redistricting-election-2026/74335939",
-      "ts": "2026-11-04T22:42:00+00:00",
-      "summary": "More than 34 million people were assigned new congressional districts before the 2026 midterms, as redistricting battles reshape the House map."
+      "id": "74338871",
+      "title": "Bob Dylan comes knockin' on pope's door as Leo welcomes legend to Vatican",
+      "link": "https://www.mynbc5.com/article/bob-dylan-pope-leo-vatican/74338871",
+      "ts": "2026-11-04T23:56:00+00:00",
+      "summary": "Bob Dylan visited with the American pope at the Vatican Wednesday — and it wasn't his first pontiff meeting."
      },
      {
       "id": "74337740",
       "title": "A new LGBTQ+ social space is set to open in Rutland",
       "link": "https://www.mynbc5.com/article/a-new-lgbtq-social-space-is-set-to-open-in-rutland-next-week/74337740",
-      "ts": "2026-11-04T22:36:00+00:00",
+      "ts": "2026-11-04T23:45:00+00:00",
       "summary": "The Q Rutland, a new LGBTQ+ gathering space, is set to open in Rutland on November 12"
      },
      {
-      "id": "74336663",
-      "title": "Florida authorities say 2 dead at Tampa office complex, including gunman shot by security guard",
-      "link": "https://www.mynbc5.com/article/at-least-2-killed-tampa-shooting-citibank-center/74336663",
-      "ts": "2026-11-04T22:30:00+00:00",
-      "summary": "Florida authorities say a gunman opened fire at Citibank's business complex in suburban Tampa and killed a woman before a security guard fatally shot him."
-     },
-     {
-      "id": "74326808",
-      "title": "Midterm election 2026: Tracking the results of redistricting efforts",
-      "link": "https://www.mynbc5.com/article/2026-midterm-redistricting-results/74326808",
-      "ts": "2026-11-04T22:30:00+00:00",
-      "summary": "More than 34 million people were assigned new congressional districts before the 2026 midterms, as redistricting battles reshape the House map."
-     },
-     {
-      "id": "74337087",
-      "title": "Driver OK after suffering medical emergency, driving into Connecticut River",
-      "link": "https://www.mynbc5.com/article/lunenburg-vermont-car-into-connecticut-river/74337087",
-      "ts": "2026-11-04T22:22:00+00:00",
-      "summary": "The Essex County Sheriff's Department helped pull a woman from a car that had driven into the Connecticut River in Lunenburg on Wednesday afternoon."
-     },
-     {
-      "id": "74337832",
-      "title": "New Hampshire man accused of murdering toddler testifies in his own defense",
-      "link": "https://www.mynbc5.com/article/annthoni-bliss-testimony-murder-trial/74337832",
-      "ts": "2026-11-04T22:21:00+00:00",
-      "summary": "A New Hampshire man charged with murdering his ex-girlfriend's 23-month-old son testified in his own defense, tearfully recounting the moment he found the child unresponsive."
-     },
-     {
-      "id": "74335851",
-      "title": "These are all the Senate, House and gubernatorial seats Democrats flipped",
-      "link": "https://www.mynbc5.com/article/democrats-senate-house-governor-midterm-results/74335851",
-      "ts": "2026-11-04T22:20:00+00:00",
-      "summary": "Democrats are on track to control the Senate and House next year after flipping key seats in a historic blue wave."
+      "id": "74338703",
+      "title": "John Nicks, legendary figure skating coach and champion maker, dies at 97",
+      "link": "https://www.mynbc5.com/article/figure-skating-coach-john-nicks-dies/74338703",
+      "ts": "2026-11-04T23:41:00+00:00",
+      "summary": "John Nicks, a renowned figure skating coach and former world pairs champion, died Monday at 97"
      }
     ]
    },
@@ -1554,68 +1546,116 @@
  "reddit-burlington": {
   "posts": [
    {
-    "id": "1xnuodd",
-    "title": "Missisquoi Abenaki Ad in 7Days - Thoughts?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xnuodd/missisquoi_abenaki_ad_in_7days_thoughts/",
-    "score": 47,
-    "comments": 91,
-    "created": "2026-11-04T17:44:40+00:00"
+    "id": "1xnz6qs",
+    "title": "Best seat in Burly 11/4",
+    "url": "https://www.reddit.com/r/burlington/comments/1xnz6qs/best_seat_in_burly_114/",
+    "score": 56,
+    "comments": 19,
+    "created": "2026-11-04T20:37:43+00:00"
    },
    {
     "id": "1xnpj6k",
     "title": "ok but genuinely why phil scott",
     "url": "https://www.reddit.com/r/burlington/comments/1xnpj6k/ok_but_genuinely_why_phil_scott/",
-    "score": 85,
-    "comments": 153,
+    "score": 135,
+    "comments": 256,
     "created": "2026-11-04T14:25:19+00:00"
    },
    {
-    "id": "1xnz6qs",
-    "title": "Best seat in Burly 11/4",
-    "url": "https://www.reddit.com/r/burlington/comments/1xnz6qs/best_seat_in_burly_114/",
-    "score": 27,
-    "comments": 16,
-    "created": "2026-11-04T20:37:43+00:00"
+    "id": "1xnuodd",
+    "title": "Missisquoi Abenaki Ad in 7Days - Thoughts?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xnuodd/missisquoi_abenaki_ad_in_7days_thoughts/",
+    "score": 59,
+    "comments": 130,
+    "created": "2026-11-04T17:44:40+00:00"
    },
    {
     "id": "1xnpkjn",
     "title": "And with that, hold Phil Scott to the same level of responsibility you hold the mayor of Burlington responsible for the decline of Vermont",
     "url": "https://www.reddit.com/r/burlington/comments/1xnpkjn/and_with_that_hold_phil_scott_to_the_same_level/",
-    "score": 59,
-    "comments": 13,
+    "score": 70,
+    "comments": 16,
     "created": "2026-11-04T14:26:54+00:00"
    },
    {
     "id": "1xnzcp3",
     "title": "The Taurid meteor shower peaks tonight, anyone want to form a stargazing club?",
     "url": "https://www.reddit.com/r/burlington/comments/1xnzcp3/the_taurid_meteor_shower_peaks_tonight_anyone/",
-    "score": 7,
-    "comments": 0,
+    "score": 13,
+    "comments": 3,
     "created": "2026-11-04T20:44:23+00:00"
+   },
+   {
+    "id": "1xo67wi",
+    "title": "Street cleaning overnight starts tonight!",
+    "url": "https://www.reddit.com/r/burlington/comments/1xo67wi/street_cleaning_overnight_starts_tonight/",
+    "score": 5,
+    "comments": 1,
+    "created": "2026-11-05T01:40:59+00:00"
+   },
+   {
+    "id": "1xo700y",
+    "title": "Favorite milemarker / utility sign?? Top 10?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xo700y/favorite_milemarker_utility_sign_top_10/",
+    "score": 4,
+    "comments": 3,
+    "created": "2026-11-05T02:19:23+00:00"
+   },
+   {
+    "id": "1xo3xpk",
+    "title": "Protos arborist helmet with stickers",
+    "url": "https://www.reddit.com/r/burlington/comments/1xo3xpk/protos_arborist_helmet_with_stickers/",
+    "score": 4,
+    "comments": 3,
+    "created": "2026-11-04T23:54:58+00:00"
+   },
+   {
+    "id": "1xo49ho",
+    "title": "Active activities?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xo49ho/active_activities/",
+    "score": 3,
+    "comments": 7,
+    "created": "2026-11-05T00:08:54+00:00"
    },
    {
     "id": "1xn8wv5",
     "title": "Mobile rave for Janoo",
     "url": "https://www.reddit.com/r/burlington/comments/1xn8wv5/mobile_rave_for_janoo/",
-    "score": 183,
-    "comments": 29,
+    "score": 186,
+    "comments": 30,
     "created": "2026-11-03T23:39:11+00:00"
+   },
+   {
+    "id": "1xo14r7",
+    "title": "Fish sticks at a restaurant?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xo14r7/fish_sticks_at_a_restaurant/",
+    "score": 3,
+    "comments": 14,
+    "created": "2026-11-04T21:54:44+00:00"
+   },
+   {
+    "id": "1xnvhfl",
+    "title": "Lunch",
+    "url": "https://www.reddit.com/r/burlington/comments/1xnvhfl/lunch/",
+    "score": 5,
+    "comments": 43,
+    "created": "2026-11-04T18:14:45+00:00"
    },
    {
     "id": "1xny7l6",
     "title": "Delivery to Hospital",
     "url": "https://www.reddit.com/r/burlington/comments/1xny7l6/delivery_to_hospital/",
     "score": 3,
-    "comments": 10,
+    "comments": 13,
     "created": "2026-11-04T19:59:46+00:00"
    },
    {
-    "id": "1xnvhfl",
-    "title": "Lunch",
-    "url": "https://www.reddit.com/r/burlington/comments/1xnvhfl/lunch/",
+    "id": "1xnqm41",
+    "title": "Physical Therapist",
+    "url": "https://www.reddit.com/r/burlington/comments/1xnqm41/physical_therapist/",
     "score": 4,
-    "comments": 37,
-    "created": "2026-11-04T18:14:45+00:00"
+    "comments": 10,
+    "created": "2026-11-04T15:09:26+00:00"
    },
    {
     "id": "1xo1ski",
@@ -1626,44 +1666,28 @@
     "created": "2026-11-04T22:21:23+00:00"
    },
    {
-    "id": "1xo14r7",
-    "title": "Fish sticks at a restaurant?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xo14r7/fish_sticks_at_a_restaurant/",
-    "score": 0,
-    "comments": 10,
-    "created": "2026-11-04T21:54:44+00:00"
-   },
-   {
-    "id": "1xnqm41",
-    "title": "Physical Therapist",
-    "url": "https://www.reddit.com/r/burlington/comments/1xnqm41/physical_therapist/",
-    "score": 3,
-    "comments": 9,
-    "created": "2026-11-04T15:09:26+00:00"
-   },
-   {
-    "id": "1xnz05s",
-    "title": "Phil Scott is not a good person",
-    "url": "https://www.reddit.com/r/burlington/comments/1xnz05s/phil_scott_is_not_a_good_person/",
-    "score": 0,
-    "comments": 2,
-    "created": "2026-11-04T20:30:19+00:00"
-   },
-   {
     "id": "1xny8k5",
     "title": "Looking for Burlington, Vermont, early-20s F",
     "url": "https://www.reddit.com/r/burlington/comments/1xny8k5/looking_for_burlington_vermont_early20s_f/",
     "score": 0,
-    "comments": 3,
+    "comments": 5,
     "created": "2026-11-04T20:00:35+00:00"
    },
    {
     "id": "1xmsh3f",
     "title": "Burlington Breakwater North Lighthouse during a beautiful morning",
     "url": "https://www.reddit.com/r/burlington/comments/1xmsh3f/burlington_breakwater_north_lighthouse_during_a/",
-    "score": 79,
+    "score": 80,
     "comments": 4,
     "created": "2026-11-03T13:07:46+00:00"
+   },
+   {
+    "id": "1xnz05s",
+    "title": "Phil Scott is not a good person",
+    "url": "https://www.reddit.com/r/burlington/comments/1xnz05s/phil_scott_is_not_a_good_person/",
+    "score": 0,
+    "comments": 11,
+    "created": "2026-11-04T20:30:19+00:00"
    },
    {
     "id": "1xmv1r6",
@@ -1712,38 +1736,6 @@
     "score": 3,
     "comments": 3,
     "created": "2026-11-03T21:22:27+00:00"
-   },
-   {
-    "id": "1xmfb3k",
-    "title": "favorite hydrants in burlington? personal top 10?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xmfb3k/favorite_hydrants_in_burlington_personal_top_10/",
-    "score": 106,
-    "comments": 37,
-    "created": "2026-11-03T01:07:53+00:00"
-   },
-   {
-    "id": "1xmcsu6",
-    "title": "Happy Andrew Champagne Day Eve. Please go vote tomorrow if you haven’t already.",
-    "url": "https://www.reddit.com/r/burlington/comments/1xmcsu6/happy_andrew_champagne_day_eve_please_go_vote/",
-    "score": 66,
-    "comments": 10,
-    "created": "2026-11-02T23:17:30+00:00"
-   },
-   {
-    "id": "1xmbfpj",
-    "title": "Clocks rolling back…",
-    "url": "https://www.reddit.com/r/burlington/comments/1xmbfpj/clocks_rolling_back/",
-    "score": 46,
-    "comments": 19,
-    "created": "2026-11-02T22:20:34+00:00"
-   },
-   {
-    "id": "1xlzmwe",
-    "title": "Amanda Janoo: The state can pay primary care providers directly, rather than going through insurance",
-    "url": "https://www.reddit.com/r/burlington/comments/1xlzmwe/amanda_janoo_the_state_can_pay_primary_care/",
-    "score": 171,
-    "comments": 238,
-    "created": "2026-11-02T15:06:34+00:00"
    }
   ]
  },
