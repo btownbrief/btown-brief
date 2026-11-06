@@ -64,6 +64,7 @@ jobs:
           # egress. Unset is fine — the source just fails as it does now.
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           SEVENDAYS_FRESH_PAGES: ${{ steps.depth.outputs.pages }}
+          PYTHONDONTWRITEBYTECODE: "1"
         run: |
           python3 scripts/events/update.py --window 60
 
@@ -76,6 +77,5 @@ jobs:
             echo "No event changes."
           else
             git commit -m "Auto-refresh events calendar"
-            git pull --rebase origin ${GITHUB_REF_NAME}
-            git push
+            git push || (git pull --rebase --autostash origin ${{ github.ref_name }} && git push)
           fi
