@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-06T01:03:25+00:00",
+ "updated": "2026-11-06T02:15:02+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 64,
-  "sky": "Clear",
+  "temp": 61,
+  "sky": "Mostly Clear",
   "from": "airport",
   "hi": 61,
   "lo": 50,
-  "rain": "A chance of showers tonight until 9pm",
+  "rain": "Dry through Friday",
   "obs": {
-   "temp": 64,
-   "sky": "Clear",
-   "at": "2026-11-06T00:45:00+00:00"
+   "temp": 61,
+   "sky": "Mostly Clear",
+   "at": "2026-11-06T00:55:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-05T20:00:00-05:00",
-    "temp": 59,
-    "sky": "Scattered Rain Showers"
-   },
    {
     "t": "2026-11-05T21:00:00-05:00",
     "temp": 59,
@@ -44,6 +39,11 @@
     "t": "2026-11-06T01:00:00-05:00",
     "temp": 56,
     "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-06T02:00:00-05:00",
+    "temp": 55,
+    "sky": "Partly Cloudy"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
@@ -70,15 +70,6 @@
  ],
  "tonight": [
   {
-   "title": "Moody Joody",
-   "time": "7 pm",
-   "venue": "Higher Ground",
-   "start": "2026-11-05T19:00:00-05:00",
-   "end": null,
-   "url": "https://events.uvm.edu/event/moody-joody",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
    "title": "Crokinole",
    "time": "6 pm",
    "venue": "The Boardroom",
@@ -88,21 +79,30 @@
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "Learn & Play Spirit Island",
-   "time": "6 pm",
-   "venue": "The Boardroom",
-   "start": "2026-11-05T18:00:00-05:00",
-   "end": "2026-11-05T21:00:00-05:00",
-   "url": "https://www.meetup.com/friendlytabletopgamers/events/317017218/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
    "title": "Strings of India: An Evening of North Indian Classical Music",
    "time": "6:30 pm",
    "venue": "Burlington City Hall",
    "start": "2026-11-05T18:30:00-05:00",
    "end": "2026-11-05T21:30:00-05:00",
    "url": "https://community.sevendaysvt.com/event/strings-of-india-an-evening-of-north-indian-classical-music-45402669",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "University Jazz Ensemble ft. Dennis Mackrel",
+   "time": "7:30 pm",
+   "venue": "Music Building and Recital Hall",
+   "start": "2026-11-05T19:30:00-05:00",
+   "end": null,
+   "url": "https://events.uvm.edu/event/university-jazz-ensemble-with-dennis-mackrel",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "TwoSev, JP Black, Rubi, Chaston",
+   "time": "8 pm",
+   "venue": "Red Square",
+   "start": "2026-11-05T20:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/twosev-jp-black-rubi-chaston-45664017",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
