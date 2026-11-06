@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-06T00:54:54+00:00",
+ "updated": "2026-11-06T01:03:19+00:00",
  "sections_updated": {
-  "now": "2026-11-06T00:54:54+00:00",
-  "forecast": "2026-11-06T00:54:54+00:00",
-  "hourly": "2026-11-06T00:54:54+00:00",
-  "alerts": "2026-11-06T00:54:54+00:00",
-  "afd": "2026-11-06T00:54:54+00:00",
-  "lake_forecast": "2026-11-06T00:54:54+00:00",
-  "lake_gage": "2026-11-06T00:54:54+00:00",
-  "air": "2026-11-06T00:54:54+00:00",
-  "sun": "2026-11-06T00:54:54+00:00",
-  "models": "2026-11-06T00:54:54+00:00"
+  "now": "2026-11-06T01:03:19+00:00",
+  "forecast": "2026-11-06T01:03:19+00:00",
+  "hourly": "2026-11-06T01:03:19+00:00",
+  "alerts": "2026-11-06T01:03:19+00:00",
+  "afd": "2026-11-06T01:03:19+00:00",
+  "lake_forecast": "2026-11-06T01:03:19+00:00",
+  "lake_gage": "2026-11-06T01:03:19+00:00",
+  "air": "2026-11-06T01:03:19+00:00",
+  "sun": "2026-11-06T01:03:19+00:00",
+  "models": "2026-11-06T01:03:19+00:00"
  },
  "now": {
-  "observed_at": "2026-11-06T00:35:00+00:00",
+  "observed_at": "2026-11-06T00:45:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 64,
   "feels_like_f": 64,
   "humidity": 88,
   "dewpoint_f": 61,
-  "wind_mph": 5,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "WSW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-05T19:00:00-05:00",
+    "start": "2026-11-05T20:00:00-05:00",
     "is_day": false,
     "temp_f": 50,
-    "pop": 43,
-    "wind": "E 2 to 6 mph",
+    "pop": 27,
+    "wind": "E 3 mph",
     "short": "Scattered Rain Showers then Mostly Cloudy",
-    "detailed": "Scattered rain showers before 9pm. Mostly cloudy, with a low around 50. East wind 2 to 6 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers before 9pm. Mostly cloudy, with a low around 50. East wind around 3 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-05T21:18:17+00:00",
   "hours": [
-   {
-    "t": "2026-11-05T19:00:00-05:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 43,
-    "humidity": 93,
-    "wind_mph": 6,
-    "wind_dir": "W",
-    "sky": 78,
-    "short": "Scattered Rain Showers",
-    "qpf_in": 0.005,
-    "snow_in": 0.0,
-    "gust_mph": 10
-   },
    {
     "t": "2026-11-05T20:00:00-05:00",
     "temp_f": 59,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 16
+   },
+   {
+    "t": "2026-11-07T07:00:00-05:00",
+    "temp_f": 48,
+    "feels_f": 44,
+    "pop": 28,
+    "humidity": 89,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 85,
+    "short": "Scattered Rain Showers",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 17
    }
   ],
   "days": [
@@ -1053,7 +1053,7 @@
  },
  "brief": {
   "date": "2026-11-05",
-  "generated": "2026-11-06T00:54:59+00:00",
+  "generated": "2026-11-06T01:03:24+00:00",
   "text": "A chance of showers tonight until 9pm, under a tenth of an inch, low 50. Friday, partly sunny, high 61.",
   "periods": [
    {
@@ -1062,13 +1062,13 @@
     "is_day": false,
     "temp_f": 50,
     "sky": "mostly cloudy",
-    "start": "2026-11-05T19:00:00-05:00",
+    "start": "2026-11-05T20:00:00-05:00",
     "end": "2026-11-06T06:00:00-05:00",
     "precip": {
      "kind": "showers",
-     "chance": 40,
+     "chance": 30,
      "say": "a chance of showers",
-     "start": "2026-11-05T19:00:00-05:00",
+     "start": "2026-11-05T20:00:00-05:00",
      "end": "2026-11-05T21:00:00-05:00",
      "when": "until 9pm",
      "amount_in": 0.03,
@@ -1077,7 +1077,7 @@
     },
     "wind": null,
     "feels_lo": 53,
-    "feels_hi": 60,
+    "feels_hi": 59,
     "text": "A chance of showers tonight until 9pm, under a tenth of an inch, low 50."
    },
    {
