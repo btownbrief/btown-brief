@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-05T23:34:52+00:00",
+ "updated": "2026-11-06T00:54:54+00:00",
  "sections_updated": {
-  "now": "2026-11-05T23:34:52+00:00",
-  "forecast": "2026-11-05T23:34:52+00:00",
-  "hourly": "2026-11-05T23:34:52+00:00",
-  "alerts": "2026-11-05T23:34:52+00:00",
-  "afd": "2026-11-05T23:34:52+00:00",
-  "lake_forecast": "2026-11-05T23:34:52+00:00",
-  "lake_gage": "2026-11-05T23:34:52+00:00",
-  "air": "2026-11-05T23:34:52+00:00",
-  "sun": "2026-11-05T23:34:52+00:00",
-  "models": "2026-11-05T23:34:52+00:00"
+  "now": "2026-11-06T00:54:54+00:00",
+  "forecast": "2026-11-06T00:54:54+00:00",
+  "hourly": "2026-11-06T00:54:54+00:00",
+  "alerts": "2026-11-06T00:54:54+00:00",
+  "afd": "2026-11-06T00:54:54+00:00",
+  "lake_forecast": "2026-11-06T00:54:54+00:00",
+  "lake_gage": "2026-11-06T00:54:54+00:00",
+  "air": "2026-11-06T00:54:54+00:00",
+  "sun": "2026-11-06T00:54:54+00:00",
+  "models": "2026-11-06T00:54:54+00:00"
  },
  "now": {
-  "observed_at": "2026-11-05T23:05:00+00:00",
+  "observed_at": "2026-11-06T00:35:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
+  "description": "Clear",
   "temp_f": 64,
   "feels_like_f": 64,
-  "humidity": 94,
-  "dewpoint_f": 63,
-  "wind_mph": 11,
+  "humidity": 88,
+  "dewpoint_f": 61,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "S",
+  "wind_dir": "WSW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-05T18:00:00-05:00",
+    "start": "2026-11-05T19:00:00-05:00",
     "is_day": false,
     "temp_f": 50,
-    "pop": 59,
-    "wind": "E 2 to 8 mph",
-    "short": "Chance Rain Showers then Mostly Cloudy",
-    "detailed": "A chance of rain showers before 9pm. Mostly cloudy, with a low around 50. East wind 2 to 8 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 43,
+    "wind": "E 2 to 6 mph",
+    "short": "Scattered Rain Showers then Mostly Cloudy",
+    "detailed": "Scattered rain showers before 9pm. Mostly cloudy, with a low around 50. East wind 2 to 6 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-05T21:18:17+00:00",
   "hours": [
-   {
-    "t": "2026-11-05T18:00:00-05:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 59,
-    "humidity": 97,
-    "wind_mph": 8,
-    "wind_dir": "SW",
-    "sky": 73,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.008,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
    {
     "t": "2026-11-05T19:00:00-05:00",
     "temp_f": 60,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 17
+   },
+   {
+    "t": "2026-11-07T06:00:00-05:00",
+    "temp_f": 47,
+    "feels_f": 43,
+    "pop": 29,
+    "humidity": 89,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 86,
+    "short": "Scattered Rain Showers",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 16
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-05T19:28:00+00:00",
+  "issued": "2026-11-05T23:38:00+00:00",
   "key_messages": [
    "Periods of scattered showers will continue this afternoon through the upcoming weekend as temperatures cool to near normal levels.",
    "There will be additional opportunities for non-impactful, beneficial precipitation during the early to middle portion of next week as the pattern remains unsettled."
   ],
   "what_changed": "As of 228 PM EST Thursday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 051928\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\nIssued by National Weather Service Albany NY\n228 PM EST Thu Nov 5 2026\n\n.WHAT HAS CHANGED...\nAs of 228 PM EST Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 PM EST Thursday...\n\n1. Periods of scattered showers will continue this afternoon\nthrough the upcoming weekend as temperatures cool to near normal\nlevels. \n\n2. There will be additional opportunities for non-impactful,\nbeneficial precipitation during the early to middle portion of\nnext week as the pattern remains unsettled.  \n\n&&\n\n.DISCUSSION...\nAs of 228 PM EST Thursday...\n\nKEY MESSAGE 1: Isolated to scattered showers continue this \nafternoon into this evening as an initial cold front begins its \npassage through the region. Drier air directly behind the front\nwill filter into northern New York and Vermont swiftly this \nevening, becoming enhanced by the of the right exit region of an\nincoming elongated jet streak, yielding dry conditions later \nthis evening through the overnight period. However, with clouds \nslow to scour out due to lower-level moisture becoming trapped \nbelow a low- to mid-level inversion, temperatures will remain on\nthe mild side. Expect lows in the low 40s to low 50s. \n\nDry conditions remain steady through tomorrow morning and even\nearly tomorrow afternoon as a secondary cold front and parent\nlow are slow to make eastward progress off the Eastern Great\nLakes. However, by mid-afternoon, isolated to scattered showers\nreturn, particularly for Lake-adjacent areas, the Adirondacks\nwhere upslope flow will overcome an overall lack of forcing, and\nalong the VT/NH border as a low develops along today's initial\ncold front that looks to stall along the New England Coastline.\nRainfall rates are anticipated to be light, with QPF generally\nremaining under 0.1\" through tomorrow night. Tomorrow's highs\nwill be a bit cooler than today, though still classify as\nabove-normal with values in the low 50s to mid 60s. Lows\ntomorrow night will then largely be in the 40s with upper 30s\nacross higher elevations. \n\nThe passage of the secondary cold front tomorrow night will see\ntemperatures fall much closer to normal than we have been over\nthe last several days. Highs Saturday will only reach the 40s\nand 50s with additional chances for isolated to scattered\nshowers across higher elevations as moist, cyclonic flow remains\nin place beneath an upper-level low moving into the Northeast.\nLows Saturday night will then fall largely to the 30s and 40s\nwith pockets of upper 20s across the Adirondacks and Greens.\nSunday will remain seasonably chilly with additional potential\nfor isolated, high-elevation showers, which could contain some\nsnowflakes, and highs in the 30s to low 40s across higher \nelevations and upper 40s to low 50s in valley areas. Lows Sunday\nnight will then fall largely to the 20s and 30s. \n\nKEY MESSAGE 2: \n\nAdditional chances for precipitation come mostly for Monday and\nWednesday next week as we remain in a more unsettled pattern. \nHowever, given the recent dry conditions, all precipitation will\nbe beneficial and not pose any significant impacts.\nTemperatures will remain more consistently near normal next week\nwith highs largely in the 40s and 50s and lows in the 20s and\n30s. \n\n&&\n\n.AVIATION /18Z THURSDAY THROUGH TUESDAY/...\nThrough 18Z Friday, a mix of VFR/MVFR Cigs with mainly VFR Vsbys \nacross the TAF sites through this afternoon. Area of steady \nlight/moderate rain will move east of the TAF sites shortly, however \na band of light/moderate showers associated with a cold front will \nmove east across the region during the mid to late afternoon, \nproducing a brief period of MVFR Vsbys. For tonight, VFR/MVFR Cigs \nare expected. Should any breaks in the clouds develop, there could \nbe a bit of fog/low Cigs developing toward daybreak at SLK and \npossibly MPV/RUT. Mainly VFR conditions are expected Friday morning.\n\nSouth to southwest winds 5-12 KT with a few gusts up to 20-25 kt \nwill shift into the southwest to west and decrease by early evening \nto 5-10 KT. Winds will then become light/variable tonight through \nFriday morning, becoming north to northeast toward and especially \nafter 18Z/Fri.\n\nOutlook...\n\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA.\nSunday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA,\nChance SHSN.\nMonday: Mainly VFR, with areas MVFR possible. Slight chance SHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for today on the broad lake. \nSouth winds currently are likely 20 to 30 knots, expected to\npeak early this morning prior to rain arriving. After a lull\nduring the rain, winds will likely pick up again for a few\nhours, likely after 2 PM and before 7 PM, when winds could \noccasionally be near 25 knots. Waves will tend to be 2 to 4 \nfeet during the period.\n\n&&\n\n.CLIMATE...\nAs of 216 AM EST Thursday...\n\nFollowing records set on Wednesday, a high minimum temperature\nis possible at BTV today. \n\nForecast: 58 \nRecord: 60 in 2022\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...NWS ALY\nDISCUSSION...NWS ALY\nAVIATION...NWS ALY\nMARINE...Kutikoff\nCLIMATE...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 052338\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n638 PM EST Thu Nov 5 2026\n\n.WHAT HAS CHANGED...\nAs of 228 PM EST Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 PM EST Thursday...\n\n1. Periods of scattered showers will continue this afternoon\nthrough the upcoming weekend as temperatures cool to near normal\nlevels. \n\n2. There will be additional opportunities for non-impactful,\nbeneficial precipitation during the early to middle portion of\nnext week as the pattern remains unsettled.\n\n&&\n\n.DISCUSSION...\nAs of 228 PM EST Thursday...\n\nKEY MESSAGE 1: Isolated to scattered showers continue this \nafternoon into this evening as an initial cold front begins its \npassage through the region. Drier air directly behind the front\nwill filter into northern New York and Vermont swiftly this \nevening, becoming enhanced by the of the right exit region of an\nincoming elongated jet streak, yielding dry conditions later \nthis evening through the overnight period. However, with clouds \nslow to scour out due to lower-level moisture becoming trapped \nbelow a low- to mid-level inversion, temperatures will remain on\nthe mild side. Expect lows in the low 40s to low 50s. \n\nDry conditions remain steady through tomorrow morning and even\nearly tomorrow afternoon as a secondary cold front and parent\nlow are slow to make eastward progress off the Eastern Great\nLakes. However, by mid-afternoon, isolated to scattered showers\nreturn, particularly for Lake-adjacent areas, the Adirondacks\nwhere upslope flow will overcome an overall lack of forcing, and\nalong the VT/NH border as a low develops along today's initial\ncold front that looks to stall along the New England Coastline.\nRainfall rates are anticipated to be light, with QPF generally\nremaining under 0.1\" through tomorrow night. Tomorrow's highs\nwill be a bit cooler than today, though still classify as\nabove-normal with values in the low 50s to mid 60s. Lows\ntomorrow night will then largely be in the 40s with upper 30s\nacross higher elevations. \n\nThe passage of the secondary cold front tomorrow night will see\ntemperatures fall much closer to normal than we have been over\nthe last several days. Highs Saturday will only reach the 40s\nand 50s with additional chances for isolated to scattered\nshowers across higher elevations as moist, cyclonic flow remains\nin place beneath an upper-level low moving into the Northeast.\nLows Saturday night will then fall largely to the 30s and 40s\nwith pockets of upper 20s across the Adirondacks and Greens.\nSunday will remain seasonably chilly with additional potential\nfor isolated, high-elevation showers, which could contain some\nsnowflakes, and highs in the 30s to low 40s across higher \nelevations and upper 40s to low 50s in valley areas. Lows Sunday\nnight will then fall largely to the 20s and 30s. \n\nKEY MESSAGE 2: \n\nAdditional chances for precipitation come mostly for Monday and\nWednesday next week as we remain in a more unsettled pattern. \nHowever, given the recent dry conditions, all precipitation will\nbe beneficial and not pose any significant impacts.\nTemperatures will remain more consistently near normal next week\nwith highs largely in the 40s and 50s and lows in the 20s and\n30s.\n\n&&\n\n.AVIATION /00Z FRIDAY THROUGH TUESDAY/...\nThrough 00Z Saturday...A mix of MVFR and VFR conditions exist\nbut low ceilings should eventually scatter tonight. EFK should \nbe first to go and become VFR by midnight. SLK will likely take \nlonger but it should be be VFR by 12Z. After the ceilings exit, \nVFR conditions will persist through tomorrow. A couple isolated \nto scattered showers are possible across Vermont this evening \nbut the visibility should remain VFR during any of them. Winds \nwill continue to decrease this evening, and by around 06Z, they \nshould be 5 KT or less. Winds will generally stay light \nthroughout the day tomorrow. Winds shear will be elevated \ntonight but it is not expected to reach the formal criteria. \nOutlook...\n\nFriday Night: Mainly VFR, with areas MVFR possible. Scattered\nSHRA.\nSaturday: MVFR. Scattered SHRA.\nSaturday Night: Mainly IFR, with areas MVFR possible. Numerous\nSHRA.\nSunday: Mainly MVFR, with areas IFR possible. Scattered SHRA.\nSunday Night: Mainly MVFR, with areas VFR possible. Chance RA.\nMonday: Mainly MVFR, with local VFR possible. Slight chance RA.\nMonday Night: Mainly MVFR, with local VFR possible. NO SIG WX.\nTuesday: Mainly VFR, with areas MVFR possible. Chance RA.\n\n&&\n\n.CLIMATE...\nAs of 216 AM EST Thursday...\n\nA high minimum temperature is possible at BTV today (11/5). \n\nForecast: 58 \nRecord: 60 in 2022\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...NWS ALY\nDISCUSSION...NWS ALY\nAVIATION...Myskowski\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-11-05T19:38:00+00:00",
@@ -970,17 +970,17 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-11-05T18:00:00.000-05:00",
-  "level_ft": 93.85,
-  "level_at": "2026-11-05T18:00:00.000-05:00",
+  "water_temp_at": "2026-11-05T19:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-05T19:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/05/26 18:00",
+  "observed": "11/05/26 19:00",
   "discussion": "On Friday, November 6th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1000,12 +1000,12 @@
      "ICON": 68
     },
     "pop_max": {
-     "GFS": 57,
+     "GFS": 54,
      "Euro": 100,
      "ICON": 98
     },
     "precip_in": {
-     "GFS": 2.15,
+     "GFS": 0.02,
      "Euro": 0.15,
      "ICON": 0.2
     },
@@ -1014,7 +1014,7 @@
    {
     "date": "2026-11-06",
     "high_f": {
-     "GFS": 60,
+     "GFS": 64,
      "Euro": 62,
      "ICON": 64
     },
@@ -1028,12 +1028,12 @@
      "Euro": 0.03,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-07",
     "high_f": {
-     "GFS": 52,
+     "GFS": 50,
      "Euro": 52,
      "ICON": 52
     },
@@ -1043,18 +1043,18 @@
      "ICON": 31
     },
     "precip_in": {
-     "GFS": 0.09,
+     "GFS": 0.08,
      "Euro": 0.18,
      "ICON": 0.07
     },
-    "high_spread_f": 0
+    "high_spread_f": 2
    }
   ]
  },
  "brief": {
   "date": "2026-11-05",
-  "generated": "2026-11-05T23:34:55+00:00",
-  "text": "Showers likely tonight until 9pm, under a tenth of an inch, low 50. Friday, partly sunny, high 61.",
+  "generated": "2026-11-06T00:54:59+00:00",
+  "text": "A chance of showers tonight until 9pm, under a tenth of an inch, low 50. Friday, partly sunny, high 61.",
   "periods": [
    {
     "label": "Tonight",
@@ -1062,23 +1062,23 @@
     "is_day": false,
     "temp_f": 50,
     "sky": "mostly cloudy",
-    "start": "2026-11-05T18:00:00-05:00",
+    "start": "2026-11-05T19:00:00-05:00",
     "end": "2026-11-06T06:00:00-05:00",
     "precip": {
      "kind": "showers",
-     "chance": 60,
-     "say": "showers likely",
-     "start": "2026-11-05T18:00:00-05:00",
+     "chance": 40,
+     "say": "a chance of showers",
+     "start": "2026-11-05T19:00:00-05:00",
      "end": "2026-11-05T21:00:00-05:00",
      "when": "until 9pm",
-     "amount_in": 0.04,
+     "amount_in": 0.03,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
     "wind": null,
     "feels_lo": 53,
-    "feels_hi": 61,
-    "text": "Showers likely tonight until 9pm, under a tenth of an inch, low 50."
+    "feels_hi": 60,
+    "text": "A chance of showers tonight until 9pm, under a tenth of an inch, low 50."
    },
    {
     "label": "Friday",
