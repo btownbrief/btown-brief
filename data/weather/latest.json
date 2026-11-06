@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-06T10:55:13+00:00",
+ "updated": "2026-11-06T11:15:10+00:00",
  "sections_updated": {
-  "now": "2026-11-06T10:55:13+00:00",
-  "forecast": "2026-11-06T10:55:13+00:00",
-  "hourly": "2026-11-06T10:55:13+00:00",
-  "alerts": "2026-11-06T10:55:13+00:00",
-  "afd": "2026-11-06T10:55:13+00:00",
-  "lake_forecast": "2026-11-06T10:55:13+00:00",
-  "lake_gage": "2026-11-06T10:55:13+00:00",
-  "air": "2026-11-06T10:55:13+00:00",
-  "sun": "2026-11-06T10:55:13+00:00",
-  "models": "2026-11-06T10:55:13+00:00"
+  "now": "2026-11-06T11:15:10+00:00",
+  "forecast": "2026-11-06T11:15:10+00:00",
+  "hourly": "2026-11-06T11:15:10+00:00",
+  "alerts": "2026-11-06T11:15:10+00:00",
+  "afd": "2026-11-06T11:15:10+00:00",
+  "lake_forecast": "2026-11-06T11:15:10+00:00",
+  "lake_gage": "2026-11-06T11:15:10+00:00",
+  "air": "2026-11-06T11:15:10+00:00",
+  "sun": "2026-11-06T11:15:10+00:00",
+  "models": "2026-11-06T11:15:10+00:00"
  },
  "now": {
   "observed_at": "2026-11-06T10:35:00+00:00",
@@ -29,17 +29,7 @@
   "updated": "2026-11-06T06:20:57+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-06T04:00:00-05:00",
-    "is_day": false,
-    "temp_f": 51,
-    "pop": 1,
-    "wind": "S 2 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 51. South wind around 2 mph."
-   },
-   {
-    "name": "Friday",
+    "name": "Today",
     "start": "2026-11-06T06:00:00-05:00",
     "is_day": true,
     "temp_f": 64,
@@ -49,7 +39,7 @@
     "detailed": "Mostly cloudy, with a high near 64. East wind 1 to 5 mph."
    },
    {
-    "name": "Friday Night",
+    "name": "Tonight",
     "start": "2026-11-06T18:00:00-05:00",
     "is_day": false,
     "temp_f": 45,
@@ -96,7 +86,7 @@
     "pop": 40,
     "wind": "SW 5 to 8 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 37. Southwest wind 5 to 8 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 37. Southwest wind 5 to 8 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Monday",
@@ -167,26 +157,22 @@
     "wind": "NW 6 mph",
     "short": "Slight Chance Snow Showers then Slight Chance Rain Showers",
     "detailed": "A slight chance of snow showers before 9am, then a slight chance of rain showers between 9am and 1pm. Partly sunny, with a high near 46. Northwest wind around 6 mph."
+   },
+   {
+    "name": "Thursday Night",
+    "start": "2026-11-12T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 27,
+    "pop": 16,
+    "wind": "NW 5 mph",
+    "short": "Slight Chance Rain And Snow Showers",
+    "detailed": "A slight chance of rain showers between 7pm and 10pm, then a slight chance of rain and snow showers. Mostly cloudy, with a low around 27. Northwest wind around 5 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-06T06:20:57+00:00",
   "hours": [
-   {
-    "t": "2026-11-06T05:00:00-05:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 1,
-    "humidity": 89,
-    "wind_mph": 2,
-    "wind_dir": "S",
-    "sky": 84,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
-   },
    {
     "t": "2026-11-06T06:00:00-05:00",
     "temp_f": 52,
@@ -676,6 +662,20 @@
     "qpf_in": 0.012,
     "snow_in": 0.0,
     "gust_mph": 25
+   },
+   {
+    "t": "2026-11-07T17:00:00-05:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 58,
+    "humidity": 83,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 92,
+    "short": "Light Rain Likely",
+    "qpf_in": 0.012,
+    "snow_in": 0.0,
+    "gust_mph": 24
    }
   ],
   "days": [
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 54,
-  "water_temp_at": "2026-11-06T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-06T06:00:00.000-05:00",
   "level_ft": 93.85,
-  "level_at": "2026-11-06T05:00:00.000-05:00",
+  "level_at": "2026-11-06T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +971,7 @@
   "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/06/26 5:00",
+  "observed": "11/06/26 6:00",
   "discussion": "On Friday, November 6th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1044,26 +1044,12 @@
  },
  "brief": {
   "date": "2026-11-06",
-  "generated": "2026-11-06T10:55:17+00:00",
-  "text": "Mostly cloudy overnight, low 51. Mostly cloudy today, high 64.",
+  "generated": "2026-11-06T11:15:13+00:00",
+  "text": "Mostly cloudy today, high 64. Mostly cloudy tonight, low 45. Saturday, rain likely and cooler from 2pm on, about a tenth of an inch, high 54.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 51,
-    "sky": "mostly cloudy",
-    "start": "2026-11-06T10:00:00+00:00",
-    "end": "2026-11-06T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 53,
-    "feels_hi": 53,
-    "text": "Mostly cloudy overnight, low 51."
-   },
-   {
     "label": "Today",
-    "name": "Friday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 64,
     "sky": "mostly cloudy",
@@ -1074,6 +1060,20 @@
     "feels_lo": 52,
     "feels_hi": 63,
     "text": "Mostly cloudy today, high 64."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 45,
+    "sky": "mostly cloudy",
+    "start": "2026-11-06T18:00:00-05:00",
+    "end": "2026-11-07T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 44,
+    "feels_hi": 58,
+    "text": "Mostly cloudy tonight, low 45."
    }
   ]
  }
