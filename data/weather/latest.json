@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-06T10:35:06+00:00",
+ "updated": "2026-11-06T10:55:13+00:00",
  "sections_updated": {
-  "now": "2026-11-06T10:35:06+00:00",
-  "forecast": "2026-11-06T10:35:06+00:00",
-  "hourly": "2026-11-06T10:35:06+00:00",
-  "alerts": "2026-11-06T10:35:06+00:00",
-  "afd": "2026-11-06T10:35:06+00:00",
-  "lake_forecast": "2026-11-06T10:35:06+00:00",
-  "lake_gage": "2026-11-06T10:35:06+00:00",
-  "air": "2026-11-06T10:35:06+00:00",
-  "sun": "2026-11-06T10:35:06+00:00",
-  "models": "2026-11-06T10:35:06+00:00"
+  "now": "2026-11-06T10:55:13+00:00",
+  "forecast": "2026-11-06T10:55:13+00:00",
+  "hourly": "2026-11-06T10:55:13+00:00",
+  "alerts": "2026-11-06T10:55:13+00:00",
+  "afd": "2026-11-06T10:55:13+00:00",
+  "lake_forecast": "2026-11-06T10:55:13+00:00",
+  "lake_gage": "2026-11-06T10:55:13+00:00",
+  "air": "2026-11-06T10:55:13+00:00",
+  "sun": "2026-11-06T10:55:13+00:00",
+  "models": "2026-11-06T10:55:13+00:00"
  },
  "now": {
-  "observed_at": "2026-11-06T09:54:00+00:00",
+  "observed_at": "2026-11-06T10:35:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 51,
-  "feels_like_f": 51,
-  "humidity": 100,
-  "dewpoint_f": 51,
+  "description": "Fog/Mist",
+  "temp_f": 52,
+  "feels_like_f": 52,
+  "humidity": 94,
+  "dewpoint_f": 50,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-11-06T05:00:00-05:00",
+    "start": "2026-11-06T04:00:00-05:00",
     "is_day": false,
     "temp_f": 51,
     "pop": 1,
@@ -988,11 +988,11 @@
     "high_f": {
      "GFS": 64,
      "Euro": 62,
-     "ICON": 64
+     "ICON": 63
     },
     "pop_max": {
      "GFS": 4,
-     "Euro": 65,
+     "Euro": 89,
      "ICON": 8
     },
     "precip_in": {
@@ -1007,11 +1007,11 @@
     "high_f": {
      "GFS": 50,
      "Euro": 53,
-     "ICON": 50
+     "ICON": 51
     },
     "pop_max": {
      "GFS": 84,
-     "Euro": 84,
+     "Euro": 89,
      "ICON": 51
     },
     "precip_in": {
@@ -1026,11 +1026,11 @@
     "high_f": {
      "GFS": 46,
      "Euro": 50,
-     "ICON": 45
+     "ICON": 46
     },
     "pop_max": {
      "GFS": 84,
-     "Euro": 80,
+     "Euro": 84,
      "ICON": 70
     },
     "precip_in": {
@@ -1038,13 +1038,13 @@
      "Euro": 0.17,
      "ICON": 0.17
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    }
   ]
  },
  "brief": {
   "date": "2026-11-06",
-  "generated": "2026-11-06T10:35:10+00:00",
+  "generated": "2026-11-06T10:55:17+00:00",
   "text": "Mostly cloudy overnight, low 51. Mostly cloudy today, high 64.",
   "periods": [
    {
@@ -1053,7 +1053,7 @@
     "is_day": false,
     "temp_f": 51,
     "sky": "mostly cloudy",
-    "start": "2026-11-06T05:00:00-05:00",
+    "start": "2026-11-06T10:00:00+00:00",
     "end": "2026-11-06T06:00:00-05:00",
     "precip": null,
     "wind": null,
