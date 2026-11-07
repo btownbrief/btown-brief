@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-07T23:48:33+00:00",
+ "updated": "2026-11-07T23:59:23+00:00",
  "sections_updated": {
-  "now": "2026-11-07T23:48:33+00:00",
-  "forecast": "2026-11-07T23:48:33+00:00",
-  "hourly": "2026-11-07T23:48:33+00:00",
-  "alerts": "2026-11-07T23:48:33+00:00",
-  "afd": "2026-11-07T23:48:33+00:00",
-  "lake_forecast": "2026-11-07T23:48:33+00:00",
-  "lake_gage": "2026-11-07T23:48:33+00:00",
-  "air": "2026-11-07T23:48:33+00:00",
-  "sun": "2026-11-07T23:48:33+00:00",
-  "models": "2026-11-07T23:48:33+00:00"
+  "now": "2026-11-07T23:59:23+00:00",
+  "forecast": "2026-11-07T23:59:23+00:00",
+  "hourly": "2026-11-07T23:59:23+00:00",
+  "alerts": "2026-11-07T23:59:23+00:00",
+  "afd": "2026-11-07T23:59:23+00:00",
+  "lake_forecast": "2026-11-07T23:59:23+00:00",
+  "lake_gage": "2026-11-07T23:59:23+00:00",
+  "air": "2026-11-07T23:59:23+00:00",
+  "sun": "2026-11-07T23:59:23+00:00",
+  "models": "2026-11-07T23:59:23+00:00"
  },
  "now": {
-  "observed_at": "2026-11-07T23:30:00+00:00",
+  "observed_at": "2026-11-07T23:40:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 45,
-  "feels_like_f": 40,
+  "feels_like_f": 39,
   "humidity": 76,
   "dewpoint_f": 37,
-  "wind_mph": 9,
+  "wind_mph": 11,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -28,16 +28,6 @@
  "forecast": {
   "updated": "2026-11-07T18:20:12+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-11-07T14:00:00-05:00",
-    "is_day": true,
-    "temp_f": 51,
-    "pop": 35,
-    "wind": "N 14 mph",
-    "short": "Chance Light Rain",
-    "detailed": "A chance of rain. Cloudy, with a high near 51. North wind around 14 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
-   },
    {
     "name": "Tonight",
     "start": "2026-11-07T18:00:00-05:00",
@@ -96,7 +86,7 @@
     "pop": 32,
     "wind": "SW 7 mph",
     "short": "Mostly Cloudy then Chance Light Rain",
-    "detailed": "A chance of rain after 1pm. Mostly cloudy, with a high near 52. Southwest wind around 7 mph. Chance of precipitation is 30%."
+    "detailed": "A chance of rain after 1pm. Mostly cloudy, with a high near 52. Southwest wind around 7 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tuesday Night",
@@ -167,26 +157,22 @@
     "wind": "N 10 mph",
     "short": "Chance Rain And Snow",
     "detailed": "A slight chance of rain before 7pm, then a chance of rain and snow. Mostly cloudy, with a low around 25. North wind around 10 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Saturday",
+    "start": "2026-11-14T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 44,
+    "pop": 28,
+    "wind": "N 13 mph",
+    "short": "Chance Rain And Snow",
+    "detailed": "A chance of rain and snow. Mostly cloudy, with a high near 44. North wind around 13 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-07T18:20:12+00:00",
   "hours": [
-   {
-    "t": "2026-11-07T17:00:00-05:00",
-    "temp_f": 49,
-    "feels_f": 44,
-    "pop": 35,
-    "humidity": 86,
-    "wind_mph": 14,
-    "wind_dir": "N",
-    "sky": 100,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.007,
-    "snow_in": 0.0,
-    "gust_mph": 22
-   },
    {
     "t": "2026-11-07T18:00:00-05:00",
     "temp_f": 48,
@@ -676,6 +662,20 @@
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-09T05:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 37,
+    "pop": 61,
+    "humidity": 100,
+    "wind_mph": 5,
+    "wind_dir": "SW",
+    "sky": 96,
+    "short": "Rain Showers Likely",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -1029,7 +1029,7 @@
      "ICON": 50
     },
     "pop_max": {
-     "GFS": 39,
+     "GFS": 33,
      "Euro": 79,
      "ICON": 65
     },
@@ -1048,7 +1048,7 @@
      "ICON": 50
     },
     "pop_max": {
-     "GFS": 40,
+     "GFS": 32,
      "Euro": 78,
      "ICON": 55
     },
@@ -1082,8 +1082,8 @@
  },
  "brief": {
   "date": "2026-11-07",
-  "generated": "2026-11-07T23:48:35+00:00",
-  "text": "Rain likely tonight from 7pm to 3am, about a tenth of an inch, low 37. Sunday, mostly cloudy, high 53. Showers likely Sunday night, low 38.",
+  "generated": "2026-11-07T23:59:26+00:00",
+  "text": "Rain likely tonight from 7pm to 3am, about a tenth of an inch, low 37. Sunday, mostly cloudy, high 53. Showers likely Sunday night from 5am on, under a tenth of an inch, low 38.",
   "periods": [
    {
     "label": "Tonight",
