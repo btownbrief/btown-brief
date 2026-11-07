@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Rebuild data/out/yard-sale-sources.json: research for Out's seasonal yard-sale map.
+
+What it does: writes the evaluation of yard/garage/estate-sale listing sources (coverage, whether
+a script can read them, their terms of use, a count seen on 2026-10-29) and the recommended plan.
+All records are typed in below from pages read that day; NO network calls.
+
+What still needs a hand:
+  - Counts and `verified` dates are a 2026-10-29 snapshot; re-check the pages before reuse.
+  - Not evaluated: Seven Days classifieds (Cloudflare block), Facebook Marketplace (login),
+    town-wide sale days, Burlington's yard-sale sign rules.
+  - The decisions in `recommendation` (reader submissions, privacy window, asking Front Porch
+    Forum) are Stephen's to make.
+
+Usage: python3 scripts/out/build_out_yard_sales.py [out_path]
+"""
+import json
+V="2026-10-29"
+S=[
+ dict(id="front-porch-forum",name="Front Porch Forum calendar",url="https://frontporchforum.com/south-burlington-central/calendar",
+  coverage="Chittenden County neighborhood forums; calendar pages show events from many nearby towns (Burlington, South Burlington, Colchester, Shelburne, Richmond, Winooski, St. Albans seen)",
+  has_addresses=True,has_dates=True,
+  machine_readable="Technically yes: calendar pages (/<forum-slug>/calendar, 3–7 MB HTML) and event pages (/calendar/events/<id>) load with plain curl + browser UA, and event pages show the street address under 'Event Info' plus start/end times. No feed or API.",
+  terms_of_use_note="FPF Terms of Use prohibit aggregating, copying or displaying Content and using 'data mining, robots, spiders, or other data gathering and extraction tools for any purpose' (exception only for search engines and non-commercial archives). The repo's data/sources.json already records a standing POLICY: FPF is never scraped.",
+  sample_count_seen_today=63,sample_count_note="63 yard/garage/estate/moving/rummage/porch-sale events on the South Burlington Central calendar page (window roughly late Sept to Nov 2026); 20 on the Old North End calendar page. Examples: 'Last Yard Sale of the Year - East Main St - Oct. 24', 'Rummage Sale at Richmond Congregational Church'. Most are now past.",
+  seasonality="Heavy in September–October in today's sample; titles like 'Last Yard Sale of the Year' (Oct 24) suggest the season winds down late October.",
+  recommendation="lead only",recommendation_note="Best real-world coverage by far, but ToS and Stephen's standing policy rule out scraping. Use it to invite sellers to submit to Out themselves, or ask FPF for permission/partnership.",
+  source_url="https://frontporchforum.com/terms-of-use",verified=V),
+ dict(id="craigslist-gms",name="Craigslist garage & moving sales (Vermont)",url="https://burlington.craigslist.org/search/gms",
+  coverage="Statewide Vermont plus nearby NH listings (burlington.craigslist.org/search/gms redirects to craigslist.org/search/area/vermont?cat=gms)",
+  has_addresses=False,has_dates=True,
+  machine_readable="No: the RSS URL (?format=rss) returned 403 'blocked'; the HTML page has JSON-LD but the ItemList was empty, with listings rendered as text.",
+  terms_of_use_note="Craigslist terms: 'You agree not to copy/collect CL content via robots, spiders, scripts, scrapers, crawlers, or any automated or manual equivalent (e.g., by hand).'",
+  sample_count_seen_today=4,sample_count_note="4 listings on the page; Chittenden County ones were a moving sale (Sat Oct 31 & Sun Nov 1, Essex Junction) and a bazaar (Essex Jct). Town only, no street addresses on the list.",
+  seasonality="Year-round, sparse.",recommendation="no",source_url="https://www.craigslist.org/about/terms.of.use",verified=V),
+ dict(id="facebook-marketplace",name="Facebook Marketplace / groups",url="https://www.facebook.com/marketplace/",coverage="Likely large but unknown",
+  has_addresses=None,has_dates=None,machine_readable="No: requires login (not fetched, per read-only rules).",
+  terms_of_use_note="Login-walled; Meta terms bar automated collection. Not evaluated beyond that.",sample_count_seen_today=None,seasonality=None,
+  recommendation="no",recommendation_note="Note only.",source_url="https://www.facebook.com/marketplace/",verified=None),
+ dict(id="estatesales-net",name="EstateSales.NET",url="https://www.estatesales.net/VT/Burlington",coverage="Professional estate-sale companies and auctions; default 100-mile radius",
+  has_addresses=True,has_dates=True,
+  machine_readable="Partly: the page embeds schema.org SaleEvent JSON-LD (name, startDate, PostalAddress often with blank street). Still subject to the terms below.",
+  terms_of_use_note="Terms of Service bar using 'spiders, robots ... or other device or mechanism ... to harvest or otherwise collect information from the Service'.",
+  sample_count_seen_today=6,sample_count_note="'Burlington Estate Sales (6 Results)' within 15 days, but none in Chittenden County: Northfield VT, Dorset VT, Gansevoort NY, Potsdam NY, Hudson Falls NY, Saxtons River VT.",
+  seasonality="Year-round.",recommendation="lead only",recommendation_note="Link out ('Estate sales near Burlington') rather than map them; local volume is near zero.",
+  source_url="https://www.estatesales.net/terms-of-service",verified=V),
+ dict(id="estatesales-org",name="EstateSales.org",url="https://estatesales.org/estate-sales/vt/burlington",coverage="Estate sales within 50 miles",has_addresses=None,has_dates=True,
+  machine_readable="No feed found; listing renders client-side.",terms_of_use_note="Terms prohibit scraping, data mining, robots and spiders, and copying content 'by hand'.",
+  sample_count_seen_today=0,sample_count_note="'No estate sales currently listed near Burlington, Vermont.'",seasonality=None,recommendation="no",source_url="https://estatesales.org/terms",verified=V),
+ dict(id="gsalr",name="gsalr.com",url="https://gsalr.com/garage-sales-burlington-vt.html",coverage="User-posted garage sales by map",has_addresses=None,has_dates=True,
+  machine_readable="No: listings load client-side (template placeholders in HTML).",terms_of_use_note="Terms prohibit scraping, data mining, robots, spiders and manual copying.",
+  sample_count_seen_today=0,sample_count_note="'Showing 0 of 0 sales.'",seasonality=None,recommendation="no",source_url="https://gsalr.com/about/terms.html",verified=V),
+ dict(id="yardsalesearch",name="YardSaleSearch.com",url="https://www.yardsalesearch.com/garage-sales-burlington-vt.html",coverage="User-posted sales",has_addresses=True,has_dates=True,
+  machine_readable="HTML only.",terms_of_use_note="Terms prohibit scraping, data mining, robots, spiders and manual copying.",
+  sample_count_seen_today=0,sample_count_note="'There are no yard sales in this location at the moment'; nearby results shown were in NY and NH.",seasonality=None,recommendation="no",source_url="https://www.yardsalesearch.com/terms",verified=V),
+ dict(id="garagesalefinder",name="GarageSaleFinder.com",url="https://www.garagesalefinder.com/yard-sales/burlington-vt/",coverage="User-posted sales",has_addresses=None,has_dates=True,
+  machine_readable="Page offers 'Export KML File' / 'Export CSV File' buttons, but terms forbid collecting or storing content.",terms_of_use_note="Terms prohibit any collection, aggregation, scraping or storing of content.",
+  sample_count_seen_today=0,sample_count_note="'No sales found for Burlington, VT' (week of 10-26 to 11-01-2026).",seasonality=None,recommendation="no",source_url="https://www.garagesalefinder.com/terms",verified=V),
+ dict(id="seven-days-classifieds",name="Seven Days classifieds",url="https://classifieds.sevendaysvt.com/",coverage="Unknown",has_addresses=None,has_dates=None,
+  machine_readable="Not evaluated: classifieds.sevendaysvt.com returned a Cloudflare 'Just a moment...' 403 to curl (www.sevendaysvt.com/classifieds redirects there).",
+  terms_of_use_note="Not read.",sample_count_seen_today=None,seasonality=None,recommendation="lead only",recommendation_note="Check by hand in a browser before relying on it.",
+  source_url="https://classifieds.sevendaysvt.com/",verified=V),
+ dict(id="town-wide-sale-days",name="Town-wide / neighborhood / church sale days",url=None,coverage="Shelburne, Essex, Williston, South Burlington, Old North End, churches",
+  has_addresses=None,has_dates=None,
+  machine_readable="None found: the CivicPlus site maps of Burlington, South Burlington, Winooski, Shelburne, Colchester, Essex and Hinesburg have no yard-sale or town-wide-sale page (Essex lists an Annual Plant & Book Sale and a Cozy Nook Craft Fair & Bake Sale, which are not yard sales). Williston's site returned 403.",
+  terms_of_use_note="n/a",sample_count_seen_today=0,sample_count_note="Church rummage sales do show up on Front Porch Forum (e.g. Richmond Congregational Church).",
+  seasonality="Typically spring; not confirmed for 2027.",recommendation="lead only",recommendation_note="Add by hand each spring from town newsletters/FPF; these are the best map pins because they are public events, not single homes.",
+  source_url="https://www.essexvt.gov/SiteMap",verified=V),
+ dict(id="burlington-rules",name="Burlington yard-sale permit and sign rules",url=None,coverage="Burlington",has_addresses=None,has_dates=None,
+  machine_readable="n/a",terms_of_use_note="No burlingtonvt.gov page on yard-sale permits was found (site map and Peddler Licensing / Other Permits pages checked). The ordinance site ecode360.com is Cloudflare-blocked (403), so permit and sign rules are unverified.",
+  sample_count_seen_today=None,seasonality=None,recommendation="lead only",
+  related_rule={"town":"Winooski","rule":"Winooski only allows temporary lawn signs in public rights-of-way if they are campaign signs (two weeks before to shortly after an election) or nonprofit signs approved by the city manager; one per entity per 50 feet.","source_url":"https://www.winooskivt.gov/1571/Lawn-Signs-Along-Roads-in-Winooski","verified":V},
+  source_url="https://www.burlingtonvt.gov/SiteMap",verified=V),
+ dict(id="reader-submissions",name="Reader submissions to Out (proposed)",url=None,coverage="Whatever readers post; Chittenden County",has_addresses=True,has_dates=True,
+  machine_readable="Yes, by design (own form → own database).",terms_of_use_note="Our own terms; seller grants permission and confirms they live at / control the address.",
+  sample_count_seen_today=None,seasonality="Mid-April to late October",recommendation="use",source_url=None,verified=None),
+]
+rec=dict(
+ simplest_viable_plan=[
+  "Make reader submissions the only automated source: a short form (sale type, street address, town, date(s), start/end time, optional 3 photos of items, required photo of the sign or a confirmation link sent to the submitter's email/phone).",
+  "Geocode the address once on submission, snap the public pin to the block (or street centroid) until the sale day, and show the exact address only from 6 AM on the first sale day until the end time on the last day; then remove the pin and delete the address after the sale.",
+  "Hand-add public events (church rummage sales, town-wide or neighborhood sale days) as pinned events, since they are not private homes.",
+  "Link out (no copying) to EstateSales.NET for estate sales and tell FPF users they can post to Out too. Do not scrape FPF, Craigslist or the national yard-sale sites; all of them forbid it.",
+  "Seasonal window: show the layer mid-April through October (FPF sample shows activity through late October, e.g. 'Last Yard Sale of the Year' Oct 24); hide it November–March.",
+  "Moderate before publish (Stephen or a helper approves each pin) for the first season; auto-expire everything.",
+ ],
+ verification_options=["Photo of the posted sign at the address (strong, easy for sellers)","Email or SMS confirmation link (cheap, stops drive-by spam)","Manual approval queue"],
+ privacy_notes=[
+  "Home addresses are personal data: show the exact address only while the sale is live and drop it right after; never keep a history of past sale addresses.",
+  "Before the sale day show only the street/block or neighborhood, plus date and time.",
+  "No seller names or phone numbers on the map; contact goes through the form if needed at all.",
+  "Let sellers delete their pin at any time; remove pins reported as wrong.",
+ ],
+ stephen_must_decide=[
+  "Whether to build a submission form and moderation queue at all (that is the real cost; there is no usable free feed).",
+  "Verification bar: sign photo required, or email/SMS confirmation only.",
+  "Exact-address timing: exact pin only during sale hours vs. from the morning of the first day.",
+  "Whether to ask Front Porch Forum for permission or a partnership (their calendar has the volume).",
+  "Season dates (proposed mid-April to end of October) and whether estate-sale companies may post (commercial).",
+  "Whether this conflicts with the newsletter's rule that keeps yard sales out of the calendar (the map would be a separate layer only).",
+ ],
+)
+out=dict(_about="Research for a seasonal yard-sale map layer in Out's Events tab (separate from the newsletter calendar, which excludes yard sales). Every source carries source_url and verified.",
+ generated=V,sources=S,recommendation=rec,
+ gaps=["Burlington yard-sale permit and sign rules unverified (ecode360 blocked; no city page found).",
+       "No town-wide yard sale day pages found for Shelburne, Essex, Williston or South Burlington; Williston site blocked (403).",
+       "Seven Days classifieds blocked by Cloudflare; not evaluated.",
+       "Facebook Marketplace not evaluated (login).",
+       "Web search budget ran out mid-task, so town-wide sale days could not be searched for further."])
+out["counts"]=dict(sources=len(S),by_recommendation={r:len([s for s in S if s["recommendation"]==r]) for r in ["use","use with care","lead only","no"]},
+ sources_with_any_listings_today=[s["id"] for s in S if (s.get("sample_count_seen_today") or 0)>0])
+json.dump(out,open(__import__("sys").argv[1] if len(__import__("sys").argv)>1 else str(__import__("pathlib").Path(__file__).resolve().parents[2]/"data/out/yard-sale-sources.json"),"w"),indent=2,ensure_ascii=False)
+print(json.dumps(out["counts"]))
