@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-07T00:12:40+00:00",
+ "updated": "2026-11-07T01:35:53+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 55,
+  "temp": 54,
   "sky": "Clear",
   "from": "airport",
   "hi": 53,
   "lo": 44,
   "rain": "Rain likely Saturday from 1pm on",
   "obs": {
-   "temp": 55,
+   "temp": 54,
    "sky": "Clear",
-   "at": "2026-11-06T23:45:00+00:00"
+   "at": "2026-11-07T01:05:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-06T19:00:00-05:00",
-    "temp": 56,
-    "sky": "Partly Cloudy"
-   },
    {
     "t": "2026-11-06T20:00:00-05:00",
     "temp": 55,
@@ -44,11 +39,22 @@
     "t": "2026-11-07T00:00:00-05:00",
     "temp": 53,
     "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-07T01:00:00-05:00",
+    "temp": 52,
+    "sky": "Mostly Cloudy"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
  "wire": [
+  {
+   "title": "Burlington City Council president launches bid for mayor",
+   "src": "VTDigger",
+   "url": "https://vtdigger.org/2026/11/06/burlington-city-council-president-launches-bid-for-mayor/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/63d41b664893"
+  },
   {
    "title": "Ben Traverse officially announces Burlington mayoral bid",
    "src": "WCAX",
@@ -56,16 +62,10 @@
    "link": "https://guide.btownbrief.com/all-day/#wire/7fdfac9c0a8f"
   },
   {
-   "title": "Burlington Democrat Ben Traverse to Run for Mayor",
-   "src": "Seven Days",
-   "url": "https://www.sevendaysvt.com/news/burlington-democrat-ben-traverse-to-run-for-mayor/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/a084dfaddd0a"
-  },
-  {
-   "title": "Construction of the South Burlington Walk-Bike Bridge advances at Exit 14",
-   "src": "Vermont Public",
-   "url": "https://www.vermontpublic.org/local-news/2026-11-06/construction-of-the-south-burlington-walk-bike-bridge-advances-at-exit-14",
-   "link": "https://guide.btownbrief.com/all-day/#wire/ee1b146e291f"
+   "title": "‘Where is your emergency?’: Hartford’s emergency communications specialists shortage echoes national trend",
+   "src": "VTDigger",
+   "url": "https://vtdigger.org/2026/11/06/where-is-your-emergency-hartfords-emergency-communications-specialists-shortage-echoes-national-trend/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/6fc8d69e07de"
   }
  ],
  "tonight": [
@@ -107,13 +107,13 @@
   }
  ],
  "game": {
-  "title": "UVM Women's Ice Hockey vs Northeastern",
-  "when": "Today 6 pm",
-  "start": "2026-11-06T23:00:00+00:00",
+  "title": "UVM Men's Ice Hockey at Boston College",
+  "when": "Today 7 pm",
+  "start": "2026-11-07T00:00:00+00:00",
   "all_day": false,
-  "home": true,
-  "tv": "ESPN+",
-  "url": "https://uvmathletics.com/calendar.aspx?game_id=6850&sport_id=12",
+  "home": false,
+  "tv": "ESPN+/NESN/TSN",
+  "url": "https://uvmathletics.com/calendar.aspx?game_id=6907&sport_id=5",
   "link": "https://guide.btownbrief.com/sports.html"
  }
 }
