@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-06T17:53:10+00:00",
+  "generated": "2026-11-07T16:48:08+00:00",
   "upcoming": [
     {
       "body": "General",
@@ -100,6 +100,20 @@
       "summary_status": "pending"
     },
     {
+      "body": "Parks & Recreation Commission",
+      "body_id": "parks-rec-commission",
+      "title": "Parks & Recreation Commission Meeting",
+      "start": "2026-11-10T12:30:00-05:00",
+      "time_uncertain": false,
+      "venue": "645 Pine Street, Burlington, VT, 05401",
+      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10307/files/agenda/21552",
+      "packet_url": "https://burlingtonvt.portal.civicclerk.com/event/10307/files/agenda/21553",
+      "minutes_url": null,
+      "video_url": null,
+      "summary_text": null,
+      "summary_status": "pending"
+    },
+    {
       "body": "Retirement Board",
       "body_id": "retirement-board",
       "title": "Retirement Board Meeting",
@@ -149,6 +163,20 @@
       "time_uncertain": false,
       "venue": "645 Pine Street, Burlington, VT, 05401",
       "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10281/files/agenda/21487",
+      "packet_url": null,
+      "minutes_url": null,
+      "video_url": null,
+      "summary_text": null,
+      "summary_status": "pending"
+    },
+    {
+      "body": "Tax Abatement Committee",
+      "body_id": "tax-abatement-committee",
+      "title": "City Council - Tax Abatement Committee Meeting",
+      "start": "2026-11-17T12:00:00-05:00",
+      "time_uncertain": false,
+      "venue": "149 Church Street, Or remotely via Zoom, Burlington, VT, 05401",
+      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10308/files/agenda/21554",
       "packet_url": null,
       "minutes_url": null,
       "video_url": null,
@@ -1304,34 +1332,6 @@
       "video_url": "https://www.youtube.com/watch?v=OirIKTQDuU0&list=PLljLFn4BZd2N95y-kUzewx0ZN0Tf8rLo_",
       "summary_text": null,
       "summary_status": "pending"
-    },
-    {
-      "body": "Ward 3 NPA",
-      "body_id": "ward-3-npa",
-      "title": "Ward 3 NPA Meeting",
-      "start": "2026-10-07T15:00:00-04:00",
-      "time_uncertain": false,
-      "venue": "City Hall, Sharon Bushor Conference Room (1st floor), 49 Church St, or Remotely via Zoom",
-      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10240/files/agenda/21243",
-      "packet_url": null,
-      "minutes_url": "https://burlingtonvt.portal.civicclerk.com/event/10240/files/agenda/21505",
-      "video_url": "https://www.youtube.com/watch?v=nHXqCIw4wAU&list=PLljLFn4BZd2N1gaqCiNELsb4lVr6pZuEc",
-      "summary_text": null,
-      "summary_status": "pending"
-    },
-    {
-      "body": "Burlington Walk Bike Council",
-      "body_id": "burlington-walk-bike-council",
-      "title": "Burlington Walk Bike Council - Community Meeting",
-      "start": "2026-10-07T13:30:00-04:00",
-      "time_uncertain": false,
-      "venue": "63 Grove St, Schmanska Barn, Schmanska Park, Burlington, Vermont, 05401",
-      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10244/files/agenda/21274",
-      "packet_url": null,
-      "minutes_url": null,
-      "video_url": null,
-      "summary_text": null,
-      "summary_status": "pending"
     }
   ],
   "bodies": [
@@ -1580,6 +1580,14 @@
       "name": "Retirement Board",
       "typical_schedule": "Schedule varies; see posted meetings",
       "source_url": "https://burlingtonvt.portal.civicclerk.com/",
+      "video_url": null,
+      "in_feed": true
+    },
+    {
+      "id": "tax-abatement-committee",
+      "name": "Tax Abatement Committee",
+      "typical_schedule": "Schedule varies; see posted meetings",
+      "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
       "video_url": null,
       "in_feed": true
     },
