@@ -78,6 +78,8 @@ def main():
         "edition": draft.get("edition", "morning"),
         "text": text.strip(),
         "week": draft.get("week"),
+        # whose forecasts the read compared, for the links under it
+        "sources": draft.get("sources") or [],
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": text.strip() != (draft.get("text") or "").strip(),
     }
