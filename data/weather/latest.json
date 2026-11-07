@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-07T16:38:48+00:00",
+ "updated": "2026-11-07T17:56:24+00:00",
  "sections_updated": {
-  "now": "2026-11-07T16:38:48+00:00",
-  "forecast": "2026-11-07T16:38:48+00:00",
-  "hourly": "2026-11-07T16:38:48+00:00",
-  "alerts": "2026-11-07T16:38:48+00:00",
-  "afd": "2026-11-07T16:38:48+00:00",
-  "lake_forecast": "2026-11-07T16:38:48+00:00",
-  "lake_gage": "2026-11-07T16:38:48+00:00",
-  "air": "2026-11-07T16:38:48+00:00",
-  "sun": "2026-11-07T16:38:48+00:00",
-  "models": "2026-11-07T16:38:48+00:00"
+  "now": "2026-11-07T17:56:24+00:00",
+  "forecast": "2026-11-07T17:56:24+00:00",
+  "hourly": "2026-11-07T17:56:24+00:00",
+  "alerts": "2026-11-07T17:56:24+00:00",
+  "afd": "2026-11-07T17:56:24+00:00",
+  "lake_forecast": "2026-11-07T17:56:24+00:00",
+  "lake_gage": "2026-11-07T17:56:24+00:00",
+  "air": "2026-11-07T17:56:24+00:00",
+  "sun": "2026-11-07T17:56:24+00:00",
+  "models": "2026-11-07T17:56:24+00:00"
  },
  "now": {
-  "observed_at": "2026-11-07T16:20:00+00:00",
+  "observed_at": "2026-11-07T17:35:00+00:00",
   "station": "KBTV",
-  "description": "Fog/Mist",
+  "description": "Cloudy",
   "temp_f": 46,
   "feels_like_f": 41,
-  "humidity": 93,
-  "dewpoint_f": 45,
-  "wind_mph": 11,
+  "humidity": 87,
+  "dewpoint_f": 43,
+  "wind_mph": 13,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -29,14 +29,14 @@
   "updated": "2026-11-07T16:28:26+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-11-07T11:00:00-05:00",
+    "name": "This Afternoon",
+    "start": "2026-11-07T12:00:00-05:00",
     "is_day": true,
     "temp_f": 51,
     "pop": 35,
-    "wind": "N 7 to 14 mph",
-    "short": "Cloudy then Chance Light Rain",
-    "detailed": "A chance of rain after 1pm. Cloudy, with a high near 51. North wind 7 to 14 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "wind": "N 9 to 14 mph",
+    "short": "Chance Light Rain",
+    "detailed": "A chance of rain after 1pm. Cloudy, with a high near 51. North wind 9 to 14 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-07T16:28:26+00:00",
   "hours": [
-   {
-    "t": "2026-11-07T11:00:00-05:00",
-    "temp_f": 48,
-    "feels_f": 45,
-    "pop": 7,
-    "humidity": 86,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 100,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
    {
     "t": "2026-11-07T12:00:00-05:00",
     "temp_f": 49,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-08T23:00:00-05:00",
+    "temp_f": 42,
+    "feels_f": 39,
+    "pop": 13,
+    "humidity": 89,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 93,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-07T11:43:00+00:00",
+  "issued": "2026-11-07T17:40:00+00:00",
   "key_messages": [
    "A cooler and unsettled pattern is expected this weekend with summit level snow possible Sunday morning.",
    "Another round of precipitation expected for the start of the work week, with this activity more focused in the favored upslope areas of the northern mountains.",
    "Remaining unsettled midweek through the end of the week, likely trending cooler by next weekend."
   ],
   "what_changed": "As of 212 AM EST Saturday... No significant changes with periods of showers expected this weekend and into early next week.",
-  "raw": "\n000\nFXUS61 KBTV 071143\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n643 AM EST Sat Nov 7 2026\n\n.WHAT HAS CHANGED...\nAs of 212 AM EST Saturday...\n\nNo significant changes with periods of showers expected this weekend \nand into early next week.\n\n&&\n\n.KEY MESSAGES...\nAs of 212 AM EST Saturday...\n\n1. A cooler and unsettled pattern is expected this weekend with \nsummit level snow possible Sunday morning. \n\n2. Another round of precipitation expected for the start of the \nwork week, with this activity more focused in the favored upslope \nareas of the northern mountains. \n\n3. Remaining unsettled midweek through the end of the week, \nlikely trending cooler by next weekend.\n\n&&\n\n.DISCUSSION...\nAs of 212 AM EST Saturday...\n\nKEY MESSAGE 1: We await the arrival of showers this morning as a closed \nupper low slowly pivots eastward across the central/eastern Great \nLakes. Scattered to numerous showers can already be seen out ahead \nof this feature. This area of showers will continue to slowly drift \neast-northeastward as its parent low crosses into southern NY, \neventually pivoting into our southern sections along a weak inverted \nsurface trough. This band of showers will rotate over NY through \nthis afternoon before shifting east into VT late today and overnight \nas the upper low spins across southern New England and eventually \noffshore by Sunday morning. Hence expect fairly widespread showers \nthrough the day and into tonight, then becoming more focused in the \nnorthern mountains Sunday morning as west-northwest flow develops \nbehind the departing low pressure. Snow levels drop to 2200-3200 ft \nas the cold pool moves overhead, and expect some slushy snow \naccumulation will be possible tonight into Sunday morning, generally \nabove 2500 ft. Precipitation will wind down Sunday afternoon, with \nsome sunshine possible by late in the day. Overall rainfall amounts \nwill be a quarter to a half an inch, with locally higher amounts \npossible in the higher terrain. Temperatures will return to somewhat \nseasonal normals today and especially Sunday; highs in the 50s today \nwill give way to mid 40s to mid 50s tomorrow. Winds may be a little \non the breezy side in the Champlain Valley today as north winds get \nfunneled down the valley. Strong winds then become more widespread \non Sunday, though remaining AOB 25 mph or so, with little impact \nexpected.\n\nKEY MESSAGE 2: Shortwave ridging briefly builds in behind the departing \nupper low, giving us a short respite from precipitation. However, \nanother vigorous upper trough will swing along the international \nborder Monday, with another following right in its footsteps on \nTuesday. Showers will once again develop, though remaining more \nfocused in the favored upslope areas of the northern \nAdirondacks/Greens as southwest winds shift to the west and \neventually northwest. A reinforcing shot of cold air will see snow \nlevels falling as low as 1500 ft early Tuesday morning, though the \nbulk of the precipitation will likely have ended by then, limiting \npotential snow accumulation. Total precipitation amounts will be a \nquarter of an inch or less through Monday night, with another tenth \nof two possible on Tuesday. Both days will see temperatures close to \nor just a bit above normal, generally in the mid 40s to low 50s.\n\nKEY MESSAGE 3: The large Hudson Bay low will continue to dominate the \nweather across our region, bringing multiple shortwaves into the \nweekend. A Shortwave pushes through on Tuesday bringing valley rain \nshowers and some chances for snow to the upper terrain locations, \nmainly above 3000 feet AGL. That snow level should drop overnight \nand give Mt. Mansfield its first chance of seeing 1\" of snow, which \nwould be the latest ever on record, breaking the record of Nov 9th \nset in 1956 and 1985. While things remain unsettled the rest of the \nweek, models are keying in on significant closed low swinging down \nthrough the Mid-Atlantic region and then up the coastline, bringing \nseveral shots of rain and rain/snow mix into the weekend. This \nsystem will definitely bare closer monitoring as the week \nprogresses.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...A mix of mainly LIFR and IFR ceilings are \nexpected at most TAF sites to start the period. KPBG and KMSS\nare the exception to start, currently MVFR but could see periods\nof IFR this morning. Low ceilings will prevail for the rest of \nthe day, though rises of several hundred feet are likely. Areas \nof mist and drizzle will also accompany these ceilings, \nespecially at KBTV, KSLK and KEFK. Scattered showers will move \nthrough later in the morning, with more organized rainshowers\nexpected later in the afternoon. While this rain by itself will\nlikely not be enough to significantly reduce the visibility, it\nwill likely combine with the mist/drizzle and there will be \nperiods of MVFR visibility. Winds will generally be under 10 KT \nand northerly/northeasterly, to start the period before\nincreasing to 10-20 knots later this afternoon.\n\nOutlook...\n\nSunday: Mainly VFR, with local IFR possible. Slight chance SHRA.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with local IFR possible. Chance SHRA.\nMonday Night: Mainly MVFR, with areas VFR possible. Slight chance\nSHRA.\nTuesday: MVFR. Chance SHRA.\nTuesday Night: Mainly MVFR, with areas VFR possible. Chance RA.\nVeterans Day: Mainly MVFR, with local VFR possible. Chance RA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Verasamy/Hastings\nAVIATION...Verasamy\n"
+  "raw": "\n000\nFXUS61 KBTV 071740\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1240 PM EST Sat Nov 7 2026\n\n.WHAT HAS CHANGED...\nAs of 212 AM EST Saturday...\n\nNo significant changes with periods of showers expected this weekend \nand into early next week.\n\n&&\n\n.KEY MESSAGES...\nAs of 212 AM EST Saturday...\n\n1. A cooler and unsettled pattern is expected this weekend with \nsummit level snow possible Sunday morning. \n\n2. Another round of precipitation expected for the start of the \nwork week, with this activity more focused in the favored upslope \nareas of the northern mountains. \n\n3. Remaining unsettled midweek through the end of the week, \nlikely trending cooler by next weekend.\n\n&&\n\n.DISCUSSION...\nAs of 212 AM EST Saturday...\n\nKEY MESSAGE 1: We await the arrival of showers this morning as a closed \nupper low slowly pivots eastward across the central/eastern Great \nLakes. Scattered to numerous showers can already be seen out ahead \nof this feature. This area of showers will continue to slowly drift \neast-northeastward as its parent low crosses into southern NY, \neventually pivoting into our southern sections along a weak inverted \nsurface trough. This band of showers will rotate over NY through \nthis afternoon before shifting east into VT late today and overnight \nas the upper low spins across southern New England and eventually \noffshore by Sunday morning. Hence expect fairly widespread showers \nthrough the day and into tonight, then becoming more focused in the \nnorthern mountains Sunday morning as west-northwest flow develops \nbehind the departing low pressure. Snow levels drop to 2200-3200 ft \nas the cold pool moves overhead, and expect some slushy snow \naccumulation will be possible tonight into Sunday morning, generally \nabove 2500 ft. Precipitation will wind down Sunday afternoon, with \nsome sunshine possible by late in the day. Overall rainfall amounts \nwill be a quarter to a half an inch, with locally higher amounts \npossible in the higher terrain. Temperatures will return to somewhat \nseasonal normals today and especially Sunday; highs in the 50s today \nwill give way to mid 40s to mid 50s tomorrow. Winds may be a little \non the breezy side in the Champlain Valley today as north winds get \nfunneled down the valley. Strong winds then become more widespread \non Sunday, though remaining AOB 25 mph or so, with little impact \nexpected.\n\nKEY MESSAGE 2: Shortwave ridging briefly builds in behind the departing \nupper low, giving us a short respite from precipitation. However, \nanother vigorous upper trough will swing along the international \nborder Monday, with another following right in its footsteps on \nTuesday. Showers will once again develop, though remaining more \nfocused in the favored upslope areas of the northern \nAdirondacks/Greens as southwest winds shift to the west and \neventually northwest. A reinforcing shot of cold air will see snow \nlevels falling as low as 1500 ft early Tuesday morning, though the \nbulk of the precipitation will likely have ended by then, limiting \npotential snow accumulation. Total precipitation amounts will be a \nquarter of an inch or less through Monday night, with another tenth \nof two possible on Tuesday. Both days will see temperatures close to \nor just a bit above normal, generally in the mid 40s to low 50s.\n\nKEY MESSAGE 3: The large Hudson Bay low will continue to dominate the \nweather across our region, bringing multiple shortwaves into the \nweekend. A Shortwave pushes through on Tuesday bringing valley rain \nshowers and some chances for snow to the upper terrain locations, \nmainly above 3000 feet AGL. That snow level should drop overnight \nand give Mt. Mansfield its first chance of seeing 1\" of snow, which \nwould be the latest ever on record, breaking the record of Nov 9th \nset in 1956 and 1985. While things remain unsettled the rest of the \nweek, models are keying in on significant closed low swinging down \nthrough the Mid-Atlantic region and then up the coastline, bringing \nseveral shots of rain and rain/snow mix into the weekend. This \nsystem will definitely bare closer monitoring as the week \nprogresses.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...An unsettled pattern is expected this\nweekend. Current conditions at TAF sites across northern New \nYork and Vermont include ceilings 300-1300 feet above ground \nlevel and visibilities ranging from around 1 mile in the \nAdirondacks to roughly 5 miles and higher elsewhere. Rain has \nfinally arrived in the St. Lawrence Valley, where visibilities \nare around 4-6 miles, and this rain is poised to head into the \nAdirondacks next, though somewhat slowly. We anticipate these \nIFR-MVFR conditions will persist tonight and Sunday morning as \nlow pressure passes overhead tonight, turning flow out of the \nnorthwest. However, for the next few hours, we could see \nceilings drift upwards, breaking some IFR sites into the MVFR \nrealm for a period before returning to IFR cigs overnight. \nCurrent surface winds are out of the north at 5-15 knots, \nexpected to increase early Sunday morning to feature gusts 10-20\nknots out of the west-northwest as any lingering rain ends. \nCeilings finally look to improve around 12-16Z Sunday at many \nsites, becoming more widespread MVFR or higher.\n\n\nOutlook...\n\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with local IFR possible. Chance SHRA.\nMonday Night: Mainly MVFR, with areas VFR possible. Slight chance\nSHRA.\nTuesday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nTuesday Night: Mainly MVFR, with areas VFR possible. Chance RA.\nVeterans Day: Mainly MVFR, with local VFR possible. Chance RA.\nWednesday Night: MVFR. Slight chance RA, Slight chance SN.\nThursday: Mainly MVFR, with areas VFR possible. Slight chance RA,\nSlight chance SN.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings/Verasamy\nAVIATION...Storm\n"
  },
  "lake_forecast": {
   "issued": "2026-11-07T06:26:00+00:00",
@@ -957,99 +957,99 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-07T11:00:00.000-05:00",
-  "level_ft": 93.83,
-  "level_at": "2026-11-07T11:00:00.000-05:00",
+  "water_temp_at": "2026-11-07T12:00:00.000-05:00",
+  "level_ft": 93.9,
+  "level_at": "2026-11-07T12:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 27,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/07/26 11:00",
-  "discussion": "On Saturday, Novermber 7th, expect generally good air quality across Vermont."
+  "observed": "11/07/26 12:00",
+  "discussion": "On Sunday, November 8th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-11-07T06:38-05:00",
   "sunset": "2026-11-07T16:34-05:00",
   "sunrise_tomorrow": "2026-11-08T06:39-05:00",
   "sunset_tomorrow": "2026-11-08T16:32-05:00",
-  "uv_max": 0.65
+  "uv_max": 1.4
  },
  "models": {
   "days": [
    {
     "date": "2026-11-07",
     "high_f": {
-     "GFS": 51,
+     "GFS": 50,
      "Euro": 54,
-     "ICON": 52
+     "ICON": 51
     },
     "pop_max": {
-     "GFS": 53,
+     "GFS": 44,
      "Euro": 95,
-     "ICON": 60
+     "ICON": 65
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.0,
      "Euro": 0.15,
-     "ICON": 0.04
+     "ICON": 0.06
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-11-08",
     "high_f": {
      "GFS": 49,
      "Euro": 53,
-     "ICON": 49
+     "ICON": 50
     },
     "pop_max": {
-     "GFS": 59,
+     "GFS": 51,
      "Euro": 91,
      "ICON": 55
     },
     "precip_in": {
-     "GFS": 0.04,
+     "GFS": 0.02,
      "Euro": 0.24,
-     "ICON": 0.08
+     "ICON": 0.07
     },
     "high_spread_f": 4
    },
    {
     "date": "2026-11-09",
     "high_f": {
-     "GFS": 46,
+     "GFS": 48,
      "Euro": 52,
-     "ICON": 49
+     "ICON": 50
     },
     "pop_max": {
      "GFS": 63,
      "Euro": 72,
-     "ICON": 72
+     "ICON": 85
     },
     "precip_in": {
-     "GFS": 0.3,
+     "GFS": 0.14,
      "Euro": 0.13,
-     "ICON": 0.46
+     "ICON": 0.38
     },
-    "high_spread_f": 6
+    "high_spread_f": 4
    }
   ]
  },
  "brief": {
   "date": "2026-11-07",
-  "generated": "2026-11-07T16:38:52+00:00",
+  "generated": "2026-11-07T17:56:27+00:00",
   "text": "A chance of rain today from 3pm on, under a tenth of an inch, high 51. Rain likely tonight from 7pm to 3am, about a tenth of an inch, low 37. Sunday, mostly cloudy, high 53.",
   "periods": [
    {
     "label": "Today",
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 51,
-    "sky": "cloudy",
-    "start": "2026-11-07T11:00:00-05:00",
+    "sky": "sunny",
+    "start": "2026-11-07T12:00:00-05:00",
     "end": "2026-11-07T18:00:00-05:00",
     "precip": {
      "kind": "rain",
