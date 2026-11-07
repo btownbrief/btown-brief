@@ -1,34 +1,34 @@
 {
- "generated": "2026-11-06T14:30:13-05:00",
+ "generated": "2026-11-06T19:19:17-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 6.3
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 84,
-   "seconds": 2.7
+   "seconds": 2.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 85,
-   "seconds": 3.6
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 177,
-   "seconds": 2.9
+   "seconds": 2.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 2.1
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 19,
+   "count": 24,
    "seconds": 3.2
   },
   "eventbrite": {
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 204,
-   "seconds": 65.4
+   "seconds": 71.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 11,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 14,
-   "seconds": 32.4
+   "seconds": 31.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 598,
-   "seconds": 28.6
+   "seconds": 31.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,28 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 32.6
+   "seconds": 14.3
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 465,
-   "seconds": 72.4
+   "seconds": 74.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 57,
-   "seconds": 109.3
+   "count": 58,
+   "seconds": 108.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.1
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 0,
-   "error": "parksrec: all city iCalendar feeds failed",
-   "staleDays": 2
+   "count": 72,
+   "seconds": 14.8
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,50 +108,50 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 59,
-   "seconds": 2.2
+   "count": 61,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 17.7
+   "seconds": 18.9
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2698,
-   "seconds": 3.2
+   "seconds": 2.4
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
-   "count": 47,
-   "seconds": 1.4
+   "count": 46,
+   "seconds": 1.9
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 369,
-   "seconds": 22.1
+   "seconds": 16.8
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 222,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 50,
-   "seconds": 63.3
+   "seconds": 69.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 39,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 5314,
- "afterDedup": 2381,
- "duplicatesMerged": 2933,
- "final": 2480,
- "firecrawlCalls": 2,
+ "gathered": 5393,
+ "afterDedup": 2429,
+ "duplicatesMerged": 2964,
+ "final": 2489,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2411,14 +2410,6 @@
  ],
  "changes": [
   {
-   "id": "a1d1b6bcd2c1",
-   "title": "Thanksgiving Eve Comedy Night Hosted by Kendall Farrell",
-   "date": "2026-11-25",
-   "change": "time",
-   "was": "2026-11-25T20:00:00-05:00",
-   "now": "2026-11-25T19:00:00-05:00"
-  },
-  {
    "id": "4e70212692f5",
    "title": "Lunch with the Poets",
    "date": "2026-11-06",
@@ -2431,12 +2422,6 @@
    "date": "2026-11-06",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "9eedbcde8076",
-   "title": "Friends of Brownell Library Event: Sweet Connections",
-   "date": "2026-11-06",
-   "change": "dropped"
   },
   {
    "id": "cfd9b18e86c4",
@@ -2460,35 +2445,11 @@
    "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
-   "id": "fd7948ea656b",
-   "title": "Saint Michael's College presents: \"The Ballad of Maria Marten\"",
-   "date": "2026-11-06",
-   "change": "dropped"
-  },
-  {
    "id": "babc95fbfa7b",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-07",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "4d8c3757e584",
-   "title": "Saint Michael's College presents: \"The Ballad of Maria Marten\"",
-   "date": "2026-11-07",
-   "change": "dropped"
-  },
-  {
-   "id": "4bc60fba75df",
-   "title": "Burlington Civic Symphony Concert",
-   "date": "2026-11-07",
-   "change": "dropped"
-  },
-  {
-   "id": "a3eff46dc2e4",
-   "title": "Sensory-Friendly Sunday at ECHO",
-   "date": "2026-11-08",
-   "change": "dropped"
   },
   {
    "id": "c3303b4d4836",
@@ -2498,23 +2459,18 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "288e0576de41",
-   "title": "Lieder by the Lake",
-   "date": "2026-11-08",
-   "change": "dropped"
-  },
-  {
-   "id": "eaee24c478b4",
-   "title": "Diwali",
+   "id": "44fcda1c0501",
+   "title": "Diwali 2026",
    "date": "2026-11-08",
    "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "lastSeen": "2026-11-06T14:30:13-05:00"
   },
   {
-   "id": "0bfcaa443762",
-   "title": "New Moon Sound Bath",
-   "date": "2026-11-08",
-   "change": "dropped"
+   "id": "bb8287d19ca5",
+   "title": "Public Skate",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "f6b8829b7fe4",
@@ -2524,14 +2480,15 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "d9c698b9c7fb",
-   "title": "'Invisible No More: How to Become Discoverable and Trusted in the Age of AI'",
-   "date": "2026-11-10",
-   "change": "dropped"
-  },
-  {
    "id": "3ed57760461a",
    "title": "Sweatshirt Giveaway for First Years & New Transfers",
+   "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "387245928682",
+   "title": "Public Skate",
    "date": "2026-11-10",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
@@ -2540,6 +2497,13 @@
    "id": "caf1648b9a67",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "7ea7e41af17a",
+   "title": "Public Skate",
+   "date": "2026-11-11",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
@@ -2558,29 +2522,11 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "6cf66ac92d14",
-   "title": "Cyber Security with Mary Kohn, Better Business Bureau",
-   "date": "2026-11-12",
-   "change": "dropped"
-  },
-  {
-   "id": "244315ccbc16",
-   "title": "Trivia Night",
-   "date": "2026-11-12",
-   "change": "dropped"
-  },
-  {
    "id": "7a01c7249aff",
    "title": "'Describe the Night'",
    "date": "2026-11-12",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "1a5988d80720",
-   "title": "WIN: Women In Nature",
-   "date": "2026-11-13",
-   "change": "dropped"
   },
   {
    "id": "3626d994b3a5",
@@ -2597,59 +2543,11 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "2effb3a95680",
-   "title": "Paul Orgel, Piano: Music of Debussy and Bach",
-   "date": "2026-11-13",
-   "change": "dropped"
-  },
-  {
-   "id": "5d9bec456f3f",
-   "title": "Cranksgiving 2026",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
    "id": "777ec2262d02",
    "title": "STEAM Ahead Saturdays",
    "date": "2026-11-14",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "e119e8244182",
-   "title": "Sensing the Season at Rock Point",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "0e94028f86ce",
-   "title": "Princess Story Hour with Miss Vermont's Teen 2026",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "a8bbf64d8382",
-   "title": "Shark Cutie Boards",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "eb9074a90307",
-   "title": "Second Saturdays | Your Place Is at This Table",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "bd7ae3595e7e",
-   "title": "Starlight Gala",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "8ff2a08e1e25",
-   "title": "OES Starlight Gala to Benefit the VT Network",
-   "date": "2026-11-14",
-   "change": "dropped"
   },
   {
    "id": "87c1196a9d8f",
@@ -2659,24 +2557,6 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "f2e90dfde482",
-   "title": "2026 HUMP! Film Festival: FALL SEASON - Burlington, VT",
-   "date": "2026-11-14",
-   "change": "dropped"
-  },
-  {
-   "id": "a412153c4823",
-   "title": "Read to a Therapy Dog | Phoenix Books Essex",
-   "date": "2026-11-15",
-   "change": "dropped"
-  },
-  {
-   "id": "a957bcec95bf",
-   "title": "D&D Group B",
-   "date": "2026-11-15",
-   "change": "dropped"
-  },
-  {
    "id": "55b3bf7041e0",
    "title": "'Describe the Night'",
    "date": "2026-11-15",
@@ -2684,10 +2564,25 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "bcf1b59b6c1d",
-   "title": "Twangtown Paramours at Westford Music Series",
+   "id": "b0ed80c97d2a",
+   "title": "Public Skate",
    "date": "2026-11-15",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "bd554bc7082a",
+   "title": "Public Skate",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "f5b1d775b170",
+   "title": "Public Skate",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "c0c49dc190a4",
@@ -2704,40 +2599,25 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "db239f609d55",
-   "title": "Kingston’s Autism Swagger Studio VT™",
-   "date": "2026-11-18",
-   "change": "dropped"
-  },
-  {
-   "id": "e26f73cb4fa6",
-   "title": "Trivia Night",
-   "date": "2026-11-19",
-   "change": "dropped"
-  },
-  {
-   "id": "9da9da95eb1a",
-   "title": "Trivia at Four Quarters",
-   "date": "2026-11-19",
-   "change": "dropped"
-  },
-  {
-   "id": "1a78ed5ee666",
-   "title": "Teton Gravity Research presents 'Actually, It Is Rocket Science'",
-   "date": "2026-11-19",
-   "change": "dropped"
-  },
-  {
-   "id": "6120fcc49ef1",
-   "title": "Celebrate Craft Holiday Show",
-   "date": "2026-11-21",
-   "change": "dropped"
-  },
-  {
-   "id": "3fa4a2c7b715",
-   "title": "Celebrate Craft Holiday Show",
+   "id": "daa4bcfeaee5",
+   "title": "Public Skate",
    "date": "2026-11-22",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "9c66969ed20a",
+   "title": "Public Skate",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "13caf4cc22fb",
+   "title": "Public Skate",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "d775b97b6987",
@@ -2747,41 +2627,44 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "2f5b008394d4",
-   "title": "Arena Closed for Thanksgiving Holiday",
+   "id": "963fa6eb41fc",
+   "title": "CLOSED - Thanksgiving Day",
    "date": "2026-11-26",
+   "change": "missing",
+   "lastSeen": "2026-11-06T14:30:13-05:00"
+  },
+  {
+   "id": "cabef42d4247",
+   "title": "Public Skate",
+   "date": "2026-11-27",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "2a1c7633f5af",
-   "title": "Thanksgiving Day",
-   "date": "2026-11-26",
+   "id": "6c5bd9ad2a87",
+   "title": "Public Skate",
+   "date": "2026-11-29",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "7925ff480548",
-   "title": "Trivia Night",
-   "date": "2026-11-26",
-   "change": "dropped"
-  },
-  {
-   "id": "00166330c935",
-   "title": "Sensing the Season at Rock Point",
-   "date": "2026-11-28",
-   "change": "dropped"
-  },
-  {
-   "id": "526796931479",
-   "title": "Holiday Jasper Hill Fondue Night",
-   "date": "2026-11-28",
-   "change": "dropped"
+   "id": "f44b8fd35abe",
+   "title": "Public Skate",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "cf80b4af94e7",
    "title": "Dungeons & Dragons",
    "date": "2026-12-01",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "23c766411ac2",
+   "title": "Public Skate",
+   "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
@@ -2800,15 +2683,30 @@
    "lastSeen": "2026-11-03T19:53:39-05:00"
   },
   {
-   "id": "5a53b4b8622a",
-   "title": "Trivia Night",
-   "date": "2026-12-03",
-   "change": "dropped"
+   "id": "b76ed9662bc1",
+   "title": "Public Skate",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "ef8089c63613",
+   "title": "Public Skate",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "ff567c3c08ef",
    "title": "Christmas Bird Count with Vermont Audubon",
    "date": "2026-12-08",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "70aa8d449e66",
+   "title": "Public Skate",
+   "date": "2026-12-09",
    "change": "missing",
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
@@ -2820,34 +2718,32 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "a85bd08acdec",
-   "title": "Pick-up Basketball",
-   "date": "2026-12-09",
-   "change": "dropped"
-  },
-  {
-   "id": "9c46b8736748",
-   "title": "Trivia Night",
-   "date": "2026-12-10",
-   "change": "dropped"
-  },
-  {
-   "id": "f0accbdb04b6",
-   "title": "Sensing the Season at Rock Point",
-   "date": "2026-12-12",
-   "change": "dropped"
-  },
-  {
-   "id": "32579a69a65f",
-   "title": "Sensory-Friendly Sunday at ECHO",
+   "id": "e2267f64c22d",
+   "title": "Cookies & Crafts at Winter Lights",
    "date": "2026-12-13",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-11-06T14:30:13-05:00"
   },
   {
-   "id": "c9e70f043416",
-   "title": "Spanish Conversation",
-   "date": "2026-12-15",
-   "change": "dropped"
+   "id": "0033ee661172",
+   "title": "Public Skate",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "15062797b05e",
+   "title": "Public Skate",
+   "date": "2026-12-14",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "2be54fddba90-0910",
+   "title": "Public Skate",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "4dfe47f091cf",
@@ -2857,16 +2753,32 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "0c6451257c2c",
-   "title": "Trivia Night",
-   "date": "2026-12-17",
-   "change": "dropped"
+   "id": "2be54fddba90",
+   "title": "Public Skate",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "04fc19a61f38",
-   "title": "Spanish Conversation",
-   "date": "2026-12-22",
-   "change": "dropped"
+   "id": "a746d04fa050",
+   "title": "Public Skate",
+   "date": "2026-12-20",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "d8cc75b6f804",
+   "title": "Public Skate",
+   "date": "2026-12-21",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "a0b4cff0dbb5",
+   "title": "Public Skate",
+   "date": "2026-12-23",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "4b92e63944b9",
@@ -2876,16 +2788,32 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "21a36a14ce91",
-   "title": "Trivia Night",
-   "date": "2026-12-24",
-   "change": "dropped"
+   "id": "3730d4da8437",
+   "title": "Public Skate",
+   "date": "2026-12-27",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "dbec353ff498",
-   "title": "Mayor Meet-Up - East District",
-   "date": "2026-12-25",
-   "change": "dropped"
+   "id": "861c216a7b9b",
+   "title": "Public Skate",
+   "date": "2026-12-28",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "39c2aa59438b",
+   "title": "Public Skate",
+   "date": "2026-12-29",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
+  },
+  {
+   "id": "f6535f9a8601",
+   "title": "Public Skate",
+   "date": "2026-12-30",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
    "id": "2b3ab5c12729",
@@ -2895,10 +2823,11 @@
    "lastSeen": "2026-11-04T12:28:27-05:00"
   },
   {
-   "id": "e0ad2ba3515d",
-   "title": "Trivia Night",
-   "date": "2026-12-31",
-   "change": "dropped"
+   "id": "3ba5eb548cd4",
+   "title": "Public Skate",
+   "date": "2027-01-03",
+   "change": "missing",
+   "lastSeen": "2026-11-04T12:28:27-05:00"
   }
  ]
 }
