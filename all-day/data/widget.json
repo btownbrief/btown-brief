@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-07T01:35:53+00:00",
+ "updated": "2026-11-07T02:55:58+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 54,
+  "temp": 53,
   "sky": "Clear",
   "from": "airport",
   "hi": 53,
   "lo": 44,
   "rain": "Rain likely Saturday from 1pm on",
   "obs": {
-   "temp": 54,
+   "temp": 53,
    "sky": "Clear",
-   "at": "2026-11-07T01:05:00+00:00"
+   "at": "2026-11-07T01:54:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-06T20:00:00-05:00",
-    "temp": 55,
-    "sky": "Partly Cloudy"
-   },
    {
     "t": "2026-11-06T21:00:00-05:00",
     "temp": 55,
@@ -42,6 +37,11 @@
    },
    {
     "t": "2026-11-07T01:00:00-05:00",
+    "temp": 52,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-07T02:00:00-05:00",
     "temp": 52,
     "sky": "Mostly Cloudy"
    }
@@ -70,33 +70,6 @@
  ],
  "tonight": [
   {
-   "title": "All Night Boogie Band",
-   "time": "7 pm",
-   "venue": "Higher Ground",
-   "start": "2026-11-06T19:00:00-05:00",
-   "end": null,
-   "url": "https://www.helloburlingtonvt.com/event/all-night-boogie-band/8019/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
-   "title": "Swampy Tonk & All Night Boogie Band",
-   "time": "7:30 pm",
-   "venue": "Higher Ground",
-   "start": "2026-11-06T19:30:00-05:00",
-   "end": null,
-   "url": "https://www.mychamplainvalley.com/calendar/#/details/swampy-tonk-all-night-boogie-band/20143079/2026-11-06T19",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
-   "title": "Fruit Bats",
-   "time": "7 pm",
-   "venue": "Higher Ground",
-   "start": "2026-11-06T19:00:00-05:00",
-   "end": null,
-   "url": "https://www.helloburlingtonvt.com/event/fruit-bats/6987/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
    "title": "Forest Station",
    "time": "8 pm",
    "venue": "Foam Brewers",
@@ -104,16 +77,43 @@
    "end": null,
    "url": "https://foambrewers.com/events/forest-station",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Fruit Bats, Sarah Klang",
+   "time": "8 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-06T20:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/fruit-bats-sarah-klang-45663860",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Shadow Monster w/ Brunch & Rangus",
+   "time": "8 pm",
+   "venue": "The Monkey House",
+   "start": "2026-11-06T20:00:00.142000-05:00",
+   "end": "2026-11-06T23:59:00.142000-05:00",
+   "url": "https://www.monkeyhousevt.com/events/shadow-monster-w-brunch-amp-rangus",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "The Phil Abair Band",
+   "time": "8 pm",
+   "venue": "The Old Post",
+   "start": "2026-11-06T20:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/the-phil-abair-band-45664011",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
  "game": {
-  "title": "UVM Men's Ice Hockey at Boston College",
-  "when": "Today 7 pm",
-  "start": "2026-11-07T00:00:00+00:00",
+  "title": "UVM Women's Ice Hockey vs Northeastern",
+  "when": "Tomorrow 3 pm",
+  "start": "2026-11-07T20:00:00+00:00",
   "all_day": false,
-  "home": false,
-  "tv": "ESPN+/NESN/TSN",
-  "url": "https://uvmathletics.com/calendar.aspx?game_id=6907&sport_id=5",
+  "home": true,
+  "tv": "ESPN+",
+  "url": "https://uvmathletics.com/calendar.aspx?game_id=6851&sport_id=12",
   "link": "https://guide.btownbrief.com/sports.html"
  }
 }
