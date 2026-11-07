@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-07T14:16:15+00:00",
+ "updated": "2026-11-07T15:36:18+00:00",
  "sections_updated": {
-  "now": "2026-11-07T14:16:15+00:00",
-  "forecast": "2026-11-07T14:16:15+00:00",
-  "hourly": "2026-11-07T14:16:15+00:00",
-  "alerts": "2026-11-07T14:16:15+00:00",
-  "afd": "2026-11-07T14:16:15+00:00",
-  "lake_forecast": "2026-11-07T14:16:15+00:00",
-  "lake_gage": "2026-11-07T14:16:15+00:00",
-  "air": "2026-11-07T14:16:15+00:00",
-  "sun": "2026-11-07T14:16:15+00:00",
-  "models": "2026-11-07T14:16:15+00:00"
+  "now": "2026-11-07T15:36:18+00:00",
+  "forecast": "2026-11-07T15:36:18+00:00",
+  "hourly": "2026-11-07T15:36:18+00:00",
+  "alerts": "2026-11-07T15:36:18+00:00",
+  "afd": "2026-11-07T15:36:18+00:00",
+  "lake_forecast": "2026-11-07T15:36:18+00:00",
+  "lake_gage": "2026-11-07T15:36:18+00:00",
+  "air": "2026-11-07T15:36:18+00:00",
+  "sun": "2026-11-07T15:36:18+00:00",
+  "models": "2026-11-07T15:36:18+00:00"
  },
  "now": {
-  "observed_at": "2026-11-07T13:55:00+00:00",
+  "observed_at": "2026-11-07T15:15:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 45,
-  "feels_like_f": 40,
-  "humidity": 93,
+  "description": "Fog/Mist",
+  "temp_f": 46,
+  "feels_like_f": 43,
+  "humidity": 87,
   "dewpoint_f": 43,
-  "wind_mph": 9,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-07T09:00:00-05:00",
+    "start": "2026-11-07T10:00:00-05:00",
     "is_day": true,
     "temp_f": 54,
     "pop": 65,
-    "wind": "N 7 to 14 mph",
+    "wind": "N 8 to 14 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Cloudy, with a high near 54. North wind 7 to 14 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A chance of rain showers. Cloudy, with a high near 54. North wind 8 to 14 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-07T09:51:38+00:00",
   "hours": [
-   {
-    "t": "2026-11-07T09:00:00-05:00",
-    "temp_f": 49,
-    "feels_f": 46,
-    "pop": 24,
-    "humidity": 89,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 93,
-    "short": "Isolated Rain Showers",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-07T10:00:00-05:00",
     "temp_f": 51,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 9
+   },
+   {
+    "t": "2026-11-08T21:00:00-05:00",
+    "temp_f": 44,
+    "feels_f": 40,
+    "pop": 9,
+    "humidity": 86,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 71,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 9
    }
   ],
   "days": [
@@ -962,17 +962,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-11-07T09:00:00.000-05:00",
-  "level_ft": 93.86,
-  "level_at": "2026-11-07T09:00:00.000-05:00",
+  "water_temp_at": "2026-11-07T10:00:00.000-05:00",
+  "level_ft": 93.88,
+  "level_at": "2026-11-07T10:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/07/26 9:00",
+  "observed": "11/07/26 10:00",
   "discussion": "On Saturday, Novermber 7th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -987,21 +987,21 @@
    {
     "date": "2026-11-07",
     "high_f": {
-     "GFS": 51,
+     "GFS": 52,
      "Euro": 54,
      "ICON": 52
     },
     "pop_max": {
-     "GFS": 71,
-     "Euro": 89,
+     "GFS": 47,
+     "Euro": 95,
      "ICON": 60
     },
     "precip_in": {
-     "GFS": 0.06,
+     "GFS": 0.09,
      "Euro": 0.15,
      "ICON": 0.04
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-08",
@@ -1011,12 +1011,12 @@
      "ICON": 49
     },
     "pop_max": {
-     "GFS": 63,
-     "Euro": 89,
+     "GFS": 57,
+     "Euro": 91,
      "ICON": 55
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.09,
      "Euro": 0.24,
      "ICON": 0.08
     },
@@ -1030,12 +1030,12 @@
      "ICON": 49
     },
     "pop_max": {
-     "GFS": 61,
-     "Euro": 76,
+     "GFS": 63,
+     "Euro": 72,
      "ICON": 72
     },
     "precip_in": {
-     "GFS": 0.34,
+     "GFS": 0.3,
      "Euro": 0.13,
      "ICON": 0.46
     },
@@ -1045,7 +1045,7 @@
  },
  "brief": {
   "date": "2026-11-07",
-  "generated": "2026-11-07T14:16:18+00:00",
+  "generated": "2026-11-07T15:36:21+00:00",
   "text": "Showers likely today from 1pm on, about a tenth of an inch, high 54. Showers likely tonight until 5am, about 0.2 inch, low 39. Sunday, a chance of showers until 7am, under a tenth of an inch, high 53.",
   "periods": [
    {
@@ -1054,7 +1054,7 @@
     "is_day": true,
     "temp_f": 54,
     "sky": "sunny",
-    "start": "2026-11-07T09:00:00-05:00",
+    "start": "2026-11-07T10:00:00-05:00",
     "end": "2026-11-07T18:00:00-05:00",
     "precip": {
      "kind": "showers",
@@ -1063,7 +1063,7 @@
      "start": "2026-11-07T13:00:00-05:00",
      "end": "2026-11-07T18:00:00-05:00",
      "when": "from 1pm on",
-     "amount_in": 0.1,
+     "amount_in": 0.09,
      "snow_in": 0,
      "amount": "about a tenth of an inch"
     },
