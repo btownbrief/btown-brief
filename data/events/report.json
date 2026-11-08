@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T10:53:36-05:00",
+ "generated": "2026-11-07T18:56:56-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -9,27 +9,27 @@
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 80,
-   "seconds": 6.3
+   "seconds": 3.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 85,
-   "seconds": 3.2
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 2.1
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 67,
-   "seconds": 1.4
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 24,
-   "seconds": 3.5
+   "seconds": 3.6
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 205,
-   "seconds": 76.3
+   "seconds": 70.5
   },
   "flynn": {
    "label": "The Flynn",
@@ -59,17 +59,17 @@
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 29.3
+   "seconds": 31.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.3
+   "seconds": 2.6
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 592,
-   "seconds": 32.4
+   "seconds": 31.2
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,17 +79,17 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 20.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 467,
-   "seconds": 66.9
+   "seconds": 74.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 58,
-   "seconds": 107.5
+   "seconds": 114.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
@@ -99,7 +99,7 @@
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 74,
-   "seconds": 16.4
+   "seconds": 15.1
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,27 +109,27 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 84,
-   "seconds": 2.1
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 18.8
+   "seconds": 18.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2774,
-   "seconds": 22.7
+   "count": 2663,
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 47,
-   "seconds": 1.1
+   "seconds": 2.1
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 352,
-   "seconds": 33.0
+   "seconds": 16.0
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -139,19 +139,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 49,
-   "seconds": 68.9
+   "seconds": 65.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 38,
-   "seconds": 0.3
+   "seconds": 0.2
   }
  },
- "gathered": 5447,
- "afterDedup": 2419,
- "duplicatesMerged": 3028,
- "final": 2477,
- "firecrawlCalls": 5,
+ "gathered": 5336,
+ "afterDedup": 2413,
+ "duplicatesMerged": 2923,
+ "final": 2431,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2410,26 +2410,87 @@
  ],
  "changes": [
   {
-   "id": "827aecc12c2e",
-   "title": "Jefferson Hamer",
-   "date": "2026-11-08",
-   "change": "time",
-   "was": "2026-11-08T13:00:00-05:00",
-   "now": "2026-11-08T15:00:00-05:00"
+   "id": "d2205a758b7b",
+   "title": "Board Game Brunch",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "2bb71c0a7fbf",
+   "title": "BTown Coffee Club",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "54e6af856907",
+   "title": "Cantilever trail hike - Mt. Mansfield",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
   },
   {
    "id": "babc95fbfa7b",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-07",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
-   "id": "8e47ade4ce82",
-   "title": "Willi Carlisle",
+   "id": "639a0595e7f8",
+   "title": "Thursday Murder Club",
    "date": "2026-11-07",
    "change": "missing",
-   "lastSeen": "2026-11-06T19:19:17-05:00"
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "51d31a9ee506",
+   "title": "Big City Laughs: Dirt Road Commute",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "ceadacb52941",
+   "title": "Soup for Two, Salmo",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "81696356666e",
+   "title": "Willi Carlisle, Sparrow Smith & the Resonant Rogues",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "27d6ef5ea64f",
+   "title": "Magnetic Horse",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "8ce1d432e660",
+   "title": "Creative Competition",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "4c765c5215cc",
+   "title": "'Small Works'",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
+  },
+  {
+   "id": "dd87689c66e4",
+   "title": "\"Thinking Different Changes You and the World\"",
+   "date": "2026-11-07",
+   "change": "missing",
+   "lastSeen": "2026-11-07T10:53:36-05:00"
   },
   {
    "id": "8b268624217f",
@@ -2449,8 +2510,7 @@
    "id": "c3303b4d4836",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "44fcda1c0501",
@@ -2460,134 +2520,111 @@
    "lastSeen": "2026-11-06T14:30:13-05:00"
   },
   {
-   "id": "74cce50fd173",
-   "title": "Learning To Fly &#8211; Student Spotlight Showcase",
+   "id": "1ddfeb0b1e3c",
+   "title": "Learning To Fly - Student Spotlight Showcase",
    "date": "2026-11-08",
    "change": "missing",
-   "lastSeen": "2026-11-06T19:19:17-05:00"
+   "lastSeen": "2026-11-07T10:53:36-05:00"
   },
   {
    "id": "bb8287d19ca5",
    "title": "Public Skate",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "f6b8829b7fe4",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "3ed57760461a",
    "title": "Sweatshirt Giveaway for First Years & New Transfers",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "387245928682",
    "title": "Public Skate",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "caf1648b9a67",
    "title": "New North End Drop-In Tech Support",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "7ea7e41af17a",
    "title": "Public Skate",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "7fc122474fbc",
    "title": "Wine Down Wednesday",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "1db42078dba8",
    "title": "'Describe the Night'",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "7a01c7249aff",
    "title": "'Describe the Night'",
    "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "3626d994b3a5",
    "title": "Mango Jam",
    "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "e8926772d2c9",
    "title": "'Describe the Night'",
    "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "777ec2262d02",
    "title": "STEAM Ahead Saturdays",
    "date": "2026-11-14",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "87c1196a9d8f",
    "title": "'Describe the Night'",
    "date": "2026-11-14",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "55b3bf7041e0",
    "title": "'Describe the Night'",
    "date": "2026-11-15",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "b0ed80c97d2a",
    "title": "Public Skate",
    "date": "2026-11-15",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "bd554bc7082a",
    "title": "Public Skate",
    "date": "2026-11-16",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "f5b1d775b170",
    "title": "Public Skate",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "c0c49dc190a4",
-   "title": "Advanced and Beginner Irish Language Conversation Groups",
    "date": "2026-11-18",
    "change": "dropped"
   },
@@ -2595,36 +2632,31 @@
    "id": "45c0587a102c",
    "title": "Wine Down Wednesday",
    "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "daa4bcfeaee5",
    "title": "Public Skate",
    "date": "2026-11-22",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "9c66969ed20a",
    "title": "Public Skate",
    "date": "2026-11-23",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "13caf4cc22fb",
    "title": "Public Skate",
    "date": "2026-11-25",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "d775b97b6987",
    "title": "Wine Down Wednesday",
    "date": "2026-11-25",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "963fa6eb41fc",
@@ -2637,84 +2669,67 @@
    "id": "cabef42d4247",
    "title": "Public Skate",
    "date": "2026-11-27",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "6c5bd9ad2a87",
    "title": "Public Skate",
    "date": "2026-11-29",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "f44b8fd35abe",
    "title": "Public Skate",
    "date": "2026-11-30",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "cf80b4af94e7",
    "title": "Dungeons & Dragons",
    "date": "2026-12-01",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "23c766411ac2",
    "title": "Public Skate",
    "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "7bd7500fc09a",
    "title": "Wine Down Wednesday",
    "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
-  },
-  {
-   "id": "05a1084a6e4e",
-   "title": "\"Seeding Change: Farming Beyond Neonics\" documentary screening",
-   "date": "2026-12-03",
    "change": "dropped"
   },
   {
    "id": "b76ed9662bc1",
    "title": "Public Skate",
    "date": "2026-12-06",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "ef8089c63613",
    "title": "Public Skate",
    "date": "2026-12-07",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "ff567c3c08ef",
    "title": "Christmas Bird Count with Vermont Audubon",
    "date": "2026-12-08",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "70aa8d449e66",
    "title": "Public Skate",
    "date": "2026-12-09",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "d2e1937823d8",
    "title": "Wine Down Wednesday",
    "date": "2026-12-09",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "e2267f64c22d",
@@ -2727,36 +2742,31 @@
    "id": "0033ee661172",
    "title": "Public Skate",
    "date": "2026-12-13",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "15062797b05e",
    "title": "Public Skate",
    "date": "2026-12-14",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "2be54fddba90-0910",
    "title": "Public Skate",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "4dfe47f091cf",
    "title": "Wine Down Wednesday",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "2be54fddba90",
    "title": "Public Skate",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "ff7780931f1c",
@@ -2769,71 +2779,61 @@
    "id": "a746d04fa050",
    "title": "Public Skate",
    "date": "2026-12-20",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "d8cc75b6f804",
    "title": "Public Skate",
    "date": "2026-12-21",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "a0b4cff0dbb5",
    "title": "Public Skate",
    "date": "2026-12-23",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "4b92e63944b9",
    "title": "Wine Down Wednesday",
    "date": "2026-12-23",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "3730d4da8437",
    "title": "Public Skate",
    "date": "2026-12-27",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "861c216a7b9b",
    "title": "Public Skate",
    "date": "2026-12-28",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "39c2aa59438b",
    "title": "Public Skate",
    "date": "2026-12-29",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "f6535f9a8601",
    "title": "Public Skate",
    "date": "2026-12-30",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "2b3ab5c12729",
    "title": "Wine Down Wednesday",
    "date": "2026-12-30",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   },
   {
    "id": "3ba5eb548cd4",
    "title": "Public Skate",
    "date": "2027-01-03",
-   "change": "missing",
-   "lastSeen": "2026-11-04T12:28:27-05:00"
+   "change": "dropped"
   }
  ]
 }
