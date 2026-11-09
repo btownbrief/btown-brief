@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-08T11:16:32-05:00",
+ "generated": "2026-11-08T19:00:16-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.8
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 77,
-   "seconds": 4.6
+   "count": 74,
+   "seconds": 5.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 84,
-   "seconds": 3.3
+   "seconds": 4.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 157,
-   "seconds": 2.5
+   "seconds": 3.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 2.2
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 23,
-   "seconds": 3.8
+   "seconds": 2.9
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 72.4
+   "seconds": 65.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 11,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 11,
-   "seconds": 31.6
+   "seconds": 32.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 589,
-   "seconds": 29.7
+   "seconds": 28.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,28 +79,28 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 15.3
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 467,
-   "seconds": 76.7
+   "seconds": 73.8
   },
   "meetup": {
    "label": "Meetup",
    "count": 58,
-   "seconds": 113.9
+   "seconds": 121.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 18,
-   "seconds": 0.4
+   "seconds": 1.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 0,
    "error": "parksrec: all city iCalendar feeds failed",
-   "staleDays": 0
+   "staleDays": 1
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,27 +110,27 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 83,
-   "seconds": 2.0
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 19,
-   "seconds": 19.0
+   "seconds": 17.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2741,
-   "seconds": 22.8
+   "count": 2655,
+   "seconds": 2.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 48,
-   "seconds": 2.1
+   "seconds": 1.3
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 346,
-   "seconds": 27.5
+   "seconds": 16.1
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -140,19 +140,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 48,
-   "seconds": 65.5
+   "seconds": 61.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 38,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5305,
- "afterDedup": 2348,
- "duplicatesMerged": 2957,
- "final": 2398,
- "firecrawlCalls": 5,
+ "gathered": 5216,
+ "afterDedup": 2337,
+ "duplicatesMerged": 2879,
+ "final": 2399,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2410,6 +2410,27 @@
  ],
  "changes": [
   {
+   "id": "2ccf3b8f6ea9",
+   "title": "Fried Chicken Sundays",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "53889d1ae46d",
+   "title": "LGBTQIA+ Mixer",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "2ff9dbf626fe",
+   "title": "NFL Football Sunday",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
    "id": "eaee24c478b4",
    "title": "Diwali",
    "date": "2026-11-08",
@@ -2422,6 +2443,20 @@
    "date": "2026-11-08",
    "change": "missing",
    "lastSeen": "2026-11-07T18:56:56-05:00"
+  },
+  {
+   "id": "b1f01b5a5c8c",
+   "title": "\"Thinking Different Changes You and the World\"",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "b0a44c399f11",
+   "title": "'Small Works'",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
   },
   {
    "id": "24ad75ee1977",
@@ -2438,11 +2473,60 @@
    "lastSeen": "2026-11-07T18:56:56-05:00"
   },
   {
-   "id": "cdaec4cd15a7",
-   "title": "Sleep",
+   "id": "bc8d883faf4e",
+   "title": "Camera Essentials",
    "date": "2026-11-11",
    "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "d9f1e88a3aa4",
+   "title": "Jenny Porter",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "943ebd5c861b",
+   "title": "VTIFF Musical Silents: 'A Trip to Mars'",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "03b88d1e5db5",
+   "title": "Jamie Lee Thurston",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "eb88cd4c6555",
+   "title": "Weatherday, sports., Skrom",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "eb400214da75",
+   "title": "Sleep, Zombi, the Schizophonics",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "58d7e3e00826",
+   "title": "Repertory Wednesday Series: 'The Dead Zone'",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
+  },
+  {
+   "id": "ad6fc0e262a8",
+   "title": "Sound Design for Film: Foley Lab",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-08T11:16:32-05:00"
   },
   {
    "id": "2a1c7633f5af",
