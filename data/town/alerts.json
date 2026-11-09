@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-08T10:45:49+00:00",
+ "generated": "2026-11-09T01:14:39+00:00",
  "sources_file": "data/town/alerts-sources.json",
  "sections": {
   "recycling": {
@@ -3942,8 +3942,9 @@
     "verified": "2026-11-08"
    },
    "items": [],
-   "ok": true,
-   "stale": false
+   "ok": false,
+   "stale": true,
+   "error": "GET https://www.burlingtonvt.gov/RSSFeed.aspx?ModID=63&CID=All-0 failed: <urlopen error timed out>"
   },
   "greenway": {
    "verified": "2026-11-08",
@@ -4015,8 +4016,9 @@
    "verified": "2026-11-08",
    "notes": "Announcements only, last 14 days. Standing year-round shelters and the state's adverse-weather motel rule are listed in alerts-sources.json; call 2-1-1 or COTS 802-864-7402 to confirm a bed.",
    "items": [],
-   "ok": true,
-   "stale": false
+   "ok": false,
+   "stale": true,
+   "error": "GET https://www.burlingtonvt.gov/RSSFeed.aspx?ModID=63&CID=All-0 failed: <urlopen error timed out>"
   }
  }
 }
