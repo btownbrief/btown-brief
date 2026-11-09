@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-08T19:00:16-05:00",
+ "generated": "2026-11-09T15:04:37-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,8 +8,8 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 74,
-   "seconds": 5.3
+   "count": 72,
+   "seconds": 3.1
   },
   "brownell": {
    "label": "Brownell Library",
@@ -18,23 +18,23 @@
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 157,
-   "seconds": 3.0
+   "count": 166,
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 1.8
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 23,
-   "seconds": 2.9
+   "count": 30,
+   "seconds": 3.1
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-08&end_date=2027-01-07&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-09&end_date=2027-01-08&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,8 +48,8 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 206,
-   "seconds": 65.4
+   "count": 201,
+   "seconds": 65.6
   },
   "flynn": {
    "label": "The Flynn",
@@ -58,18 +58,18 @@
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 11,
-   "seconds": 32.2
+   "count": 15,
+   "seconds": 33.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.6
+   "seconds": 2.8
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 589,
-   "seconds": 28.5
+   "count": 581,
+   "seconds": 28.9
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,22 +79,22 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 15.3
+   "seconds": 17.6
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 467,
-   "seconds": 73.8
+   "count": 464,
+   "seconds": 75.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 58,
-   "seconds": 121.7
+   "count": 59,
+   "seconds": 108.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 18,
-   "seconds": 1.3
+   "count": 17,
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
@@ -109,139 +109,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 83,
-   "seconds": 2.2
+   "count": 86,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 19,
-   "seconds": 17.6
+   "count": 22,
+   "seconds": 16.5
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2655,
-   "seconds": 2.5
+   "count": 2795,
+   "seconds": 66.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
-   "count": 48,
-   "seconds": 1.3
+   "count": 49,
+   "seconds": 1.6
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 346,
-   "seconds": 16.1
+   "count": 349,
+   "seconds": 22.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 205,
+   "count": 208,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 48,
-   "seconds": 61.4
+   "count": 50,
+   "seconds": 65.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 38,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 5216,
- "afterDedup": 2337,
- "duplicatesMerged": 2879,
- "final": 2399,
- "firecrawlCalls": 1,
+ "gathered": 5373,
+ "afterDedup": 2370,
+ "duplicatesMerged": 3003,
+ "final": 2458,
+ "firecrawlCalls": 15,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-04"
-  },
-  {
-   "kept": {
-    "title": "World Premiere of Crowdsourced VT Shrek",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-04"
-  },
-  {
-   "kept": {
-    "title": "Paul Winter’s Winter Solstice Celebration",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-04"
-  },
-  {
-   "kept": {
-    "title": "LEGO Time at the NNE Branch",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Ariel Elias",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "vcc"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Sculpt HIIT and Flow",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Men's Ice Hockey vs Providence",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-05"
-  },
   {
    "kept": {
     "title": "\"Break Forth Into Joy\": English Christmas Music",
@@ -910,6 +822,17 @@
   },
   {
    "kept": {
+    "title": "2026 Computer Science Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -921,7 +844,29 @@
   },
   {
    "kept": {
+    "title": "Catamount Cubs Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
     "title": "Yoga with Hayki at Reststop",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "BTV Winter Market",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1032,6 +977,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
+    "title": "BTV Winter Market",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-12"
   },
@@ -1167,6 +1123,17 @@
    },
    "merged_sources": [
     "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Handel's Messiah at College Street Church, Burlington, Vermont",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
     "sevendays"
    ],
    "date": "2026-12-13"
@@ -2406,127 +2373,225 @@
     "sevendays"
    ],
    "date": "2027-01-07"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2027-01-08"
+  },
+  {
+   "kept": {
+    "title": "Mad Robin Burlington Contra Dance",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-08"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-08"
   }
  ],
  "changes": [
   {
-   "id": "2ccf3b8f6ea9",
-   "title": "Fried Chicken Sundays",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "id": "78c5a0c15c0b",
+   "title": "Good Time Line Dancing",
+   "date": "2026-11-13",
+   "change": "time",
+   "was": "2026-11-13T19:00:00-05:00",
+   "now": "2026-11-13T19:30:00-05:00"
   },
   {
-   "id": "53889d1ae46d",
-   "title": "LGBTQIA+ Mixer",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "id": "fbbd3d5e6b9c",
+   "title": "Fitter Happier: A Radiohead Tribute",
+   "date": "2026-11-14",
+   "change": "time",
+   "was": "2026-11-14T19:00:00-05:00",
+   "now": "2026-11-14T19:30:00-05:00"
   },
   {
-   "id": "2ff9dbf626fe",
-   "title": "NFL Football Sunday",
-   "date": "2026-11-08",
+   "id": "0b8d67fe804b",
+   "title": "Oxy Acetylene Torch Training",
+   "date": "2026-11-09",
    "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "eaee24c478b4",
-   "title": "Diwali",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
-  },
-  {
-   "id": "74cce50fd173",
-   "title": "Learning To Fly &#8211; Student Spotlight Showcase",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
-  },
-  {
-   "id": "b1f01b5a5c8c",
-   "title": "\"Thinking Different Changes You and the World\"",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "b0a44c399f11",
-   "title": "'Small Works'",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "24ad75ee1977",
+   "id": "e48ed96bb874",
    "title": "Trystan Bates",
-   "date": "2026-11-08",
+   "date": "2026-11-09",
    "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "3bc500d60a13",
+   "id": "fe580b8e3dd4",
    "title": "Kathleen Schneider",
-   "date": "2026-11-08",
+   "date": "2026-11-09",
    "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "bc8d883faf4e",
-   "title": "Camera Essentials",
+   "id": "54eaef9d7fc0",
+   "title": "Coloring in the Marble Court",
    "date": "2026-11-11",
    "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "d9f1e88a3aa4",
-   "title": "Jenny Porter",
+   "id": "05af5b6220b6",
+   "title": "Bluegrass Nights",
    "date": "2026-11-11",
    "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "943ebd5c861b",
-   "title": "VTIFF Musical Silents: 'A Trip to Mars'",
+   "id": "cdaec4cd15a7",
+   "title": "Sleep",
    "date": "2026-11-11",
    "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "03b88d1e5db5",
-   "title": "Jamie Lee Thurston",
-   "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "eb88cd4c6555",
-   "title": "Weatherday, sports., Skrom",
-   "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "eb400214da75",
-   "title": "Sleep, Zombi, the Schizophonics",
-   "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "58d7e3e00826",
-   "title": "Repertory Wednesday Series: 'The Dead Zone'",
-   "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
-  },
-  {
-   "id": "ad6fc0e262a8",
-   "title": "Sound Design for Film: Foley Lab",
+   "id": "f72eba060c4f",
+   "title": "Learn to Sew Knits",
    "date": "2026-11-12",
    "change": "missing",
-   "lastSeen": "2026-11-08T11:16:32-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "091de120e5ae",
+   "title": "Vinyl Thursdays",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "6e141871fcd9",
+   "title": "Story Slam: 'What’s Now?'",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "d2473472f5d0",
+   "title": "Wet Felt & Dye a Wool Mason Jar Coozie",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "280d04f2feeb",
+   "title": "Vermont Comedy Club Show: Good Clean Fun",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "da6b17c233f8",
+   "title": "Marty O'Reilly",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "2716cc010aca",
+   "title": "Phillip Phillips",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "7b39dc313251",
+   "title": "Social Sunday",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "65b94ae80186",
+   "title": "Founder Lunch & Learn - FlyShirley",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "4b99f3da2c71",
+   "title": "Bluegrass Nights",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "0644e826a268",
+   "title": "Turning Pages with Mary - Live!",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "0d9a67b0f126",
+   "title": "Vinyl Thursdays",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "79a179d311e0",
+   "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "6b63d1fdb408",
+   "title": "The Vermont Choral Union: The American Mercury",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "ba99715b7057",
+   "title": "Social Sunday",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "7cbcba5ea815",
+   "title": "The Vermont Choral Union: The American Mercury",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "8bcd7ef991c8",
+   "title": "Learning to use eBird and Merlin (November)",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "6352bf4fecc2",
+   "title": "Bluegrass Nights",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
    "id": "2a1c7633f5af",
@@ -2536,11 +2601,73 @@
    "lastSeen": "2026-11-07T18:56:56-05:00"
   },
   {
+   "id": "93caa1aaa1ad",
+   "title": "Vinyl Thursdays",
+   "date": "2026-11-26",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "d6c6c1845c61",
+   "title": "Social Sunday",
+   "date": "2026-11-29",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "4d03317392c3",
+   "title": "Bluegrass Nights",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "460df876738b",
+   "title": "Vinyl Thursdays",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "45e034e331ea",
+   "title": "Social Sunday",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "0f574725a310",
+   "title": "Bluegrass Nights",
+   "date": "2026-12-09",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "dec0d9d1d4f9",
+   "title": "Vinyl Thursdays",
+   "date": "2026-12-10",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "d611ff825ae4",
+   "title": "Social Sunday",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
    "id": "e2267f64c22d",
    "title": "Cookies & Crafts at Winter Lights",
    "date": "2026-12-13",
+   "change": "dropped"
+  },
+  {
+   "id": "7b27b15a3b5d",
+   "title": "Handel's Messiah at College Street Church",
+   "date": "2026-12-13",
    "change": "missing",
-   "lastSeen": "2026-11-06T14:30:13-05:00"
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
    "id": "ff7780931f1c",
@@ -2548,6 +2675,90 @@
    "date": "2026-12-16",
    "change": "missing",
    "lastSeen": "2026-11-06T19:19:17-05:00"
+  },
+  {
+   "id": "81702c614577",
+   "title": "Bluegrass Nights",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "9c93ee11cc04",
+   "title": "Vinyl Thursdays",
+   "date": "2026-12-17",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "7a3800fb2c4a",
+   "title": "Vermont Comedy Club Show: Good Clean Fun",
+   "date": "2026-12-19",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "149e2fa3c36a",
+   "title": "Social Sunday",
+   "date": "2026-12-20",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "dc0f7d85f724",
+   "title": "Bluegrass Nights",
+   "date": "2026-12-23",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "34fd88206f47",
+   "title": "Vinyl Thursdays",
+   "date": "2026-12-24",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "82426596965a",
+   "title": "Social Sunday",
+   "date": "2026-12-27",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "293fc65895ca",
+   "title": "Bluegrass Nights",
+   "date": "2026-12-30",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "887995ed1d14",
+   "title": "Vinyl Thursdays",
+   "date": "2026-12-31",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "85f8b96e88dd",
+   "title": "Social Sunday",
+   "date": "2027-01-03",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "8723410f93ac",
+   "title": "Bluegrass Nights",
+   "date": "2027-01-06",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "8098438716e4",
+   "title": "Vinyl Thursdays",
+   "date": "2027-01-07",
+   "change": "missing",
+   "lastSeen": "2026-11-08T19:00:16-05:00"
   }
  ]
 }
