@@ -1,25 +1,16 @@
 {
  "v": 1,
- "updated": "2026-11-09T22:43:20+00:00",
+ "updated": "2026-11-09T23:48:41+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 48,
+  "temp": 46,
   "sky": "Cloudy",
-  "from": "airport",
-  "hi": 50,
+  "from": "forecast",
+  "hi": 51,
   "lo": 39,
-  "rain": "Dry through tonight",
-  "obs": {
-   "temp": 48,
-   "sky": "Cloudy",
-   "at": "2026-11-09T22:25:00+00:00"
-  },
+  "rain": "Showers likely Tuesday on and off from 1pm on",
+  "obs": null,
   "hours": [
-   {
-    "t": "2026-11-09T17:00:00-05:00",
-    "temp": 47,
-    "sky": "Mostly Cloudy"
-   },
    {
     "t": "2026-11-09T18:00:00-05:00",
     "temp": 46,
@@ -43,6 +34,11 @@
    {
     "t": "2026-11-09T22:00:00-05:00",
     "temp": 44,
+    "sky": "Cloudy"
+   },
+   {
+    "t": "2026-11-09T23:00:00-05:00",
+    "temp": 43,
     "sky": "Cloudy"
    }
   ],
@@ -88,21 +84,21 @@
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "3D Printer Training 101 (Prusa)",
-   "time": "5:30 pm",
-   "venue": "Generator Makerspace",
-   "start": "2026-11-09T17:30:00-05:00",
-   "end": "2026-11-09T18:30:00-05:00",
-   "url": "https://app.glueup.com/event/3d-printer-training-101-prusa-186782/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
    "title": "Monday Yoga",
    "time": "6 pm",
    "venue": "Fitness Center Studio, IDX Student Life Center",
    "start": "2026-11-09T18:00:00-05:00",
    "end": "2026-11-09T19:00:00-05:00",
    "url": "https://www.champlain.edu/event/monday-yoga-4/2026-11-09/",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "RAR Bike Basics (women/trans/enby)",
+   "time": "6 pm",
+   "venue": "Old Spokes Home",
+   "start": "2026-11-09T18:00:00-05:00",
+   "end": "2026-11-19T20:00:00-05:00",
+   "url": "https://www.mychamplainvalley.com/calendar/#/details/rar-bike-basics-women-trans-enby-/20256006/2026-11-09T18",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
