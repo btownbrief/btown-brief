@@ -1,27 +1,27 @@
 {
- "updated": "2026-11-10T20:36:58+00:00",
+ "updated": "2026-11-10T21:21:27+00:00",
  "sections_updated": {
-  "now": "2026-11-10T20:36:58+00:00",
-  "forecast": "2026-11-10T20:36:58+00:00",
-  "hourly": "2026-11-10T20:36:58+00:00",
-  "alerts": "2026-11-10T20:36:58+00:00",
-  "afd": "2026-11-10T20:36:58+00:00",
-  "lake_forecast": "2026-11-10T20:36:58+00:00",
-  "lake_gage": "2026-11-10T20:36:58+00:00",
-  "air": "2026-11-10T20:36:58+00:00",
-  "sun": "2026-11-10T20:36:58+00:00",
-  "models": "2026-11-10T20:36:58+00:00"
+  "now": "2026-11-10T21:21:27+00:00",
+  "forecast": "2026-11-10T21:21:27+00:00",
+  "hourly": "2026-11-10T21:21:27+00:00",
+  "alerts": "2026-11-10T21:21:27+00:00",
+  "afd": "2026-11-10T21:21:27+00:00",
+  "lake_forecast": "2026-11-10T21:21:27+00:00",
+  "lake_gage": "2026-11-10T21:21:27+00:00",
+  "air": "2026-11-10T21:21:27+00:00",
+  "sun": "2026-11-10T21:21:27+00:00",
+  "models": "2026-11-10T21:21:27+00:00"
  },
  "now": {
-  "observed_at": "2026-11-10T20:15:00+00:00",
+  "observed_at": "2026-11-10T20:45:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 50,
-  "feels_like_f": 50,
-  "humidity": 71,
-  "dewpoint_f": 41,
-  "wind_mph": 13,
-  "wind_gust_mph": 21,
+  "temp_f": 48,
+  "feels_like_f": 43,
+  "humidity": 81,
+  "dewpoint_f": 43,
+  "wind_mph": 11,
+  "wind_gust_mph": null,
   "wind_dir": "S",
   "precip_last_hr_in": null
  },
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-10T15:00:00-05:00",
+    "start": "2026-11-10T16:00:00-05:00",
     "is_day": true,
     "temp_f": 52,
     "pop": 58,
-    "wind": "SW 10 mph",
+    "wind": "SW 9 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 52. Southwest wind around 10 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 52. Southwest wind around 9 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-10T15:00:00.000-05:00",
+  "water_temp_at": "2026-11-10T16:00:00.000-05:00",
   "level_ft": 93.8,
-  "level_at": "2026-11-10T15:00:00.000-05:00",
+  "level_at": "2026-11-10T16:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -994,7 +994,7 @@
   "aqi": 25,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/10/26 15:00",
+  "observed": "11/10/26 16:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1014,7 +1014,7 @@
      "ICON": 51
     },
     "pop_max": {
-     "GFS": 27,
+     "GFS": 31,
      "Euro": 78,
      "ICON": 93
     },
@@ -1033,7 +1033,7 @@
      "ICON": 48
     },
     "pop_max": {
-     "GFS": 13,
+     "GFS": 18,
      "Euro": 7,
      "ICON": 13
     },
@@ -1052,7 +1052,7 @@
      "ICON": 41
     },
     "pop_max": {
-     "GFS": 78,
+     "GFS": 61,
      "Euro": 78,
      "ICON": 70
     },
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-10",
-  "generated": "2026-11-10T20:37:05+00:00",
+  "generated": "2026-11-10T21:21:30+00:00",
   "text": "Showers likely today, under a tenth of an inch, high 52. Showers likely tonight until 7pm, under a tenth of an inch, low 39. Wednesday, mostly cloudy and cooler, high 46.",
   "periods": [
    {
@@ -1076,16 +1076,16 @@
     "is_day": true,
     "temp_f": 52,
     "sky": "sunny",
-    "start": "2026-11-10T15:00:00-05:00",
+    "start": "2026-11-10T16:00:00-05:00",
     "end": "2026-11-10T18:00:00-05:00",
     "precip": {
      "kind": "showers",
      "chance": 60,
      "say": "showers likely",
-     "start": "2026-11-10T15:00:00-05:00",
+     "start": "2026-11-10T16:00:00-05:00",
      "end": "2026-11-10T18:00:00-05:00",
      "when": "",
-     "amount_in": 0.01,
+     "amount_in": 0.0,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
