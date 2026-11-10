@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T23:48:37+00:00",
+ "updated": "2026-11-10T02:51:01+00:00",
  "sections_updated": {
-  "now": "2026-11-09T23:48:37+00:00",
-  "forecast": "2026-11-09T23:48:37+00:00",
-  "hourly": "2026-11-09T23:48:37+00:00",
-  "alerts": "2026-11-09T23:48:37+00:00",
-  "afd": "2026-11-09T23:48:37+00:00",
-  "lake_forecast": "2026-11-09T23:48:37+00:00",
-  "lake_gage": "2026-11-09T23:48:37+00:00",
-  "air": "2026-11-09T23:48:37+00:00",
-  "sun": "2026-11-09T23:48:37+00:00",
-  "models": "2026-11-09T23:48:37+00:00"
+  "now": "2026-11-10T02:51:01+00:00",
+  "forecast": "2026-11-10T02:51:01+00:00",
+  "hourly": "2026-11-10T02:51:01+00:00",
+  "alerts": "2026-11-10T02:51:01+00:00",
+  "afd": "2026-11-10T02:51:01+00:00",
+  "lake_forecast": "2026-11-10T02:51:01+00:00",
+  "lake_gage": "2026-11-10T02:51:01+00:00",
+  "air": "2026-11-10T02:51:01+00:00",
+  "sun": "2026-11-10T02:51:01+00:00",
+  "models": "2026-11-10T02:51:01+00:00"
  },
  "now": {
-  "observed_at": "2026-11-09T22:54:00+00:00",
+  "observed_at": "2026-11-10T02:35:00+00:00",
   "station": "KBTV",
-  "description": null,
-  "temp_f": null,
-  "feels_like_f": null,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": null,
+  "description": "Cloudy",
+  "temp_f": 46,
+  "feels_like_f": 40,
+  "humidity": 71,
+  "dewpoint_f": 37,
+  "wind_mph": 14,
   "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_dir": "WNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-09T18:00:00-05:00",
+    "start": "2026-11-09T21:00:00-05:00",
     "is_day": false,
     "temp_f": 39,
-    "pop": 13,
-    "wind": "NW 6 to 14 mph",
+    "pop": 11,
+    "wind": "NW 6 to 13 mph",
     "short": "Cloudy",
-    "detailed": "Cloudy, with a low around 39. Northwest wind 6 to 14 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Cloudy, with a low around 39. Northwest wind 6 to 13 mph."
    },
    {
     "name": "Tuesday",
@@ -173,48 +173,6 @@
  "hourly": {
   "updated": "2026-11-09T23:11:01+00:00",
   "hours": [
-   {
-    "t": "2026-11-09T18:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 40,
-    "pop": 13,
-    "humidity": 76,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 93,
-    "short": "Cloudy",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 22
-   },
-   {
-    "t": "2026-11-09T19:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 40,
-    "pop": 12,
-    "humidity": 73,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 95,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 22
-   },
-   {
-    "t": "2026-11-09T20:00:00-05:00",
-    "temp_f": 45,
-    "feels_f": 39,
-    "pop": 11,
-    "humidity": 76,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 91,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 21
-   },
    {
     "t": "2026-11-09T21:00:00-05:00",
     "temp_f": 44,
@@ -676,6 +634,48 @@
     "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 16
+   },
+   {
+    "t": "2026-11-11T06:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 35,
+    "pop": 31,
+    "humidity": 79,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 79,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 15
+   },
+   {
+    "t": "2026-11-11T07:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 35,
+    "pop": 19,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 84,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-11T08:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 35,
+    "pop": 19,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 87,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-09T18:24:00+00:00",
+  "issued": "2026-11-09T23:56:00+00:00",
   "key_messages": [
    "Upper low pressure will keep the weather unsettled and breezy into the late week.",
    "High uncertainty with end of week system, but trending cooler and showery regardless."
   ],
   "what_changed": "As of 124 PM EST Monday... No significant changes were made with this forecast update.",
-  "raw": "\n000\nFXUS61 KBTV 091824\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n124 PM EST Mon Nov 9 2026\n\n.WHAT HAS CHANGED...\nAs of 124 PM EST Monday...\n\nNo significant changes were made with this forecast update.\n\n&&\n\n.KEY MESSAGES...\nAs of 124 PM EST Monday...\n\n1. Upper low pressure will keep the weather unsettled and \nbreezy into the late week.\n\n2. High uncertainty with end of week system, but trending \ncooler and showery regardless.\n\n&&\n\n.DISCUSSION...\nAs of 124 PM EST Monday...\n\nKEY MESSAGE 1: Multi layer stacked low pressure currently rotating over \nfar eastern Quebec, centered near Anticosti Island, will keep our \nforecast area in classic dreary November weather into the late week. \nClouds continue to blanket northern New York and Vermont this \nafternoon and tonight with scattered to isolated showers, then our \nnext shortwave comes through Tuesday, greatly increasing \nprobabilities of precipitation Tuesday and Tuesday night. Daytime \nhighs in the mid 40s to mid 50s will mean this precipitation mainly \nfalls in the form of rain during daylight hours. The cold pool aloft \nand some meager instability could allow for more robust showers to \nproduce some graupel on Tuesday afternoon, along with brief \nmoderately heavy rainfall and gusty winds. Overall winds out of the \nsouthwest will be breezy Tuesday, particularly on summits and \neastern slopes of mountains. Gusts to 30 mph will be possible on the \neastern slopes, with 35 to 45+ mph atop the mountain summits. A \nreinforcing shot of cold air Tuesday night will bring snow levels as \nlow as 1500 ft or so, mainly along the international border and the \nnorthern Adirondacks/Greens, and this is the best chance for seeing \nany accumulating snow below 2000 ft, though even then, it'll be \npretty minimal. Lows by Wednesday morning will fall into the mid 20s \nto mid 30s. During the day Wednesday, we'll be drying out under high \npressure, with perhaps a lingering shower or two in morning for the \nNortheast Kingdom and seasonable afternoon highs in the 40s and \nlower 50s. Total precipitation amounts Tuesday through Wednesday \nwill be as high as 0.10-0.30\", with highest in the northern \nmountains and Northeast Kingdom. Total snow accumulations will \nlikely be under an inch, limited to highest elevations.\n\nKEY MESSAGE 2: There remains high uncertainty with the late week \nsystem, but trends have continued to suggest a track shift south and \neast of the region with the newest round of guidance. A broad closed \nupper low will gradually shift southeast Thursday into Friday with a \npair of shortwaves digging well into the Mid-Atlantic. As these \nshortwaves interact with the parent upper low, the associated long \nwave will become negatively tilted amplifying the flow pattern along \nthe east coast. Current guidance shows a strengthening subtropical \njet off the coast of the Mid-Atlantic, with an associated tight \nthermal gradient south and east of southern New England. As \nexpected, models show 850-700mb frontogenesis maximized in this \nthermal gradient along and south of southern New England. These \nfactors do not bode confidence in this system bringing large scale \nimpacts to Vermont, but raw guidance including statistical and AI-\ndriven forecast suggest it is worth continuing to monitor. We \nrecently highlighted preparedness for winter weather across New \nEngland, and so it is good to be ready whether or not something \ntakes place. As of 2 PM on Monday, though, the GFS is the only model \nsolution denoting an impactful system for Vermont and the north \nCountry, with the Euro, CMC, and RRFS showing a more suppressed \nsoutherly system, keeping us on the northern periphery of the \nsystem. Regardless, temperatures by Friday will struggle to reach 40 \nacross the area as will sit in cold subsidence under the upper low. \n\nPerhaps more notable, regardless of how Thursday and Friday play \nout, will be the shift to northwest flow leading to some upslope \nsnow showers Saturday and Sunday. There is higher confidence that \nregardless of the system track, that behind the upper low, winds \nwill turn northwest, with cold advective upslope snow showers in the \nwestern facing slopes of the Greens and northern Adirondacks. \nAmounts will be uncertain due to differences in moisture profiles, \nbut some wet snow in the mountains appears likely this weekend. NBM \n72 hour probabilities of 1 inch or more in the eastern Greens and \nAdirondacks through Sunday are around 40-50%.\n\n&&\n\n.AVIATION /18Z MONDAY THROUGH SATURDAY/...\nThrough 18Z Tuesday...Northwest flow continues to bring low ceilings\nto the area as a cold front washes out over the area. Ceilings will\ngenerally hold steady where they are for the next 12-18 hours. MVFR\nceilings between 2000- 2500ft agl will be the main flight\nrestrictions, outside of SLK/EFK where terrain influences will lead\nto sporadic IFR cigs around 700- 900ft agl for the next 6-8 hours.\nThere are some isolated showers and drizzle about the area with some\nPROB30s for our mountain terminals mainly. Little to no vsby\nreductions are anticipated with any shower, but some MVFR vsbys at\nEFK/SLK are noted. Northwest winds will occasionally be gusty\n15-20knots in the wider valleys through 23-00Z or so before turning\nmore westerly and tapering towards 5-10 knots by tomorrow morning.\nMountain obscuration and icing aloft will be possible with\ntemperatures around 4000ft or higher near 0C. By tomorrow morning,\nany IFR cigs will trend towards MVFR towards the end of this TAF\npackage.\n\nOutlook...\n\nTuesday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nVeterans Day: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nWednesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SN.\nThursday: Mainly VFR, with local IFR possible. Slight chance RA.\nThursday Night: Mainly VFR, with areas MVFR possible. Chance RA,\nChance SN.\nFriday: Mainly VFR, with local MVFR possible. Chance RA, Chance\nSN.\nFriday Night: Mainly MVFR, with local VFR possible. Chance SN,\nChance RA.\nSaturday: Mainly MVFR, with local IFR possible. Chance RA, Chance\nSN.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Danzig\nAVIATION...Danzig\n"
+  "raw": "\n000\nFXUS61 KBTV 092356\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n656 PM EST Mon Nov 9 2026\n\n.WHAT HAS CHANGED...\nAs of 124 PM EST Monday...\n\nNo significant changes were made with this forecast update.\n\n&&\n\n.KEY MESSAGES...\nAs of 124 PM EST Monday...\n\n1. Upper low pressure will keep the weather unsettled and \nbreezy into the late week.\n\n2. High uncertainty with end of week system, but trending \ncooler and showery regardless.\n\n&&\n\n.DISCUSSION...\nAs of 124 PM EST Monday...\n\nKEY MESSAGE 1: Multi layer stacked low pressure currently rotating over \nfar eastern Quebec, centered near Anticosti Island, will keep our \nforecast area in classic dreary November weather into the late week. \nClouds continue to blanket northern New York and Vermont this \nafternoon and tonight with scattered to isolated showers, then our \nnext shortwave comes through Tuesday, greatly increasing \nprobabilities of precipitation Tuesday and Tuesday night. Daytime \nhighs in the mid 40s to mid 50s will mean this precipitation mainly \nfalls in the form of rain during daylight hours. The cold pool aloft \nand some meager instability could allow for more robust showers to \nproduce some graupel on Tuesday afternoon, along with brief \nmoderately heavy rainfall and gusty winds. Overall winds out of the \nsouthwest will be breezy Tuesday, particularly on summits and \neastern slopes of mountains. Gusts to 30 mph will be possible on the \neastern slopes, with 35 to 45+ mph atop the mountain summits. A \nreinforcing shot of cold air Tuesday night will bring snow levels as \nlow as 1500 ft or so, mainly along the international border and the \nnorthern Adirondacks/Greens, and this is the best chance for seeing \nany accumulating snow below 2000 ft, though even then, it'll be \npretty minimal. Lows by Wednesday morning will fall into the mid 20s \nto mid 30s. During the day Wednesday, we'll be drying out under high \npressure, with perhaps a lingering shower or two in morning for the \nNortheast Kingdom and seasonable afternoon highs in the 40s and \nlower 50s. Total precipitation amounts Tuesday through Wednesday \nwill be as high as 0.10-0.30\", with highest in the northern \nmountains and Northeast Kingdom. Total snow accumulations will \nlikely be under an inch, limited to highest elevations.\n\nKEY MESSAGE 2: There remains high uncertainty with the late week \nsystem, but trends have continued to suggest a track shift south and \neast of the region with the newest round of guidance. A broad closed \nupper low will gradually shift southeast Thursday into Friday with a \npair of shortwaves digging well into the Mid-Atlantic. As these \nshortwaves interact with the parent upper low, the associated long \nwave will become negatively tilted amplifying the flow pattern along \nthe east coast. Current guidance shows a strengthening subtropical \njet off the coast of the Mid-Atlantic, with an associated tight \nthermal gradient south and east of southern New England. As \nexpected, models show 850-700mb frontogenesis maximized in this \nthermal gradient along and south of southern New England. These \nfactors do not bode confidence in this system bringing large scale \nimpacts to Vermont, but raw guidance including statistical and AI-\ndriven forecast suggest it is worth continuing to monitor. We \nrecently highlighted preparedness for winter weather across New \nEngland, and so it is good to be ready whether or not something \ntakes place. As of 2 PM on Monday, though, the GFS is the only model \nsolution denoting an impactful system for Vermont and the north \nCountry, with the Euro, CMC, and RRFS showing a more suppressed \nsoutherly system, keeping us on the northern periphery of the \nsystem. Regardless, temperatures by Friday will struggle to reach 40 \nacross the area as will sit in cold subsidence under the upper low. \n\nPerhaps more notable, regardless of how Thursday and Friday play \nout, will be the shift to northwest flow leading to some upslope \nsnow showers Saturday and Sunday. There is higher confidence that \nregardless of the system track, that behind the upper low, winds \nwill turn northwest, with cold advective upslope snow showers in the \nwestern facing slopes of the Greens and northern Adirondacks. \nAmounts will be uncertain due to differences in moisture profiles, \nbut some wet snow in the mountains appears likely this weekend. NBM \n72 hour probabilities of 1 inch or more in the eastern Greens and \nAdirondacks through Sunday are around 40-50%.\n\n&&\n\n.AVIATION /00Z TUESDAY THROUGH SATURDAY/...\nThrough 00Z Wednesday...A northwest flow will remain in place\nwith occasional gusts 18-22kts overnight. A mix of MVFR and VFR\nceilings across the region early this evening, will generally\nfall overnight. There is a low probability of brief intervals \nof IFR ceilings at KSLK and KEFK during the 06-12Z period, but\nTAF reflect prevailing MVFR conditions. Anticipate HIR TRRN\nOBSCD throughout the overnight period. May see a brief rain\nshower or sprinkle overnight, but measurable precipitation is\ngenerally not expected at the TAF locations. \n\nBy Tuesday morning, ceilings gradually improve to 2500-4000ft \nwith a few breaks in the overcast likely. A quick moving trough \nin WNW mid-level flow will bring scattered rain showers during \nthe afternoon hours. All TAFs indicate -SHRA except KRUT during \nTuesday afternoon. \n\nOutlook...\n\nTuesday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nVeterans Day: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nWednesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA, Slight chance SHSN.\nThursday: Mainly MVFR, with local IFR possible. Slight chance\nSHRA.\nThursday Night: Mainly MVFR, with areas IFR possible. Chance RA,\nChance SN.\nFriday: Mainly IFR, with areas MVFR possible. Chance RA, Chance\nSN.\nFriday Night: Mainly MVFR, with areas IFR possible. Chance SN,\nChance RA.\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA,\nChance SHSN.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Danzig/Storm\nAVIATION...Banacos\n"
  },
  "lake_forecast": {
   "issued": "2026-11-09T18:35:00+00:00",
@@ -983,17 +983,17 @@
  },
  "lake_gage": {
   "water_temp_f": 52,
-  "water_temp_at": "2026-11-09T18:00:00.000-05:00",
-  "level_ft": 93.85,
-  "level_at": "2026-11-09T18:00:00.000-05:00",
+  "water_temp_at": "2026-11-09T21:00:00.000-05:00",
+  "level_ft": 93.84,
+  "level_at": "2026-11-09T21:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/09/26 18:00",
+  "observed": "11/09/26 21:00",
   "discussion": "On Tuesday, November 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1027,18 +1027,18 @@
    {
     "date": "2026-11-10",
     "high_f": {
-     "GFS": 48,
-     "Euro": 52,
+     "GFS": 49,
+     "Euro": 53,
      "ICON": 51
     },
     "pop_max": {
-     "GFS": 35,
-     "Euro": 54,
+     "GFS": 40,
+     "Euro": 61,
      "ICON": 88
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.0,
+     "Euro": 0.03,
      "ICON": 0.17
     },
     "high_spread_f": 4
@@ -1046,27 +1046,27 @@
    {
     "date": "2026-11-11",
     "high_f": {
-     "GFS": 46,
+     "GFS": 44,
      "Euro": 48,
      "ICON": 46
     },
     "pop_max": {
-     "GFS": 17,
-     "Euro": 18,
+     "GFS": 8,
+     "Euro": 12,
      "ICON": 38
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
+     "Euro": 0.0,
      "ICON": 0.04
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    }
   ]
  },
  "brief": {
   "date": "2026-11-09",
-  "generated": "2026-11-09T23:48:40+00:00",
+  "generated": "2026-11-10T02:51:05+00:00",
   "text": "Cloudy tonight, low 39. Tuesday, showers likely on and off from 1pm on, under a tenth of an inch, high 51. Showers likely Tuesday night until 9pm, about a tenth of an inch, low 35.",
   "periods": [
    {
@@ -1075,12 +1075,12 @@
     "is_day": false,
     "temp_f": 39,
     "sky": "cloudy",
-    "start": "2026-11-09T18:00:00-05:00",
+    "start": "2026-11-09T21:00:00-05:00",
     "end": "2026-11-10T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 36,
-    "feels_hi": 40,
+    "feels_hi": 38,
     "text": "Cloudy tonight, low 39."
    },
    {

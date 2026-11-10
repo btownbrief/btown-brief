@@ -1,31 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-09T23:48:41+00:00",
+ "updated": "2026-11-10T02:51:05+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
   "temp": 46,
   "sky": "Cloudy",
-  "from": "forecast",
+  "from": "airport",
   "hi": 51,
   "lo": 39,
   "rain": "Showers likely Tuesday on and off from 1pm on",
-  "obs": null,
+  "obs": {
+   "temp": 46,
+   "sky": "Cloudy",
+   "at": "2026-11-10T02:35:00+00:00"
+  },
   "hours": [
-   {
-    "t": "2026-11-09T18:00:00-05:00",
-    "temp": 46,
-    "sky": "Cloudy"
-   },
-   {
-    "t": "2026-11-09T19:00:00-05:00",
-    "temp": 46,
-    "sky": "Cloudy"
-   },
-   {
-    "t": "2026-11-09T20:00:00-05:00",
-    "temp": 45,
-    "sky": "Cloudy"
-   },
    {
     "t": "2026-11-09T21:00:00-05:00",
     "temp": 44,
@@ -39,6 +28,21 @@
    {
     "t": "2026-11-09T23:00:00-05:00",
     "temp": 43,
+    "sky": "Cloudy"
+   },
+   {
+    "t": "2026-11-10T00:00:00-05:00",
+    "temp": 43,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-10T01:00:00-05:00",
+    "temp": 43,
+    "sky": "Cloudy"
+   },
+   {
+    "t": "2026-11-10T02:00:00-05:00",
+    "temp": 42,
     "sky": "Cloudy"
    }
   ],
@@ -65,33 +69,6 @@
   }
  ],
  "tonight": [
-  {
-   "title": "Oxy Acetylene Torch Training",
-   "time": "6 pm",
-   "venue": "Generator Makerspace",
-   "start": "2026-11-09T18:00:00-05:00",
-   "end": "2026-11-09T21:00:00-05:00",
-   "url": "https://app.glueup.com/event/oxy-acetylene-torch-training-186771/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
-   "title": "Soccer Intramurals",
-   "time": "5 pm",
-   "venue": "Argosy Gym, IDX Student Life Center",
-   "start": "2026-11-09T17:00:00-05:00",
-   "end": "2026-11-09T19:00:00-05:00",
-   "url": "https://www.champlain.edu/event/soccer-intramurals/2026-11-09/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
-   "title": "Monday Yoga",
-   "time": "6 pm",
-   "venue": "Fitness Center Studio, IDX Student Life Center",
-   "start": "2026-11-09T18:00:00-05:00",
-   "end": "2026-11-09T19:00:00-05:00",
-   "url": "https://www.champlain.edu/event/monday-yoga-4/2026-11-09/",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
   {
    "title": "RAR Bike Basics (women/trans/enby)",
    "time": "6 pm",
