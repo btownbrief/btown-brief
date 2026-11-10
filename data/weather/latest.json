@@ -1,42 +1,42 @@
 {
- "updated": "2026-11-10T13:01:12+00:00",
+ "updated": "2026-11-10T17:16:29+00:00",
  "sections_updated": {
-  "now": "2026-11-10T13:01:12+00:00",
-  "forecast": "2026-11-10T13:01:12+00:00",
-  "hourly": "2026-11-10T13:01:12+00:00",
-  "alerts": "2026-11-10T13:01:12+00:00",
-  "afd": "2026-11-10T13:01:12+00:00",
-  "lake_forecast": "2026-11-10T13:01:12+00:00",
-  "lake_gage": "2026-11-10T13:01:12+00:00",
-  "air": "2026-11-10T13:01:12+00:00",
-  "sun": "2026-11-10T13:01:12+00:00",
-  "models": "2026-11-10T13:01:12+00:00"
+  "now": "2026-11-10T17:16:29+00:00",
+  "forecast": "2026-11-10T17:16:29+00:00",
+  "hourly": "2026-11-10T17:16:29+00:00",
+  "alerts": "2026-11-10T17:16:29+00:00",
+  "afd": "2026-11-10T17:16:29+00:00",
+  "lake_forecast": "2026-11-10T17:16:29+00:00",
+  "lake_gage": "2026-11-10T17:16:29+00:00",
+  "air": "2026-11-10T17:16:29+00:00",
+  "sun": "2026-11-10T17:16:29+00:00",
+  "models": "2026-11-10T17:16:29+00:00"
  },
  "now": {
-  "observed_at": "2026-11-10T11:54:00+00:00",
+  "observed_at": "2026-11-10T15:55:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 42,
-  "feels_like_f": 42,
+  "temp_f": 45,
+  "feels_like_f": 40,
   "humidity": 76,
-  "dewpoint_f": 35,
-  "wind_mph": 0,
+  "dewpoint_f": 37,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-11-10T06:37:34+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-11-10T08:00:00-05:00",
+    "name": "This Afternoon",
+    "start": "2026-11-10T12:00:00-05:00",
     "is_day": true,
     "temp_f": 51,
     "pop": 62,
-    "wind": "SW 5 to 12 mph",
+    "wind": "S 8 to 12 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely after 9am. Mostly cloudy, with a high near 51. Southwest wind 5 to 12 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 51. South wind 8 to 12 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,62 +173,6 @@
  "hourly": {
   "updated": "2026-11-10T06:37:34+00:00",
   "hours": [
-   {
-    "t": "2026-11-10T08:00:00-05:00",
-    "temp_f": 42,
-    "feels_f": 39,
-    "pop": 6,
-    "humidity": 79,
-    "wind_mph": 5,
-    "wind_dir": "SW",
-    "sky": 88,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
-   {
-    "t": "2026-11-10T09:00:00-05:00",
-    "temp_f": 44,
-    "feels_f": 40,
-    "pop": 27,
-    "humidity": 76,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 87,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 10
-   },
-   {
-    "t": "2026-11-10T10:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 42,
-    "pop": 31,
-    "humidity": 73,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 90,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
-   {
-    "t": "2026-11-10T11:00:00-05:00",
-    "temp_f": 48,
-    "feels_f": 43,
-    "pop": 25,
-    "humidity": 71,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 89,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-11-10T12:00:00-05:00",
     "temp_f": 49,
@@ -676,6 +620,62 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 7
+   },
+   {
+    "t": "2026-11-11T20:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 38,
+    "pop": 8,
+    "humidity": 79,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 96,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 6
+   },
+   {
+    "t": "2026-11-11T21:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 38,
+    "pop": 8,
+    "humidity": 79,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 84,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 6
+   },
+   {
+    "t": "2026-11-11T22:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 37,
+    "pop": 8,
+    "humidity": 79,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 71,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 6
+   },
+   {
+    "t": "2026-11-11T23:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 37,
+    "pop": 8,
+    "humidity": 79,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 75,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 6
    }
   ],
   "days": [
@@ -962,18 +962,18 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-10T07:00:00.000-05:00",
-  "level_ft": 93.82,
-  "level_at": "2026-11-10T07:00:00.000-05:00",
+  "water_temp_at": "2026-11-10T12:00:00.000-05:00",
+  "level_ft": 93.84,
+  "level_at": "2026-11-10T12:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 15,
+  "aqi": 20,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/10/26 7:00",
-  "discussion": "On Tuesday, November 10th, expect generally good air quality across Vermont."
+  "observed": "11/10/26 12:00",
+  "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-11-10T06:42-05:00",
@@ -988,73 +988,73 @@
     "date": "2026-11-10",
     "high_f": {
      "GFS": 51,
-     "Euro": 54,
+     "Euro": 55,
      "ICON": 51
     },
     "pop_max": {
-     "GFS": 35,
-     "Euro": 80,
+     "GFS": 37,
+     "Euro": 78,
      "ICON": 95
     },
     "precip_in": {
-     "GFS": 0.03,
-     "Euro": 0.08,
-     "ICON": 0.11
+     "GFS": 0.0,
+     "Euro": 0.13,
+     "ICON": 0.1
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-11-11",
     "high_f": {
-     "GFS": 46,
+     "GFS": 47,
      "Euro": 49,
-     "ICON": 47
+     "ICON": 48
     },
     "pop_max": {
-     "GFS": 16,
+     "GFS": 14,
      "Euro": 7,
      "ICON": 33
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.02,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-12",
     "high_f": {
      "GFS": 42,
      "Euro": 43,
-     "ICON": 42
+     "ICON": 41
     },
     "pop_max": {
-     "GFS": 45,
-     "Euro": 57,
+     "GFS": 78,
+     "Euro": 78,
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.6,
-     "Euro": 0.35,
-     "ICON": 0.1
+     "GFS": 0.59,
+     "Euro": 0.34,
+     "ICON": 0.2
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  },
  "brief": {
   "date": "2026-11-10",
-  "generated": "2026-11-10T13:01:18+00:00",
+  "generated": "2026-11-10T17:16:32+00:00",
   "text": "Showers likely today from 4pm on, under a tenth of an inch, high 51. Showers likely tonight until 7pm, under a tenth of an inch, low 39. Wednesday, mostly cloudy, high 48.",
   "periods": [
    {
     "label": "Today",
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 51,
     "sky": "sunny",
-    "start": "2026-11-10T08:00:00-05:00",
+    "start": "2026-11-10T12:00:00-05:00",
     "end": "2026-11-10T18:00:00-05:00",
     "precip": {
      "kind": "showers",
@@ -1068,7 +1068,7 @@
      "amount": "under a tenth of an inch"
     },
     "wind": null,
-    "feels_lo": 39,
+    "feels_lo": 43,
     "feels_hi": 51,
     "text": "Showers likely today from 4pm on, under a tenth of an inch, high 51."
    },
