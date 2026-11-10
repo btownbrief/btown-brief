@@ -1,40 +1,40 @@
 {
- "generated": "2026-11-09T21:54:46-05:00",
+ "generated": "2026-11-10T12:15:07-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 7.1
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 72,
-   "seconds": 4.4
+   "seconds": 4.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 84,
-   "seconds": 3.5
+   "count": 79,
+   "seconds": 7.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 167,
-   "seconds": 2.6
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 66,
-   "seconds": 1.9
+   "count": 71,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 30,
-   "seconds": 3.5
+   "seconds": 3.4
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-09&end_date=2027-01-08&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-10&end_date=2027-01-09&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -49,7 +49,7 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 202,
-   "seconds": 70.4
+   "seconds": 71.0
   },
   "flynn": {
    "label": "The Flynn",
@@ -58,18 +58,18 @@
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 15,
-   "seconds": 32.2
+   "count": 14,
+   "seconds": 32.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.8
+   "seconds": 2.6
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 581,
-   "seconds": 31.3
+   "count": 624,
+   "seconds": 32.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 19.4
+   "seconds": 20.0
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 464,
-   "seconds": 76.7
+   "seconds": 74.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 59,
-   "seconds": 117.3
+   "count": 58,
+   "seconds": 107.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
-   "seconds": 0.3
+   "count": 18,
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 69,
-   "seconds": 14.9
+   "count": 68,
+   "seconds": 15.9
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,163 +108,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 86,
-   "seconds": 2.0
+   "count": 83,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 17.7
+   "seconds": 17.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2795,
-   "seconds": 2.4
+   "count": 2784,
+   "seconds": 23.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
-   "count": 49,
-   "seconds": 1.2
+   "count": 50,
+   "seconds": 1.4
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 350,
-   "seconds": 13.5
+   "count": 346,
+   "seconds": 25.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 209,
+   "count": 208,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 50,
-   "seconds": 71.4
+   "count": 52,
+   "seconds": 70.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 38,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5448,
- "afterDedup": 2443,
- "duplicatesMerged": 3005,
- "final": 2493,
- "firecrawlCalls": 1,
+ "gathered": 5471,
+ "afterDedup": 2447,
+ "duplicatesMerged": 3024,
+ "final": 2503,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "\"Break Forth Into Joy\": English Christmas Music",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Shake It Till You Make It Newcomers Burlesque Showcase",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "sevendays",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Madaila",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Generator Holiday Maker Market",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Paul Winter’s Winter Solstice Celebration",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Bella Voce Concert \"Cool Yule\"",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Karina Rykman",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-12-05"
-  },
-  {
-   "kept": {
-    "title": "Build It Big: Second Story",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Holiday Pops",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "flynn",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
   {
    "kept": {
     "title": "Cheryl A. Ossola in Conversation with Lisa DeNatale | How Long a Shadow",
@@ -275,6 +163,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-06"
+  },
+  {
+   "kept": {
+    "title": "Madigan Linnane",
+    "source": "breweries"
+   },
+   "merged_sources": [
+    "breweries",
+    "helloburlington"
    ],
    "date": "2026-12-06"
   },
@@ -527,6 +426,17 @@
    "merged_sources": [
     "fletcherfree",
     "loveburlington"
+   ],
+   "date": "2026-12-09"
+  },
+  {
+   "kept": {
+    "title": "The Magic School Bus",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
    ],
    "date": "2026-12-09"
   },
@@ -804,7 +714,19 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "vcc"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Festive Friday: Not so Silent Night",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-11"
   },
@@ -869,6 +791,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -948,6 +871,17 @@
   },
   {
    "kept": {
+    "title": "Reindeer LIVE",
+    "source": "echo"
+   },
+   "merged_sources": [
+    "echo",
+    "helloburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
     "title": "The Poetry Experience",
     "source": "fletcherfree"
    },
@@ -985,6 +919,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1118,6 +1053,17 @@
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Winooski Winter Farmers Market",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2386,12 +2332,25 @@
   },
   {
    "kept": {
-    "title": "Mad Robin Burlington Contra Dance",
-    "source": "loveburlington"
+    "title": "Men's Ice Hockey vs Northeastern",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-08"
+  },
+  {
+   "kept": {
+    "title": "Mad Robin Contra Dance",
+    "source": "uvm"
    },
    "merged_sources": [
     "loveburlington",
-    "sevendays"
+    "sevendays",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2027-01-08"
   },
@@ -2405,59 +2364,80 @@
     "sevendays"
    ],
    "date": "2027-01-08"
+  },
+  {
+   "kept": {
+    "title": "The Poetry Experience",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2027-01-09"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2027-01-09"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-09"
+  },
+  {
+   "kept": {
+    "title": "Second Saturdays",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2027-01-09"
   }
  ],
  "changes": [
   {
-   "id": "e28ab99d582a",
-   "title": "Non-Fiction Comic Festival",
-   "date": "2026-11-13",
-   "change": "time",
-   "was": "2026-11-13T16:00:00-05:00",
-   "now": "2026-11-13T11:00:00-05:00"
-  },
-  {
-   "id": "90023a83b548",
-   "title": "Non-Fiction Comic Festival SETUP",
-   "date": "2026-11-13",
-   "change": "time",
-   "was": "2026-11-13T18:00:00-05:00",
-   "now": "2026-11-13T12:00:00-05:00"
-  },
-  {
-   "id": "8928b9de33df",
-   "title": "Stick & Puck",
-   "date": "2026-11-09",
+   "id": "f56dae8e7490",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-11-10",
    "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   },
   {
-   "id": "0b8d67fe804b",
-   "title": "Oxy Acetylene Torch Training",
-   "date": "2026-11-09",
+   "id": "387245928682",
+   "title": "Public Skate",
+   "date": "2026-11-10",
    "change": "missing",
-   "lastSeen": "2026-11-08T19:00:16-05:00"
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   },
   {
-   "id": "80f407a69721",
-   "title": "Adult Drop- In Table Tennis",
-   "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
-  },
-  {
-   "id": "e48ed96bb874",
+   "id": "65fc8b7705d6",
    "title": "Trystan Bates",
-   "date": "2026-11-09",
+   "date": "2026-11-10",
    "change": "missing",
-   "lastSeen": "2026-11-08T19:00:16-05:00"
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   },
   {
-   "id": "fe580b8e3dd4",
+   "id": "865720ea41d4",
    "title": "Kathleen Schneider",
-   "date": "2026-11-09",
+   "date": "2026-11-10",
    "change": "missing",
-   "lastSeen": "2026-11-08T19:00:16-05:00"
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   },
   {
    "id": "54eaef9d7fc0",
@@ -2544,6 +2524,13 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "16c4012f5534",
+   "title": "Intro to Computer-Aided Design (CAD): Fusion 360 Workshop",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
+  },
+  {
    "id": "4b99f3da2c71",
    "title": "Bluegrass Nights",
    "date": "2026-11-18",
@@ -2586,6 +2573,13 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "a8b99e3e17f0",
+   "title": "The Amazing Puzzle Race",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
+  },
+  {
    "id": "ba99715b7057",
    "title": "Social Sunday",
    "date": "2026-11-22",
@@ -2614,6 +2608,13 @@
    "lastSeen": "2026-11-09T15:04:37-05:00"
   },
   {
+   "id": "4e2909943253",
+   "title": "Scrabble Night @ The Boardroom",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
+  },
+  {
    "id": "6352bf4fecc2",
    "title": "Bluegrass Nights",
    "date": "2026-11-25",
@@ -2635,11 +2636,25 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "877a90fdce06",
+   "title": "Tree Lighting & Santa Parade",
+   "date": "2026-11-27",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
+  },
+  {
    "id": "d6c6c1845c61",
    "title": "Social Sunday",
    "date": "2026-11-29",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "081e18d27871",
+   "title": "Exhibit - The Growth of a Medical Library: Dana’s Origins and Contributions to UVM Medicine",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   },
   {
    "id": "4d03317392c3",
@@ -2689,12 +2704,6 @@
    "date": "2026-12-13",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
-  },
-  {
-   "id": "ff7780931f1c",
-   "title": "Puzzle Swap",
-   "date": "2026-12-16",
-   "change": "dropped"
   },
   {
    "id": "81702c614577",
@@ -2767,6 +2776,13 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "5ebadc9f1c2c",
+   "title": "Exhibit - The Growth of a Medical Library: Dana’s Origins and Contributions to UVM Medicine",
+   "date": "2027-01-04",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
+  },
+  {
    "id": "8723410f93ac",
    "title": "Bluegrass Nights",
    "date": "2027-01-06",
@@ -2779,6 +2795,13 @@
    "date": "2027-01-07",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "0e3eeca8af4a",
+   "title": "Mad Robin Burlington Contra Dance",
+   "date": "2027-01-08",
+   "change": "missing",
+   "lastSeen": "2026-11-09T21:54:46-05:00"
   }
  ]
 }
