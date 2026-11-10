@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-09T15:04:37-05:00",
+ "generated": "2026-11-09T21:54:46-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.5
+   "seconds": 7.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 72,
-   "seconds": 3.1
+   "seconds": 4.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 84,
-   "seconds": 4.0
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 166,
-   "seconds": 3.1
+   "count": 167,
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 2.0
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 30,
-   "seconds": 3.1
+   "seconds": 3.5
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 201,
-   "seconds": 65.6
+   "count": 202,
+   "seconds": 70.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 11,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 15,
-   "seconds": 33.3
+   "seconds": 32.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 581,
-   "seconds": 28.9
+   "seconds": 31.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,28 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 17.6
+   "seconds": 19.4
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 464,
-   "seconds": 75.5
+   "seconds": 76.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 59,
-   "seconds": 108.9
+   "seconds": 117.3
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 17,
-   "seconds": 0.1
+   "count": 19,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 0,
-   "error": "parksrec: all city iCalendar feeds failed",
-   "staleDays": 1
+   "count": 69,
+   "seconds": 14.9
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,49 +109,49 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 86,
-   "seconds": 2.1
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 16.5
+   "seconds": 17.7
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2795,
-   "seconds": 66.5
+   "seconds": 2.4
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 49,
-   "seconds": 1.6
+   "seconds": 1.2
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 349,
-   "seconds": 22.5
+   "count": 350,
+   "seconds": 13.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 208,
-   "seconds": 0.2
+   "count": 209,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 50,
-   "seconds": 65.7
+   "seconds": 71.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 38,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 5373,
- "afterDedup": 2370,
- "duplicatesMerged": 3003,
- "final": 2458,
- "firecrawlCalls": 15,
+ "gathered": 5448,
+ "afterDedup": 2443,
+ "duplicatesMerged": 3005,
+ "final": 2493,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2410,20 +2409,27 @@
  ],
  "changes": [
   {
-   "id": "78c5a0c15c0b",
-   "title": "Good Time Line Dancing",
+   "id": "e28ab99d582a",
+   "title": "Non-Fiction Comic Festival",
    "date": "2026-11-13",
    "change": "time",
-   "was": "2026-11-13T19:00:00-05:00",
-   "now": "2026-11-13T19:30:00-05:00"
+   "was": "2026-11-13T16:00:00-05:00",
+   "now": "2026-11-13T11:00:00-05:00"
   },
   {
-   "id": "fbbd3d5e6b9c",
-   "title": "Fitter Happier: A Radiohead Tribute",
-   "date": "2026-11-14",
+   "id": "90023a83b548",
+   "title": "Non-Fiction Comic Festival SETUP",
+   "date": "2026-11-13",
    "change": "time",
-   "was": "2026-11-14T19:00:00-05:00",
-   "now": "2026-11-14T19:30:00-05:00"
+   "was": "2026-11-13T18:00:00-05:00",
+   "now": "2026-11-13T12:00:00-05:00"
+  },
+  {
+   "id": "8928b9de33df",
+   "title": "Stick & Puck",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-11-07T18:56:56-05:00"
   },
   {
    "id": "0b8d67fe804b",
@@ -2431,6 +2437,13 @@
    "date": "2026-11-09",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "80f407a69721",
+   "title": "Adult Drop- In Table Tennis",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-11-07T18:56:56-05:00"
   },
   {
    "id": "e48ed96bb874",
@@ -2552,6 +2565,13 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "a9bafdcf6574",
+   "title": "Sunday Cruise w/ Friend, Dino Gala & Latchkey Kids",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-11-09T15:04:37-05:00"
+  },
+  {
    "id": "79a179d311e0",
    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
    "date": "2026-11-21",
@@ -2587,6 +2607,13 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "8fc084d9c5f7",
+   "title": "Play Time",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-11-09T15:04:37-05:00"
+  },
+  {
    "id": "6352bf4fecc2",
    "title": "Bluegrass Nights",
    "date": "2026-11-25",
@@ -2594,11 +2621,11 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "2a1c7633f5af",
-   "title": "Thanksgiving Day",
+   "id": "963fa6eb41fc",
+   "title": "CLOSED - Thanksgiving Day",
    "date": "2026-11-26",
    "change": "missing",
-   "lastSeen": "2026-11-07T18:56:56-05:00"
+   "lastSeen": "2026-11-09T15:04:37-05:00"
   },
   {
    "id": "93caa1aaa1ad",
@@ -2657,12 +2684,6 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
-   "id": "e2267f64c22d",
-   "title": "Cookies & Crafts at Winter Lights",
-   "date": "2026-12-13",
-   "change": "dropped"
-  },
-  {
    "id": "7b27b15a3b5d",
    "title": "Handel's Messiah at College Street Church",
    "date": "2026-12-13",
@@ -2673,8 +2694,7 @@
    "id": "ff7780931f1c",
    "title": "Puzzle Swap",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-11-06T19:19:17-05:00"
+   "change": "dropped"
   },
   {
    "id": "81702c614577",
