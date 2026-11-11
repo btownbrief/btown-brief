@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-10T12:15:07-05:00",
+ "generated": "2026-11-10T19:53:44-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.9
+   "seconds": 6.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 72,
-   "seconds": 4.9
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 79,
-   "seconds": 7.2
+   "count": 80,
+   "seconds": 5.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 167,
-   "seconds": 2.8
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 71,
-   "seconds": 1.7
+   "count": 175,
+   "seconds": 5.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 30,
-   "seconds": 3.4
+   "seconds": 3.2
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 202,
-   "seconds": 71.0
+   "seconds": 67.6
   },
   "flynn": {
    "label": "The Flynn",
@@ -59,17 +59,17 @@
   "generator": {
    "label": "Generator Makerspace",
    "count": 14,
-   "seconds": 32.3
+   "seconds": 32.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.6
+   "seconds": 2.7
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 624,
-   "seconds": 32.1
+   "seconds": 32.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 20.0
+   "seconds": 22.5
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 464,
-   "seconds": 74.5
+   "count": 581,
+   "seconds": 74.0
   },
   "meetup": {
    "label": "Meetup",
    "count": 58,
-   "seconds": 107.9
+   "seconds": 118.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 18,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 68,
-   "seconds": 15.9
+   "count": 67,
+   "seconds": 16.3
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,38 +108,39 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 83,
-   "seconds": 2.1
+   "count": 85,
+   "seconds": 2.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 17.9
+   "seconds": 17.0
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2784,
-   "seconds": 23.5
+   "count": 2772,
+   "seconds": 3.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
-   "count": 50,
-   "seconds": 1.4
+   "count": 0,
+   "error": "fetch failed after 3 tries: https://shelburnemuseum.org/wp-json/tribe/events/v1/events?start_date=2026-11-10&end_date=2027-01-09&per_page=50&page=1 (HTTP Error 502: Bad Gateway)",
+   "staleDays": 0
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 346,
-   "seconds": 25.9
+   "seconds": 26.5
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 208,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 52,
-   "seconds": 70.1
+   "seconds": 69.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -147,533 +148,12 @@
    "seconds": 0.4
   }
  },
- "gathered": 5471,
- "afterDedup": 2447,
- "duplicatesMerged": 3024,
- "final": 2503,
- "firecrawlCalls": 5,
+ "gathered": 5632,
+ "afterDedup": 2437,
+ "duplicatesMerged": 3195,
+ "final": 2524,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Cheryl A. Ossola in Conversation with Lisa DeNatale | How Long a Shadow",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Madigan Linnane",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Bella Voce Concert \"Cool Yule\"",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Tall Heights",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Stories & Crafts: Animal Antics!",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "Trivia with Craig Mitchell @ The Monkey House",
-    "source": "monkeyhouse"
-   },
-   "merged_sources": [
-    "monkeyhouse",
-    "sevendays"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "Yoga with Hayki at Reststop",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "Bit Brigade: performing “The Legend of Zelda” + “Castlevania” + “Tetris”",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-07"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Spanish Conversation",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Crafters Drop-In",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Chemistry Graduate Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Sculpt HIIT and Flow",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "UVM Costa Rica Davis Center Atrium Tabling",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Let's Talk at WAGE",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "UPB Art Attack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Sue Foley + GA-20",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-12-08"
-  },
-  {
-   "kept": {
-    "title": "Architecture + Design Film Series, The First Siza",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "sevendays",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Stories & Songs for Library Littles",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "The Magic School Bus",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Switch It Up!",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Wine Down Wednesday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "The Big Book Nook Giveaway",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "RSENR Research Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Student Recital IV",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "Pub Quiz",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
-    "title": "GROW Preschool Yoga",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Matt Braunger",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "vcc"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Chemistry Graduate Seminars",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "Empowerment Self-Defense (Employee Session)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "UPB Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-10"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-10"
-  },
   {
    "kept": {
     "title": "Trivia",
@@ -722,6 +202,50 @@
   {
    "kept": {
     "title": "Festive Friday: Not so Silent Night",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "North Pole Express Mailboxes",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
     "source": "churchst"
    },
    "merged_sources": [
@@ -876,7 +400,8 @@
    },
    "merged_sources": [
     "echo",
-    "helloburlington"
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-12-12"
   },
@@ -899,6 +424,50 @@
    "merged_sources": [
     "champlainvalley",
     "vcc"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
+    "title": "North Pole Express Mailboxes",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-12"
   },
@@ -1041,6 +610,72 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "North Pole Express Mailboxes",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Santa Visits",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Kids Train",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
     "title": "5K Fun Run/Walk: Ugly Sweater Run Adult Registration 2026",
     "source": "sbrec"
    },
@@ -1119,6 +754,39 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
     "title": "Documents and Details: Raul Hilberg at 100",
     "source": "uvm"
    },
@@ -1181,6 +849,39 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
     "loveburlington"
    ],
    "date": "2026-12-15"
@@ -1298,7 +999,29 @@
   },
   {
    "kept": {
-    "title": "Wine Down Wednesday",
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
     "source": "churchst"
    },
    "merged_sources": [
@@ -1377,6 +1100,39 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
     "title": "Thirsty Thursday",
     "source": "churchst"
    },
@@ -1444,6 +1200,50 @@
   },
   {
    "kept": {
+    "title": "Festive Friday: Light Up the Night",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1472,6 +1272,39 @@
    "merged_sources": [
     "helloburlington",
     "vcc"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-19"
   },
@@ -1532,6 +1365,61 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Holiday Window Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Santa Visits",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Kids Train",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Snowflake Hunt",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -1572,6 +1460,17 @@
    "merged_sources": [
     "monkeyhouse",
     "sevendays"
+   ],
+   "date": "2026-12-21"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-21"
   },
@@ -1622,6 +1521,17 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
     "title": "Super Smash Tuesdays",
     "source": "churchst"
    },
@@ -1666,7 +1576,7 @@
   },
   {
    "kept": {
-    "title": "Wine Down Wednesday",
+    "title": "Postcard Club",
     "source": "churchst"
    },
    "merged_sources": [
@@ -1707,6 +1617,17 @@
     "fletcherfree",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-24"
   },
@@ -1780,6 +1701,17 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-25"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1802,12 +1734,34 @@
   },
   {
    "kept": {
+    "title": "Reindeer LIVE",
+    "source": "echo"
+   },
+   "merged_sources": [
+    "echo",
+    "loveburlington"
+   ],
+   "date": "2026-12-26"
+  },
+  {
+   "kept": {
     "title": "The Poetry Experience",
     "source": "fletcherfree"
    },
    "merged_sources": [
     "fletcherfree",
     "sevendays"
+   ],
+   "date": "2026-12-26"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-26"
   },
@@ -1846,6 +1800,17 @@
   },
   {
    "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-27"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -1863,6 +1828,17 @@
    "merged_sources": [
     "monkeyhouse",
     "sevendays"
+   ],
+   "date": "2026-12-28"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-28"
   },
@@ -1908,6 +1884,17 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
     "loveburlington"
    ],
    "date": "2026-12-29"
@@ -1969,7 +1956,7 @@
   },
   {
    "kept": {
-    "title": "Wine Down Wednesday",
+    "title": "Postcard Club",
     "source": "churchst"
    },
    "merged_sources": [
@@ -2010,6 +1997,17 @@
     "fletcherfree",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-31"
+  },
+  {
+   "kept": {
+    "title": "Postcard Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-12-31"
   },
@@ -2230,17 +2228,6 @@
   },
   {
    "kept": {
-    "title": "Wine Down Wednesday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2027-01-06"
-  },
-  {
-   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -2412,6 +2399,14 @@
  ],
  "changes": [
   {
+   "id": "7ec80cf431ad",
+   "title": "Tulip Project Art Reception",
+   "date": "2026-12-03",
+   "change": "time",
+   "was": "2026-12-03T08:00:00-05:00",
+   "now": "2026-12-03T16:00:00-05:00"
+  },
+  {
    "id": "f56dae8e7490",
    "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
    "date": "2026-11-10",
@@ -2461,6 +2456,20 @@
    "lastSeen": "2026-11-08T19:00:16-05:00"
   },
   {
+   "id": "36290ded8cf3",
+   "title": "Lincoln Sprague",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
+  },
+  {
+   "id": "b6ce292c5fd1",
+   "title": "Red Hot Juba",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
+  },
+  {
    "id": "f72eba060c4f",
    "title": "Learn to Sew Knits",
    "date": "2026-11-12",
@@ -2480,6 +2489,27 @@
    "date": "2026-11-12",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "eae4b541ca1e",
+   "title": "DJ Two Sev, JP Black, Cece, Chaston",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
+  },
+  {
+   "id": "ca6d452a377b",
+   "title": "Zack DuPont",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
+  },
+  {
+   "id": "dd1bee88a9a1",
+   "title": "Duncan MacLeod Trio",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
   },
   {
    "id": "d2473472f5d0",
@@ -2690,6 +2720,20 @@
    "date": "2026-12-10",
    "change": "missing",
    "lastSeen": "2026-11-08T19:00:16-05:00"
+  },
+  {
+   "id": "211b76fd82fb",
+   "title": "Classy Dinner Night Out!",
+   "date": "2026-12-12",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
+  },
+  {
+   "id": "4a480ac6d311",
+   "title": "Stick & Puck",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-11-10T12:15:07-05:00"
   },
   {
    "id": "d611ff825ae4",
