@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-11T08:25:09+00:00",
+ "updated": "2026-11-11T10:38:51+00:00",
  "sections_updated": {
-  "now": "2026-11-11T08:25:09+00:00",
-  "forecast": "2026-11-11T08:25:09+00:00",
-  "hourly": "2026-11-11T08:25:09+00:00",
-  "alerts": "2026-11-11T08:25:09+00:00",
-  "afd": "2026-11-11T08:25:09+00:00",
-  "lake_forecast": "2026-11-11T08:25:09+00:00",
-  "lake_gage": "2026-11-11T08:25:09+00:00",
-  "air": "2026-11-11T08:25:09+00:00",
-  "sun": "2026-11-11T08:25:09+00:00",
-  "models": "2026-11-11T08:25:09+00:00"
+  "now": "2026-11-11T10:38:51+00:00",
+  "forecast": "2026-11-11T10:38:51+00:00",
+  "hourly": "2026-11-11T10:38:51+00:00",
+  "alerts": "2026-11-11T10:38:51+00:00",
+  "afd": "2026-11-11T10:38:51+00:00",
+  "lake_forecast": "2026-11-11T10:38:51+00:00",
+  "lake_gage": "2026-11-11T10:38:51+00:00",
+  "air": "2026-11-11T10:38:51+00:00",
+  "sun": "2026-11-11T10:38:51+00:00",
+  "models": "2026-11-11T10:38:51+00:00"
  },
  "now": {
-  "observed_at": "2026-11-11T08:00:00+00:00",
+  "observed_at": "2026-11-11T09:55:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Cloudy",
   "temp_f": 43,
-  "feels_like_f": 39,
-  "humidity": 81,
-  "dewpoint_f": 37,
-  "wind_mph": 7,
+  "feels_like_f": 40,
+  "humidity": 76,
+  "dewpoint_f": 36,
+  "wind_mph": 5,
   "wind_gust_mph": null,
   "wind_dir": "NNW",
   "precip_last_hr_in": null
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-11-11T06:18:43+00:00",
   "hours": [
-   {
-    "t": "2026-11-11T03:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 35,
-    "pop": 13,
-    "humidity": 86,
-    "wind_mph": 10,
-    "wind_dir": "NW",
-    "sky": 63,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
-   {
-    "t": "2026-11-11T04:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 34,
-    "pop": 11,
-    "humidity": 82,
-    "wind_mph": 12,
-    "wind_dir": "NW",
-    "sky": 59,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 17
-   },
    {
     "t": "2026-11-11T05:00:00-05:00",
     "temp_f": 40,
@@ -676,6 +648,34 @@
     "qpf_in": 0.018,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T15:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 35,
+    "pop": 88,
+    "humidity": 89,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 92,
+    "short": "Light Rain",
+    "qpf_in": 0.018,
+    "snow_in": 0.0,
+    "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T16:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 34,
+    "pop": 89,
+    "humidity": 89,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 94,
+    "short": "Light Rain",
+    "qpf_in": 0.018,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-11T03:00:00.000-05:00",
-  "level_ft": 93.81,
-  "level_at": "2026-11-11T03:00:00.000-05:00",
+  "water_temp_at": "2026-11-11T05:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-11T05:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +971,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/11/26 3:00",
+  "observed": "11/11/26 5:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1007,44 +1007,44 @@
     "high_f": {
      "GFS": 42,
      "Euro": 43,
-     "ICON": 40
+     "ICON": 42
     },
     "pop_max": {
-     "GFS": 71,
+     "GFS": 73,
      "Euro": 81,
      "ICON": 70
     },
     "precip_in": {
      "GFS": 0.13,
      "Euro": 0.13,
-     "ICON": 0.11
+     "ICON": 0.19
     },
-    "high_spread_f": 3
+    "high_spread_f": 1
    },
    {
     "date": "2026-11-13",
     "high_f": {
      "GFS": 38,
      "Euro": 42,
-     "ICON": 38
+     "ICON": 36
     },
     "pop_max": {
-     "GFS": 77,
+     "GFS": 66,
      "Euro": 73,
      "ICON": 60
     },
     "precip_in": {
      "GFS": 0.34,
      "Euro": 0.01,
-     "ICON": 0.0
+     "ICON": 0.19
     },
-    "high_spread_f": 4
+    "high_spread_f": 6
    }
   ]
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T08:25:12+00:00",
+  "generated": "2026-11-11T10:38:54+00:00",
   "text": "Mostly cloudy overnight, low 39. Mostly cloudy today, high 46.",
   "periods": [
    {
@@ -1053,12 +1053,12 @@
     "is_day": false,
     "temp_f": 39,
     "sky": "mostly cloudy",
-    "start": "2026-11-11T03:00:00-05:00",
+    "start": "2026-11-11T10:00:00+00:00",
     "end": "2026-11-11T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 33,
-    "feels_hi": 35,
+    "feels_hi": 33,
     "text": "Mostly cloudy overnight, low 39."
    },
    {
