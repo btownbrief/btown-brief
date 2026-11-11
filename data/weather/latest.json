@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T11:18:57+00:00",
+ "updated": "2026-11-11T16:38:07+00:00",
  "sections_updated": {
-  "now": "2026-11-11T11:18:57+00:00",
-  "forecast": "2026-11-11T11:18:57+00:00",
-  "hourly": "2026-11-11T11:18:57+00:00",
-  "alerts": "2026-11-11T11:18:57+00:00",
-  "afd": "2026-11-11T11:18:57+00:00",
-  "lake_forecast": "2026-11-11T11:18:57+00:00",
-  "lake_gage": "2026-11-11T11:18:57+00:00",
-  "air": "2026-11-11T11:18:57+00:00",
-  "sun": "2026-11-11T11:18:57+00:00",
-  "models": "2026-11-11T11:18:57+00:00"
+  "now": "2026-11-11T16:38:07+00:00",
+  "forecast": "2026-11-11T16:38:07+00:00",
+  "hourly": "2026-11-11T16:38:07+00:00",
+  "alerts": "2026-11-11T16:38:07+00:00",
+  "afd": "2026-11-11T16:38:07+00:00",
+  "lake_forecast": "2026-11-11T16:38:07+00:00",
+  "lake_gage": "2026-11-11T16:38:07+00:00",
+  "air": "2026-11-11T16:38:07+00:00",
+  "sun": "2026-11-11T16:38:07+00:00",
+  "models": "2026-11-11T16:38:07+00:00"
  },
  "now": {
-  "observed_at": "2026-11-11T09:55:00+00:00",
+  "observed_at": "2026-11-11T16:20:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 43,
-  "feels_like_f": 40,
-  "humidity": 76,
-  "dewpoint_f": 36,
+  "temp_f": 45,
+  "feels_like_f": 42,
+  "humidity": 61,
+  "dewpoint_f": 32,
   "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Veterans Day",
-    "start": "2026-11-11T06:00:00-05:00",
+    "start": "2026-11-11T11:00:00-05:00",
     "is_day": true,
     "temp_f": 46,
-    "pop": 10,
-    "wind": "NW 3 to 8 mph",
+    "pop": 2,
+    "wind": "NW 3 to 7 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 46. Northwest wind 3 to 8 mph."
+    "detailed": "Mostly cloudy, with a high near 46. Northwest wind 3 to 7 mph."
    },
    {
     "name": "Tonight",
@@ -173,76 +173,6 @@
  "hourly": {
   "updated": "2026-11-11T06:18:43+00:00",
   "hours": [
-   {
-    "t": "2026-11-11T06:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 35,
-    "pop": 10,
-    "humidity": 79,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 75,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
-   {
-    "t": "2026-11-11T07:00:00-05:00",
-    "temp_f": 39,
-    "feels_f": 34,
-    "pop": 2,
-    "humidity": 79,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 73,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
-   {
-    "t": "2026-11-11T08:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 35,
-    "pop": 2,
-    "humidity": 79,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 72,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-11-11T09:00:00-05:00",
-    "temp_f": 43,
-    "feels_f": 39,
-    "pop": 2,
-    "humidity": 70,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 60,
-    "short": "Partly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
-   {
-    "t": "2026-11-11T10:00:00-05:00",
-    "temp_f": 43,
-    "feels_f": 39,
-    "pop": 2,
-    "humidity": 70,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 49,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
    {
     "t": "2026-11-11T11:00:00-05:00",
     "temp_f": 44,
@@ -676,6 +606,76 @@
     "qpf_in": 0.018,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T18:00:00-05:00",
+    "temp_f": 38,
+    "feels_f": 33,
+    "pop": 94,
+    "humidity": 96,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 96,
+    "short": "Light Rain",
+    "qpf_in": 0.018,
+    "snow_in": 0.0,
+    "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T19:00:00-05:00",
+    "temp_f": 37,
+    "feels_f": 31,
+    "pop": 99,
+    "humidity": 96,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 100,
+    "short": "Light Rain",
+    "qpf_in": 0.033,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
+   {
+    "t": "2026-11-12T20:00:00-05:00",
+    "temp_f": 37,
+    "feels_f": 31,
+    "pop": 99,
+    "humidity": 96,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 100,
+    "short": "Rain And Snow",
+    "qpf_in": 0.033,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
+   {
+    "t": "2026-11-12T21:00:00-05:00",
+    "temp_f": 36,
+    "feels_f": 30,
+    "pop": 99,
+    "humidity": 100,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 100,
+    "short": "Rain And Snow",
+    "qpf_in": 0.033,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
+   {
+    "t": "2026-11-12T22:00:00-05:00",
+    "temp_f": 35,
+    "feels_f": 28,
+    "pop": 99,
+    "humidity": 100,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 100,
+    "short": "Rain And Snow",
+    "qpf_in": 0.033,
+    "snow_in": 0.0,
+    "gust_mph": 13
    }
   ],
   "days": [
@@ -710,13 +710,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-11T07:35:00+00:00",
+  "issued": "2026-11-11T11:25:00+00:00",
   "key_messages": [
    "Increased confidence in impactful elevation-dependent snowfall Thursday into Friday.",
    "Lingering upslope rain/snow showers possible on Sunday, followed by much quieter and warmer weather next week."
   ],
   "what_changed": "As of 234 AM EST Wednesday... Forecast snow totals have increased in the higher elevations for Thursday into Friday.",
-  "raw": "\n000\nFXUS61 KBTV 110735\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n235 AM EST Wed Nov 11 2026\n\n.WHAT HAS CHANGED...\nAs of 234 AM EST Wednesday...\n\nForecast snow totals have increased in the higher elevations for \nThursday into Friday.\n\n&&\n\n.KEY MESSAGES...\nAs of 234 AM EST Wednesday...\n\n1. Increased confidence in impactful elevation-dependent \nsnowfall Thursday into Friday. \n\n2. Lingering upslope rain/snow showers possible on Sunday, \nfollowed by much quieter and warmer weather next week. \n \n&&\n\n.DISCUSSION...\nAs of 234 AM EST Wednesday...\n\nKEY MESSAGE 1: A gradually deepening surface low will track from the \nOhio Valley east over southern New England before heading off into \nthe Canadian Maritimes on Thursday into Friday. Despite a favorable \nstorm track for snow, a marginally cold initial airmass will be in \nplace at the onset, especially at the surface due to a lack of \nCanadian high pressure to the north. Precipitation looks to enter \nsouthwestern areas Thursday morning but very slowly make its way \nnortheast during the day. By Thursday night, it should reach the \nNortheast Kingdom, but the heaviest rates may remain to the south. \nAt the onset, surface temperatures will likely be in the 30s in most \nplaces, with low 40s possible in the warmest valleys. Steep lapse \nrates will exist with summit levels well below freezing, though a \nlack of a significantly dry layer will prevent significant wet-bulb \ncooling. \n\nPrecipitation will begin as rain in the valleys and snow at the \nsummits. A first estimate of initial snow levels is around 1,500 ft. \nLight rates and daytime occurrence will prevent significant \naccumulations at the onset outside the mountains. A weak November \nsun angle will limit some of the warming effects though. Heading \ninto Thursday night, heavier rates will likely enter the region, and \ndarkness will end any solar radiation. The combination of lowering \ntemperatures due to dynamical cooling and nighttime cooling will \nallow snow levels to drop a bit, and especially allow for more \nefficient accumulations at higher elevations with higher snow \nratios. By Friday morning, snow levels should be around or below \n1,000 ft. While brief periods of snow are possible in the low \nvalleys like the Champlain Valley and Lower Connecticut Valley, \ntemperatures may stay just above freezing and prevent accumulations \nother than some slush in grassy-type surfaces. \n\nAs the low tracks to the east heading through Friday, cyclonic \nnorthwest flow will develop and maintain some upslope snow showers \nin the higher terrain into Saturday. Boundary layer temperatures \nwill reach their lowest values Saturday morning, with most areas \nlikely seeing temperatures in the 20s. Warm Lake Champlain \ntemperatures will probably further limit the already marginal \naccumulations in the immediate Champlain Valley, especially with \nnorthwest flow off the lake and downsloping along the eastern \nAdirondacks. \n\nOverall, this is still a relatively low-confidence forecast. Our \ndeterministic most-likely scenario has snow amounts in the 3-6 inch \nrange for areas around and above 2,000 ft. One exception is northern \nVermont, where the heaviest bands may not reach. Areas between 1,000-\n2,000 ft look to be in the 1-3 inch range, and below 1,000 ft looks \nto be a slushy coating. However, the ensemble spread is still \nmassive. The NBM 10th percentile is 2-4 inches above 2,000 ft and \nthe 90th percentile is 10-18 inches. Deterministic models are all \nsplit. This is mostly due to QPF differences and not \ntemperatures/ratios so any significant accumulations in the lower \nelevations like the Champlain Valley are unlikely at this point. \n\nIn higher end scenarios, there would be a power outage threat in the \nhigher elevations. The snow will be a heavier, wetter snow, prone to \nsticking to trees and powerlines. It may end a bit drier with lower \nratios in the Adirondacks if enough cooling occurs on the backside, \nbut the exact details remain to be seen.\n\nKEY MESSAGE 2: The cyclonic upslope flow from departing low pres wl \nproduce a few light rain and mtn snow showers on Sunday, along with \nplenty of clouds. A building ridge of high pres both aloft and at \nthe sfc is progged to expand acrs the Great Lakes/NE CONUS by next \nweek. This wl result in much drier atmospheric profiles, with pw \nvalues btwn 0.20 and 0.40\" by early next week. As 1035mb high pres \nbuilds directly overhead, expect large daily swings in temps from \ncool night-time lows to mild day-time highs, given the dry airmass \nand nightly inversions. No significant or impactful wx is \nanticipated for days 4 thru 7. Highs generally mid 40s to lower 50s \nand lows mid 20s to mid 30s.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...Current radar indicates scattered showers\ncontinue to impact the region with a combination of MVFR and VFR\nconditions. Given upslope flow thinking MVFR cigs prevail at\nMPV/SLK and EFK with intervals of MVFR at RUT/MPV, while mostly\nVFR is expected at MSS/PBG thru 12z this morning. Winds continue\nfrom the northwest at 5 to 10 knots. As moisture near the\nsurface slowly dissipates, expect cigs to trend toward VFR at\nall sites by 16z today with northwest winds prevailing. These\nconditions continue into Weds evening. \n\nOutlook...\n\nThursday: Mainly MVFR, with areas IFR possible. Definite RA,\nDefinite SN.\nThursday Night: Mainly IFR, with local MVFR possible. Likely RA,\nLikely SN.\nFriday: Mainly IFR, with areas MVFR possible. Chance RA, Chance\nSN.\nFriday Night: MVFR/IFR conditions possible. Chance SHSN, Chance\nSHRA.\nSaturday: MVFR. Chance SHRA, Chance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA, Chance SHSN.\nSunday: Mainly MVFR, with local VFR possible. Chance SHSN, Slight\nchance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Taber/Myskowski\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 111125\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n625 AM EST Wed Nov 11 2026\n\n.WHAT HAS CHANGED...\nAs of 234 AM EST Wednesday...\n\nForecast snow totals have increased in the higher elevations for \nThursday into Friday.\n\n&&\n\n.KEY MESSAGES...\nAs of 234 AM EST Wednesday...\n\n1. Increased confidence in impactful elevation-dependent \nsnowfall Thursday into Friday. \n\n2. Lingering upslope rain/snow showers possible on Sunday, \nfollowed by much quieter and warmer weather next week.\n\n&&\n\n.DISCUSSION...\nAs of 234 AM EST Wednesday...\n\nKEY MESSAGE 1: A gradually deepening surface low will track from the \nOhio Valley east over southern New England before heading off into \nthe Canadian Maritimes on Thursday into Friday. Despite a favorable \nstorm track for snow, a marginally cold initial airmass will be in \nplace at the onset, especially at the surface due to a lack of \nCanadian high pressure to the north. Precipitation looks to enter \nsouthwestern areas Thursday morning but very slowly make its way \nnortheast during the day. By Thursday night, it should reach the \nNortheast Kingdom, but the heaviest rates may remain to the south. \nAt the onset, surface temperatures will likely be in the 30s in most \nplaces, with low 40s possible in the warmest valleys. Steep lapse \nrates will exist with summit levels well below freezing, though a \nlack of a significantly dry layer will prevent significant wet-bulb \ncooling. \n\nPrecipitation will begin as rain in the valleys and snow at the \nsummits. A first estimate of initial snow levels is around 1,500 ft. \nLight rates and daytime occurrence will prevent significant \naccumulations at the onset outside the mountains. A weak November \nsun angle will limit some of the warming effects though. Heading \ninto Thursday night, heavier rates will likely enter the region, and \ndarkness will end any solar radiation. The combination of lowering \ntemperatures due to dynamical cooling and nighttime cooling will \nallow snow levels to drop a bit, and especially allow for more \nefficient accumulations at higher elevations with higher snow \nratios. By Friday morning, snow levels should be around or below \n1,000 ft. While brief periods of snow are possible in the low \nvalleys like the Champlain Valley and Lower Connecticut Valley, \ntemperatures may stay just above freezing and prevent accumulations \nother than some slush in grassy-type surfaces. \n\nAs the low tracks to the east heading through Friday, cyclonic \nnorthwest flow will develop and maintain some upslope snow showers \nin the higher terrain into Saturday. Boundary layer temperatures \nwill reach their lowest values Saturday morning, with most areas \nlikely seeing temperatures in the 20s. Warm Lake Champlain \ntemperatures will probably further limit the already marginal \naccumulations in the immediate Champlain Valley, especially with \nnorthwest flow off the lake and downsloping along the eastern \nAdirondacks. \n\nOverall, this is still a relatively low-confidence forecast. Our \ndeterministic most-likely scenario has snow amounts in the 3-6 inch \nrange for areas around and above 2,000 ft. One exception is northern \nVermont, where the heaviest bands may not reach. Areas between 1,000-\n2,000 ft look to be in the 1-3 inch range, and below 1,000 ft looks \nto be a slushy coating. However, the ensemble spread is still \nmassive. The NBM 10th percentile is 2-4 inches above 2,000 ft and \nthe 90th percentile is 10-18 inches. Deterministic models are all \nsplit. This is mostly due to QPF differences and not \ntemperatures/ratios so any significant accumulations in the lower \nelevations like the Champlain Valley are unlikely at this point. \n\nIn higher end scenarios, there would be a power outage threat in the \nhigher elevations. The snow will be a heavier, wetter snow, prone to \nsticking to trees and powerlines. It may end a bit drier with lower \nratios in the Adirondacks if enough cooling occurs on the backside, \nbut the exact details remain to be seen.\n\nKEY MESSAGE 2: The cyclonic upslope flow from departing low pres wl \nproduce a few light rain and mtn snow showers on Sunday, along with \nplenty of clouds. A building ridge of high pres both aloft and at \nthe sfc is progged to expand acrs the Great Lakes/NE CONUS by next \nweek. This wl result in much drier atmospheric profiles, with pw \nvalues btwn 0.20 and 0.40\" by early next week. As 1035mb high pres \nbuilds directly overhead, expect large daily swings in temps from \ncool night-time lows to mild day-time highs, given the dry airmass \nand nightly inversions. No significant or impactful wx is \nanticipated for days 4 thru 7. Highs generally mid 40s to lower 50s \nand lows mid 20s to mid 30s.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Current observations indicate a mixture\nof MVFR and VFR conditions with across our 7 taf sites this\nmorning. Any lingering MVFR cigs at MPV/EFK and SLK will improve\nby 15z this morning, while VFR conditions prevail across our\nlower elevation taf sites. Northwest winds will be 5 to 10\nknots, before shifting to the northeast at MSS and southeast at\nRUT overnight. Cigs lower toward MVFR again after 06z tonight at\nSLK with a light mixture of snow and rain likely by sunrise on\nThursday.  \n\nOutlook...\n\nThursday: MVFR/IFR conditions possible. Definite SN, Chance RA.\nThursday Night: Mainly MVFR, with areas IFR possible. Definite\nSN, Definite RA.\nFriday: Mainly MVFR, with local IFR possible. Likely SN, Chance\nRA.\nFriday Night: Mainly MVFR, with local VFR possible. Chance SN,\nChance RA.\nSaturday: MVFR. Chance RA, Chance SN.\nSaturday Night: Mainly MVFR, with areas VFR possible. Chance\nSHSN, Chance SHRA.\nSunday: Mainly MVFR, with local VFR possible. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Taber/Myskowski\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-11-11T06:18:00+00:00",
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-11T06:00:00.000-05:00",
-  "level_ft": 93.85,
-  "level_at": "2026-11-11T06:00:00.000-05:00",
+  "water_temp_at": "2026-11-11T11:00:00.000-05:00",
+  "level_ft": 93.82,
+  "level_at": "2026-11-11T11:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +971,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/11/26 6:00",
+  "observed": "11/11/26 11:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -979,19 +979,19 @@
   "sunset": "2026-11-11T16:29-05:00",
   "sunrise_tomorrow": "2026-11-12T06:45-05:00",
   "sunset_tomorrow": "2026-11-12T16:28-05:00",
-  "uv_max": 1.85
+  "uv_max": 2.4
  },
  "models": {
   "days": [
    {
     "date": "2026-11-11",
     "high_f": {
-     "GFS": 47,
+     "GFS": 49,
      "Euro": 49,
-     "ICON": 46
+     "ICON": 47
     },
     "pop_max": {
-     "GFS": 3,
+     "GFS": 2,
      "Euro": 33,
      "ICON": 15
     },
@@ -1000,43 +1000,43 @@
      "Euro": 0.09,
      "ICON": 0.01
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-12",
     "high_f": {
-     "GFS": 42,
+     "GFS": 41,
      "Euro": 43,
-     "ICON": 42
+     "ICON": 39
     },
     "pop_max": {
-     "GFS": 73,
-     "Euro": 61,
+     "GFS": 58,
+     "Euro": 88,
      "ICON": 70
     },
     "precip_in": {
-     "GFS": 0.13,
-     "Euro": 0.13,
-     "ICON": 0.19
+     "GFS": 0.06,
+     "Euro": 0.21,
+     "ICON": 0.44
     },
-    "high_spread_f": 1
+    "high_spread_f": 4
    },
    {
     "date": "2026-11-13",
     "high_f": {
-     "GFS": 38,
+     "GFS": 36,
      "Euro": 42,
-     "ICON": 36
+     "ICON": 38
     },
     "pop_max": {
-     "GFS": 66,
-     "Euro": 59,
+     "GFS": 58,
+     "Euro": 80,
      "ICON": 60
     },
     "precip_in": {
-     "GFS": 0.34,
-     "Euro": 0.01,
-     "ICON": 0.19
+     "GFS": 0.18,
+     "Euro": 0.12,
+     "ICON": 0.14
     },
     "high_spread_f": 6
    }
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T11:19:00+00:00",
+  "generated": "2026-11-11T16:38:10+00:00",
   "text": "Mostly cloudy today, high 46. Mostly cloudy tonight, low 33. Thursday, rain from 1pm on, about a tenth of an inch, high 44.",
   "periods": [
    {
@@ -1053,11 +1053,11 @@
     "is_day": true,
     "temp_f": 46,
     "sky": "mostly cloudy",
-    "start": "2026-11-11T06:00:00-05:00",
+    "start": "2026-11-11T11:00:00-05:00",
     "end": "2026-11-11T18:00:00-05:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 34,
+    "feels_lo": 40,
     "feels_hi": 44,
     "text": "Mostly cloudy today, high 46."
    },
