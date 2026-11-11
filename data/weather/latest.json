@@ -1,262 +1,178 @@
 {
- "updated": "2026-11-11T17:26:45+00:00",
+ "updated": "2026-11-11T22:04:34+00:00",
  "sections_updated": {
-  "now": "2026-11-11T17:26:45+00:00",
-  "forecast": "2026-11-11T17:26:45+00:00",
-  "hourly": "2026-11-11T17:26:45+00:00",
-  "alerts": "2026-11-11T17:26:45+00:00",
-  "afd": "2026-11-11T17:26:45+00:00",
-  "lake_forecast": "2026-11-11T17:26:45+00:00",
-  "lake_gage": "2026-11-11T17:26:45+00:00",
-  "air": "2026-11-11T17:26:45+00:00",
-  "sun": "2026-11-11T17:26:45+00:00",
-  "models": "2026-11-11T17:26:45+00:00"
+  "now": "2026-11-11T22:04:34+00:00",
+  "forecast": "2026-11-11T22:04:34+00:00",
+  "hourly": "2026-11-11T22:04:34+00:00",
+  "alerts": "2026-11-11T22:04:34+00:00",
+  "afd": "2026-11-11T22:04:34+00:00",
+  "lake_forecast": "2026-11-11T22:04:34+00:00",
+  "lake_gage": "2026-11-11T22:04:34+00:00",
+  "air": "2026-11-11T22:04:34+00:00",
+  "sun": "2026-11-11T22:04:34+00:00",
+  "models": "2026-11-11T22:04:34+00:00"
  },
  "now": {
-  "observed_at": "2026-11-11T16:54:00+00:00",
+  "observed_at": "2026-11-11T21:20:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Cloudy",
   "temp_f": 45,
-  "feels_like_f": 41,
-  "humidity": 63,
-  "dewpoint_f": 33,
-  "wind_mph": 7,
+  "feels_like_f": 42,
+  "humidity": 57,
+  "dewpoint_f": 30,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "ENE",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-11-11T06:18:43+00:00",
+  "updated": "2026-11-11T19:08:50+00:00",
   "periods": [
    {
     "name": "Veterans Day",
-    "start": "2026-11-11T10:00:00-05:00",
+    "start": "2026-11-11T16:00:00-05:00",
     "is_day": true,
     "temp_f": 46,
-    "pop": 2,
-    "wind": "NW 3 to 7 mph",
+    "pop": 1,
+    "wind": "N 5 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 46. Northwest wind 3 to 7 mph."
+    "detailed": "Mostly cloudy, with a high near 46. North wind around 5 mph."
    },
    {
     "name": "Tonight",
     "start": "2026-11-11T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 33,
-    "pop": 16,
+    "temp_f": 31,
+    "pop": 6,
     "wind": "NE 3 mph",
-    "short": "Mostly Cloudy then Slight Chance Light Rain",
-    "detailed": "A slight chance of rain after 5am. Mostly cloudy, with a low around 33. Northeast wind around 3 mph. Chance of precipitation is 20%."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 31. Northeast wind around 3 mph."
    },
    {
     "name": "Thursday",
     "start": "2026-11-12T06:00:00-05:00",
     "is_day": true,
-    "temp_f": 44,
-    "pop": 90,
-    "wind": "NE 2 to 7 mph",
-    "short": "Rain And Snow",
-    "detailed": "A slight chance of rain before 7am, then rain and snow. Cloudy. High near 44, with temperatures falling to around 38 in the afternoon. Northeast wind 2 to 7 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "temp_f": 43,
+    "pop": 65,
+    "wind": "NE 2 to 8 mph",
+    "short": "Rain And Snow Likely",
+    "detailed": "Rain and snow likely after 7am. Mostly cloudy, with a high near 43. Northeast wind 2 to 8 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday Night",
     "start": "2026-11-12T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 33,
-    "pop": 99,
+    "temp_f": 27,
+    "pop": 62,
     "wind": "N 8 mph",
-    "short": "Rain And Snow",
-    "detailed": "Rain before 8pm, then rain and snow. Cloudy, with a low around 33. North wind around 8 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
+    "short": "Rain And Snow Likely",
+    "detailed": "A chance of rain before 8pm, then rain and snow likely. Mostly cloudy, with a low around 27. North wind around 8 mph. Chance of precipitation is 60%. Little or no snow accumulation expected."
    },
    {
     "name": "Friday",
     "start": "2026-11-13T06:00:00-05:00",
     "is_day": true,
-    "temp_f": 40,
-    "pop": 95,
+    "temp_f": 41,
+    "pop": 23,
     "wind": "N 8 to 13 mph",
-    "short": "Rain And Snow",
-    "detailed": "Rain and snow. Cloudy, with a high near 40. North wind 8 to 13 mph. Chance of precipitation is 100%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Slight Chance Light Snow",
+    "detailed": "A slight chance of snow between 7am and 9am, then a slight chance of rain and snow between 9am and 1pm. Mostly cloudy, with a high near 41. North wind 8 to 13 mph. New snow accumulation of less than half an inch possible."
    },
    {
     "name": "Friday Night",
     "start": "2026-11-13T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 29,
-    "pop": 50,
+    "temp_f": 28,
+    "pop": 31,
     "wind": "N 13 mph",
     "short": "Chance Rain And Snow",
-    "detailed": "A chance of rain and snow. Cloudy, with a low around 29. North wind around 13 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain and snow after 7pm. Cloudy, with a low around 28. North wind around 13 mph. Chance of precipitation is 30%."
    },
    {
     "name": "Saturday",
     "start": "2026-11-14T06:00:00-05:00",
     "is_day": true,
     "temp_f": 42,
-    "pop": 55,
+    "pop": 51,
     "wind": "N 14 mph",
-    "short": "Rain And Snow Likely",
-    "detailed": "Rain and snow likely. Mostly cloudy, with a high near 42. North wind around 14 mph. Chance of precipitation is 60%."
+    "short": "Chance Rain And Snow",
+    "detailed": "A chance of rain and snow. Mostly cloudy, with a high near 42. North wind around 14 mph. Chance of precipitation is 50%."
    },
    {
     "name": "Saturday Night",
     "start": "2026-11-14T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 33,
-    "pop": 43,
-    "wind": "NW 12 mph",
-    "short": "Chance Light Rain then Slight Chance Rain And Snow Showers",
-    "detailed": "A chance of rain before 7pm, then a chance of rain showers between 7pm and 1am, then a slight chance of rain and snow showers. Cloudy, with a low around 33. Northwest wind around 12 mph. Chance of precipitation is 40%."
+    "temp_f": 30,
+    "pop": 44,
+    "wind": "NW 8 to 12 mph",
+    "short": "Chance Rain And Snow",
+    "detailed": "A chance of rain before 10pm, then a chance of rain and snow. Cloudy, with a low around 30. Northwest wind 8 to 12 mph. Chance of precipitation is 40%."
    },
    {
     "name": "Sunday",
     "start": "2026-11-15T06:00:00-05:00",
     "is_day": true,
     "temp_f": 43,
-    "pop": 22,
-    "wind": "NW 12 mph",
-    "short": "Slight Chance Rain And Snow Showers",
-    "detailed": "A slight chance of rain and snow showers before 1pm. Mostly cloudy, with a high near 43. Northwest wind around 12 mph."
+    "pop": 39,
+    "wind": "NW 10 mph",
+    "short": "Slight Chance Rain And Snow",
+    "detailed": "A chance of rain before 7am, then a slight chance of rain and snow between 7am and 1pm. Mostly cloudy, with a high near 43. Northwest wind around 10 mph. Chance of precipitation is 40%."
    },
    {
     "name": "Sunday Night",
     "start": "2026-11-15T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 32,
-    "pop": 10,
-    "wind": "NW 6 to 9 mph",
+    "temp_f": 30,
+    "pop": 9,
+    "wind": "NW 8 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 32. Northwest wind 6 to 9 mph."
+    "detailed": "Mostly cloudy, with a low around 30. Northwest wind around 8 mph."
    },
    {
     "name": "Monday",
     "start": "2026-11-16T06:00:00-05:00",
     "is_day": true,
-    "temp_f": 44,
-    "pop": 4,
+    "temp_f": 43,
+    "pop": 8,
     "wind": "NW 8 mph",
     "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 44. Northwest wind around 8 mph."
+    "detailed": "Partly sunny, with a high near 43. Northwest wind around 8 mph."
    },
    {
     "name": "Monday Night",
     "start": "2026-11-16T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 28,
-    "pop": 0,
-    "wind": "NW 5 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 28. Northwest wind around 5 mph."
+    "temp_f": 26,
+    "pop": 1,
+    "wind": "W 5 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 26. West wind around 5 mph."
    },
    {
     "name": "Tuesday",
     "start": "2026-11-17T06:00:00-05:00",
     "is_day": true,
     "temp_f": 45,
-    "pop": 0,
-    "wind": "NW 5 mph",
+    "pop": 1,
+    "wind": "SW 5 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 45. Northwest wind around 5 mph."
+    "detailed": "Mostly sunny, with a high near 45. Southwest wind around 5 mph."
    },
    {
     "name": "Tuesday Night",
     "start": "2026-11-17T18:00:00-05:00",
     "is_day": false,
-    "temp_f": 29,
+    "temp_f": 26,
     "pop": 0,
-    "wind": "W 2 mph",
+    "wind": "SW 2 mph",
     "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 29. West wind around 2 mph."
+    "detailed": "Partly cloudy, with a low around 26. Southwest wind around 2 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-11-11T06:18:43+00:00",
+  "updated": "2026-11-11T19:08:50+00:00",
   "hours": [
-   {
-    "t": "2026-11-11T11:00:00-05:00",
-    "temp_f": 44,
-    "feels_f": 40,
-    "pop": 2,
-    "humidity": 68,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 54,
-    "short": "Partly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-11-11T12:00:00-05:00",
-    "temp_f": 45,
-    "feels_f": 42,
-    "pop": 2,
-    "humidity": 63,
-    "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 70,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-11-11T13:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 43,
-    "pop": 1,
-    "humidity": 58,
-    "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 74,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-11-11T14:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 43,
-    "pop": 1,
-    "humidity": 58,
-    "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 71,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 10
-   },
-   {
-    "t": "2026-11-11T15:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 44,
-    "pop": 1,
-    "humidity": 56,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 81,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
-   {
-    "t": "2026-11-11T16:00:00-05:00",
-    "temp_f": 45,
-    "feels_f": 43,
-    "pop": 1,
-    "humidity": 58,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 75,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
    {
     "t": "2026-11-11T17:00:00-05:00",
     "temp_f": 44,
@@ -273,10 +189,10 @@
    },
    {
     "t": "2026-11-11T18:00:00-05:00",
-    "temp_f": 42,
-    "feels_f": 40,
+    "temp_f": 43,
+    "feels_f": 41,
     "pop": 1,
-    "humidity": 70,
+    "humidity": 67,
     "wind_mph": 3,
     "wind_dir": "N",
     "sky": 82,
@@ -287,14 +203,14 @@
    },
    {
     "t": "2026-11-11T19:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 39,
-    "pop": 1,
-    "humidity": 73,
+    "temp_f": 40,
+    "feels_f": 38,
+    "pop": 0,
+    "humidity": 79,
     "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 76,
-    "short": "Mostly Cloudy",
+    "wind_dir": "NE",
+    "sky": 90,
+    "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 6
@@ -303,11 +219,11 @@
     "t": "2026-11-11T20:00:00-05:00",
     "temp_f": 39,
     "feels_f": 37,
-    "pop": 3,
-    "humidity": 79,
+    "pop": 1,
+    "humidity": 82,
     "wind_mph": 3,
     "wind_dir": "NE",
-    "sky": 77,
+    "sky": 85,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -316,12 +232,12 @@
    {
     "t": "2026-11-11T21:00:00-05:00",
     "temp_f": 38,
-    "feels_f": 36,
-    "pop": 5,
-    "humidity": 82,
-    "wind_mph": 3,
+    "feels_f": 38,
+    "pop": 1,
+    "humidity": 85,
+    "wind_mph": 2,
     "wind_dir": "NE",
-    "sky": 79,
+    "sky": 81,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -330,12 +246,12 @@
    {
     "t": "2026-11-11T22:00:00-05:00",
     "temp_f": 38,
-    "feels_f": 36,
-    "pop": 5,
-    "humidity": 79,
-    "wind_mph": 3,
-    "wind_dir": "E",
-    "sky": 83,
+    "feels_f": 38,
+    "pop": 1,
+    "humidity": 85,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 78,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -345,11 +261,11 @@
     "t": "2026-11-11T23:00:00-05:00",
     "temp_f": 37,
     "feels_f": 37,
-    "pop": 4,
-    "humidity": 82,
+    "pop": 2,
+    "humidity": 89,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 86,
+    "wind_dir": "NE",
+    "sky": 80,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -357,56 +273,56 @@
    },
    {
     "t": "2026-11-12T00:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 36,
-    "pop": 6,
+    "temp_f": 37,
+    "feels_f": 37,
+    "pop": 3,
     "humidity": 85,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 92,
-    "short": "Cloudy",
+    "wind_dir": "NE",
+    "sky": 87,
+    "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 5
+    "gust_mph": 3
    },
    {
     "t": "2026-11-12T01:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 36,
-    "pop": 10,
+    "temp_f": 37,
+    "feels_f": 37,
+    "pop": 4,
     "humidity": 89,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 95,
-    "short": "Cloudy",
+    "wind_dir": "NE",
+    "sky": 81,
+    "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 5
    },
    {
     "t": "2026-11-12T02:00:00-05:00",
-    "temp_f": 35,
-    "feels_f": 35,
-    "pop": 8,
+    "temp_f": 36,
+    "feels_f": 36,
+    "pop": 4,
     "humidity": 92,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 88,
-    "short": "Cloudy",
+    "wind_dir": "NE",
+    "sky": 84,
+    "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 5
+    "gust_mph": 3
    },
    {
     "t": "2026-11-12T03:00:00-05:00",
     "temp_f": 35,
     "feels_f": 35,
-    "pop": 8,
+    "pop": 6,
     "humidity": 92,
     "wind_mph": 2,
     "wind_dir": "NE",
-    "sky": 95,
-    "short": "Cloudy",
+    "sky": 78,
+    "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 5
@@ -415,7 +331,21 @@
     "t": "2026-11-12T04:00:00-05:00",
     "temp_f": 34,
     "feels_f": 34,
-    "pop": 13,
+    "pop": 6,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 86,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 5
+   },
+   {
+    "t": "2026-11-12T05:00:00-05:00",
+    "temp_f": 34,
+    "feels_f": 34,
+    "pop": 6,
     "humidity": 96,
     "wind_mph": 2,
     "wind_dir": "NE",
@@ -426,282 +356,347 @@
     "gust_mph": 5
    },
    {
-    "t": "2026-11-12T05:00:00-05:00",
-    "temp_f": 35,
-    "feels_f": 35,
-    "pop": 16,
-    "humidity": 89,
-    "wind_mph": 2,
-    "wind_dir": "NE",
-    "sky": 88,
-    "short": "Slight Chance Light Rain",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
-   },
-   {
     "t": "2026-11-12T06:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 36,
-    "pop": 18,
-    "humidity": 89,
+    "temp_f": 33,
+    "feels_f": 33,
+    "pop": 8,
+    "humidity": 100,
     "wind_mph": 2,
     "wind_dir": "NE",
-    "sky": 88,
-    "short": "Slight Chance Light Rain",
+    "sky": 79,
+    "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 5
    },
    {
     "t": "2026-11-12T07:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 33,
-    "pop": 22,
-    "humidity": 89,
+    "temp_f": 32,
+    "feels_f": 29,
+    "pop": 26,
+    "humidity": 100,
     "wind_mph": 3,
     "wind_dir": "NE",
-    "sky": 82,
-    "short": "Slight Chance Rain And Snow",
-    "qpf_in": 0.002,
+    "sky": 84,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 6
    },
    {
     "t": "2026-11-12T08:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 34,
-    "pop": 28,
-    "humidity": 89,
+    "temp_f": 35,
+    "feels_f": 32,
+    "pop": 23,
+    "humidity": 96,
     "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 83,
-    "short": "Chance Rain And Snow",
-    "qpf_in": 0.002,
+    "wind_dir": "NE",
+    "sky": 82,
+    "short": "Slight Chance Rain And Snow",
+    "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 6
    },
    {
     "t": "2026-11-12T09:00:00-05:00",
     "temp_f": 38,
-    "feels_f": 36,
-    "pop": 29,
-    "humidity": 92,
-    "wind_mph": 3,
-    "wind_dir": "NE",
-    "sky": 78,
-    "short": "Chance Rain And Snow",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
-   {
-    "t": "2026-11-12T10:00:00-05:00",
-    "temp_f": 39,
-    "feels_f": 36,
-    "pop": 43,
+    "feels_f": 34,
+    "pop": 35,
     "humidity": 89,
     "wind_mph": 5,
     "wind_dir": "NE",
-    "sky": 84,
+    "sky": 82,
     "short": "Chance Light Rain",
-    "qpf_in": 0.002,
+    "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 7
    },
    {
-    "t": "2026-11-12T11:00:00-05:00",
+    "t": "2026-11-12T10:00:00-05:00",
     "temp_f": 40,
     "feels_f": 37,
-    "pop": 48,
-    "humidity": 89,
+    "pop": 50,
+    "humidity": 82,
     "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 91,
+    "wind_dir": "N",
+    "sky": 79,
     "short": "Chance Light Rain",
-    "qpf_in": 0.002,
+    "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 8
    },
    {
-    "t": "2026-11-12T12:00:00-05:00",
+    "t": "2026-11-12T11:00:00-05:00",
     "temp_f": 40,
     "feels_f": 36,
-    "pop": 47,
-    "humidity": 89,
+    "pop": 55,
+    "humidity": 82,
     "wind_mph": 6,
-    "wind_dir": "NE",
-    "sky": 90,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.002,
+    "wind_dir": "N",
+    "sky": 89,
+    "short": "Light Rain Likely",
+    "qpf_in": 0.003,
     "snow_in": 0.0,
-    "gust_mph": 9
+    "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T12:00:00-05:00",
+    "temp_f": 41,
+    "feels_f": 36,
+    "pop": 53,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 83,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T13:00:00-05:00",
-    "temp_f": 40,
+    "temp_f": 41,
     "feels_f": 36,
-    "pop": 70,
-    "humidity": 89,
-    "wind_mph": 6,
-    "wind_dir": "NE",
-    "sky": 92,
+    "pop": 63,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 81,
     "short": "Light Rain Likely",
-    "qpf_in": 0.018,
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T14:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 36,
-    "pop": 80,
-    "humidity": 89,
-    "wind_mph": 6,
-    "wind_dir": "NE",
-    "sky": 92,
-    "short": "Light Rain",
-    "qpf_in": 0.018,
+    "temp_f": 42,
+    "feels_f": 38,
+    "pop": 65,
+    "humidity": 76,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 89,
+    "short": "Light Rain Likely",
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T15:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 35,
-    "pop": 88,
-    "humidity": 89,
-    "wind_mph": 7,
+    "temp_f": 41,
+    "feels_f": 36,
+    "pop": 62,
+    "humidity": 76,
+    "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 92,
-    "short": "Light Rain",
-    "qpf_in": 0.018,
+    "sky": 82,
+    "short": "Light Rain Likely",
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T16:00:00-05:00",
-    "temp_f": 39,
-    "feels_f": 34,
-    "pop": 89,
-    "humidity": 89,
-    "wind_mph": 7,
+    "temp_f": 41,
+    "feels_f": 36,
+    "pop": 50,
+    "humidity": 76,
+    "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 94,
-    "short": "Light Rain",
-    "qpf_in": 0.018,
+    "sky": 87,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T17:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 33,
-    "pop": 90,
-    "humidity": 96,
-    "wind_mph": 7,
+    "temp_f": 41,
+    "feels_f": 36,
+    "pop": 41,
+    "humidity": 76,
+    "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 96,
-    "short": "Light Rain",
-    "qpf_in": 0.018,
+    "sky": 84,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-12T18:00:00-05:00",
     "temp_f": 38,
     "feels_f": 33,
-    "pop": 94,
-    "humidity": 96,
+    "pop": 33,
+    "humidity": 85,
     "wind_mph": 7,
     "wind_dir": "N",
-    "sky": 96,
-    "short": "Light Rain",
-    "qpf_in": 0.018,
+    "sky": 90,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.01,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 13
    },
    {
     "t": "2026-11-12T19:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 31,
-    "pop": 99,
-    "humidity": 96,
+    "temp_f": 38,
+    "feels_f": 32,
+    "pop": 34,
+    "humidity": 85,
     "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 100,
-    "short": "Light Rain",
-    "qpf_in": 0.033,
+    "sky": 91,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.013,
     "snow_in": 0.0,
-    "gust_mph": 12
+    "gust_mph": 14
    },
    {
     "t": "2026-11-12T20:00:00-05:00",
     "temp_f": 37,
     "feels_f": 31,
-    "pop": 99,
-    "humidity": 96,
+    "pop": 40,
+    "humidity": 89,
     "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 100,
-    "short": "Rain And Snow",
-    "qpf_in": 0.033,
+    "sky": 88,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.013,
     "snow_in": 0.0,
-    "gust_mph": 12
+    "gust_mph": 14
    },
    {
     "t": "2026-11-12T21:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 30,
-    "pop": 99,
-    "humidity": 100,
+    "temp_f": 35,
+    "feels_f": 28,
+    "pop": 40,
+    "humidity": 92,
     "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 100,
-    "short": "Rain And Snow",
-    "qpf_in": 0.033,
+    "sky": 81,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.013,
     "snow_in": 0.0,
-    "gust_mph": 12
+    "gust_mph": 13
    },
    {
     "t": "2026-11-12T22:00:00-05:00",
     "temp_f": 35,
     "feels_f": 28,
-    "pop": 99,
+    "pop": 40,
+    "humidity": 89,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 82,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.013,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-12T23:00:00-05:00",
+    "temp_f": 34,
+    "feels_f": 27,
+    "pop": 21,
+    "humidity": 92,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 73,
+    "short": "Slight Chance Rain And Snow",
+    "qpf_in": 0.013,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-13T00:00:00-05:00",
+    "temp_f": 33,
+    "feels_f": 27,
+    "pop": 14,
+    "humidity": 92,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 83,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.013,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-13T01:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 31,
+    "humidity": 96,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 74,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.012,
+    "snow_in": 0.02,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-13T02:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 58,
+    "humidity": 92,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 79,
+    "short": "Rain And Snow Likely",
+    "qpf_in": 0.012,
+    "snow_in": 0.02,
+    "gust_mph": 15
+   },
+   {
+    "t": "2026-11-13T03:00:00-05:00",
+    "temp_f": 31,
+    "feels_f": 24,
+    "pop": 51,
+    "humidity": 96,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 75,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.012,
+    "snow_in": 0.02,
+    "gust_mph": 15
+   },
+   {
+    "t": "2026-11-13T04:00:00-05:00",
+    "temp_f": 30,
+    "feels_f": 22,
+    "pop": 44,
     "humidity": 100,
     "wind_mph": 8,
     "wind_dir": "N",
-    "sky": 100,
-    "short": "Rain And Snow",
-    "qpf_in": 0.033,
-    "snow_in": 0.0,
-    "gust_mph": 13
+    "sky": 83,
+    "short": "Chance Rain And Snow",
+    "qpf_in": 0.012,
+    "snow_in": 0.02,
+    "gust_mph": 15
    }
   ],
   "days": [
    {
-    "date": "2026-11-10",
-    "precip_in": 0.008,
-    "snow_in": 0.0
-   },
-   {
     "date": "2026-11-11",
-    "precip_in": 0.002,
+    "precip_in": 0.0,
     "snow_in": 0.0
    },
    {
     "date": "2026-11-12",
-    "precip_in": 0.287,
+    "precip_in": 0.147,
     "snow_in": 0.0
    },
    {
     "date": "2026-11-13",
-    "precip_in": 0.242,
-    "snow_in": 0.0
+    "precip_in": 0.103,
+    "snow_in": 0.2
    },
    {
     "date": "2026-11-14",
-    "precip_in": 0.012,
+    "precip_in": 0.02,
     "snow_in": 0.0
    }
   ]
@@ -710,45 +705,37 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-11T11:25:00+00:00",
+  "issued": "2026-11-11T20:13:00+00:00",
   "key_messages": [
-   "Increased confidence in impactful elevation-dependent snowfall Thursday into Friday.",
-   "Lingering upslope rain/snow showers possible on Sunday, followed by much quieter and warmer weather next week."
+   "A coastal low will bring widespread lower elevation rain and wet snow mainly above 1200 feet with shower chances continuing through the weekend.",
+   "A few lingering showers Sunday, then high confidence in dry weather early next week."
   ],
-  "what_changed": "As of 234 AM EST Wednesday... Forecast snow totals have increased in the higher elevations for Thursday into Friday.",
-  "raw": "\n000\nFXUS61 KBTV 111125\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n625 AM EST Wed Nov 11 2026\n\n.WHAT HAS CHANGED...\nAs of 234 AM EST Wednesday...\n\nForecast snow totals have increased in the higher elevations for \nThursday into Friday.\n\n&&\n\n.KEY MESSAGES...\nAs of 234 AM EST Wednesday...\n\n1. Increased confidence in impactful elevation-dependent \nsnowfall Thursday into Friday. \n\n2. Lingering upslope rain/snow showers possible on Sunday, \nfollowed by much quieter and warmer weather next week.\n\n&&\n\n.DISCUSSION...\nAs of 234 AM EST Wednesday...\n\nKEY MESSAGE 1: A gradually deepening surface low will track from the \nOhio Valley east over southern New England before heading off into \nthe Canadian Maritimes on Thursday into Friday. Despite a favorable \nstorm track for snow, a marginally cold initial airmass will be in \nplace at the onset, especially at the surface due to a lack of \nCanadian high pressure to the north. Precipitation looks to enter \nsouthwestern areas Thursday morning but very slowly make its way \nnortheast during the day. By Thursday night, it should reach the \nNortheast Kingdom, but the heaviest rates may remain to the south. \nAt the onset, surface temperatures will likely be in the 30s in most \nplaces, with low 40s possible in the warmest valleys. Steep lapse \nrates will exist with summit levels well below freezing, though a \nlack of a significantly dry layer will prevent significant wet-bulb \ncooling. \n\nPrecipitation will begin as rain in the valleys and snow at the \nsummits. A first estimate of initial snow levels is around 1,500 ft. \nLight rates and daytime occurrence will prevent significant \naccumulations at the onset outside the mountains. A weak November \nsun angle will limit some of the warming effects though. Heading \ninto Thursday night, heavier rates will likely enter the region, and \ndarkness will end any solar radiation. The combination of lowering \ntemperatures due to dynamical cooling and nighttime cooling will \nallow snow levels to drop a bit, and especially allow for more \nefficient accumulations at higher elevations with higher snow \nratios. By Friday morning, snow levels should be around or below \n1,000 ft. While brief periods of snow are possible in the low \nvalleys like the Champlain Valley and Lower Connecticut Valley, \ntemperatures may stay just above freezing and prevent accumulations \nother than some slush in grassy-type surfaces. \n\nAs the low tracks to the east heading through Friday, cyclonic \nnorthwest flow will develop and maintain some upslope snow showers \nin the higher terrain into Saturday. Boundary layer temperatures \nwill reach their lowest values Saturday morning, with most areas \nlikely seeing temperatures in the 20s. Warm Lake Champlain \ntemperatures will probably further limit the already marginal \naccumulations in the immediate Champlain Valley, especially with \nnorthwest flow off the lake and downsloping along the eastern \nAdirondacks. \n\nOverall, this is still a relatively low-confidence forecast. Our \ndeterministic most-likely scenario has snow amounts in the 3-6 inch \nrange for areas around and above 2,000 ft. One exception is northern \nVermont, where the heaviest bands may not reach. Areas between 1,000-\n2,000 ft look to be in the 1-3 inch range, and below 1,000 ft looks \nto be a slushy coating. However, the ensemble spread is still \nmassive. The NBM 10th percentile is 2-4 inches above 2,000 ft and \nthe 90th percentile is 10-18 inches. Deterministic models are all \nsplit. This is mostly due to QPF differences and not \ntemperatures/ratios so any significant accumulations in the lower \nelevations like the Champlain Valley are unlikely at this point. \n\nIn higher end scenarios, there would be a power outage threat in the \nhigher elevations. The snow will be a heavier, wetter snow, prone to \nsticking to trees and powerlines. It may end a bit drier with lower \nratios in the Adirondacks if enough cooling occurs on the backside, \nbut the exact details remain to be seen.\n\nKEY MESSAGE 2: The cyclonic upslope flow from departing low pres wl \nproduce a few light rain and mtn snow showers on Sunday, along with \nplenty of clouds. A building ridge of high pres both aloft and at \nthe sfc is progged to expand acrs the Great Lakes/NE CONUS by next \nweek. This wl result in much drier atmospheric profiles, with pw \nvalues btwn 0.20 and 0.40\" by early next week. As 1035mb high pres \nbuilds directly overhead, expect large daily swings in temps from \ncool night-time lows to mild day-time highs, given the dry airmass \nand nightly inversions. No significant or impactful wx is \nanticipated for days 4 thru 7. Highs generally mid 40s to lower 50s \nand lows mid 20s to mid 30s.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Current observations indicate a mixture\nof MVFR and VFR conditions with across our 7 taf sites this\nmorning. Any lingering MVFR cigs at MPV/EFK and SLK will improve\nby 15z this morning, while VFR conditions prevail across our\nlower elevation taf sites. Northwest winds will be 5 to 10\nknots, before shifting to the northeast at MSS and southeast at\nRUT overnight. Cigs lower toward MVFR again after 06z tonight at\nSLK with a light mixture of snow and rain likely by sunrise on\nThursday.  \n\nOutlook...\n\nThursday: MVFR/IFR conditions possible. Definite SN, Chance RA.\nThursday Night: Mainly MVFR, with areas IFR possible. Definite\nSN, Definite RA.\nFriday: Mainly MVFR, with local IFR possible. Likely SN, Chance\nRA.\nFriday Night: Mainly MVFR, with local VFR possible. Chance SN,\nChance RA.\nSaturday: MVFR. Chance RA, Chance SN.\nSaturday Night: Mainly MVFR, with areas VFR possible. Chance\nSHSN, Chance SHRA.\nSunday: Mainly MVFR, with local VFR possible. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Taber/Myskowski\nAVIATION...Taber\n"
+  "what_changed": "As of 242 PM EST Wednesday... A Winter Weather Advisory has been issued for the higher terrain of the Adirondacks and portions of the southern Green Mountains for Thursday and early Friday.",
+  "raw": "\n000\nFXUS61 KBTV 112013\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n313 PM EST Wed Nov 11 2026\n\n.WHAT HAS CHANGED...\nAs of 242 PM EST Wednesday...\n\nA Winter Weather Advisory has been issued for the higher terrain\nof the Adirondacks and portions of the southern Green Mountains\nfor Thursday and early Friday.\n\n&&\n\n.KEY MESSAGES...\nAs of 242 PM EST Wednesday...\n\n1. A coastal low will bring widespread lower elevation rain and\nwet snow mainly above 1200 feet with shower chances continuing\nthrough the weekend. \n\n2. A few lingering showers Sunday, then high confidence in dry \nweather early next week. \n\n&&\n\n.DISCUSSION...\nAs of 242 PM EST Wednesday...\n\nKEY MESSAGE 1: Model consensus continues to favor a coastal type\nlow to deepen and wrap moisture back across Vermont and northern\nNew York Thursday with a more upslope regime developing by\nFriday. Temperatures and this pattern support lower elevation\nrain Thursday and mainly higher elevation snowfall before\ntemperatures drop Thursday night promoting snow showers to most\nvalley floors. The overall forecast remains quite tricky with\nbalancing QPF timing, changing SLRs, and a shift in primary\nprecipitation mechanisms while models struggle with the details.\n\nWhere the models continue to struggle are placement of the\nsurface circulation, extent of northward moisture transport and\nQPF amounts, and amount of cold air in place across the region.\nThe latest trends have pushed moisture back southward leaving\nmore modest QPF across northern New York and Vermont\nrepresenting nearly a 50% reduction to QPF from the previous\nforecast for many locations. As such, snow totals were decreased\nwith most spots only seeing a dusting to around 1 inch, southern\nand Adirondack locations below 1200 feet receiving 1-2 inches,\nand 2-5 inches above 1200ft. This will primarily be a function\nof the period of heaviest precipitation period occurring over \nthe daytime hours with snow ratios being lower due to thermal \nprofiles. As such, snow will start at higher elevations and \ncrash down to around 1000 feet over the evening hours as the low\npulls away. The upslope regime begins Thursday night and \ncontinues through early Friday with higher snow ratios \nsupporting more efficient accumulation rates, but hindered by \ndecreasing moisture. Cooling profiles and dynamic cooling \nprocesses will help snow reach most valley locations overnight \nThursday night and early Friday. However, it will be tough to \nget snow accumulations in lower valleys like the Champlain \nValley given the relatively warm ground temperatures likely \nmelting most, if not all, of the snow that reaches the ground \nThursday night. For the St Lawrence Valley, most of the moisture\nwill have exited before temperature profiles cool enough to \nallow snow to occur. \n\nBehind the coastal low, northerly flow will remain through\nSaturday keeping shower chances ongoing, especially across\nterrain. One \"gotcha\" to watch out for will be the potential for\nstreamers to form off of Lake Champlain producing some higher\nelevation snow showers. Temperatures over the weekend may be\ncooler as well depending on cloud cover which may keep highs\nlower. Valley highs over the weekend are favored in the lower\n40s, but could decrease into the upper 30s if clouds proliferate\noff of Lake Champlain given continued cool air advection. Lows\nwill be in the 20s for most spots. \n\nKEY MESSAGE 2:  The departing low will continue to pull away from the \nregion Sunday, leading to continued northwesterly wrap-around flow \nwith a few lingering showers.  As the low exits, the depth of \nmoisture will decrease throughout the day and shower coverage will \nfurther decrease from Saturday. Lower elevations will be mostly dry, \nwhile higher elevations Sunday will still see a few showers. \nThroughout the weekend, precipitation type will be elevation-\ndependent; snow levels will be generally between 1000 and 1500 ft. \nHigher elevations will pick up up to an additional inch over the \nweekend, with limited depth of moisture being the main limiting \nfactor in larger wrap-around snow accumulations. Lower elevations \nshould not expect any accumulating snow. \n\nMonday onward, the forecast turns very quiet with high confidence in \nhigh pressure building in and larger diurnal temperature swings. \nHighs will be near seasonable normals, but lows will be chillier \nthan normal, especially going into midweek.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...VFR ceilings will prevail through\nmidnight, with cloud bases between 3000 and 8000 ft AGL. After \nmidnight, ceilings will gradually lower, with ceilings becoming \npredominantly MVFR after 12Z. Rain and snow showers will spread\ninto the area from southwest to northeast after 12Z Thursday.\nPrecipitation type will be elevation dependent; snow levels \nwill hover between 1000 and 2000 ft. Lowest flight conditions \ntowards the end of the TAF period will be at KSLK and KRUT, \nwhere a trend towards IFR is expected after 12Z as precipitation\nand lower ceilings affect these terminals first. Winds will \ngenerally be light and variable through the next 24 hours. \n\nOutlook...\n\nThursday Night: MVFR/IFR conditions possible. Definite SN,\nDefinite RA.\nFriday: Mainly MVFR and IFR, with areas VFR possible. Likely SN,\nChance RA.\nFriday Night: Mainly VFR, with areas MVFR possible. Chance SN,\nChance RA.\nSaturday: Mainly MVFR, with local IFR possible. Chance RA, Chance\nSN.\nSaturday Night: Mainly MVFR, with local VFR possible. Chance\nSHSN, Chance SHRA.\nSunday: MVFR. Slight chance SHRA.\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly VFR, with areas MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory from 10 AM Thursday to 10 AM EST \n     Friday for VTZ018-019.\nNY...Winter Weather Advisory from 10 AM Thursday to 10 AM EST \n     Friday for NYZ034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Duell/Myskowski\nAVIATION...Duell\n"
  },
  "lake_forecast": {
-  "issued": "2026-11-11T06:18:00+00:00",
+  "issued": "2026-11-11T19:27:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 15 knots. Partly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 2,
-    "calm": false
-   },
-   {
     "period": "Tonight",
-    "text": "North winds 10 knots or less, becoming northeast. Cloudy. A slight chance of rain overnight. Waves 1 foot or less.",
+    "text": "North winds 5 to 10 knots, becoming light and variable. Mostly cloudy. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
-    "calm": false
+    "calm": true
    },
    {
     "period": "Thursday",
-    "text": "Northeast winds 5 to 15 knots. A chance of rain in the morning, then rain in the afternoon. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
+    "text": "North winds 10 knots or less, increasing to 10 to 15 knots. A chance of rain in the morning, then rain likely in the afternoon. Waves 1 to 2 feet.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Thursday Night",
-    "text": "North winds 15 to 20 knots. Rain or snow. Waves around 1 foot.",
+    "text": "North winds 15 to 20 knots. Mostly cloudy. A chance of rain in the evening, then a chance of rain and snow overnight. Waves around 1 foot.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": null,
@@ -756,7 +743,7 @@
    },
    {
     "period": "Friday",
-    "text": "North winds 15 to 20 knots. Rain or snow. Waves 1 to 2 feet.",
+    "text": "North winds 15 to 20 knots. Cloudy. Waves 1 to 2 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -764,7 +751,7 @@
    },
    {
     "period": "Friday Night",
-    "text": "North winds 15 to 20 knots. Cloudy. A chance of rain in the evening, then a chance of rain or snow overnight. Waves 1 to 2 feet.",
+    "text": "North winds 15 to 20 knots. Cloudy. A chance of rain and snow overnight. Waves 1 to 2 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -772,7 +759,7 @@
    },
    {
     "period": "Saturday",
-    "text": "North winds 15 to 20 knots, becoming northwest 10 to 15 knots. Mostly cloudy. A chance of rain and snow in the morning, then a chance of rain in the afternoon. Waves 1 to 2 feet.",
+    "text": "North winds 15 to 20 knots, becoming northwest 10 to 15 knots. Cloudy. A chance of rain and snow in the morning, then a chance of rain in the afternoon. Waves 1 to 2 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -780,7 +767,7 @@
    },
    {
     "period": "Saturday Night",
-    "text": "Northwest winds 10 to 15 knots. Mostly cloudy. A chance of rain in the evening. Waves 1 foot or less.",
+    "text": "Northwest winds 10 to 15 knots. Mostly cloudy. A chance of rain. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -793,20 +780,28 @@
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
-   }
-  ],
-  "northern": [
+   },
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 15 knots. Mostly cloudy. Waves 1 foot or less.",
-    "wind_knots_max": 15,
+    "period": "Sunday Night",
+    "text": "Northwest winds 5 to 10 knots. Mostly cloudy in the evening, then becoming partly cloudy. Waves 1 foot or less.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
    },
    {
+    "period": "Monday",
+    "text": "Northwest winds 10 knots or less. Partly sunny. Waves 1 foot or less.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": false
+   }
+  ],
+  "northern": [
+   {
     "period": "Tonight",
-    "text": "Northwest winds less than 10 knots. Cloudy. Waves 1 foot or less.",
+    "text": "North winds less than 10 knots. Mostly cloudy. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -814,15 +809,15 @@
    },
    {
     "period": "Thursday",
-    "text": "Northeast winds 10 knots or less, increasing to 10 to 15 knots. A chance of rain or snow in the morning, then rain in the afternoon. Waves 1 foot or less.",
+    "text": "Light and variable winds, becoming north 5 to 10 knots. Mostly cloudy. A chance of rain. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
-    "calm": false
+    "calm": true
    },
    {
     "period": "Thursday Night",
-    "text": "North winds 10 to 15 knots. Rain or snow. Waves 1 foot or less.",
+    "text": "North winds 10 to 15 knots. Mostly cloudy. A chance of rain and snow. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -830,7 +825,7 @@
    },
    {
     "period": "Friday",
-    "text": "North winds 10 to 15 knots. Rain or snow. Waves 1 to 2 feet.",
+    "text": "North winds 10 to 15 knots. Mostly cloudy. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -838,7 +833,7 @@
    },
    {
     "period": "Friday Night",
-    "text": "North winds 5 to 15 knots. Cloudy. A chance of rain or snow. Waves 1 to 2 feet.",
+    "text": "North winds 5 to 15 knots with gusts to around 30 knots. Cloudy. A chance of rain and snow overnight. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -846,7 +841,7 @@
    },
    {
     "period": "Saturday",
-    "text": "North winds 5 to 15 knots, becoming northwest. Cloudy. A chance of rain and snow in the morning, then a chance of rain in the afternoon. Waves 1 foot or less.",
+    "text": "North winds 5 to 15 knots with gusts to around 30 knots, becoming northwest. Cloudy. A chance of rain and snow in the morning, then a chance of rain in the afternoon. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -854,8 +849,8 @@
    },
    {
     "period": "Saturday Night",
-    "text": "Northwest winds 5 to 15 knots. Mostly cloudy. A chance of rain in the evening. Waves 1 foot or less.",
-    "wind_knots_max": 15,
+    "text": "Northwest winds 5 to 10 knots. Mostly cloudy. A chance of rain in the evening. Waves 1 foot or less.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
@@ -867,20 +862,28 @@
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
-   }
-  ],
-  "southern": [
+   },
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 15 knots. Partly sunny. Waves 1 foot or less.",
-    "wind_knots_max": 15,
+    "period": "Sunday Night",
+    "text": "Northwest winds 5 to 10 knots. Mostly cloudy in the evening, then becoming partly cloudy. Waves 1 foot or less.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
    },
    {
+    "period": "Monday",
+    "text": "Northwest winds less than 10 knots. Partly sunny. Waves 1 foot or less.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": false
+   }
+  ],
+  "southern": [
+   {
     "period": "Tonight",
-    "text": "North winds less than 10 knots. Mostly cloudy. A slight chance of rain overnight. Waves 1 foot or less.",
+    "text": "North winds less than 10 knots. Mostly cloudy. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -888,7 +891,7 @@
    },
    {
     "period": "Thursday",
-    "text": "Northeast winds 5 to 10 knots. Rain. Waves 1 foot or less.",
+    "text": "North winds 10 knots or less. Rain likely. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -896,7 +899,7 @@
    },
    {
     "period": "Thursday Night",
-    "text": "North winds 10 to 15 knots. Rain or snow. Waves 1 foot or less.",
+    "text": "North winds 10 to 15 knots. A chance of rain in the evening, then rain and snow overnight. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -904,7 +907,7 @@
    },
    {
     "period": "Friday",
-    "text": "North winds 15 to 20 knots, diminishing to 10 to 15 knots. Rain or snow. Waves 1 to 2 feet.",
+    "text": "North winds 15 to 20 knots, diminishing to 10 to 15 knots. Cloudy. A chance of rain and snow in the morning, then a chance of rain in the afternoon. Waves 1 to 2 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -912,7 +915,7 @@
    },
    {
     "period": "Friday Night",
-    "text": "North winds 10 to 15 knots, increasing to 15 to 20 knots. Rain likely in the evening, then a chance of rain or snow overnight. Waves 1 to 2 feet.",
+    "text": "North winds 10 to 15 knots, increasing to 15 to 20 knots. Cloudy. A chance of rain and snow overnight. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -928,7 +931,7 @@
    },
    {
     "period": "Saturday Night",
-    "text": "Northwest winds 10 to 15 knots. Mostly cloudy. A chance of rain in the evening. Waves 1 foot or less.",
+    "text": "Northwest winds 5 to 15 knots. Mostly cloudy. A chance of rain in the evening, then a chance of rain and snow overnight. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -936,34 +939,53 @@
    },
    {
     "period": "Sunday",
-    "text": "Northwest winds 5 to 15 knots. Mostly cloudy. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.20 feet 48 degrees USGS gage at Burlington VT 93.27 feet 50 degrees USGS gage at Port Henry NY 93.05 feet 43 degrees",
+    "text": "Northwest winds 5 to 15 knots. Mostly cloudy. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "Northwest winds 5 to 10 knots. Mostly cloudy in the evening, then becoming partly cloudy. Waves 1 foot or less.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": false
+   },
+   {
+    "period": "Monday",
+    "text": "Northwest winds 10 knots or less. Partly sunny. Waves nearly calm. The ultraviolet index for Thursday will be a 0. This is in the low category. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.22 feet 47 degrees USGS gage at Burlington VT 93.29 feet 51 degrees USGS gage at Port Henry NY 93.03 feet 50 degrees",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": null,
+    "calm": false
    }
   ],
-  "uv": null,
+  "uv": {
+   "day": "Thursday",
+   "index": 0
+  },
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.2,
-    "temp_f": 48
+    "level_ft": 93.22,
+    "temp_f": 47
    },
    "Burlington VT": {
-    "level_ft": 93.27,
-    "temp_f": 50
+    "level_ft": 93.29,
+    "temp_f": 51
    },
    "Port Henry NY": {
-    "level_ft": 93.05,
-    "temp_f": 43
+    "level_ft": 93.03,
+    "temp_f": 50
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-11T12:00:00.000-05:00",
-  "level_ft": 93.83,
-  "level_at": "2026-11-11T12:00:00.000-05:00",
+  "water_temp_at": "2026-11-11T16:00:00.000-05:00",
+  "level_ft": 93.82,
+  "level_at": "2026-11-11T16:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +993,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/11/26 12:00",
+  "observed": "11/11/26 16:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -986,9 +1008,9 @@
    {
     "date": "2026-11-11",
     "high_f": {
-     "GFS": 49,
+     "GFS": 48,
      "Euro": 49,
-     "ICON": 47
+     "ICON": 48
     },
     "pop_max": {
      "GFS": 2,
@@ -1000,52 +1022,52 @@
      "Euro": 0.09,
      "ICON": 0.01
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    },
    {
     "date": "2026-11-12",
     "high_f": {
      "GFS": 41,
-     "Euro": 43,
-     "ICON": 39
+     "Euro": 42,
+     "ICON": 42
     },
     "pop_max": {
-     "GFS": 61,
+     "GFS": 62,
      "Euro": 88,
-     "ICON": 70
+     "ICON": 85
     },
     "precip_in": {
-     "GFS": 0.06,
-     "Euro": 0.21,
-     "ICON": 0.44
+     "GFS": 0.03,
+     "Euro": 0.16,
+     "ICON": 0.09
     },
-    "high_spread_f": 4
+    "high_spread_f": 1
    },
    {
     "date": "2026-11-13",
     "high_f": {
-     "GFS": 36,
-     "Euro": 42,
-     "ICON": 38
+     "GFS": 38,
+     "Euro": 41,
+     "ICON": 39
     },
     "pop_max": {
-     "GFS": 58,
+     "GFS": 39,
      "Euro": 80,
-     "ICON": 60
+     "ICON": 78
     },
     "precip_in": {
-     "GFS": 0.18,
-     "Euro": 0.12,
-     "ICON": 0.14
+     "GFS": 0.05,
+     "Euro": 0.03,
+     "ICON": 0.0
     },
-    "high_spread_f": 6
+    "high_spread_f": 3
    }
   ]
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T17:26:48+00:00",
-  "text": "Mostly cloudy today, high 46. Mostly cloudy tonight, low 33. Thursday, rain from 1pm on, about a tenth of an inch, high 44.",
+  "generated": "2026-11-11T22:04:37+00:00",
+  "text": "Mostly cloudy today, high 46. Mostly cloudy tonight, low 31. Thursday, rain likely from 10am to 5pm, about a tenth of an inch, high 43.",
   "periods": [
    {
     "label": "Today",
@@ -1053,27 +1075,27 @@
     "is_day": true,
     "temp_f": 46,
     "sky": "mostly cloudy",
-    "start": "2026-11-11T17:00:00+00:00",
+    "start": "2026-11-11T22:00:00+00:00",
     "end": "2026-11-11T18:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 42,
-    "feels_hi": 44,
+    "feels_hi": 42,
     "text": "Mostly cloudy today, high 46."
    },
    {
     "label": "Tonight",
     "name": "Tonight",
     "is_day": false,
-    "temp_f": 33,
+    "temp_f": 31,
     "sky": "mostly cloudy",
     "start": "2026-11-11T18:00:00-05:00",
     "end": "2026-11-12T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 34,
-    "feels_hi": 40,
-    "text": "Mostly cloudy tonight, low 33."
+    "feels_hi": 41,
+    "text": "Mostly cloudy tonight, low 31."
    }
   ]
  }
