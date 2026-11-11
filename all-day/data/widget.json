@@ -1,40 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-11T04:58:51+00:00",
+ "updated": "2026-11-11T08:25:13+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 46,
-  "sky": "Cloudy",
+  "temp": 43,
+  "sky": "Mostly Cloudy",
   "from": "airport",
   "hi": 46,
   "lo": 39,
-  "rain": "Dry through Wednesday",
+  "rain": "Dry through today",
   "obs": {
-   "temp": 46,
-   "sky": "Cloudy",
-   "at": "2026-11-11T04:30:00+00:00"
+   "temp": 43,
+   "sky": "Mostly Cloudy",
+   "at": "2026-11-11T08:00:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-10T23:00:00-05:00",
-    "temp": 42,
-    "sky": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-11-11T00:00:00-05:00",
-    "temp": 42,
-    "sky": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-11-11T01:00:00-05:00",
-    "temp": 42,
-    "sky": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-11-11T02:00:00-05:00",
-    "temp": 41,
-    "sky": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-11-11T03:00:00-05:00",
     "temp": 41,
@@ -42,64 +22,74 @@
    },
    {
     "t": "2026-11-11T04:00:00-05:00",
+    "temp": 41,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-11T05:00:00-05:00",
+    "temp": 40,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-11T06:00:00-05:00",
+    "temp": 40,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-11T07:00:00-05:00",
+    "temp": 39,
+    "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-11-11T08:00:00-05:00",
     "temp": 40,
     "sky": "Mostly Cloudy"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
- "wire": [
-  {
-   "title": "Burlington City Council confirms Geraci as new police chief with 10-2 vote",
-   "src": "VTDigger",
-   "url": "https://vtdigger.org/2026/11/10/burlington-city-council-confirms-geraci-as-new-police-chief-with-10-2-vote/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/9b91e9d0af85"
-  },
-  {
-   "title": "Police identify two killed in fiery Quechee crash",
-   "src": "WCAX",
-   "url": "https://www.wcax.com/2026/11/10/police-identify-two-killed-fiery-quechee-crash/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/b27d8bf094ba"
-  },
-  {
-   "title": "Hook & Peel Pizza Moves Into the Den at Harry’s Hardware",
-   "src": "Seven Days",
-   "url": "https://www.sevendaysvt.com/food-drink/foodnews/hook-peel-pizza-moves-into-the-den-at-harrys-hardware/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/2255477f6530"
-  }
- ],
+ "wire": [],
  "tonight": [
   {
-   "title": "Julesy w/ english major & Paper Castles",
-   "time": "7:15 pm",
-   "venue": "The Monkey House",
-   "start": "2026-11-10T19:15:00.713000-05:00",
-   "end": "2026-11-10T23:59:00.713000-05:00",
-   "url": "https://www.monkeyhousevt.com/events/julesy-w-english-major-amp-paper-castles",
+   "title": "Sleep",
+   "time": "7 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-11T19:00:00-05:00",
+   "end": null,
+   "url": "https://www.helloburlingtonvt.com/event/sleep/7588/",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "$10 Martini Tuesday",
-   "time": "5 pm",
-   "venue": "Doma Bar",
-   "start": "2026-11-10T17:00:00-05:00",
-   "end": "2026-11-10T23:59:59-05:00",
-   "url": "https://calendar.time.ly/vfaca7kw/event/78340639/20261110170000",
+   "title": "Weatherday",
+   "time": "7 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-11T19:00:00-05:00",
+   "end": null,
+   "url": "https://events.uvm.edu/event/weatherday",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
-   "title": "Bike Basics",
-   "time": "6 pm",
-   "venue": "Old Spokes Home",
-   "start": "2026-11-10T18:00:00-05:00",
-   "end": "2026-11-18T20:00:00-05:00",
-   "url": "https://www.mychamplainvalley.com/calendar/#/details/bike-basics/20256005/2026-11-10T18",
+   "title": "Sleep, Zombi, the Schizophonics",
+   "time": "8 pm",
+   "venue": "Higher Ground",
+   "start": "2026-11-11T20:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/sleep-zombi-the-schizophonics-45663866",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Pick-up Basketball",
+   "time": "5:30 pm",
+   "venue": "Gutterson Fieldhouse",
+   "start": "2026-11-11T17:30:00-05:00",
+   "end": "2026-11-11T19:30:00-05:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/317096463/",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
  "game": {
   "title": "UVM Field Hockey vs Saint Joseph's",
-  "when": "Tomorrow 2 pm",
+  "when": "Today 2 pm",
   "start": "2026-11-11T19:00:00+00:00",
   "all_day": false,
   "home": true,
