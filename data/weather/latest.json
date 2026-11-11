@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-11T10:38:51+00:00",
+ "updated": "2026-11-11T10:58:54+00:00",
  "sections_updated": {
-  "now": "2026-11-11T10:38:51+00:00",
-  "forecast": "2026-11-11T10:38:51+00:00",
-  "hourly": "2026-11-11T10:38:51+00:00",
-  "alerts": "2026-11-11T10:38:51+00:00",
-  "afd": "2026-11-11T10:38:51+00:00",
-  "lake_forecast": "2026-11-11T10:38:51+00:00",
-  "lake_gage": "2026-11-11T10:38:51+00:00",
-  "air": "2026-11-11T10:38:51+00:00",
-  "sun": "2026-11-11T10:38:51+00:00",
-  "models": "2026-11-11T10:38:51+00:00"
+  "now": "2026-11-11T10:58:54+00:00",
+  "forecast": "2026-11-11T10:58:54+00:00",
+  "hourly": "2026-11-11T10:58:54+00:00",
+  "alerts": "2026-11-11T10:58:54+00:00",
+  "afd": "2026-11-11T10:58:54+00:00",
+  "lake_forecast": "2026-11-11T10:58:54+00:00",
+  "lake_gage": "2026-11-11T10:58:54+00:00",
+  "air": "2026-11-11T10:58:54+00:00",
+  "sun": "2026-11-11T10:58:54+00:00",
+  "models": "2026-11-11T10:58:54+00:00"
  },
  "now": {
   "observed_at": "2026-11-11T09:55:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-11-11T03:00:00-05:00",
+    "start": "2026-11-11T05:00:00-05:00",
     "is_day": false,
     "temp_f": 39,
-    "pop": 13,
-    "wind": "NW 12 mph",
+    "pop": 10,
+    "wind": "NW 10 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 39. Northwest wind around 12 mph."
+    "detailed": "Mostly cloudy, with a low around 39. Northwest wind around 10 mph."
    },
    {
     "name": "Veterans Day",
@@ -986,13 +986,13 @@
    {
     "date": "2026-11-11",
     "high_f": {
-     "GFS": 46,
+     "GFS": 47,
      "Euro": 49,
      "ICON": 46
     },
     "pop_max": {
      "GFS": 3,
-     "Euro": 18,
+     "Euro": 33,
      "ICON": 15
     },
     "precip_in": {
@@ -1011,7 +1011,7 @@
     },
     "pop_max": {
      "GFS": 73,
-     "Euro": 81,
+     "Euro": 61,
      "ICON": 70
     },
     "precip_in": {
@@ -1030,7 +1030,7 @@
     },
     "pop_max": {
      "GFS": 66,
-     "Euro": 73,
+     "Euro": 59,
      "ICON": 60
     },
     "precip_in": {
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T10:38:54+00:00",
+  "generated": "2026-11-11T10:58:57+00:00",
   "text": "Mostly cloudy overnight, low 39. Mostly cloudy today, high 46.",
   "periods": [
    {
@@ -1053,7 +1053,7 @@
     "is_day": false,
     "temp_f": 39,
     "sky": "mostly cloudy",
-    "start": "2026-11-11T10:00:00+00:00",
+    "start": "2026-11-11T05:00:00-05:00",
     "end": "2026-11-11T06:00:00-05:00",
     "precip": null,
     "wind": null,
