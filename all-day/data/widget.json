@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-11-11T10:58:58+00:00",
+ "updated": "2026-11-11T11:19:01+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
   "temp": 43,
   "sky": "Cloudy",
   "from": "airport",
   "hi": 46,
-  "lo": 39,
-  "rain": "Dry through today",
+  "lo": 33,
+  "rain": "Dry through tonight",
   "obs": {
    "temp": 43,
    "sky": "Cloudy",
    "at": "2026-11-11T09:55:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-11-11T05:00:00-05:00",
-    "temp": 40,
-    "sky": "Mostly Cloudy"
-   },
    {
     "t": "2026-11-11T06:00:00-05:00",
     "temp": 40,
@@ -44,11 +39,35 @@
     "t": "2026-11-11T10:00:00-05:00",
     "temp": 43,
     "sky": "Mostly Sunny"
+   },
+   {
+    "t": "2026-11-11T11:00:00-05:00",
+    "temp": 44,
+    "sky": "Partly Sunny"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
- "wire": [],
+ "wire": [
+  {
+   "title": "One person seriously injured in Interstate 91 crash in Barnet",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/11/one-person-seriously-injured-interstate-91-crash-barnet/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/2043e751a524"
+  },
+  {
+   "title": "Lake Champlain sturgeon study offers hope for endangered species",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/10/lake-champlain-sturgeon-study-offers-hope-endangered-species/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/7e44597ddcc6"
+  },
+  {
+   "title": "Home heating oil prices about $2.50 higher than last year, EIA says",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/11/11/home-heating-oil-prices-about-250-higher-than-last-year-eia-says/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/f8fa10624bdc"
+  }
+ ],
  "tonight": [
   {
    "title": "Sleep",

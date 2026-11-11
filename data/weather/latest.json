@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-11T10:58:54+00:00",
+ "updated": "2026-11-11T11:18:57+00:00",
  "sections_updated": {
-  "now": "2026-11-11T10:58:54+00:00",
-  "forecast": "2026-11-11T10:58:54+00:00",
-  "hourly": "2026-11-11T10:58:54+00:00",
-  "alerts": "2026-11-11T10:58:54+00:00",
-  "afd": "2026-11-11T10:58:54+00:00",
-  "lake_forecast": "2026-11-11T10:58:54+00:00",
-  "lake_gage": "2026-11-11T10:58:54+00:00",
-  "air": "2026-11-11T10:58:54+00:00",
-  "sun": "2026-11-11T10:58:54+00:00",
-  "models": "2026-11-11T10:58:54+00:00"
+  "now": "2026-11-11T11:18:57+00:00",
+  "forecast": "2026-11-11T11:18:57+00:00",
+  "hourly": "2026-11-11T11:18:57+00:00",
+  "alerts": "2026-11-11T11:18:57+00:00",
+  "afd": "2026-11-11T11:18:57+00:00",
+  "lake_forecast": "2026-11-11T11:18:57+00:00",
+  "lake_gage": "2026-11-11T11:18:57+00:00",
+  "air": "2026-11-11T11:18:57+00:00",
+  "sun": "2026-11-11T11:18:57+00:00",
+  "models": "2026-11-11T11:18:57+00:00"
  },
  "now": {
   "observed_at": "2026-11-11T09:55:00+00:00",
@@ -29,16 +29,6 @@
   "updated": "2026-11-11T06:18:43+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-11T05:00:00-05:00",
-    "is_day": false,
-    "temp_f": 39,
-    "pop": 10,
-    "wind": "NW 10 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 39. Northwest wind around 10 mph."
-   },
-   {
     "name": "Veterans Day",
     "start": "2026-11-11T06:00:00-05:00",
     "is_day": true,
@@ -49,7 +39,7 @@
     "detailed": "Mostly cloudy, with a high near 46. Northwest wind 3 to 8 mph."
    },
    {
-    "name": "Wednesday Night",
+    "name": "Tonight",
     "start": "2026-11-11T18:00:00-05:00",
     "is_day": false,
     "temp_f": 33,
@@ -66,7 +56,7 @@
     "pop": 90,
     "wind": "NE 2 to 7 mph",
     "short": "Rain And Snow",
-    "detailed": "A slight chance of rain before 7am, then rain and snow. Cloudy, with a high near 44. Northeast wind 2 to 7 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A slight chance of rain before 7am, then rain and snow. Cloudy. High near 44, with temperatures falling to around 38 in the afternoon. Northeast wind 2 to 7 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday Night",
@@ -96,7 +86,7 @@
     "pop": 50,
     "wind": "N 13 mph",
     "short": "Chance Rain And Snow",
-    "detailed": "A chance of rain and snow. Cloudy, with a low around 29. North wind around 13 mph. Chance of precipitation is 50%."
+    "detailed": "A chance of rain and snow. Cloudy, with a low around 29. North wind around 13 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Saturday",
@@ -167,26 +157,22 @@
     "wind": "NW 5 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 45. Northwest wind around 5 mph."
+   },
+   {
+    "name": "Tuesday Night",
+    "start": "2026-11-17T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 29,
+    "pop": 0,
+    "wind": "W 2 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 29. West wind around 2 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-11T06:18:43+00:00",
   "hours": [
-   {
-    "t": "2026-11-11T05:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 33,
-    "pop": 10,
-    "humidity": 82,
-    "wind_mph": 10,
-    "wind_dir": "NW",
-    "sky": 65,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-11-11T06:00:00-05:00",
     "temp_f": 40,
@@ -676,6 +662,20 @@
     "qpf_in": 0.018,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-12T17:00:00-05:00",
+    "temp_f": 38,
+    "feels_f": 33,
+    "pop": 90,
+    "humidity": 96,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 96,
+    "short": "Light Rain",
+    "qpf_in": 0.018,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-11T05:00:00.000-05:00",
-  "level_ft": 93.83,
-  "level_at": "2026-11-11T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-11T06:00:00.000-05:00",
+  "level_ft": 93.85,
+  "level_at": "2026-11-11T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +971,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/11/26 5:00",
+  "observed": "11/11/26 6:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1044,23 +1044,9 @@
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T10:58:57+00:00",
-  "text": "Mostly cloudy overnight, low 39. Mostly cloudy today, high 46.",
+  "generated": "2026-11-11T11:19:00+00:00",
+  "text": "Mostly cloudy today, high 46. Mostly cloudy tonight, low 33. Thursday, rain from 1pm on, about a tenth of an inch, high 44.",
   "periods": [
-   {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 39,
-    "sky": "mostly cloudy",
-    "start": "2026-11-11T05:00:00-05:00",
-    "end": "2026-11-11T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 33,
-    "feels_hi": 33,
-    "text": "Mostly cloudy overnight, low 39."
-   },
    {
     "label": "Today",
     "name": "Veterans Day",
@@ -1074,6 +1060,20 @@
     "feels_lo": 34,
     "feels_hi": 44,
     "text": "Mostly cloudy today, high 46."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 33,
+    "sky": "mostly cloudy",
+    "start": "2026-11-11T18:00:00-05:00",
+    "end": "2026-11-12T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 34,
+    "feels_hi": 40,
+    "text": "Mostly cloudy tonight, low 33."
    }
   ]
  }
