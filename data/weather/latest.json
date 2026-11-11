@@ -1,52 +1,42 @@
 {
- "updated": "2026-11-10T21:21:27+00:00",
+ "updated": "2026-11-11T00:47:22+00:00",
  "sections_updated": {
-  "now": "2026-11-10T21:21:27+00:00",
-  "forecast": "2026-11-10T21:21:27+00:00",
-  "hourly": "2026-11-10T21:21:27+00:00",
-  "alerts": "2026-11-10T21:21:27+00:00",
-  "afd": "2026-11-10T21:21:27+00:00",
-  "lake_forecast": "2026-11-10T21:21:27+00:00",
-  "lake_gage": "2026-11-10T21:21:27+00:00",
-  "air": "2026-11-10T21:21:27+00:00",
-  "sun": "2026-11-10T21:21:27+00:00",
-  "models": "2026-11-10T21:21:27+00:00"
+  "now": "2026-11-11T00:47:22+00:00",
+  "forecast": "2026-11-11T00:47:22+00:00",
+  "hourly": "2026-11-11T00:47:22+00:00",
+  "alerts": "2026-11-11T00:47:22+00:00",
+  "afd": "2026-11-11T00:47:22+00:00",
+  "lake_forecast": "2026-11-11T00:47:22+00:00",
+  "lake_gage": "2026-11-11T00:47:22+00:00",
+  "air": "2026-11-11T00:47:22+00:00",
+  "sun": "2026-11-11T00:47:22+00:00",
+  "models": "2026-11-11T00:47:22+00:00"
  },
  "now": {
-  "observed_at": "2026-11-10T20:45:00+00:00",
+  "observed_at": "2026-11-11T00:15:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 48,
-  "feels_like_f": 43,
-  "humidity": 81,
+  "temp_f": 46,
+  "feels_like_f": 46,
+  "humidity": 87,
   "dewpoint_f": 43,
-  "wind_mph": 11,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "S",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-11-10T18:17:42+00:00",
+  "updated": "2026-11-10T23:22:24+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-11-10T16:00:00-05:00",
-    "is_day": true,
-    "temp_f": 52,
-    "pop": 58,
-    "wind": "SW 9 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 52. Southwest wind around 9 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-11-10T18:00:00-05:00",
+    "start": "2026-11-10T19:00:00-05:00",
     "is_day": false,
     "temp_f": 39,
-    "pop": 65,
-    "wind": "NW 9 to 14 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely before 3am. Mostly cloudy, with a low around 39. Northwest wind 9 to 14 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 39,
+    "wind": "NW 6 to 16 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers before 3am. Mostly cloudy, with a low around 39. Northwest wind 6 to 16 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Veterans Day",
@@ -96,7 +86,7 @@
     "pop": 64,
     "wind": "N 8 to 13 mph",
     "short": "Chance Rain And Snow",
-    "detailed": "Rain likely before 8am, then a chance of rain and snow. Cloudy, with a high near 41. North wind 8 to 13 mph. Chance of precipitation is 60%."
+    "detailed": "Rain likely before 8am, then a chance of rain and snow. Cloudy, with a high near 41. North wind 8 to 13 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday Night",
@@ -167,115 +157,69 @@
     "wind": "NW 5 mph",
     "short": "Mostly Cloudy",
     "detailed": "Mostly cloudy, with a low around 27. Northwest wind around 5 mph."
+   },
+   {
+    "name": "Tuesday",
+    "start": "2026-11-17T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 44,
+    "pop": 2,
+    "wind": "NW 5 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 44. Northwest wind around 5 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-11-10T18:17:42+00:00",
+  "updated": "2026-11-10T23:22:24+00:00",
   "hours": [
-   {
-    "t": "2026-11-10T15:00:00-05:00",
-    "temp_f": 50,
-    "feels_f": 46,
-    "pop": 31,
-    "humidity": 74,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 80,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 18
-   },
-   {
-    "t": "2026-11-10T16:00:00-05:00",
-    "temp_f": 50,
-    "feels_f": 46,
-    "pop": 51,
-    "humidity": 77,
-    "wind_mph": 9,
-    "wind_dir": "SW",
-    "sky": 84,
-    "short": "Chance Rain Showers",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
-   {
-    "t": "2026-11-10T17:00:00-05:00",
-    "temp_f": 48,
-    "feels_f": 44,
-    "pop": 58,
-    "humidity": 86,
-    "wind_mph": 8,
-    "wind_dir": "SW",
-    "sky": 78,
-    "short": "Rain Showers Likely",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
-   {
-    "t": "2026-11-10T18:00:00-05:00",
-    "temp_f": 46,
-    "feels_f": 41,
-    "pop": 65,
-    "humidity": 93,
-    "wind_mph": 9,
-    "wind_dir": "W",
-    "sky": 77,
-    "short": "Rain Showers Likely",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 17
-   },
    {
     "t": "2026-11-10T19:00:00-05:00",
     "temp_f": 46,
-    "feels_f": 41,
-    "pop": 28,
+    "feels_f": 43,
+    "pop": 31,
     "humidity": 96,
-    "wind_mph": 10,
+    "wind_mph": 6,
     "wind_dir": "W",
     "sky": 72,
     "short": "Chance Rain Showers",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 17
+    "gust_mph": 9
    },
    {
     "t": "2026-11-10T20:00:00-05:00",
     "temp_f": 45,
-    "feels_f": 39,
-    "pop": 17,
+    "feels_f": 42,
+    "pop": 24,
     "humidity": 96,
-    "wind_mph": 12,
+    "wind_mph": 6,
     "wind_dir": "W",
     "sky": 65,
     "short": "Slight Chance Rain Showers",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 20
+    "gust_mph": 9
    },
    {
     "t": "2026-11-10T21:00:00-05:00",
     "temp_f": 44,
-    "feels_f": 37,
-    "pop": 18,
+    "feels_f": 41,
+    "pop": 39,
     "humidity": 96,
-    "wind_mph": 14,
+    "wind_mph": 6,
     "wind_dir": "NW",
     "sky": 62,
     "short": "Slight Chance Rain Showers",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 22
+    "gust_mph": 9
    },
    {
     "t": "2026-11-10T22:00:00-05:00",
     "temp_f": 44,
     "feels_f": 38,
-    "pop": 18,
+    "pop": 30,
     "humidity": 93,
     "wind_mph": 12,
     "wind_dir": "NW",
@@ -283,7 +227,7 @@
     "short": "Slight Chance Rain Showers",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 20
+    "gust_mph": 17
    },
    {
     "t": "2026-11-10T23:00:00-05:00",
@@ -291,69 +235,69 @@
     "feels_f": 36,
     "pop": 14,
     "humidity": 96,
-    "wind_mph": 12,
+    "wind_mph": 9,
     "wind_dir": "NW",
     "sky": 58,
     "short": "Mostly Cloudy",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 21
+    "gust_mph": 14
    },
    {
     "t": "2026-11-11T00:00:00-05:00",
     "temp_f": 42,
-    "feels_f": 36,
+    "feels_f": 35,
     "pop": 8,
     "humidity": 89,
-    "wind_mph": 12,
+    "wind_mph": 13,
     "wind_dir": "NW",
     "sky": 68,
     "short": "Mostly Cloudy",
     "qpf_in": 0.002,
     "snow_in": 0.0,
-    "gust_mph": 21
+    "gust_mph": 20
    },
    {
     "t": "2026-11-11T01:00:00-05:00",
     "temp_f": 42,
-    "feels_f": 36,
-    "pop": 13,
+    "feels_f": 35,
+    "pop": 12,
     "humidity": 86,
-    "wind_mph": 12,
+    "wind_mph": 13,
     "wind_dir": "NW",
     "sky": 65,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 21
+    "gust_mph": 25
    },
    {
     "t": "2026-11-11T02:00:00-05:00",
     "temp_f": 41,
-    "feels_f": 34,
+    "feels_f": 33,
     "pop": 15,
     "humidity": 89,
-    "wind_mph": 12,
+    "wind_mph": 16,
     "wind_dir": "NW",
     "sky": 59,
     "short": "Slight Chance Rain Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 21
+    "gust_mph": 23
    },
    {
     "t": "2026-11-11T03:00:00-05:00",
     "temp_f": 41,
     "feels_f": 35,
     "pop": 13,
-    "humidity": 86,
+    "humidity": 85,
     "wind_mph": 10,
     "wind_dir": "NW",
     "sky": 63,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 20
+    "gust_mph": 16
    },
    {
     "t": "2026-11-11T04:00:00-05:00",
@@ -361,21 +305,21 @@
     "feels_f": 33,
     "pop": 11,
     "humidity": 85,
-    "wind_mph": 10,
+    "wind_mph": 12,
     "wind_dir": "NW",
     "sky": 59,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 18
+    "gust_mph": 17
    },
    {
     "t": "2026-11-11T05:00:00-05:00",
     "temp_f": 39,
-    "feels_f": 33,
+    "feels_f": 32,
     "pop": 10,
     "humidity": 85,
-    "wind_mph": 9,
+    "wind_mph": 10,
     "wind_dir": "NW",
     "sky": 65,
     "short": "Mostly Cloudy",
@@ -676,6 +620,62 @@
     "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 5
+   },
+   {
+    "t": "2026-11-12T03:00:00-05:00",
+    "temp_f": 36,
+    "feels_f": 36,
+    "pop": 29,
+    "humidity": 89,
+    "wind_mph": 2,
+    "wind_dir": "E",
+    "sky": 95,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 5
+   },
+   {
+    "t": "2026-11-12T04:00:00-05:00",
+    "temp_f": 35,
+    "feels_f": 35,
+    "pop": 40,
+    "humidity": 92,
+    "wind_mph": 2,
+    "wind_dir": "E",
+    "sky": 95,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 5
+   },
+   {
+    "t": "2026-11-12T05:00:00-05:00",
+    "temp_f": 35,
+    "feels_f": 35,
+    "pop": 44,
+    "humidity": 92,
+    "wind_mph": 2,
+    "wind_dir": "E",
+    "sky": 95,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 5
+   },
+   {
+    "t": "2026-11-12T06:00:00-05:00",
+    "temp_f": 34,
+    "feels_f": 34,
+    "pop": 52,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "E",
+    "sky": 93,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 5
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-10T19:20:00+00:00",
+  "issued": "2026-11-10T23:58:00+00:00",
   "key_messages": [
    "Unsettled weather continues across the region today, with a period of drier weather expected tomorrow.",
    "Widespread precipitation looks likely Thursday into Friday, with some wet snow accumulations possible for the higher terrain, although exact impacts still need to be determined.",
    "Seasonably cool conditions with upslope showers this weekend, then trending drier into next week."
   ],
   "what_changed": "As of 121 PM EST Tuesday... No significant changes have been made from the previous forecast.",
-  "raw": "\n000\nFXUS61 KBTV 101920\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n220 PM EST Tue Nov 10 2026\n\n.WHAT HAS CHANGED...\nAs of 121 PM EST Tuesday...\n\nNo significant changes have been made from the previous forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 121 PM EST Tuesday...\n\n1. Unsettled weather continues across the region today, with a \nperiod of drier weather expected tomorrow. \n\n2. Widespread precipitation looks likely Thursday into Friday, \nwith some wet snow accumulations possible for the higher terrain, \nalthough exact impacts still need to be determined. \n\n3. Seasonably cool conditions with upslope showers this \nweekend, then trending drier into next week.\n\n&&\n\n.DISCUSSION...\nAs of 121 PM EST Tuesday...\n\nKEY MESSAGE 1: The unsettled weather continues this afternoon as \nanother shortwave moves through the region. The greatest chances for \nprecipitation will be across the Adirondacks and northern Greens, \nparticularly in the favored upslope locations. There may be enough \ninstability to allow for a few heavier downpours or even some \ngraupel, but for the most part light rainfall is expected with snow \nlevels near summit level. Some of the upslope showers may linger \ninto tomorrow morning, especially across the Northeast Kingdom, but \noverall tomorrow will feature drier weather ahead of the next system \narriving late week. Temperatures to be rather seasonable through \ntomorrow, with daytime highs in the upper 30s to near 50 and \novernight lows generally in the 30s.\n\nKEY MESSAGE 2:  Confidence continues to increase in the likelihood of \nwidespread precipitation across the region Thursday into Friday. A \nlarge scale upper level trough looks to build across the eastern \nCONUS, with surface low pressure centered in the Ohio Valley. As the \ninitial low moves eastward, a secondary coastal low is expected to \ndevelop and strengthen, which will bring our chances for widespread \nprecipitation. Although there is still some uncertainty regarding \nthe exact timing and track of the system, it looks to be fairly \nprogressive and consensus continues to grow amongst guidance as we \nget closer. Some of the biggest uncertainty has been and continues \nto be on expected precipitation type with this event. Higher \nelevations can expected to receive some wet snow accumulations with \nthis event, but valley rain is expected for the most part, \nespecially with the lack of cold air initially. Some snow may mix in \nat the lower elevations, particularly Thursday night into Friday \nmorning, but accumulations are not expected. Another area of \nuncertainty is how quickly cold air advects into the region which \ncould allow for some additional snowfall on the backside of the \nsystem, although there is still some uncertainty on amounts. As of \nnow, snowfall totals look to be between 1-4 inches across the High \nPeaks of the Adirondacks and the spine of the Green Mountains \nThursday and Friday. As previously mentioned, there is still some \nuncertainty, so while confidence has increased there are still some \ndetails that change over the next day or so. Temperatures are expect \nto trend cooler towards the end of the week, with highs generally in \nthe 30s to low 40s by Friday.\n\nKEY MESSAGE 3: Upper level troughing will prevail for much of the \nweekend, leading to a mostly cloudy and cool stretch. Friday night, \nsurface low pressure will be tracking northeastward across the \nAtlantic, resulting in northwesterly flow for northern New York and \nVermont and potential for upslope showers, 30-65% chance \nprecipitation Friday night and Saturday. As temperatures fall from \nthe 30s at the start of Friday to the seasonably cold upper \nteens/20s by early Saturday morning, any potential precipitation \nwould start as snow at higher elevations, while wider valleys would \nsee rain become rain/snow mix or even snow as temperatures fall \ntheir lowest. Showers may linger into Sunday at higher elevations, \nlikely drying out by Monday. Snow levels rise again each day as \nhighs reach a seasonably cool mid 30s and 40s, but are expected to \nfall each night to around 1000 feet or even lower as temperatures \ndip into the upper teens to lower 30s. Several inches will be \npossible in the mountains, but anything in the valleys would likely \nbe lighter and have a hard time accumulating. Heading into next \nweek, a large surface high pressure looks to build into the region, \nbringing increasing sunshine and cold overnight lows.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...An unsettled weather pattern continues this\nafternoon with showers likely, before drier weather returns\nWednesday. Current ceilings run anywhere from 1,300-10,000 feet\nabove ground level, with a scattered layer of clouds hovering around\n1,000-1,200 feet and southerly winds gusting 10-25 knots at times.\nCeilings are expected to continue lifting throughout the afternoon,\nleading to widespread VFR conditions by around 20Z-21Z today, but\nfor the mountain sites (SLK, MPV, and EFK), this could be brief\nbefore heading back down to MVFR cigs for a few hours. As mentioned,\nsome showers are expected throughout the afternoon as well, and\nvisibility restrictions should be around 4-6 miles in showers,\nthough any heavier shower could bring vis lower. Shower threat is\nexpected to come to an end by 00Z- 06Z Wednesday. Gusty winds will\nalso continue through this time, turning more northwesterly\nthroughout the evening and overnight. A northwesterly low level jet\nwill be present overnight tonight, resulting in some potential brief\nLLWS from 00Z-06Z before surface winds turn northwesterly to match\nthe upper levels.\n\nOutlook...\n\nWednesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA, Slight chance SHSN.\nThursday: Mainly IFR, with local MVFR possible. Chance RA, Chance\nSN.\nThursday Night: IFR. Chance RA, Chance SN.\nFriday: IFR. Chance RA, Chance SN.\nFriday Night: Mainly IFR, with areas MVFR possible. Chance SN,\nChance RA.\nSaturday: Mainly MVFR, with areas IFR possible. Chance RA, Chance\nSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance RA,\nChance SN.\nSunday: Mainly MVFR, with local VFR possible. Slight chance RA,\nSlight chance SN.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Storm\nAVIATION...Storm\n"
+  "raw": "\n000\nFXUS61 KBTV 102358\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n658 PM EST Tue Nov 10 2026\n\n.WHAT HAS CHANGED...\nAs of 121 PM EST Tuesday...\n\nNo significant changes have been made from the previous forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 121 PM EST Tuesday...\n\n1. Unsettled weather continues across the region today, with a \nperiod of drier weather expected tomorrow. \n\n2. Widespread precipitation looks likely Thursday into Friday, \nwith some wet snow accumulations possible for the higher terrain, \nalthough exact impacts still need to be determined. \n\n3. Seasonably cool conditions with upslope showers this \nweekend, then trending drier into next week.\n\n&&\n\n.DISCUSSION...\nAs of 121 PM EST Tuesday...\n\nKEY MESSAGE 1: The unsettled weather continues this afternoon as \nanother shortwave moves through the region. The greatest chances for \nprecipitation will be across the Adirondacks and northern Greens, \nparticularly in the favored upslope locations. There may be enough \ninstability to allow for a few heavier downpours or even some \ngraupel, but for the most part light rainfall is expected with snow \nlevels near summit level. Some of the upslope showers may linger \ninto tomorrow morning, especially across the Northeast Kingdom, but \noverall tomorrow will feature drier weather ahead of the next system \narriving late week. Temperatures to be rather seasonable through \ntomorrow, with daytime highs in the upper 30s to near 50 and \novernight lows generally in the 30s.\n\nKEY MESSAGE 2:  Confidence continues to increase in the likelihood of \nwidespread precipitation across the region Thursday into Friday. A \nlarge scale upper level trough looks to build across the eastern \nCONUS, with surface low pressure centered in the Ohio Valley. As the \ninitial low moves eastward, a secondary coastal low is expected to \ndevelop and strengthen, which will bring our chances for widespread \nprecipitation. Although there is still some uncertainty regarding \nthe exact timing and track of the system, it looks to be fairly \nprogressive and consensus continues to grow amongst guidance as we \nget closer. Some of the biggest uncertainty has been and continues \nto be on expected precipitation type with this event. Higher \nelevations can expected to receive some wet snow accumulations with \nthis event, but valley rain is expected for the most part, \nespecially with the lack of cold air initially. Some snow may mix in \nat the lower elevations, particularly Thursday night into Friday \nmorning, but accumulations are not expected. Another area of \nuncertainty is how quickly cold air advects into the region which \ncould allow for some additional snowfall on the backside of the \nsystem, although there is still some uncertainty on amounts. As of \nnow, snowfall totals look to be between 1-4 inches across the High \nPeaks of the Adirondacks and the spine of the Green Mountains \nThursday and Friday. As previously mentioned, there is still some \nuncertainty, so while confidence has increased there are still some \ndetails that change over the next day or so. Temperatures are expect \nto trend cooler towards the end of the week, with highs generally in \nthe 30s to low 40s by Friday.\n\nKEY MESSAGE 3: Upper level troughing will prevail for much of the \nweekend, leading to a mostly cloudy and cool stretch. Friday night, \nsurface low pressure will be tracking northeastward across the \nAtlantic, resulting in northwesterly flow for northern New York and \nVermont and potential for upslope showers, 30-65% chance \nprecipitation Friday night and Saturday. As temperatures fall from \nthe 30s at the start of Friday to the seasonably cold upper \nteens/20s by early Saturday morning, any potential precipitation \nwould start as snow at higher elevations, while wider valleys would \nsee rain become rain/snow mix or even snow as temperatures fall \ntheir lowest. Showers may linger into Sunday at higher elevations, \nlikely drying out by Monday. Snow levels rise again each day as \nhighs reach a seasonably cool mid 30s and 40s, but are expected to \nfall each night to around 1000 feet or even lower as temperatures \ndip into the upper teens to lower 30s. Several inches will be \npossible in the mountains, but anything in the valleys would likely \nbe lighter and have a hard time accumulating. Heading into next \nweek, a large surface high pressure looks to build into the region, \nbringing increasing sunshine and cold overnight lows.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...Mainly VFR is present as a weak frontal \nsystem moves across the airspace at this hour. Disorganized \nclusters of rain showers are moving through; based on radar \ntrends, additional rain will only briefly bring a chance of \nreduced visibilities at most sites through about 04Z. Currently \nlight surface winds are likely bringing marginal LLWS, with \ngreatest confidence at PBG where relatively strong westerly flow\nat 2000 feet is present while METAR winds continue to be under \n5 knots through the next couple of hours. \n\nAfter 06Z, expect a trend to MVFR at higher elevation sites \n(SLK, MPV, EFK) due to lowering ceilings. A period of breezy \nwest-northwest winds, with gusts possibly into the 20-25 knot \nrange, is indicated at most terminals overnight. Given the \nrelatively weak front and development of nocturnal inversion \ncombating the cold air advection, confidence in gusts overnight \nare relatively low. Otherwise, modest 5 to 10 knot west- \nnorthwest winds will be common through the remainder of the TAF \nperiod, with any MVFR ceilings gradually lifting, most likely \nbetween 15Z and 18Z.\n\n\nOutlook...\n\nWednesday Night: VFR. Chance SHRA, Chance SHSN.\nThursday: Mainly IFR, with areas MVFR possible. Definite RA,\nDefinite SN.\nThursday Night: Mainly IFR, with local MVFR possible. Likely RA,\nLikely SN.\nFriday: Mainly IFR, with local MVFR possible. Chance RA, Chance\nSN.\nFriday Night: Mainly IFR, with areas MVFR possible. Chance SHSN,\nChance SHRA.\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA,\nChance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA, Chance SHSN.\nSunday: Mainly MVFR, with local IFR possible. Chance SHSN, Slight\nchance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Storm/Kremer\nAVIATION...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-11-10T18:20:00+00:00",
@@ -984,17 +984,17 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-10T16:00:00.000-05:00",
-  "level_ft": 93.8,
-  "level_at": "2026-11-10T16:00:00.000-05:00",
+  "water_temp_at": "2026-11-10T19:00:00.000-05:00",
+  "level_ft": 93.88,
+  "level_at": "2026-11-10T19:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/10/26 16:00",
+  "observed": "11/10/26 19:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1011,17 +1011,17 @@
     "high_f": {
      "GFS": 50,
      "Euro": 54,
-     "ICON": 51
+     "ICON": 50
     },
     "pop_max": {
-     "GFS": 31,
-     "Euro": 78,
+     "GFS": 41,
+     "Euro": 91,
      "ICON": 93
     },
     "precip_in": {
-     "GFS": 0.07,
+     "GFS": 0.0,
      "Euro": 0.15,
-     "ICON": 0.1
+     "ICON": 0.13
     },
     "high_spread_f": 4
    },
@@ -1030,93 +1030,83 @@
     "high_f": {
      "GFS": 46,
      "Euro": 48,
-     "ICON": 48
+     "ICON": 46
     },
     "pop_max": {
-     "GFS": 18,
-     "Euro": 7,
+     "GFS": 5,
+     "Euro": 20,
      "ICON": 13
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.12,
-     "ICON": 0.0
+     "ICON": 0.01
     },
     "high_spread_f": 2
    },
    {
     "date": "2026-11-12",
     "high_f": {
-     "GFS": 39,
+     "GFS": 40,
      "Euro": 43,
-     "ICON": 41
+     "ICON": 42
     },
     "pop_max": {
      "GFS": 61,
-     "Euro": 78,
+     "Euro": 86,
      "ICON": 70
     },
     "precip_in": {
-     "GFS": 0.46,
+     "GFS": 0.45,
      "Euro": 0.47,
-     "ICON": 0.2
+     "ICON": 0.17
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    }
   ]
  },
  "brief": {
   "date": "2026-11-10",
-  "generated": "2026-11-10T21:21:30+00:00",
-  "text": "Showers likely today, under a tenth of an inch, high 52. Showers likely tonight until 7pm, under a tenth of an inch, low 39. Wednesday, mostly cloudy and cooler, high 46.",
+  "generated": "2026-11-11T00:47:26+00:00",
+  "text": "A chance of showers tonight on and off until 11pm, under a tenth of an inch, low 39. Wednesday, mostly cloudy, high 46. A chance of showers Wednesday night from 3am on, under a tenth of an inch, low 34.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 52,
-    "sky": "sunny",
-    "start": "2026-11-10T16:00:00-05:00",
-    "end": "2026-11-10T18:00:00-05:00",
-    "precip": {
-     "kind": "showers",
-     "chance": 60,
-     "say": "showers likely",
-     "start": "2026-11-10T16:00:00-05:00",
-     "end": "2026-11-10T18:00:00-05:00",
-     "when": "",
-     "amount_in": 0.0,
-     "snow_in": 0,
-     "amount": "under a tenth of an inch"
-    },
-    "wind": null,
-    "feels_lo": 44,
-    "feels_hi": 46,
-    "text": "Showers likely today, under a tenth of an inch, high 52."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
     "is_day": false,
     "temp_f": 39,
     "sky": "clear",
-    "start": "2026-11-10T18:00:00-05:00",
+    "start": "2026-11-10T19:00:00-05:00",
     "end": "2026-11-11T06:00:00-05:00",
     "precip": {
      "kind": "showers",
-     "chance": 60,
-     "say": "showers likely",
-     "start": "2026-11-10T18:00:00-05:00",
-     "end": "2026-11-10T19:00:00-05:00",
-     "when": "until 7pm",
+     "chance": 40,
+     "say": "a chance of showers",
+     "start": "2026-11-10T19:00:00-05:00",
+     "end": "2026-11-10T23:00:00-05:00",
+     "when": "on and off until 11pm",
      "amount_in": 0.01,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
     "wind": null,
+    "feels_lo": 32,
+    "feels_hi": 43,
+    "text": "A chance of showers tonight on and off until 11pm, under a tenth of an inch, low 39."
+   },
+   {
+    "label": "Wednesday",
+    "name": "Veterans Day",
+    "is_day": true,
+    "temp_f": 46,
+    "sky": "mostly cloudy",
+    "start": "2026-11-11T06:00:00-05:00",
+    "end": "2026-11-11T18:00:00-05:00",
+    "precip": null,
+    "wind": null,
     "feels_lo": 33,
-    "feels_hi": 41,
-    "text": "Showers likely tonight until 7pm, under a tenth of an inch, low 39."
+    "feels_hi": 44,
+    "text": "Wednesday, mostly cloudy, high 46."
    }
   ]
  }
