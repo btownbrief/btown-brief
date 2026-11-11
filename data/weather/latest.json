@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-11T16:38:07+00:00",
+ "updated": "2026-11-11T17:26:45+00:00",
  "sections_updated": {
-  "now": "2026-11-11T16:38:07+00:00",
-  "forecast": "2026-11-11T16:38:07+00:00",
-  "hourly": "2026-11-11T16:38:07+00:00",
-  "alerts": "2026-11-11T16:38:07+00:00",
-  "afd": "2026-11-11T16:38:07+00:00",
-  "lake_forecast": "2026-11-11T16:38:07+00:00",
-  "lake_gage": "2026-11-11T16:38:07+00:00",
-  "air": "2026-11-11T16:38:07+00:00",
-  "sun": "2026-11-11T16:38:07+00:00",
-  "models": "2026-11-11T16:38:07+00:00"
+  "now": "2026-11-11T17:26:45+00:00",
+  "forecast": "2026-11-11T17:26:45+00:00",
+  "hourly": "2026-11-11T17:26:45+00:00",
+  "alerts": "2026-11-11T17:26:45+00:00",
+  "afd": "2026-11-11T17:26:45+00:00",
+  "lake_forecast": "2026-11-11T17:26:45+00:00",
+  "lake_gage": "2026-11-11T17:26:45+00:00",
+  "air": "2026-11-11T17:26:45+00:00",
+  "sun": "2026-11-11T17:26:45+00:00",
+  "models": "2026-11-11T17:26:45+00:00"
  },
  "now": {
-  "observed_at": "2026-11-11T16:20:00+00:00",
+  "observed_at": "2026-11-11T16:54:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Mostly Cloudy",
   "temp_f": 45,
-  "feels_like_f": 42,
-  "humidity": 61,
-  "dewpoint_f": 32,
-  "wind_mph": 5,
+  "feels_like_f": 41,
+  "humidity": 63,
+  "dewpoint_f": 33,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Veterans Day",
-    "start": "2026-11-11T11:00:00-05:00",
+    "start": "2026-11-11T10:00:00-05:00",
     "is_day": true,
     "temp_f": 46,
     "pop": 2,
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 51,
-  "water_temp_at": "2026-11-11T11:00:00.000-05:00",
-  "level_ft": 93.82,
-  "level_at": "2026-11-11T11:00:00.000-05:00",
+  "water_temp_at": "2026-11-11T12:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-11T12:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -971,7 +971,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/11/26 11:00",
+  "observed": "11/11/26 12:00",
   "discussion": "On Wednesday, November 11th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -979,7 +979,7 @@
   "sunset": "2026-11-11T16:29-05:00",
   "sunrise_tomorrow": "2026-11-12T06:45-05:00",
   "sunset_tomorrow": "2026-11-12T16:28-05:00",
-  "uv_max": 2.4
+  "uv_max": 2.55
  },
  "models": {
   "days": [
@@ -1010,7 +1010,7 @@
      "ICON": 39
     },
     "pop_max": {
-     "GFS": 58,
+     "GFS": 61,
      "Euro": 88,
      "ICON": 70
     },
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-11-11",
-  "generated": "2026-11-11T16:38:10+00:00",
+  "generated": "2026-11-11T17:26:48+00:00",
   "text": "Mostly cloudy today, high 46. Mostly cloudy tonight, low 33. Thursday, rain from 1pm on, about a tenth of an inch, high 44.",
   "periods": [
    {
@@ -1053,11 +1053,11 @@
     "is_day": true,
     "temp_f": 46,
     "sky": "mostly cloudy",
-    "start": "2026-11-11T11:00:00-05:00",
+    "start": "2026-11-11T17:00:00+00:00",
     "end": "2026-11-11T18:00:00-05:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 40,
+    "feels_lo": 42,
     "feels_hi": 44,
     "text": "Mostly cloudy today, high 46."
    },
