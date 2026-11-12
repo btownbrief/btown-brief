@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-12T13:17:28+00:00",
+ "updated": "2026-11-12T14:39:11+00:00",
  "sections_updated": {
-  "now": "2026-11-12T13:17:28+00:00",
-  "forecast": "2026-11-12T13:17:28+00:00",
-  "hourly": "2026-11-12T13:17:28+00:00",
-  "alerts": "2026-11-12T13:17:28+00:00",
-  "afd": "2026-11-12T13:17:28+00:00",
-  "lake_forecast": "2026-11-12T13:17:28+00:00",
-  "lake_gage": "2026-11-12T13:17:28+00:00",
-  "air": "2026-11-12T13:17:28+00:00",
-  "sun": "2026-11-12T13:17:28+00:00",
-  "models": "2026-11-12T13:17:28+00:00"
+  "now": "2026-11-12T14:39:11+00:00",
+  "forecast": "2026-11-12T14:39:11+00:00",
+  "hourly": "2026-11-12T14:39:11+00:00",
+  "alerts": "2026-11-12T14:39:11+00:00",
+  "afd": "2026-11-12T14:39:11+00:00",
+  "lake_forecast": "2026-11-12T14:39:11+00:00",
+  "lake_gage": "2026-11-12T14:39:11+00:00",
+  "air": "2026-11-12T14:39:11+00:00",
+  "sun": "2026-11-12T14:39:11+00:00",
+  "models": "2026-11-12T14:39:11+00:00"
  },
  "now": {
-  "observed_at": "2026-11-12T12:55:00+00:00",
+  "observed_at": "2026-11-12T13:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 39,
   "feels_like_f": 37,
-  "humidity": 81,
-  "dewpoint_f": 34,
+  "humidity": 70,
+  "dewpoint_f": 30,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "NE",
+  "wind_dir": "ENE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-12T08:00:00-05:00",
+    "start": "2026-11-12T09:00:00-05:00",
     "is_day": true,
     "temp_f": 41,
     "pop": 74,
-    "wind": "N 3 to 8 mph",
+    "wind": "N 5 to 8 mph",
     "short": "Light Rain Likely",
-    "detailed": "Rain likely. Mostly cloudy, with a high near 41. North wind 3 to 8 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain likely. Mostly cloudy, with a high near 41. North wind 5 to 8 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-12T06:21:49+00:00",
   "hours": [
-   {
-    "t": "2026-11-12T08:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 36,
-    "pop": 22,
-    "humidity": 89,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 87,
-    "short": "Slight Chance Light Rain",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
    {
     "t": "2026-11-12T09:00:00-05:00",
     "temp_f": 39,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 15
+   },
+   {
+    "t": "2026-11-13T20:00:00-05:00",
+    "temp_f": 35,
+    "feels_f": 28,
+    "pop": 12,
+    "humidity": 82,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 96,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 15
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 50,
-  "water_temp_at": "2026-11-12T08:00:00.000-05:00",
-  "level_ft": 93.81,
-  "level_at": "2026-11-12T08:00:00.000-05:00",
+  "water_temp_at": "2026-11-12T09:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-12T09:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 24,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/12/26 8:00",
+  "observed": "11/12/26 9:00",
   "discussion": null
  },
  "sun": {
@@ -991,7 +991,7 @@
      "ICON": 43
     },
     "pop_max": {
-     "GFS": 22,
+     "GFS": 27,
      "Euro": 79,
      "ICON": 75
     },
@@ -1044,8 +1044,8 @@
  },
  "brief": {
   "date": "2026-11-12",
-  "generated": "2026-11-12T13:17:31+00:00",
-  "text": "Rain likely today from noon to 5pm, about a tenth of an inch, high 41. A chance of rain and snow tonight, under a tenth of an inch, low 32. Friday, a chance of snow until 7am, under a tenth of an inch, high 42.",
+  "generated": "2026-11-12T14:39:14+00:00",
+  "text": "Rain likely today from noon to 5pm, under a tenth of an inch, high 41. A chance of rain and snow tonight, under a tenth of an inch, low 32. Friday, a chance of snow until 7am, under a tenth of an inch, high 42.",
   "periods": [
    {
     "label": "Today",
@@ -1053,7 +1053,7 @@
     "is_day": true,
     "temp_f": 41,
     "sky": "sunny",
-    "start": "2026-11-12T08:00:00-05:00",
+    "start": "2026-11-12T09:00:00-05:00",
     "end": "2026-11-12T18:00:00-05:00",
     "precip": {
      "kind": "rain",
@@ -1064,12 +1064,12 @@
      "when": "from noon to 5pm",
      "amount_in": 0.05,
      "snow_in": 0,
-     "amount": "about a tenth of an inch"
+     "amount": "under a tenth of an inch"
     },
     "wind": null,
     "feels_lo": 32,
     "feels_hi": 36,
-    "text": "Rain likely today from noon to 5pm, about a tenth of an inch, high 41."
+    "text": "Rain likely today from noon to 5pm, under a tenth of an inch, high 41."
    },
    {
     "label": "Tonight",
