@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-12T18:59:21+00:00",
+ "updated": "2026-11-12T20:19:38+00:00",
  "sections_updated": {
-  "now": "2026-11-12T18:59:21+00:00",
-  "forecast": "2026-11-12T18:59:21+00:00",
-  "hourly": "2026-11-12T18:59:21+00:00",
-  "alerts": "2026-11-12T18:59:21+00:00",
-  "afd": "2026-11-12T18:59:21+00:00",
-  "lake_forecast": "2026-11-12T18:59:21+00:00",
-  "lake_gage": "2026-11-12T18:59:21+00:00",
-  "air": "2026-11-12T18:59:21+00:00",
-  "sun": "2026-11-12T18:59:21+00:00",
-  "models": "2026-11-12T18:59:21+00:00"
+  "now": "2026-11-12T20:19:38+00:00",
+  "forecast": "2026-11-12T20:19:38+00:00",
+  "hourly": "2026-11-12T20:19:38+00:00",
+  "alerts": "2026-11-12T20:19:38+00:00",
+  "afd": "2026-11-12T20:19:38+00:00",
+  "lake_forecast": "2026-11-12T20:19:38+00:00",
+  "lake_gage": "2026-11-12T20:19:38+00:00",
+  "air": "2026-11-12T20:19:38+00:00",
+  "sun": "2026-11-12T20:19:38+00:00",
+  "models": "2026-11-12T20:19:38+00:00"
  },
  "now": {
-  "observed_at": "2026-11-12T17:54:00+00:00",
+  "observed_at": "2026-11-12T19:35:00+00:00",
   "station": "KBTV",
-  "description": null,
-  "temp_f": 42,
+  "description": "Cloudy",
+  "temp_f": 43,
   "feels_like_f": 37,
-  "humidity": 59,
-  "dewpoint_f": 29,
-  "wind_mph": 8,
+  "humidity": 57,
+  "dewpoint_f": 28,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,10 +30,10 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-12T13:00:00-05:00",
+    "start": "2026-11-12T15:00:00-05:00",
     "is_day": true,
     "temp_f": 41,
-    "pop": 34,
+    "pop": 33,
     "wind": "N 8 mph",
     "short": "Chance Rain And Snow",
     "detailed": "A chance of rain before 5pm, then a chance of rain and snow. Mostly cloudy, with a high near 41. North wind around 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-11-12T18:41:08+00:00",
   "hours": [
-   {
-    "t": "2026-11-12T13:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 36,
-    "pop": 34,
-    "humidity": 76,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 86,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
-   {
-    "t": "2026-11-12T14:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 36,
-    "pop": 34,
-    "humidity": 73,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 87,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
    {
     "t": "2026-11-12T15:00:00-05:00",
     "temp_f": 41,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 13
+   },
+   {
+    "t": "2026-11-14T01:00:00-05:00",
+    "temp_f": 33,
+    "feels_f": 27,
+    "pop": 0,
+    "humidity": 82,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 87,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 13
+   },
+   {
+    "t": "2026-11-14T02:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 88,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 93,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 13
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-12T18:51:00+00:00",
+  "issued": "2026-11-12T19:10:00+00:00",
   "key_messages": [
    "Widespread lower elevation rain and wet snow above 1200ft will continue into tonight as a coastal low rotates south of the region through tomorrow.",
    "Upslope snow showers will develop by late Friday for the northwest facing slopes of the Adirondacks and Greens, with some possible Lake Champlain enhanced precipitation in the Champlain Valley late Saturday into Sunday.",
-   "High confidence for dry weather and above normal temperatures next week."
+   "There is high confidence in drier and warmer conditions next week with high pressure building across the region."
   ],
   "what_changed": "As of 150 PM EST Thursday... Confidence is increasing in light upslope snow showers, with the potential for lower elevation flakes, late Friday through Sunday.",
-  "raw": "\n000\nFXUS61 KBTV 121851\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n151 PM EST Thu Nov 12 2026\n\n.WHAT HAS CHANGED...\nAs of 150 PM EST Thursday...\n\nConfidence is increasing in light upslope snow showers, with the \npotential for lower elevation flakes, late Friday through \nSunday.\n\n&&\n\n.KEY MESSAGES...\nAs of 150 PM EST Thursday...\n\n1.  Widespread lower elevation rain and wet snow above 1200ft \nwill continue into tonight as a coastal low rotates south of the \nregion through tomorrow.\n\n2. Upslope snow showers will develop by late Friday for the \nnorthwest facing slopes of the Adirondacks and Greens, with some \npossible Lake Champlain enhanced precipitation in the Champlain \nValley late Saturday into Sunday.\n\n3. High confidence for dry weather and above normal \ntemperatures next week.\n\n&&\n\n.DISCUSSION...\nAs of 150 PM EST Thursday...\n\nKEY MESSAGE 1: Current radar depicts our parent surface low occluding \nover western Pennsylvania this afternoon, with RAP surface analysis \ndenoting the secondary coastal low beginning to deepen near the \nDelaware Bay. This secondary low will become the dominant system \ntonight into tomorrow with the better forcing and dynamics focused \nto our south. Models continue to shunt the best moisture profiles to \nour south where an axis of stronger frontogenesis looks to set up \nalong Long Island to Cape Cod. That said, overrunning precipitation \nhas already overspread much of southern Vermont this afternoon with \nroad cameras showing snow falling across our higher elevations in \nthe southern Greens, mainly above 1500ft. However, below 1500ft, \ninto the area valleys, rain is expected to remain the dominant ptype \nthrough much of this event. Drier air along the International Border \nis helping to stifle much of the northward moisture extent, with \nprecipitation amount trends lowering for areas north of US-2, and \nhave since cut back on PoPs for these areas. Total snow amounts have \ncome down slightly in the mountains with generally 2 to 4 inches, \nheavily tied to the terrain. A Winter Weather Advisory remains in \neffect until 10 AM Friday for eastern Addison and Rutland Counties \nin Vermont, as well as western Essex County in New York. \n\nInto tonight, with the combination of dynamical cooling and \nnighttime cooling, some flakes may be able to mix into the the lower \nelevations like the Champlain and Connecticut River Valleys. Though \nsurface temperatures in the aforementioned areas will remain at or \njust above freezing, limiting any accumulations to mainly just \ngrassy surfaces. As the low continues to track east Friday, cyclonic \nnorth to northwest flow will develop and keep snow showers in the \nmountains as upslope snow.\n\nKEY MESSAGE 2: North to northwest cyclonic flow will keep moisture \nwrapping around the coast low late Friday through early Sunday. As \nboundary layer temperatures cool with cold advection towards late \nFriday, orographic lift will help sustain snow showers in the \nupslope favored western facing slopes of the central and northern \nGreens and Adirondacks. In addition, with lake temperatures becoming \n10C warmer than the advective cold air aloft, narrow lake enhanced \nsnow showers may develop downstream of Lake Champlain overnight \nFriday and during the day Saturday. Areas that may see some \nadditional rain/snow enhancement look to be in the areas along a \nline from Shelburne to Lincoln. The exact placement and actual \ndevelopment of such a mesoscale lake streamer are still uncertain, \nbut dynamically this synoptic setup is favorable for Lake clouds and \nsubsequent precipitation enhancement. Precipitation totals would be \nlight in the aforementioned areas, with mainly rain northwest of \nBristol, and perhaps some locally enhanced snow showers around an \ninch of snow near Bristol, Lincoln, and the Ripton areas. \n\nOutside of the Lake enhanced showers, blocked flow will lead to snow \nshowers along areas in eastern Chittenden and Franklin Counties in \nVermont, and northern Franklin and eastern St. Lawrence Counties in \nNew York. This second round of wintry weather looks to be more \nfavorable for accumulations for our area, with snow levels hovering \naround 1000ft, and better dynamics. There is the potential for a \nmesoband to develop out of Ontario, with decent frontogenesis, and \nassociated 50 to 100J/kg of cape in the Champlain Valley Saturday \nmorning. If it materializes, brief accumulations are possible down \nto the valley floors due to dynamical cooling and an additional \ncouple inches would be possible across the higher terrain. However, \nthis should not significantly change the impacts. Any snow in the \nlower valleys would mainly be a coating to a slushy wet snow at this \ntime. At this point, the snowfall looks too light to cause power \noutages but far southern Vermont will have to be watched in case the \nmesoband comes in and stalls there for a couple hours. The shortwave \nresponsible for the upslope snow will swing south and exit the area \nlate Sunday, with generally drying conditions by Monday morning.\n\nKEY MESSAGE 3: Models continue to suggest we could see a few upslope \nsnow showers along the western slopes of the Green and Adirondack \nMountains Sunday night into Monday morning. This may yield some \nminor snow accumulation but otherwise not impactful. Increasing \nsubsidence from a building deep layer ridge will bring an end to any \nshower activity by Monday afternoon. High pressure will remain \nentrenched across the region through the remainder of the week with \nthe axis of the upper level ridge forcing a series of disturbances \nto push harmlessly to our north. Temperatures will warm throughout \nthe week with high temperatures by Wednesday and Thursday climbing \ninto the 50s, which will be slightly above normal for this time of \nthe year.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...Precipitation has been slow to overspread\nthe area this morning. We've slowed down the onset of rain\nacross the valleys and snow at the higher summits by a few\nhours. Nevertheless, the MVFR and IFR ceilings still looked to\nbe slowly building into the area with most sites dropping to\neither MVFR of IFR by 16Z. KRUT/KSLK/KMPV will be the difficult\nsites today as temperatures will likely fluctuate in the mid to\nupper 30s which will support periods of rain, snow, or both at\ntimes. This will make visibilities tricky as any bursts of\nheavier precip will drive visibilities below 1 SM while\nprevailing visibilities will likely be 3+ SM. Rain will begin to\nchange over to snow in valley locations after 6Z but will also\nbe tapering off around the same time. Light northerly winds are\ncurrently being observed and will continue through the forecast\nperiod.\n\nOutlook...\n\nFriday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nSaturday: Mainly MVFR, with local VFR possible. Chance SHRA,\nSlight chance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA, Chance SHSN.\nSunday: Mainly MVFR, with local VFR possible. Chance SHRA, Chance\nSHSN.\nSunday Night: Mainly MVFR, with areas VFR possible. Slight chance\nSN.\nMonday: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory until 10 AM EST Friday for VTZ018-019.\nNY...Winter Weather Advisory until 10 AM EST Friday for NYZ034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Clay/Danzig\nAVIATION...Clay\n"
+  "raw": "\n000\nFXUS61 KBTV 121910\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n210 PM EST Thu Nov 12 2026\n\n.WHAT HAS CHANGED...\nAs of 150 PM EST Thursday...\n\nConfidence is increasing in light upslope snow showers, with the \npotential for lower elevation flakes, late Friday through \nSunday.\n\n&&\n\n.KEY MESSAGES...\nAs of 150 PM EST Thursday...\n\n1.  Widespread lower elevation rain and wet snow above 1200ft \nwill continue into tonight as a coastal low rotates south of the \nregion through tomorrow.\n\n2. Upslope snow showers will develop by late Friday for the \nnorthwest facing slopes of the Adirondacks and Greens, with some \npossible Lake Champlain enhanced precipitation in the Champlain \nValley late Saturday into Sunday.\n\n3. There is high confidence in drier and warmer conditions next\nweek with high pressure building across the region. \n\n&&\n\n.DISCUSSION...\nAs of 156 PM EST Thursday...\n\nKEY MESSAGE 1: Current radar depicts our parent surface low occluding \nover western Pennsylvania this afternoon, with RAP surface analysis \ndenoting the secondary coastal low beginning to deepen near the \nDelaware Bay. This secondary low will become the dominant system \ntonight into tomorrow with the better forcing and dynamics focused \nto our south. Models continue to shunt the best moisture profiles to \nour south where an axis of stronger frontogenesis looks to set up \nalong Long Island to Cape Cod. That said, overrunning precipitation \nhas already overspread much of southern Vermont this afternoon with \nroad cameras showing snow falling across our higher elevations in \nthe southern Greens, mainly above 1500ft. However, below 1500ft, \ninto the area valleys, rain is expected to remain the dominant ptype \nthrough much of this event. Drier air along the International Border \nis helping to stifle much of the northward moisture extent, with \nprecipitation amount trends lowering for areas north of US-2, and \nhave since cut back on PoPs for these areas. Total snow amounts have \ncome down slightly in the mountains with generally 2 to 4 inches, \nheavily tied to the terrain. A Winter Weather Advisory remains in \neffect until 10 AM Friday for eastern Addison and Rutland Counties \nin Vermont, as well as western Essex County in New York. \n\nInto tonight, with the combination of dynamical cooling and \nnighttime cooling, some flakes may be able to mix into the the lower \nelevations like the Champlain and Connecticut River Valleys. Though \nsurface temperatures in the aforementioned areas will remain at or \njust above freezing, limiting any accumulations to mainly just \ngrassy surfaces. As the low continues to track east Friday, cyclonic \nnorth to northwest flow will develop and keep snow showers in the \nmountains as upslope snow.\n\nKEY MESSAGE 2: North to northwest cyclonic flow will keep moisture \nwrapping around the coast low late Friday through early Sunday. As \nboundary layer temperatures cool with cold advection towards late \nFriday, orographic lift will help sustain snow showers in the \nupslope favored western facing slopes of the central and northern \nGreens and Adirondacks. In addition, with lake temperatures becoming \n10C warmer than the advective cold air aloft, narrow lake enhanced \nsnow showers may develop downstream of Lake Champlain overnight \nFriday and during the day Saturday. Areas that may see some \nadditional rain/snow enhancement look to be in the areas along a \nline from Shelburne to Lincoln. The exact placement and actual \ndevelopment of such a mesoscale lake streamer are still uncertain, \nbut dynamically this synoptic setup is favorable for Lake clouds and \nsubsequent precipitation enhancement. Precipitation totals would be \nlight in the aforementioned areas, with mainly rain northwest of \nBristol, and perhaps some locally enhanced snow showers around an \ninch of snow near Bristol, Lincoln, and the Ripton areas. \n\nOutside of the Lake enhanced showers, blocked flow will lead to snow \nshowers along areas in eastern Chittenden and Franklin Counties in \nVermont, and northern Franklin and eastern St. Lawrence Counties in \nNew York. This second round of wintry weather looks to be more \nfavorable for accumulations for our area, with snow levels hovering \naround 1000ft, and better dynamics. There is the potential for a \nmesoband to develop out of Ontario, with decent frontogenesis, and \nassociated 50 to 100J/kg of cape in the Champlain Valley Saturday \nmorning. If it materializes, brief accumulations are possible down \nto the valley floors due to dynamical cooling and an additional \ncouple inches would be possible across the higher terrain. However, \nthis should not significantly change the impacts. Any snow in the \nlower valleys would mainly be a coating to a slushy wet snow at this \ntime. At this point, the snowfall looks too light to cause power \noutages but far southern Vermont will have to be watched in case the \nmesoband comes in and stalls there for a couple hours. The shortwave \nresponsible for the upslope snow will swing south and exit the area \nlate Sunday, with generally drying conditions by Monday morning.\n\nKEY MESSAGE 3: Model consensus remains strong with little spread\nshowing high pressure building across the Northeast next week.\nMost models support the ridge axis deflecting systems along a\nmore northward track in central to northern Canadian latitudes.\nThis will allow for some drying and warming through the week\nwith highs generally in the 50s for most locations by \nWednesday and most lows in the upper 20s to lower 30s. With \nideal conditions for radiational cooling being likely, colder \novernight temperatures should be anticipated for the usual \ncolder hollows.\n\n&&\n\n.AVIATION /18Z THURSDAY THROUGH TUESDAY/...\nThrough 18Z Friday...The overall threat of more widespread\nMVFR/IFR conditions continue to decrease with a more southerly\ntrack of our passing system. Could see a few showers still at\nPBG/BTV with some passing MVFR CIGs, but limited to a tempo\ngroup this afternoon. IFR conditions are more widespread across\nsouthern Vermont with RUT remaining OVC004 through much of the\nforecast beginning to improve possibly after 12Z Friday. MPV and\nSLK could see periods of IFR as well. Winds will remain mostly\nunidirectional out of the north through the period except some\nchanneled northeasterly flow at MSS. \n\nOutlook...\n\nFriday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nSaturday: Mainly MVFR, with local VFR possible. Chance SHRA,\nSlight chance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA, Chance SHSN.\nSunday: Mainly MVFR, with local VFR possible. Chance SHRA, Chance\nSHSN.\nSunday Night: Mainly MVFR, with areas VFR possible. Slight chance\nSN.\nMonday: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory until 10 AM EST Friday for VTZ018-019.\nNY...Winter Weather Advisory until 10 AM EST Friday for NYZ034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Boyd\nAVIATION...Boyd\n"
  },
  "lake_forecast": {
   "issued": "2026-11-12T18:42:00+00:00",
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 50,
-  "water_temp_at": "2026-11-12T13:00:00.000-05:00",
+  "water_temp_at": "2026-11-12T15:00:00.000-05:00",
   "level_ft": 93.84,
-  "level_at": "2026-11-12T13:00:00.000-05:00",
+  "level_at": "2026-11-12T15:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -994,7 +994,7 @@
   "aqi": 20,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/12/26 13:00",
+  "observed": "11/12/26 15:00",
   "discussion": "On Friday, November 13th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1014,7 +1014,7 @@
      "ICON": 44
     },
     "pop_max": {
-     "GFS": 19,
+     "GFS": 17,
      "Euro": 77,
      "ICON": 28
     },
@@ -1033,7 +1033,7 @@
      "ICON": 40
     },
     "pop_max": {
-     "GFS": 10,
+     "GFS": 9,
      "Euro": 25,
      "ICON": 10
     },
@@ -1058,7 +1058,7 @@
     },
     "precip_in": {
      "GFS": 0.22,
-     "Euro": 0.14,
+     "Euro": 0.09,
      "ICON": 0.3
     },
     "high_spread_f": 6
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-12",
-  "generated": "2026-11-12T18:59:24+00:00",
+  "generated": "2026-11-12T20:19:43+00:00",
   "text": "A chance of rain and snow today, under a tenth of an inch, high 41. A chance of snow tonight from 7pm to 5am, under a tenth of an inch, low 26. Friday, mostly cloudy, high 41.",
   "periods": [
    {
@@ -1076,13 +1076,13 @@
     "is_day": true,
     "temp_f": 41,
     "sky": "sunny",
-    "start": "2026-11-12T13:00:00-05:00",
+    "start": "2026-11-12T15:00:00-05:00",
     "end": "2026-11-12T18:00:00-05:00",
     "precip": {
      "kind": "rain and snow",
      "chance": 30,
      "say": "a chance of rain and snow",
-     "start": "2026-11-12T13:00:00-05:00",
+     "start": "2026-11-12T15:00:00-05:00",
      "end": "2026-11-12T18:00:00-05:00",
      "when": "",
      "amount_in": 0.01,
