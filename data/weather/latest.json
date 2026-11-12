@@ -1,24 +1,24 @@
 {
- "updated": "2026-11-12T21:07:21+00:00",
+ "updated": "2026-11-12T21:39:28+00:00",
  "sections_updated": {
-  "now": "2026-11-12T21:07:21+00:00",
-  "forecast": "2026-11-12T21:07:21+00:00",
-  "hourly": "2026-11-12T21:07:21+00:00",
-  "alerts": "2026-11-12T21:07:21+00:00",
-  "afd": "2026-11-12T21:07:21+00:00",
-  "lake_forecast": "2026-11-12T21:07:21+00:00",
-  "lake_gage": "2026-11-12T21:07:21+00:00",
-  "air": "2026-11-12T21:07:21+00:00",
-  "sun": "2026-11-12T21:07:21+00:00",
-  "models": "2026-11-12T21:07:21+00:00"
+  "now": "2026-11-12T21:39:28+00:00",
+  "forecast": "2026-11-12T21:39:28+00:00",
+  "hourly": "2026-11-12T21:39:28+00:00",
+  "alerts": "2026-11-12T21:39:28+00:00",
+  "afd": "2026-11-12T21:39:28+00:00",
+  "lake_forecast": "2026-11-12T21:39:28+00:00",
+  "lake_gage": "2026-11-12T21:39:28+00:00",
+  "air": "2026-11-12T21:39:28+00:00",
+  "sun": "2026-11-12T21:39:28+00:00",
+  "models": "2026-11-12T21:39:28+00:00"
  },
  "now": {
-  "observed_at": "2026-11-12T20:40:00+00:00",
+  "observed_at": "2026-11-12T20:54:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Cloudy",
   "temp_f": 41,
   "feels_like_f": 35,
-  "humidity": 61,
+  "humidity": 60,
   "dewpoint_f": 28,
   "wind_mph": 9,
   "wind_gust_mph": null,
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 50,
-  "water_temp_at": "2026-11-12T15:00:00.000-05:00",
-  "level_ft": 93.84,
-  "level_at": "2026-11-12T15:00:00.000-05:00",
+  "water_temp_at": "2026-11-12T16:00:00.000-05:00",
+  "level_ft": 93.85,
+  "level_at": "2026-11-12T16:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -994,7 +994,7 @@
   "aqi": 21,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/12/26 15:00",
+  "observed": "11/12/26 16:00",
   "discussion": "On Friday, November 13th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1011,7 +1011,7 @@
     "high_f": {
      "GFS": 44,
      "Euro": 42,
-     "ICON": 44
+     "ICON": 43
     },
     "pop_max": {
      "GFS": 17,
@@ -1049,7 +1049,7 @@
     "high_f": {
      "GFS": 38,
      "Euro": 44,
-     "ICON": 39
+     "ICON": 40
     },
     "pop_max": {
      "GFS": 70,
@@ -1059,7 +1059,7 @@
     "precip_in": {
      "GFS": 0.24,
      "Euro": 0.09,
-     "ICON": 0.3
+     "ICON": 0.27
     },
     "high_spread_f": 6
    }
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-12",
-  "generated": "2026-11-12T21:07:24+00:00",
+  "generated": "2026-11-12T21:39:30+00:00",
   "text": "A chance of rain and snow today, under a tenth of an inch, high 41. A chance of snow tonight from 7pm to 5am, under a tenth of an inch, low 26. Friday, mostly cloudy, high 41.",
   "periods": [
    {
