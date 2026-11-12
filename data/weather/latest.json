@@ -1,19 +1,19 @@
 {
- "updated": "2026-11-12T16:39:16+00:00",
+ "updated": "2026-11-12T17:43:46+00:00",
  "sections_updated": {
-  "now": "2026-11-12T16:39:16+00:00",
-  "forecast": "2026-11-12T16:39:16+00:00",
-  "hourly": "2026-11-12T16:39:16+00:00",
-  "alerts": "2026-11-12T16:39:16+00:00",
-  "afd": "2026-11-12T16:39:16+00:00",
-  "lake_forecast": "2026-11-12T16:39:16+00:00",
-  "lake_gage": "2026-11-12T16:39:16+00:00",
-  "air": "2026-11-12T16:39:16+00:00",
-  "sun": "2026-11-12T16:39:16+00:00",
-  "models": "2026-11-12T16:39:16+00:00"
+  "now": "2026-11-12T17:43:46+00:00",
+  "forecast": "2026-11-12T17:43:46+00:00",
+  "hourly": "2026-11-12T17:43:46+00:00",
+  "alerts": "2026-11-12T17:43:46+00:00",
+  "afd": "2026-11-12T17:43:46+00:00",
+  "lake_forecast": "2026-11-12T17:43:46+00:00",
+  "lake_gage": "2026-11-12T17:43:46+00:00",
+  "air": "2026-11-12T17:43:46+00:00",
+  "sun": "2026-11-12T17:43:46+00:00",
+  "models": "2026-11-12T17:43:46+00:00"
  },
  "now": {
-  "observed_at": "2026-11-12T16:10:00+00:00",
+  "observed_at": "2026-11-12T17:20:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 43,
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-12T06:00:00-05:00",
+    "start": "2026-11-12T08:00:00-05:00",
     "is_day": true,
     "temp_f": 41,
     "pop": 74,
-    "wind": "N 2 to 8 mph",
+    "wind": "N 3 to 8 mph",
     "short": "Light Rain Likely",
-    "detailed": "Rain likely after 7am. Mostly cloudy, with a high near 41. North wind 2 to 8 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain likely. Mostly cloudy, with a high near 41. North wind 3 to 8 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-11-12T06:21:49+00:00",
   "hours": [
-   {
-    "t": "2026-11-12T10:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 36,
-    "pop": 31,
-    "humidity": 85,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 83,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 8
-   },
-   {
-    "t": "2026-11-12T11:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 36,
-    "pop": 47,
-    "humidity": 85,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 86,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.003,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
    {
     "t": "2026-11-12T12:00:00-05:00",
     "temp_f": 40,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 15
+   },
+   {
+    "t": "2026-11-13T22:00:00-05:00",
+    "temp_f": 34,
+    "feels_f": 27,
+    "pop": 12,
+    "humidity": 85,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 89,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-13T23:00:00-05:00",
+    "temp_f": 33,
+    "feels_f": 26,
+    "pop": 12,
+    "humidity": 89,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 89,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 50,
-  "water_temp_at": "2026-11-12T11:00:00.000-05:00",
+  "water_temp_at": "2026-11-12T12:00:00.000-05:00",
   "level_ft": 93.84,
-  "level_at": "2026-11-12T11:00:00.000-05:00",
+  "level_at": "2026-11-12T12:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/12/26 11:00",
+  "observed": "11/12/26 12:00",
   "discussion": null
  },
  "sun": {
@@ -986,14 +986,14 @@
    {
     "date": "2026-11-12",
     "high_f": {
-     "GFS": 43,
+     "GFS": 44,
      "Euro": 42,
      "ICON": 44
     },
     "pop_max": {
      "GFS": 23,
      "Euro": 77,
-     "ICON": 75
+     "ICON": 28
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1010,9 +1010,9 @@
      "ICON": 40
     },
     "pop_max": {
-     "GFS": 13,
+     "GFS": 14,
      "Euro": 25,
-     "ICON": 60
+     "ICON": 10
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1024,28 +1024,28 @@
    {
     "date": "2026-11-14",
     "high_f": {
-     "GFS": 39,
+     "GFS": 38,
      "Euro": 44,
      "ICON": 39
     },
     "pop_max": {
      "GFS": 51,
      "Euro": 85,
-     "ICON": 48
+     "ICON": 84
     },
     "precip_in": {
-     "GFS": 0.06,
+     "GFS": 0.22,
      "Euro": 0.14,
      "ICON": 0.3
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    }
   ]
  },
  "brief": {
   "date": "2026-11-12",
-  "generated": "2026-11-12T16:39:20+00:00",
-  "text": "Rain likely today from noon to 5pm, under a tenth of an inch, high 41. A chance of rain and snow tonight, under a tenth of an inch, low 32. Friday, a chance of snow until 7am, under a tenth of an inch, high 42.",
+  "generated": "2026-11-12T17:43:49+00:00",
+  "text": "Rain likely today until 5pm, under a tenth of an inch, high 41. A chance of rain and snow tonight, under a tenth of an inch, low 32. Friday, a chance of snow until 7am, under a tenth of an inch, high 42.",
   "periods": [
    {
     "label": "Today",
@@ -1053,7 +1053,7 @@
     "is_day": true,
     "temp_f": 41,
     "sky": "sunny",
-    "start": "2026-11-12T16:00:00+00:00",
+    "start": "2026-11-12T17:00:00+00:00",
     "end": "2026-11-12T18:00:00-05:00",
     "precip": {
      "kind": "rain",
@@ -1061,15 +1061,15 @@
      "say": "rain likely",
      "start": "2026-11-12T12:00:00-05:00",
      "end": "2026-11-12T17:00:00-05:00",
-     "when": "from noon to 5pm",
+     "when": "until 5pm",
      "amount_in": 0.04,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
     "wind": null,
     "feels_lo": 32,
-    "feels_hi": 36,
-    "text": "Rain likely today from noon to 5pm, under a tenth of an inch, high 41."
+    "feels_hi": 35,
+    "text": "Rain likely today until 5pm, under a tenth of an inch, high 41."
    },
    {
     "label": "Tonight",
