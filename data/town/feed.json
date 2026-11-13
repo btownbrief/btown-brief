@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-13T17:08:52+00:00",
+ "generated": "2026-11-13T18:08:43+00:00",
  "status": {
   "ban": null,
   "ban_url": null,
   "schools": 0,
   "outages": 0
  },
- "median": 495000,
+ "median": 498000,
  "tonight": {
   "id": "tonight-2026-11-13",
   "kind": "tonight",
@@ -74,15 +74,15 @@
    ],
    [
     "2026-11-14T10:00:00-05:00",
-    "Dads & Kids Fire Station Tour",
-    "Burlington Fire Department",
-    "https://community.sevendaysvt.com/event/dads-and-kids-fire-station-tour-45573121"
-   ],
-   [
-    "2026-11-14T10:00:00-05:00",
     "Chocolate Tasting",
     "NU Chocolat",
     "https://community.sevendaysvt.com/event/chocolate-tasting-45670779"
+   ],
+   [
+    "2026-11-14T10:00:00-05:00",
+    "Dads & Kids Fire Station Tour",
+    "Burlington Fire Department",
+    "https://community.sevendaysvt.com/event/dads-and-kids-fire-station-tour-45573121"
    ],
    [
     "2026-11-14T16:00:00-05:00",
@@ -124,21 +124,94 @@
  },
  "tiles": [
   {
-   "id": "weather-overnight-a-slight-chance-of-snow-before-5am-2026-11-13",
-   "kind": "weather",
-   "ts": "2026-11-13T09:46:17+00:00",
-   "title": "Overnight: A slight chance of snow before 5am",
-   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   "id": "jobs-2026-11-13",
+   "kind": "jobs",
+   "ts": "2026-11-13T18:08:42+00:00",
+   "n": 10,
+   "rows": [
+    [
+     "GlobalFoundries",
+     4
+    ],
+    [
+     "University of Vermont",
+     2
+    ],
+    [
+     "State of Vermont",
+     1
+    ],
+    [
+     "Howard Center",
+     1
+    ]
+   ],
+   "url": "#work"
+  },
+  {
+   "id": "jobs-2026-11-12",
+   "kind": "jobs",
+   "ts": "2026-11-13T18:08:42+00:00",
+   "n": 23,
+   "rows": [
+    [
+     "Community Health Centers of Burlington",
+     13
+    ],
+    [
+     "University of Vermont",
+     4
+    ],
+    [
+     "Howard Center",
+     2
+    ],
+    [
+     "GlobalFoundries",
+     1
+    ]
+   ],
+   "url": "#work"
+  },
+  {
+   "id": "jobs-2026-11-11",
+   "kind": "jobs",
+   "ts": "2026-11-13T18:08:42+00:00",
+   "n": 20,
+   "rows": [
+    [
+     "OnLogic",
+     10
+    ],
+    [
+     "University of Vermont",
+     4
+    ],
+    [
+     "GlobalFoundries",
+     4
+    ],
+    [
+     "State of Vermont",
+     2
+    ]
+   ],
+   "url": "#work"
   },
   {
    "id": "cityweek",
    "kind": "cityweek",
-   "ts": "2026-11-13T01:58:42+00:00",
+   "ts": "2026-11-13T17:55:23+00:00",
    "rows": [
     [
      "2026-11-13",
      "Special Fire Commission",
      "https://burlingtonvt.portal.civicclerk.com/event/10315/overview"
+    ],
+    [
+     "2026-11-16",
+     "Burlington Board of Health special meeting",
+     "https://burlingtonvt.portal.civicclerk.com/event/10321/overview"
     ],
     [
      "2026-11-16",
@@ -152,17 +225,66 @@
     ],
     [
      "2026-11-17",
-     "Transportation, Energy, and Utilities Committee",
-     "https://burlingtonvt.portal.civicclerk.com/event/10306/overview"
-    ],
-    [
-     "2026-11-17",
-     "Development Review Board",
-     "https://burlingtonvt.portal.civicclerk.com/event/10281/overview"
+     "Police Commission",
+     "https://burlingtonvt.portal.civicclerk.com/event/10322/overview"
     ]
    ],
-   "n": 13,
+   "n": 15,
    "url": "#cityhall"
+  },
+  {
+   "id": "weather-tonight-a-slight-chance-of-snow-showers-after-5am-2026-11-13",
+   "kind": "weather",
+   "ts": "2026-11-13T17:55:16+00:00",
+   "title": "Tonight: A slight chance of snow showers after 5am",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+  },
+  {
+   "id": "news-burlington-salvation-army-kicks-off-red-kettle-campaign",
+   "kind": "news",
+   "ts": "2026-11-13T17:25:00+00:00",
+   "title": "Burlington Salvation Army kicks off red kettle campaign",
+   "src": "NBC5",
+   "url": "https://www.mynbc5.com/article/burlington-salvation-army-kicks-off-red-kettle-campaign/74424449"
+  },
+  {
+   "id": "calendar-2026-11-13",
+   "kind": "calendar",
+   "ts": "2026-11-13T17:21:17+00:00",
+   "n": 10,
+   "rows": [
+    [
+     "2026-11-17T10:00:00-05:00",
+     "CANCELLED: 3D Printer Training 201 (Bambu)",
+     "Generator Makerspace",
+     "https://app.glueup.com/event/3d-printer-training-201-bambu-186788/"
+    ],
+    [
+     "2026-11-18T18:00:00-05:00",
+     "Vegan in Vermont",
+     "Fletcher Free Library",
+     "https://fletcherfree.libcal.com/event/17410496"
+    ],
+    [
+     "2026-11-19T17:30:00-05:00",
+     "Creative Learning Workshop: A Living Song",
+     "The Flynn",
+     "https://www.mychamplainvalley.com/calendar/#/details/creative-learning-workshop-a-living-song/20431358/2026-11-19T17"
+    ],
+    [
+     "2026-11-26T18:00:00-05:00",
+     "Blood on the Clocktower",
+     "The Boardroom",
+     "https://www.meetup.com/friendlytabletopgamers/events/317319614/"
+    ]
+   ]
+  },
+  {
+   "id": "weather-overnight-a-slight-chance-of-snow-before-5am-2026-11-13",
+   "kind": "weather",
+   "ts": "2026-11-13T09:46:17+00:00",
+   "title": "Overnight: A slight chance of snow before 5am",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
   },
   {
    "id": "weather-tonight-a-slight-chance-of-rain-and-snow-between-8pm-and-5am-2026-11-1",
@@ -393,52 +515,6 @@
    "url": "https://www.instagram.com/p/DfnH4-nmTJg/"
   },
   {
-   "id": "jobs-2026-11-11",
-   "kind": "jobs",
-   "ts": "2026-11-11T18:07:29+00:00",
-   "n": 8,
-   "rows": [
-    [
-     "University of Vermont",
-     3
-    ],
-    [
-     "GlobalFoundries",
-     3
-    ],
-    [
-     "State of Vermont",
-     2
-    ]
-   ],
-   "url": "#work"
-  },
-  {
-   "id": "jobs-2026-11-10",
-   "kind": "jobs",
-   "ts": "2026-11-11T18:07:29+00:00",
-   "n": 24,
-   "rows": [
-    [
-     "GlobalFoundries",
-     8
-    ],
-    [
-     "University of Vermont",
-     5
-    ],
-    [
-     "University of Vermont Medical Center",
-     4
-    ],
-    [
-     "State of Vermont",
-     2
-    ]
-   ],
-   "url": "#work"
-  },
-  {
    "id": "photo-DfnDDoTl1x3",
    "kind": "photo",
    "ts": "2026-11-11T17:45:09+00:00",
@@ -601,31 +677,6 @@
    "url": "https://www.wcax.com/2026/11/09/burlington-mayor-introduces-police-chief-nominee/"
   },
   {
-   "id": "jobs-2026-11-09",
-   "kind": "jobs",
-   "ts": "2026-11-09T21:08:25+00:00",
-   "n": 9,
-   "rows": [
-    [
-     "GlobalFoundries",
-     3
-    ],
-    [
-     "Howard Center",
-     2
-    ],
-    [
-     "Beta Technologies",
-     2
-    ],
-    [
-     "University of Vermont",
-     1
-    ]
-   ],
-   "url": "#work"
-  },
-  {
    "id": "news-opposing-letters-raise-concerns-about-safety-in-burlington-offer-diffe",
    "kind": "news",
    "ts": "2026-11-09T17:22:00+00:00",
@@ -729,18 +780,10 @@
   {
    "id": "news-construction-of-the-south-burlington-walk-bike-bridge-advances-at-exit",
    "kind": "news",
-   "ts": "2026-11-06T16:47:53+00:00",
+   "ts": "2026-11-06T19:11:04+00:00",
    "title": "Construction of the South Burlington Walk-Bike Bridge advances at Exit 14",
-   "src": "Vermont Public",
-   "url": "https://www.vermontpublic.org/local-news/2026-11-06/construction-of-the-south-burlington-walk-bike-bridge-advances-at-exit-14"
-  },
-  {
-   "id": "news-holiday-hunger-assistance-fundraiser-returns-to-burlington",
-   "kind": "news",
-   "ts": "2026-11-06T12:47:43+00:00",
-   "title": "Holiday hunger assistance fundraiser returns to Burlington",
-   "src": "WCAX",
-   "url": "https://www.wcax.com/2026/11/06/holiday-hunger-assistance-fundraiser-returns-burlington/"
+   "src": "VTDigger",
+   "url": "https://vtdigger.org/2026/11/06/construction-of-the-south-burlington-walk-bike-bridge-advances-at-exit-14/"
   },
   {
    "id": "sold-c2c59e71f482",
