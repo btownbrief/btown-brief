@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-13T00:39:40+00:00",
+ "updated": "2026-11-13T01:21:22+00:00",
  "sections_updated": {
-  "now": "2026-11-13T00:39:40+00:00",
-  "forecast": "2026-11-13T00:39:40+00:00",
-  "hourly": "2026-11-13T00:39:40+00:00",
-  "alerts": "2026-11-13T00:39:40+00:00",
-  "afd": "2026-11-13T00:39:40+00:00",
-  "lake_forecast": "2026-11-13T00:39:40+00:00",
-  "lake_gage": "2026-11-13T00:39:40+00:00",
-  "air": "2026-11-13T00:39:40+00:00",
+  "now": "2026-11-13T01:21:22+00:00",
+  "forecast": "2026-11-13T01:21:22+00:00",
+  "hourly": "2026-11-13T01:21:22+00:00",
+  "alerts": "2026-11-13T01:21:22+00:00",
+  "afd": "2026-11-13T01:21:22+00:00",
+  "lake_forecast": "2026-11-13T01:21:22+00:00",
+  "lake_gage": "2026-11-13T01:21:22+00:00",
+  "air": "2026-11-13T01:21:22+00:00",
   "sun": "2026-11-13T00:39:40+00:00",
   "models": "2026-11-13T00:39:40+00:00"
  },
  "now": {
-  "observed_at": "2026-11-13T00:10:00+00:00",
+  "observed_at": "2026-11-13T00:54:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 37,
+  "description": "Mostly Cloudy",
+  "temp_f": 36,
   "feels_like_f": 31,
-  "humidity": 65,
+  "humidity": 70,
   "dewpoint_f": 27,
-  "wind_mph": 8,
+  "wind_mph": 6,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-12T19:00:00-05:00",
+    "start": "2026-11-12T20:00:00-05:00",
     "is_day": false,
     "temp_f": 29,
     "pop": 21,
     "wind": "N 10 mph",
     "short": "Slight Chance Rain And Snow",
-    "detailed": "A slight chance of rain and snow between 8pm and 5am. Cloudy, with a low around 29. North wind around 10 mph. Chance of precipitation is 20%."
+    "detailed": "A slight chance of rain and snow before 5am. Cloudy, with a low around 29. North wind around 10 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Friday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-12T22:32:13+00:00",
   "hours": [
-   {
-    "t": "2026-11-12T19:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 30,
-    "pop": 14,
-    "humidity": 72,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 98,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 17
-   },
    {
     "t": "2026-11-12T20:00:00-05:00",
     "temp_f": 36,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 13
+   },
+   {
+    "t": "2026-11-14T07:00:00-05:00",
+    "temp_f": 31,
+    "feels_f": 25,
+    "pop": 39,
+    "humidity": 100,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 91,
+    "short": "Chance Snow Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 13
    }
   ],
   "days": [
@@ -984,9 +984,9 @@
  },
  "lake_gage": {
   "water_temp_f": 50,
-  "water_temp_at": "2026-11-12T19:00:00.000-05:00",
-  "level_ft": 93.84,
-  "level_at": "2026-11-12T19:00:00.000-05:00",
+  "water_temp_at": "2026-11-12T20:00:00.000-05:00",
+  "level_ft": 93.83,
+  "level_at": "2026-11-12T20:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -994,7 +994,7 @@
   "aqi": 21,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/12/26 19:00",
+  "observed": "11/12/26 20:00",
   "discussion": "On Friday, November 13th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-12",
-  "generated": "2026-11-13T00:39:42+00:00",
+  "generated": "2026-11-13T01:22:25+00:00",
   "text": "Clear tonight, low 29. Friday, mostly cloudy, high 41.",
   "periods": [
    {
@@ -1076,12 +1076,12 @@
     "is_day": false,
     "temp_f": 29,
     "sky": "clear",
-    "start": "2026-11-12T19:00:00-05:00",
+    "start": "2026-11-12T20:00:00-05:00",
     "end": "2026-11-13T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 22,
-    "feels_hi": 30,
+    "feels_hi": 29,
     "text": "Clear tonight, low 29."
    },
    {
