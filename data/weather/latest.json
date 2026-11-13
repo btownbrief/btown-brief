@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-13T23:00:31+00:00",
+ "updated": "2026-11-13T23:54:49+00:00",
  "sections_updated": {
-  "now": "2026-11-13T23:00:31+00:00",
-  "forecast": "2026-11-13T23:00:31+00:00",
-  "hourly": "2026-11-13T23:00:31+00:00",
-  "alerts": "2026-11-13T23:00:31+00:00",
-  "afd": "2026-11-13T23:00:31+00:00",
-  "lake_forecast": "2026-11-13T23:00:31+00:00",
-  "lake_gage": "2026-11-13T23:00:31+00:00",
-  "air": "2026-11-13T23:00:31+00:00",
+  "now": "2026-11-13T23:54:49+00:00",
+  "forecast": "2026-11-13T23:54:49+00:00",
+  "hourly": "2026-11-13T23:54:49+00:00",
+  "alerts": "2026-11-13T23:54:49+00:00",
+  "afd": "2026-11-13T23:54:49+00:00",
+  "lake_forecast": "2026-11-13T23:54:49+00:00",
+  "lake_gage": "2026-11-13T23:54:49+00:00",
+  "air": "2026-11-13T23:54:49+00:00",
   "sun": "2026-11-13T23:00:31+00:00",
   "models": "2026-11-13T23:00:31+00:00"
  },
  "now": {
-  "observed_at": "2026-11-13T21:54:00+00:00",
+  "observed_at": "2026-11-13T23:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 38,
-  "feels_like_f": 31,
-  "humidity": 59,
+  "temp_f": 37,
+  "feels_like_f": 34,
+  "humidity": 60,
   "dewpoint_f": 25,
-  "wind_mph": 10,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -171,31 +171,31 @@
   ]
  },
  "hourly": {
-  "updated": "2026-11-13T18:20:57+00:00",
+  "updated": "2026-11-13T23:45:37+00:00",
   "hours": [
    {
     "t": "2026-11-13T18:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 31,
-    "pop": 1,
+    "feels_f": 32,
+    "pop": 2,
     "humidity": 70,
-    "wind_mph": 8,
+    "wind_mph": 6,
     "wind_dir": "N",
-    "sky": 87,
-    "short": "Mostly Cloudy",
+    "sky": 99,
+    "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 14
+    "gust_mph": 13
    },
    {
     "t": "2026-11-13T19:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 30,
-    "pop": 1,
+    "feels_f": 31,
+    "pop": 7,
     "humidity": 70,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 95,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 99,
     "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -204,12 +204,12 @@
    {
     "t": "2026-11-13T20:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 30,
-    "pop": 1,
+    "feels_f": 31,
+    "pop": 7,
     "humidity": 70,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 93,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 100,
     "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -218,12 +218,12 @@
    {
     "t": "2026-11-13T21:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 31,
-    "pop": 1,
+    "feels_f": 32,
+    "pop": 7,
     "humidity": 70,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 88,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 100,
     "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -232,40 +232,40 @@
    {
     "t": "2026-11-13T22:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 31,
-    "pop": 3,
+    "feels_f": 32,
+    "pop": 6,
     "humidity": 70,
-    "wind_mph": 8,
+    "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 86,
-    "short": "Mostly Cloudy",
+    "sky": 99,
+    "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 14
+    "gust_mph": 13
    },
    {
     "t": "2026-11-13T23:00:00-05:00",
     "temp_f": 37,
-    "feels_f": 31,
-    "pop": 0,
+    "feels_f": 32,
+    "pop": 6,
     "humidity": 70,
-    "wind_mph": 8,
+    "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 92,
+    "sky": 99,
     "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 14
+    "gust_mph": 13
    },
    {
     "t": "2026-11-14T00:00:00-05:00",
     "temp_f": 36,
     "feels_f": 30,
-    "pop": 3,
+    "pop": 12,
     "humidity": 75,
-    "wind_mph": 8,
+    "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 92,
+    "sky": 99,
     "short": "Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
@@ -275,43 +275,43 @@
     "t": "2026-11-14T01:00:00-05:00",
     "temp_f": 36,
     "feels_f": 31,
-    "pop": 19,
+    "pop": 18,
     "humidity": 79,
     "wind_mph": 6,
     "wind_dir": "NW",
-    "sky": 92,
+    "sky": 100,
     "short": "Slight Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 13
+    "gust_mph": 12
    },
    {
     "t": "2026-11-14T02:00:00-05:00",
     "temp_f": 36,
     "feels_f": 31,
-    "pop": 27,
+    "pop": 23,
     "humidity": 75,
     "wind_mph": 6,
     "wind_dir": "NW",
-    "sky": 94,
-    "short": "Chance Rain And Snow Showers",
+    "sky": 98,
+    "short": "Slight Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 13
+    "gust_mph": 12
    },
    {
     "t": "2026-11-14T03:00:00-05:00",
     "temp_f": 36,
     "feels_f": 31,
-    "pop": 30,
+    "pop": 29,
     "humidity": 75,
     "wind_mph": 6,
     "wind_dir": "NW",
-    "sky": 95,
+    "sky": 97,
     "short": "Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 13
+    "gust_mph": 12
    },
    {
     "t": "2026-11-14T04:00:00-05:00",
@@ -325,7 +325,7 @@
     "short": "Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 13
+    "gust_mph": 12
    },
    {
     "t": "2026-11-14T05:00:00-05:00",
@@ -339,21 +339,21 @@
     "short": "Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 12
+    "gust_mph": 10
    },
    {
     "t": "2026-11-14T06:00:00-05:00",
     "temp_f": 36,
-    "feels_f": 31,
+    "feels_f": 30,
     "pop": 37,
     "humidity": 82,
-    "wind_mph": 6,
+    "wind_mph": 7,
     "wind_dir": "NW",
     "sky": 86,
     "short": "Chance Rain And Snow Showers",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 10
+    "gust_mph": 12
    },
    {
     "t": "2026-11-14T07:00:00-05:00",
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-13T19:02:00+00:00",
+  "issued": "2026-11-13T23:35:00+00:00",
   "key_messages": [
    "Upslope snow showers will develop late tonight for the northwest facing slopes of the Adirondacks and Greens, with some possible Lake Champlain enhanced precipitation in the Champlain Valley late Saturday into Sunday.",
    "Conditions are expected to remain dry with a warming trend next week."
   ],
   "what_changed": "As of 202 PM EST Friday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 131902\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n202 PM EST Fri Nov 13 2026\n\n.WHAT HAS CHANGED...\nAs of 202 PM EST Friday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 202 PM EST Friday...\n\n1. Upslope snow showers will develop late tonight for the \nnorthwest facing slopes of the Adirondacks and Greens, with some \npossible Lake Champlain enhanced precipitation in the Champlain \nValley late Saturday into Sunday.\n\n2. Conditions are expected to remain dry with a warming trend \nnext week. \n\n&&\n\n.DISCUSSION...\nAs of 202 PM EST Friday...\n\nKEY MESSAGE 1: Snow showers across southern Vermont will end this \nafternoon with a brief lull in precipitation for this evening. \nClouds will remain as a reinforcing shortwave will shift south from \nQuebec later tonight into tomorrow. Wrap around moisture associated \nwith the large upper level trough centered across our region will \nprovide enough moisture to sustain upslope snow showers by tomorrow \nmorning. As the shortwave dips into our area by tomorrow morning, \nblocked flow and orographic lift will lead to stratiform snow \nshowers along our northwestern facing slopes in the northern \nAdirondacks and central and northern Greens. As the core of the \nshortwave passes through tomorrow early afternoon, our showery \nactivity will turn more convective as marginal instability develops, \nallowing shower activity to survive the spine of the Greens into the \neastern Greens, and survive the northwest slopes of the Adirondacks \ninto the central northern Adirondacks. Snow showers will be \nstrongest along the spine of the Greens with 3 to 5 inches of more \npowdery snow due to snow ratios around 10-15:1. Into the Adirondacks \n2 to 4 inches is expected, with the highest amounts in the High \nPeaks and northern Franklin County in New York between US-11 and \nSaranac Lake. Snow levels look to initially hover around 1200ft agl, \nbut dynamical cooling could lead to snow level lowering down towards \n500ft, especially by tomorrow night in coordination with diurnal \ncooling. This could push some flakes into the eastern Champlain \nValley where a few tenths of an inch of wet snow are possible. While \nsnow amounts will be localized to the higher terrain, mountain \npasses, and untreated roads may become slick at times. Moreover, \nsome localized power outages may be possible, but due to the drier \ncharacter of the snow, impacts will be limited. \n\nAs our snow turns more convective tomorrow afternoon into Saturday \nnight, Lake Champlain streamers downstream of Lake Champlain look to \ndevelop as cold air aloft will be 10 degrees cooler than the current \nlake temperatures. Precipitation enhancement will be possible in the \ndownstream regions of southern Chittenden and north and central \nAddison Counties. Precipitation types along this corridor will be \nmainly rain closest to the lake, with snow closer to the western \nslopes of the Greens, but dynamical cooling could push precipitation \ntowards more snow closer to the lake at times. Accumulations look to \nbe light as precipitable water will only be around 3 to 4 tenths of \nan inch. The position of any lake streamers are still somewhat \nuncertain, and will be dependent on the prevailing wind at the time, \nbut it looks to be focused in an area between VT-22A and the\nspine of the Greens.\n\nSnow showers will lighten into Sunday, and taper off by Sunday \nevening, departing the highest summits of the Greens and NEK last. \nSolar heating, and gradual clearing will help to melt any snow in \nthe lower elevations by Monday, with a warming and drying trend \nbeginning early next week.\n\nKEY MESSAGE 2: Confidence remains high that pervasive ridging will \nremain over the region next week keeping local weather dry and \npromoting a warming trend. High temperatures are favored in the 50s \nfrom Tuesday through Friday with lows ranging in the 20s to low 30s \nthrough mid week, climbing to around 30 to upper 30s by the end of \nthe work week. Conditions for radiational cooling will be near \nideal, so typically colder hollows will be running several degrees \ncolder each morning.\n\n&&\n\n.AVIATION /19Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...Widespread MVFR continues for most terminals\ntoday with flow becoming upslope. It will be hard to break out of\nthis cloud cover despite dry air advecting into the region. Still,\nMSS/BTV/RUT could return to VFR conditions 22-06Z before upsloping\nincreases as temperatures cool. MVFR/IFR conditions are likely to\nreturn after 06Z as flow promotes some precipitation along slopes\nwhile becoming increasingly blocked and backing clouds/precip down\ninto valleys. Scattered shower chances increase after 06Z before\nincreasing further after 14Z as surface instability increases. Lake\nenhanced showers are possible downstream of Lake Champlain and may\nimpact BTV/MPV as flow turns more westerly. Overnight snow showers\nshould be expected with rainshowers in lower elevations becoming\nmore likely after 14Z.\n\nOutlook...\n\nSaturday Night: Mainly MVFR, with local IFR possible. Likely\nSHSN, Likely SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Chance SHRA, Chance\nSHSN.\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly MVFR, with local VFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Boyd\nAVIATION...Boyd\n"
+  "raw": "\n000\nFXUS61 KBTV 132335\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n635 PM EST Fri Nov 13 2026\n\n.WHAT HAS CHANGED...\nAs of 202 PM EST Friday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 202 PM EST Friday...\n\n1. Upslope snow showers will develop late tonight for the \nnorthwest facing slopes of the Adirondacks and Greens, with some \npossible Lake Champlain enhanced precipitation in the Champlain \nValley late Saturday into Sunday.\n\n2. Conditions are expected to remain dry with a warming trend \nnext week.\n\n&&\n\n.DISCUSSION...\nAs of 202 PM EST Friday...\n\nKEY MESSAGE 1: Snow showers across southern Vermont will end this \nafternoon with a brief lull in precipitation for this evening. \nClouds will remain as a reinforcing shortwave will shift south from \nQuebec later tonight into tomorrow. Wrap around moisture associated \nwith the large upper level trough centered across our region will \nprovide enough moisture to sustain upslope snow showers by tomorrow \nmorning. As the shortwave dips into our area by tomorrow morning, \nblocked flow and orographic lift will lead to stratiform snow \nshowers along our northwestern facing slopes in the northern \nAdirondacks and central and northern Greens. As the core of the \nshortwave passes through tomorrow early afternoon, our showery \nactivity will turn more convective as marginal instability develops, \nallowing shower activity to survive the spine of the Greens into the \neastern Greens, and survive the northwest slopes of the Adirondacks \ninto the central northern Adirondacks. Snow showers will be \nstrongest along the spine of the Greens with 3 to 5 inches of more \npowdery snow due to snow ratios around 10-15:1. Into the Adirondacks \n2 to 4 inches is expected, with the highest amounts in the High \nPeaks and northern Franklin County in New York between US-11 and \nSaranac Lake. Snow levels look to initially hover around 1200ft agl, \nbut dynamical cooling could lead to snow level lowering down towards \n500ft, especially by tomorrow night in coordination with diurnal \ncooling. This could push some flakes into the eastern Champlain \nValley where a few tenths of an inch of wet snow are possible. While \nsnow amounts will be localized to the higher terrain, mountain \npasses, and untreated roads may become slick at times. Moreover, \nsome localized power outages may be possible, but due to the drier \ncharacter of the snow, impacts will be limited. \n\nAs our snow turns more convective tomorrow afternoon into Saturday \nnight, Lake Champlain streamers downstream of Lake Champlain look to \ndevelop as cold air aloft will be 10 degrees cooler than the current \nlake temperatures. Precipitation enhancement will be possible in the \ndownstream regions of southern Chittenden and north and central \nAddison Counties. Precipitation types along this corridor will be \nmainly rain closest to the lake, with snow closer to the western \nslopes of the Greens, but dynamical cooling could push precipitation \ntowards more snow closer to the lake at times. Accumulations look to \nbe light as precipitable water will only be around 3 to 4 tenths of \nan inch. The position of any lake streamers are still somewhat \nuncertain, and will be dependent on the prevailing wind at the time, \nbut it looks to be focused in an area between VT-22A and the\nspine of the Greens.\n\nSnow showers will lighten into Sunday, and taper off by Sunday \nevening, departing the highest summits of the Greens and NEK last. \nSolar heating, and gradual clearing will help to melt any snow in \nthe lower elevations by Monday, with a warming and drying trend \nbeginning early next week.\n\nKEY MESSAGE 2: Confidence remains high that pervasive ridging will \nremain over the region next week keeping local weather dry and \npromoting a warming trend. High temperatures are favored in the 50s \nfrom Tuesday through Friday with lows ranging in the 20s to low 30s \nthrough mid week, climbing to around 30 to upper 30s by the end of \nthe work week. Conditions for radiational cooling will be near \nideal, so typically colder hollows will be running several degrees \ncolder each morning.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...Mainly overcast skies continue, especially\nnorth and west. With a few exceptions, like KRUT, most locations\nhave ceilings around 2500-4000 ft agl. Winds range from light\nand variable to north or northwest around 4-9 knots. Ceilings\nmay lower some in the next few hours, but the main impacts will\ncome as a secondary trough to our north approaches the region\naround 06z-14z, and then an upper low shifts south across the\narea about 16z-04z Sunday. This will result in intervals of\nshowers across the area, with a few terminals cold enough for\nsnow to mix in or precipitation to be all snow. Some convective\nelements are possible. Some graupel may be observed, as well as\nheavier some briefly heavy rates that could result in sharper\ndrops in visibility. The greatest confidence of these impacts\nare at KSLK after about 16z. Otherwise, kept visibility impacts\ngenerally around 4-6SM. \n\nOutlook...\n\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHSN, Chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Chance SHSN, Slight\nchance SHRA.\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Boyd\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-11-13T18:23:00+00:00",
@@ -956,17 +956,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-13T17:00:00.000-05:00",
+  "water_temp_at": "2026-11-13T18:00:00.000-05:00",
   "level_ft": 93.8,
-  "level_at": "2026-11-13T17:00:00.000-05:00",
+  "level_at": "2026-11-13T18:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/13/26 17:00",
+  "observed": "11/13/26 18:00",
   "discussion": "On Saturday, November 14th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1039,8 +1039,8 @@
  },
  "brief": {
   "date": "2026-11-13",
-  "generated": "2026-11-13T23:00:38+00:00",
-  "text": "A chance of snow tonight from 2am on, under a tenth of an inch, low 35. Saturday, showers from 1pm on, about a tenth of an inch, high 40. Rain and snow likely Saturday night until midnight, about a tenth of an inch, low 36.",
+  "generated": "2026-11-13T23:55:51+00:00",
+  "text": "A chance of snow tonight from 3am on, under a tenth of an inch, low 35. Saturday, showers from 1pm on, about a tenth of an inch, high 40. Rain and snow likely Saturday night until midnight, about a tenth of an inch, low 36.",
   "periods": [
    {
     "label": "Tonight",
@@ -1054,17 +1054,17 @@
      "kind": "snow",
      "chance": 40,
      "say": "a chance of snow",
-     "start": "2026-11-14T02:00:00-05:00",
+     "start": "2026-11-14T03:00:00-05:00",
      "end": "2026-11-14T06:00:00-05:00",
-     "when": "from 2am on",
+     "when": "from 3am on",
      "amount_in": 0,
      "snow_in": 0,
      "amount": "under a tenth of an inch"
     },
     "wind": null,
     "feels_lo": 30,
-    "feels_hi": 31,
-    "text": "A chance of snow tonight from 2am on, under a tenth of an inch, low 35."
+    "feels_hi": 32,
+    "text": "A chance of snow tonight from 3am on, under a tenth of an inch, low 35."
    },
    {
     "label": "Saturday",
