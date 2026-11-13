@@ -1,40 +1,40 @@
 {
- "generated": "2026-11-12T20:28:02-05:00",
+ "generated": "2026-11-13T12:21:17-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 10,
-   "seconds": 6.5
+   "count": 14,
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 3.9
+   "count": 66,
+   "seconds": 5.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 81,
-   "seconds": 5.3
+   "count": 80,
+   "seconds": 4.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 161,
-   "seconds": 2.4
+   "count": 153,
+   "seconds": 2.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 173,
-   "seconds": 3.8
+   "count": 172,
+   "seconds": 4.3
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 31,
-   "seconds": 4.2
+   "seconds": 5.0
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-12&end_date=2027-01-11&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-13&end_date=2027-01-12&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,28 +48,28 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 196,
-   "seconds": 75.1
+   "count": 192,
+   "seconds": 65.6
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 11,
-   "seconds": 0.5
+   "count": 10,
+   "seconds": 0.2
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 14,
-   "seconds": 32.9
+   "count": 13,
+   "seconds": 32.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.5
+   "seconds": 2.8
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 622,
-   "seconds": 35.8
+   "count": 612,
+   "seconds": 30.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 19.8
+   "seconds": 15.1
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 577,
-   "seconds": 69.7
+   "count": 570,
+   "seconds": 73.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 56,
-   "seconds": 115.8
+   "count": 58,
+   "seconds": 108.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 1.6
+   "count": 21,
+   "seconds": 1.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 67,
-   "seconds": 16.2
+   "seconds": 22.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,75 +108,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 90,
-   "seconds": 2.4
+   "count": 86,
+   "seconds": 2.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 23,
-   "seconds": 19.2
+   "count": 22,
+   "seconds": 17.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2842,
-   "seconds": 2.6
+   "count": 2792,
+   "seconds": 25.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 3.4
+   "seconds": 2.8
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 302,
-   "seconds": 15.9
+   "count": 285,
+   "seconds": 20.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 176,
+   "count": 168,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 50,
-   "seconds": 66.6
+   "count": 49,
+   "seconds": 63.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 37,
+   "count": 35,
    "seconds": 0.3
   }
  },
- "gathered": 5660,
- "afterDedup": 2433,
- "duplicatesMerged": 3227,
- "final": 2460,
- "firecrawlCalls": 2,
+ "gathered": 5547,
+ "afterDedup": 2378,
+ "duplicatesMerged": 3169,
+ "final": 2399,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "TRSH at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
   {
    "kept": {
     "title": "Lorelei Ensemble",
@@ -2399,44 +2375,31 @@
     "sevendays"
    ],
    "date": "2027-01-11"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2027-01-12"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-12"
   }
  ],
  "changes": [
-  {
-   "id": "8cfac4dd51ed",
-   "title": "Achillée Wine Bar Takeover",
-   "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
-  {
-   "id": "8f6fcbe2c41e",
-   "title": "Thursday Social Run",
-   "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-12T12:43:53-05:00"
-  },
-  {
-   "id": "d1835361744a",
-   "title": "Thursday Trivia with Max",
-   "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-12T12:43:53-05:00"
-  },
-  {
-   "id": "3267762edd99",
-   "title": "Trystan Bates",
-   "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
-  {
-   "id": "ac18d7c635cd",
-   "title": "Kathleen Schneider",
-   "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
   {
    "id": "0228ce26be51",
    "title": "'My Undesirable Friends: Part II — Exile'",
@@ -2450,6 +2413,20 @@
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
+  },
+  {
+   "id": "b61e88e2ec41",
+   "title": "Kathleen Schneider",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
+  },
+  {
+   "id": "93c3f3524255",
+   "title": "Trystan Bates",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
    "id": "288d4c48ca7d",
@@ -2480,6 +2457,20 @@
    "lastSeen": "2026-11-11T20:59:46-05:00"
   },
   {
+   "id": "94f02df4857c",
+   "title": "Assessing the Impact of Impaired Lakes on Zooplankton Community Responses to Salt Stress",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
+  },
+  {
+   "id": "cf3b4bf142ea",
+   "title": "3D Printer Training 201 (Bambu)",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
+  },
+  {
    "id": "6aea347d6025",
    "title": "CANCELLED: Intro to Computer-Aided Design (CAD): Fusion 360 Workshop",
    "date": "2026-11-17",
@@ -2490,8 +2481,7 @@
    "id": "16c4012f5534",
    "title": "Intro to Computer-Aided Design (CAD): Fusion 360 Workshop",
    "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "change": "dropped"
   },
   {
    "id": "7108b1d2e3d4",
@@ -2508,43 +2498,31 @@
    "lastSeen": "2026-11-11T20:59:46-05:00"
   },
   {
-   "id": "a9bafdcf6574",
-   "title": "Sunday Cruise w/ Friend, Dino Gala & Latchkey Kids",
-   "date": "2026-11-19",
-   "change": "dropped"
-  },
-  {
-   "id": "6afd4d014b2d",
-   "title": "HU Chant: Ancient Mantra for a Modern World",
-   "date": "2026-11-21",
+   "id": "2f8dd781e793",
+   "title": "ViVT Hold",
+   "date": "2026-11-18",
    "change": "missing",
-   "lastSeen": "2026-11-11T12:25:11-05:00"
+   "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
-   "id": "8fc084d9c5f7",
-   "title": "Play Time",
-   "date": "2026-11-25",
-   "change": "dropped"
-  },
-  {
-   "id": "4e2909943253",
-   "title": "Scrabble Night @ The Boardroom",
-   "date": "2026-11-25",
+   "id": "2251d6980de4",
+   "title": "Domestic Sewing Training",
+   "date": "2026-11-18",
    "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
-   "id": "963fa6eb41fc",
-   "title": "CLOSED - Thanksgiving Day",
-   "date": "2026-11-26",
-   "change": "dropped"
+   "id": "e1bca4345274",
+   "title": "Vegan in Vermont",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
    "id": "877a90fdce06",
    "title": "Tree Lighting & Santa Parade",
    "date": "2026-11-27",
-   "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "change": "dropped"
   },
   {
    "id": "0e28a1fa550e",
@@ -2557,8 +2535,7 @@
    "id": "081e18d27871",
    "title": "Exhibit - The Growth of a Medical Library: Dana’s Origins and Contributions to UVM Medicine",
    "date": "2026-11-30",
-   "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "change": "dropped"
   },
   {
    "id": "41a44b9691e0",
@@ -2566,6 +2543,13 @@
    "date": "2026-12-01",
    "change": "missing",
    "lastSeen": "2026-11-10T19:53:44-05:00"
+  },
+  {
+   "id": "11cc6ac55220",
+   "title": "Chess Club",
+   "date": "2026-12-05",
+   "change": "missing",
+   "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
    "id": "f9e3138ed638",
@@ -2578,15 +2562,13 @@
    "id": "211b76fd82fb",
    "title": "Classy Dinner Night Out!",
    "date": "2026-12-12",
-   "change": "missing",
-   "lastSeen": "2026-11-10T12:15:07-05:00"
+   "change": "dropped"
   },
   {
    "id": "4a480ac6d311",
    "title": "Stick & Puck",
    "date": "2026-12-13",
-   "change": "missing",
-   "lastSeen": "2026-11-10T12:15:07-05:00"
+   "change": "dropped"
   },
   {
    "id": "e5339b2ef1eb",
@@ -2599,15 +2581,13 @@
    "id": "5ebadc9f1c2c",
    "title": "Exhibit - The Growth of a Medical Library: Dana’s Origins and Contributions to UVM Medicine",
    "date": "2027-01-04",
-   "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "change": "dropped"
   },
   {
    "id": "0e3eeca8af4a",
    "title": "Mad Robin Burlington Contra Dance",
    "date": "2027-01-08",
-   "change": "missing",
-   "lastSeen": "2026-11-09T21:54:46-05:00"
+   "change": "dropped"
   }
  ]
 }
