@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-12T12:43:53-05:00",
+ "generated": "2026-11-12T20:28:02-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.8
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 69,
-   "seconds": 4.7
+   "count": 68,
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 81,
-   "seconds": 6.4
+   "seconds": 5.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 161,
-   "seconds": 2.7
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 171,
-   "seconds": 4.8
+   "count": 173,
+   "seconds": 3.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 30,
-   "seconds": 3.5
+   "count": 31,
+   "seconds": 4.2
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -49,27 +49,27 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 196,
-   "seconds": 70.7
+   "seconds": 75.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 11,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 33.4
+   "count": 14,
+   "seconds": 32.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.7
+   "seconds": 2.5
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 623,
-   "seconds": 31.7
+   "count": 622,
+   "seconds": 35.8
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 18.8
+   "seconds": 19.8
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 566,
-   "seconds": 74.5
+   "count": 577,
+   "seconds": 69.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 57,
-   "seconds": 109.1
+   "count": 56,
+   "seconds": 115.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 18,
-   "seconds": 0.2
+   "count": 22,
+   "seconds": 1.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 67,
-   "seconds": 17.1
+   "seconds": 16.2
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,97 +108,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 88,
-   "seconds": 2.2
+   "count": 90,
+   "seconds": 2.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 22,
-   "seconds": 18.4
+   "count": 23,
+   "seconds": 19.2
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2842,
-   "seconds": 88.6
+   "seconds": 2.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 4.1
+   "seconds": 3.4
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 301,
-   "seconds": 20.6
+   "count": 302,
+   "seconds": 15.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 175,
-   "seconds": 0.2
+   "count": 176,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 50,
-   "seconds": 68.1
+   "seconds": 66.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 37,
-   "seconds": 0.4
+   "seconds": 0.3
   }
  },
- "gathered": 5639,
- "afterDedup": 2424,
- "duplicatesMerged": 3215,
- "final": 2449,
- "firecrawlCalls": 16,
+ "gathered": 5660,
+ "afterDedup": 2433,
+ "duplicatesMerged": 3227,
+ "final": 2460,
+ "firecrawlCalls": 2,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "Catamount Cubs Code",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "Yoga with Hayki at Reststop",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "BTV Winter Market",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
   {
    "kept": {
     "title": "Board Game Night",
@@ -286,11 +240,23 @@
   },
   {
    "kept": {
+    "title": "Sing Along with Linda at the NNE Branch",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
     "title": "The Poetry Experience",
     "source": "fletcherfree"
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-12"
@@ -473,7 +439,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Food For Talk Cookbook Club: Green Mountains",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-13"
   },
@@ -496,6 +474,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-13"
@@ -568,7 +547,7 @@
   },
   {
    "kept": {
-    "title": "5K Fun Run/Walk: Ugly Sweater Run Adult Registration 2026",
+    "title": "Social Pulse: 12/13 Ugly Sweater Run - SB City Hall",
     "source": "sbrec"
    },
    "merged_sources": [
@@ -848,6 +827,17 @@
   {
    "kept": {
     "title": "Stories & Songs for Library Littles",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
+    "title": "Vegan in Vermont",
     "source": "fletcherfree"
    },
    "merged_sources": [
@@ -1736,6 +1726,17 @@
   },
   {
    "kept": {
+    "title": "Queer Reads Book Club: Heated Rivalry by Rachel Reid",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-27"
+  },
+  {
+   "kept": {
     "title": "Postcard Club",
     "source": "churchst"
    },
@@ -2402,35 +2403,25 @@
  ],
  "changes": [
   {
-   "id": "539407ec6257",
-   "title": "Untapped: A Night of Drag and Burlesque",
-   "date": "2026-11-13",
-   "change": "time",
-   "was": "2026-11-13T12:00:00-05:00",
-   "now": "2026-11-13T20:00:00-05:00"
-  },
-  {
-   "id": "2c41ea474fd1",
-   "title": "Untapped: A Night of Drag and Burlesque",
-   "date": "2026-12-11",
-   "change": "time",
-   "was": "2026-12-11T12:00:00-05:00",
-   "now": "2026-12-11T20:00:00-05:00"
-  },
-  {
-   "id": "e3820f2a449e",
-   "title": "Corn Husk Doll Ornaments Crafting",
-   "date": "2026-11-19",
-   "change": "time",
-   "was": "2026-11-19T12:00:00-05:00",
-   "now": "2026-11-19T11:30:00-05:00"
-  },
-  {
    "id": "8cfac4dd51ed",
    "title": "Achillée Wine Bar Takeover",
    "date": "2026-11-12",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
+  },
+  {
+   "id": "8f6fcbe2c41e",
+   "title": "Thursday Social Run",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-12T12:43:53-05:00"
+  },
+  {
+   "id": "d1835361744a",
+   "title": "Thursday Trivia with Max",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-11-12T12:43:53-05:00"
   },
   {
    "id": "3267762edd99",
@@ -2461,6 +2452,13 @@
    "lastSeen": "2026-11-11T20:59:46-05:00"
   },
   {
+   "id": "288d4c48ca7d",
+   "title": "Chess Club",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-12T12:43:53-05:00"
+  },
+  {
    "id": "e60fd9f0e815",
    "title": "'My Undesirable Friends: Part II — Exile'",
    "date": "2026-11-14",
@@ -2480,6 +2478,13 @@
    "date": "2026-11-15",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
+  },
+  {
+   "id": "6aea347d6025",
+   "title": "CANCELLED: Intro to Computer-Aided Design (CAD): Fusion 360 Workshop",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-11-12T12:43:53-05:00"
   },
   {
    "id": "16c4012f5534",
@@ -2506,8 +2511,7 @@
    "id": "a9bafdcf6574",
    "title": "Sunday Cruise w/ Friend, Dino Gala & Latchkey Kids",
    "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-11-09T15:04:37-05:00"
+   "change": "dropped"
   },
   {
    "id": "6afd4d014b2d",
@@ -2520,8 +2524,7 @@
    "id": "8fc084d9c5f7",
    "title": "Play Time",
    "date": "2026-11-25",
-   "change": "missing",
-   "lastSeen": "2026-11-09T15:04:37-05:00"
+   "change": "dropped"
   },
   {
    "id": "4e2909943253",
@@ -2534,8 +2537,7 @@
    "id": "963fa6eb41fc",
    "title": "CLOSED - Thanksgiving Day",
    "date": "2026-11-26",
-   "change": "missing",
-   "lastSeen": "2026-11-09T15:04:37-05:00"
+   "change": "dropped"
   },
   {
    "id": "877a90fdce06",
@@ -2564,6 +2566,13 @@
    "date": "2026-12-01",
    "change": "missing",
    "lastSeen": "2026-11-10T19:53:44-05:00"
+  },
+  {
+   "id": "f9e3138ed638",
+   "title": "Dead Sessions \"End of Semester Shakedown\" at Higher Ground",
+   "date": "2026-12-11",
+   "change": "missing",
+   "lastSeen": "2026-11-12T12:43:53-05:00"
   },
   {
    "id": "211b76fd82fb",
