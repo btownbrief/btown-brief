@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-13T21:40:28+00:00",
+ "updated": "2026-11-13T23:00:31+00:00",
  "sections_updated": {
-  "now": "2026-11-13T21:40:28+00:00",
-  "forecast": "2026-11-13T21:40:28+00:00",
-  "hourly": "2026-11-13T21:40:28+00:00",
-  "alerts": "2026-11-13T21:40:28+00:00",
-  "afd": "2026-11-13T21:40:28+00:00",
-  "lake_forecast": "2026-11-13T21:40:28+00:00",
-  "lake_gage": "2026-11-13T21:40:28+00:00",
-  "air": "2026-11-13T21:40:28+00:00",
-  "sun": "2026-11-13T21:28:04+00:00",
-  "models": "2026-11-13T21:28:04+00:00"
+  "now": "2026-11-13T23:00:31+00:00",
+  "forecast": "2026-11-13T23:00:31+00:00",
+  "hourly": "2026-11-13T23:00:31+00:00",
+  "alerts": "2026-11-13T23:00:31+00:00",
+  "afd": "2026-11-13T23:00:31+00:00",
+  "lake_forecast": "2026-11-13T23:00:31+00:00",
+  "lake_gage": "2026-11-13T23:00:31+00:00",
+  "air": "2026-11-13T23:00:31+00:00",
+  "sun": "2026-11-13T23:00:31+00:00",
+  "models": "2026-11-13T23:00:31+00:00"
  },
  "now": {
-  "observed_at": "2026-11-13T21:15:00+00:00",
+  "observed_at": "2026-11-13T21:54:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 39,
-  "feels_like_f": 33,
-  "humidity": 56,
+  "temp_f": 38,
+  "feels_like_f": 31,
+  "humidity": 59,
   "dewpoint_f": 25,
-  "wind_mph": 9,
+  "wind_mph": 10,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -28,16 +28,6 @@
  "forecast": {
   "updated": "2026-11-13T18:20:57+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-11-13T16:00:00-05:00",
-    "is_day": true,
-    "temp_f": 39,
-    "pop": 1,
-    "wind": "N 9 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 39. North wind around 9 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-11-13T18:00:00-05:00",
@@ -167,40 +157,22 @@
     "wind": "S 7 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 35. South wind around 7 mph."
+   },
+   {
+    "name": "Friday",
+    "start": "2026-11-20T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 54,
+    "pop": 2,
+    "wind": "S 8 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 54. South wind around 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-13T18:20:57+00:00",
   "hours": [
-   {
-    "t": "2026-11-13T16:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 32,
-    "pop": 0,
-    "humidity": 64,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 82,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
-   {
-    "t": "2026-11-13T17:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 30,
-    "pop": 1,
-    "humidity": 70,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 91,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
    {
     "t": "2026-11-13T18:00:00-05:00",
     "temp_f": 37,
@@ -676,6 +648,34 @@
     "qpf_in": 0.005,
     "snow_in": 0.0,
     "gust_mph": 20
+   },
+   {
+    "t": "2026-11-15T04:00:00-05:00",
+    "temp_f": 36,
+    "feels_f": 29,
+    "pop": 30,
+    "humidity": 89,
+    "wind_mph": 10,
+    "wind_dir": "NW",
+    "sky": 89,
+    "short": "Chance Rain And Snow Showers",
+    "qpf_in": 0.005,
+    "snow_in": 0.0,
+    "gust_mph": 21
+   },
+   {
+    "t": "2026-11-15T05:00:00-05:00",
+    "temp_f": 36,
+    "feels_f": 29,
+    "pop": 37,
+    "humidity": 89,
+    "wind_mph": 10,
+    "wind_dir": "NW",
+    "sky": 83,
+    "short": "Chance Rain And Snow Showers",
+    "qpf_in": 0.005,
+    "snow_in": 0.0,
+    "gust_mph": 21
    }
   ],
   "days": [
@@ -956,17 +956,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-13T16:00:00.000-05:00",
+  "water_temp_at": "2026-11-13T17:00:00.000-05:00",
   "level_ft": 93.8,
-  "level_at": "2026-11-13T16:00:00.000-05:00",
+  "level_at": "2026-11-13T17:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 21,
+  "aqi": 22,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/13/26 16:00",
+  "observed": "11/13/26 17:00",
   "discussion": "On Saturday, November 14th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1005,12 +1005,12 @@
      "ICON": 39
     },
     "pop_max": {
-     "GFS": 69,
+     "GFS": 70,
      "Euro": 100,
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.5,
+     "GFS": 0.52,
      "Euro": 0.23,
      "ICON": 0.35
     },
@@ -1025,7 +1025,7 @@
     },
     "pop_max": {
      "GFS": 27,
-     "Euro": 96,
+     "Euro": 100,
      "ICON": 78
     },
     "precip_in": {
@@ -1039,23 +1039,9 @@
  },
  "brief": {
   "date": "2026-11-13",
-  "generated": "2026-11-13T21:42:02+00:00",
-  "text": "Mostly cloudy today, high 39. A chance of snow tonight from 2am on, under a tenth of an inch, low 35. Saturday, showers from 1pm on, about a tenth of an inch, high 40.",
+  "generated": "2026-11-13T23:00:38+00:00",
+  "text": "A chance of snow tonight from 2am on, under a tenth of an inch, low 35. Saturday, showers from 1pm on, about a tenth of an inch, high 40. Rain and snow likely Saturday night until midnight, about a tenth of an inch, low 36.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 39,
-    "sky": "mostly cloudy",
-    "start": "2026-11-13T16:00:00-05:00",
-    "end": "2026-11-13T18:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 30,
-    "feels_hi": 32,
-    "text": "Mostly cloudy today, high 39."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1079,6 +1065,30 @@
     "feels_lo": 30,
     "feels_hi": 31,
     "text": "A chance of snow tonight from 2am on, under a tenth of an inch, low 35."
+   },
+   {
+    "label": "Saturday",
+    "name": "Saturday",
+    "is_day": true,
+    "temp_f": 40,
+    "sky": "sunny",
+    "start": "2026-11-14T06:00:00-05:00",
+    "end": "2026-11-14T18:00:00-05:00",
+    "precip": {
+     "kind": "showers",
+     "chance": 80,
+     "say": "showers",
+     "start": "2026-11-14T13:00:00-05:00",
+     "end": "2026-11-14T18:00:00-05:00",
+     "when": "from 1pm on",
+     "amount_in": 0.07,
+     "snow_in": 0,
+     "amount": "about a tenth of an inch"
+    },
+    "wind": null,
+    "feels_lo": 29,
+    "feels_hi": 34,
+    "text": "Saturday, showers from 1pm on, about a tenth of an inch, high 40."
    }
   ]
  }
