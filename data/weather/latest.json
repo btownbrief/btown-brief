@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-13T11:20:00+00:00",
+ "updated": "2026-11-13T11:39:58+00:00",
  "sections_updated": {
-  "now": "2026-11-13T11:20:00+00:00",
-  "forecast": "2026-11-13T11:20:00+00:00",
-  "hourly": "2026-11-13T11:20:00+00:00",
-  "alerts": "2026-11-13T11:20:00+00:00",
-  "afd": "2026-11-13T11:20:00+00:00",
-  "lake_forecast": "2026-11-13T11:20:00+00:00",
-  "lake_gage": "2026-11-13T11:20:00+00:00",
-  "air": "2026-11-13T11:20:00+00:00",
-  "sun": "2026-11-13T11:20:00+00:00",
-  "models": "2026-11-13T11:20:00+00:00"
+  "now": "2026-11-13T11:39:58+00:00",
+  "forecast": "2026-11-13T11:39:58+00:00",
+  "hourly": "2026-11-13T11:39:58+00:00",
+  "alerts": "2026-11-13T11:39:58+00:00",
+  "afd": "2026-11-13T11:39:58+00:00",
+  "lake_forecast": "2026-11-13T11:39:58+00:00",
+  "lake_gage": "2026-11-13T11:39:58+00:00",
+  "air": "2026-11-13T11:39:58+00:00",
+  "sun": "2026-11-13T11:39:58+00:00",
+  "models": "2026-11-13T11:39:58+00:00"
  },
  "now": {
-  "observed_at": "2026-11-13T10:55:00+00:00",
+  "observed_at": "2026-11-13T11:15:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
+  "description": "Mostly Clear",
   "temp_f": 30,
-  "feels_like_f": 24,
+  "feels_like_f": 23,
   "humidity": 86,
   "dewpoint_f": 27,
-  "wind_mph": 6,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "NNE",
   "precip_last_hr_in": null
@@ -29,7 +29,17 @@
   "updated": "2026-11-13T07:41:23+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "Overnight",
+    "start": "2026-11-13T05:00:00-05:00",
+    "is_day": false,
+    "temp_f": 29,
+    "pop": 14,
+    "wind": "N 10 mph",
+    "short": "Cloudy",
+    "detailed": "Cloudy, with a low around 29. North wind around 10 mph."
+   },
+   {
+    "name": "Friday",
     "start": "2026-11-13T06:00:00-05:00",
     "is_day": true,
     "temp_f": 41,
@@ -39,7 +49,7 @@
     "detailed": "Cloudy, with a high near 41. North wind around 10 mph."
    },
    {
-    "name": "Tonight",
+    "name": "Friday Night",
     "start": "2026-11-13T18:00:00-05:00",
     "is_day": false,
     "temp_f": 29,
@@ -157,16 +167,6 @@
     "wind": "S 6 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 52. South wind around 6 mph."
-   },
-   {
-    "name": "Thursday Night",
-    "start": "2026-11-19T18:00:00-05:00",
-    "is_day": false,
-    "temp_f": 33,
-    "pop": 0,
-    "wind": "S 6 mph",
-    "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 33. South wind around 6 mph."
    }
   ]
  },
@@ -710,14 +710,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-13T06:49:00+00:00",
+  "issued": "2026-11-13T11:23:00+00:00",
   "key_messages": [
    "Lingering snow ends early this morning.",
    "Widespread upslope snow showers Saturday, gradually tapering off Sunday.",
    "High confidence for dry weather and above normal temperatures next week."
   ],
   "what_changed": "As of 149 AM EST Friday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 130649\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n149 AM EST Fri Nov 13 2026\n\n.WHAT HAS CHANGED...\nAs of 149 AM EST Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 149 AM EST Friday...\n\n1. Lingering snow ends early this morning. \n\n2. Widespread upslope snow showers Saturday, gradually tapering \noff Sunday. \n\n3. High confidence for dry weather and above normal \ntemperatures next week.\n\n&&\n\n.DISCUSSION...\nAs of 149 AM EST Friday...\n\nKEY MESSAGE 1: The center of the surface low has passed slightly to the \neast and backside cold air advection is causing the lingering rain \nto gradually change to snow. Snow levels have dropped to the valley \nfloors in the Southern Champlain Valley and Marble Valley around and \nsouth of Rutland. However, snow levels are slightly higher east of \nthe Greens as some of the surface cold air advection is being \nblocked, so they still range around 750 ft. So far, 1-3 inches looks \nto have fallen above 1500 ft in the southern Greens and the surfaces \nof the mountain passes have begun to become snow covered. Within the \nnext couple hours, snow levels should reach the Connecticut River \nbut the precipitation will end shortly after. Additional \naccumulations between 1-2 inches are possible around and above 1,000 \nft while mostly just a slushy coating is expected below. \nPrecipitation will end by around 8 AM.\n\nKEY MESSAGE 2: For the weekend, cyclonic northwest flow will prevail \nunder an upper level low. However, for today, the region will be in \nan area of subsidence between shortwaves so it will be mostly dry, \nthough a couple upslope flurries will be possible in the mountains. \nA potent embedded shortwave will pass south tomorrow and tomorrow \nnight, bringing widespread showers. While they will be most \nconcentrated in the typical northwest flow upslope areas, very \nmarginal instability will develop in the lower 10,000 ft in the \natmosphere due to cold air aloft and solar heating. This will cause \nthe precipitation to trend more convective, especially Saturday \nafternoon. Therefore, snow showers will be able to survive crossing \nthe terrain and should pass through the downslope areas like the \nConnecticut River Valley, though likely in a lighter form. While \ntemperatures will rise above freezing below 2,000 ft, and likely \nreach 40 in the lowest points, temperatures will drop significantly \nin any of the showers. Therefore, even though consistent snow levels \nwill likely only be down to around 1,000-1,500 ft, a period of \ngraupel or even brief wet snow will be possible all the way down \ninto the valleys. However, any continuous accumulations should \ngenerally be limited to above 2,000 ft. The showers will gradually \nbecome less and less widespread heading into Sunday, and they should \nbe done by Sunday evening. Accumulations by the end should be in the \n1-4 inch range above 2,500 ft, with mostly brief coatings that melt \nbelow that. The lowest accumulating snow will fall Saturday night. \nMoisture off Lake Champlain will enhance the showers in the parts of \nthe Champlain Valley and Greens, but the more convective nature may \nprevent the formation of distinct bands.\n\nKEY MESSAGE 3: Deterministic and ensemble guidance are in strong \nagreement that an 2-3 standard deviation ridge of high pressure will \nbe centered to the south and west of the North Country next week. \nTemperatures will start seasonably mild with highs in the 40s on \nFriday with temperatures warming a few degrees each day. Highs by \nFriday will warm into the mid 50s which will be 3-7 degrees above \nnormal. Some of the deterministic guidance is trying to flatten the \nridge on Friday with a strong shortwave but the likelihood of this \nscenario seems pretty low considering just how strong and amplified \nthe upper level ridge is forecasted to be. Should the ridge break \ndown, then it's possible we see some rain chances Friday into next \nweekend but again that's a very low confidence scenario as dry \nweather seems the most likely case at this time.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...Conditions will steadily improve through the\nmorning as we see an area of low pressure move to the east.\nCurrently, we are seeing a mix of VFR at northern terminals and MVFR\nat southern terminals. We are now getting into the tricky phase for\nvisibilities as temperatures begin to cool and allow for rain to\nchange over to snow. The idea is that MVFR conditions will be\npossible south of KBTV through 14Z with an improvement to VFR\nthereafter as precipitation taper off. However, there could be some\nslightly heavier precipitation that could impact KRUT with brief IFR\nvisibilities due to falling snow. The remainder of the day will be\npretty quiet in terms of aviation with VFR conditions and light\nnortherly winds.\n\nOutlook...\n\nSaturday: Mainly MVFR, with local VFR possible. Chance SHRA,\nChance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance\nSHSN, Chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Chance SHRA, Chance\nSHSN.\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly VFR, with areas MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory until 10 AM EST this morning for \n     VTZ018-019.\nNY...Winter Weather Advisory until 10 AM EST this morning for \n     NYZ034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Clay/Myskowski\nAVIATION...Clay\n"
+  "raw": "\n000\nFXUS61 KBTV 131123\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n623 AM EST Fri Nov 13 2026\n\n.WHAT HAS CHANGED...\nAs of 149 AM EST Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 149 AM EST Friday...\n\n1. Lingering snow ends early this morning. \n\n2. Widespread upslope snow showers Saturday, gradually tapering \noff Sunday. \n\n3. High confidence for dry weather and above normal \ntemperatures next week.\n\n&&\n\n.DISCUSSION...\nAs of 149 AM EST Friday...\n\nKEY MESSAGE 1: The center of the surface low has passed slightly to the \neast and backside cold air advection is causing the lingering rain \nto gradually change to snow. Snow levels have dropped to the valley \nfloors in the Southern Champlain Valley and Marble Valley around and \nsouth of Rutland. However, snow levels are slightly higher east of \nthe Greens as some of the surface cold air advection is being \nblocked, so they still range around 750 ft. So far, 1-3 inches looks \nto have fallen above 1500 ft in the southern Greens and the surfaces \nof the mountain passes have begun to become snow covered. Within the \nnext couple hours, snow levels should reach the Connecticut River \nbut the precipitation will end shortly after. Additional \naccumulations between 1-2 inches are possible around and above 1,000 \nft while mostly just a slushy coating is expected below. \nPrecipitation will end by around 8 AM.\n\nKEY MESSAGE 2: For the weekend, cyclonic northwest flow will prevail \nunder an upper level low. However, for today, the region will be in \nan area of subsidence between shortwaves so it will be mostly dry, \nthough a couple upslope flurries will be possible in the mountains. \nA potent embedded shortwave will pass south tomorrow and tomorrow \nnight, bringing widespread showers. While they will be most \nconcentrated in the typical northwest flow upslope areas, very \nmarginal instability will develop in the lower 10,000 ft in the \natmosphere due to cold air aloft and solar heating. This will cause \nthe precipitation to trend more convective, especially Saturday \nafternoon. Therefore, snow showers will be able to survive crossing \nthe terrain and should pass through the downslope areas like the \nConnecticut River Valley, though likely in a lighter form. While \ntemperatures will rise above freezing below 2,000 ft, and likely \nreach 40 in the lowest points, temperatures will drop significantly \nin any of the showers. Therefore, even though consistent snow levels \nwill likely only be down to around 1,000-1,500 ft, a period of \ngraupel or even brief wet snow will be possible all the way down \ninto the valleys. However, any continuous accumulations should \ngenerally be limited to above 2,000 ft. The showers will gradually \nbecome less and less widespread heading into Sunday, and they should \nbe done by Sunday evening. Accumulations by the end should be in the \n1-4 inch range above 2,500 ft, with mostly brief coatings that melt \nbelow that. The lowest accumulating snow will fall Saturday night. \nMoisture off Lake Champlain will enhance the showers in the parts of \nthe Champlain Valley and Greens, but the more convective nature may \nprevent the formation of distinct bands.\n\nKEY MESSAGE 3: Deterministic and ensemble guidance are in strong \nagreement that an 2-3 standard deviation ridge of high pressure will \nbe centered to the south and west of the North Country next week. \nTemperatures will start seasonably mild with highs in the 40s on \nFriday with temperatures warming a few degrees each day. Highs by \nFriday will warm into the mid 50s which will be 3-7 degrees above \nnormal. Some of the deterministic guidance is trying to flatten the \nridge on Friday with a strong shortwave but the likelihood of this \nscenario seems pretty low considering just how strong and amplified \nthe upper level ridge is forecasted to be. Should the ridge break \ndown, then it's possible we see some rain chances Friday into next \nweekend but again that's a very low confidence scenario as dry \nweather seems the most likely case at this time.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...Conditions will steadily improve through\nthe morning as we see an area of low pressure move to the east.\nCurrently, we are seeing a mix of VFR at northern terminals and\nMVFR at southern terminals The idea is that MVFR conditions \nwill be possible south of KBTV through 14Z with an improvement \nto VFR thereafter as precipitation taper off. However, there \ncould be some slightly heavier precipitation that could impact \nKRUT with brief IFR visibilities due to falling snow. The \nremainder of the day will be pretty quiet in terms of aviation \nwith VFR conditions and light northerly winds.\n\nOutlook...\n\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA,\nChance SHSN.\nSaturday Night: Mainly MVFR, with local IFR possible. Likely\nSHSN, Likely SHRA.\nSunday: Mainly MVFR, with local VFR possible. Chance SHRA, Chance\nSHSN.\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory until 10 AM EST this morning for \n     VTZ018-019.\nNY...Winter Weather Advisory until 10 AM EST this morning for \n     NYZ034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Clay\nAVIATION...Clay\n"
  },
  "lake_forecast": {
   "issued": "2026-11-13T06:11:00+00:00",
@@ -969,7 +969,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
   "observed": "11/13/26 6:00",
@@ -980,7 +980,7 @@
   "sunset": "2026-11-13T16:27-05:00",
   "sunrise_tomorrow": "2026-11-14T06:47-05:00",
   "sunset_tomorrow": "2026-11-14T16:26-05:00",
-  "uv_max": 2.15
+  "uv_max": 2.0
  },
  "models": {
   "days": [
@@ -1016,7 +1016,7 @@
      "ICON": 95
     },
     "precip_in": {
-     "GFS": 0.34,
+     "GFS": 0.33,
      "Euro": 0.22,
      "ICON": 0.26
     },
@@ -1035,7 +1035,7 @@
      "ICON": 86
     },
     "precip_in": {
-     "GFS": 0.1,
+     "GFS": 0.09,
      "Euro": 0.17,
      "ICON": 0.02
     },
@@ -1045,12 +1045,12 @@
  },
  "brief": {
   "date": "2026-11-13",
-  "generated": "2026-11-13T11:20:04+00:00",
+  "generated": "2026-11-13T11:40:00+00:00",
   "text": "Cloudy today, high 41. Cloudy tonight, low 29. Saturday, snow from noon on, under a tenth of an inch, high 42.",
   "periods": [
    {
     "label": "Today",
-    "name": "Today",
+    "name": "Friday",
     "is_day": true,
     "temp_f": 41,
     "sky": "cloudy",
@@ -1064,7 +1064,7 @@
    },
    {
     "label": "Tonight",
-    "name": "Tonight",
+    "name": "Friday Night",
     "is_day": false,
     "temp_f": 29,
     "sky": "cloudy",
