@@ -1,21 +1,21 @@
 {
- "updated": "2026-11-13T10:59:53+00:00",
+ "updated": "2026-11-13T11:20:00+00:00",
  "sections_updated": {
-  "now": "2026-11-13T10:59:53+00:00",
-  "forecast": "2026-11-13T10:59:53+00:00",
-  "hourly": "2026-11-13T10:59:53+00:00",
-  "alerts": "2026-11-13T10:59:53+00:00",
-  "afd": "2026-11-13T10:59:53+00:00",
-  "lake_forecast": "2026-11-13T10:59:53+00:00",
-  "lake_gage": "2026-11-13T10:59:53+00:00",
-  "air": "2026-11-13T10:59:53+00:00",
-  "sun": "2026-11-13T10:59:53+00:00",
-  "models": "2026-11-13T10:59:53+00:00"
+  "now": "2026-11-13T11:20:00+00:00",
+  "forecast": "2026-11-13T11:20:00+00:00",
+  "hourly": "2026-11-13T11:20:00+00:00",
+  "alerts": "2026-11-13T11:20:00+00:00",
+  "afd": "2026-11-13T11:20:00+00:00",
+  "lake_forecast": "2026-11-13T11:20:00+00:00",
+  "lake_gage": "2026-11-13T11:20:00+00:00",
+  "air": "2026-11-13T11:20:00+00:00",
+  "sun": "2026-11-13T11:20:00+00:00",
+  "models": "2026-11-13T11:20:00+00:00"
  },
  "now": {
-  "observed_at": "2026-11-13T10:30:00+00:00",
+  "observed_at": "2026-11-13T10:55:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
+  "description": "Partly Cloudy",
   "temp_f": 30,
   "feels_like_f": 24,
   "humidity": 86,
@@ -29,17 +29,7 @@
   "updated": "2026-11-13T07:41:23+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-13T05:00:00-05:00",
-    "is_day": false,
-    "temp_f": 29,
-    "pop": 14,
-    "wind": "N 10 mph",
-    "short": "Cloudy",
-    "detailed": "Cloudy, with a low around 29. North wind around 10 mph."
-   },
-   {
-    "name": "Friday",
+    "name": "Today",
     "start": "2026-11-13T06:00:00-05:00",
     "is_day": true,
     "temp_f": 41,
@@ -49,7 +39,7 @@
     "detailed": "Cloudy, with a high near 41. North wind around 10 mph."
    },
    {
-    "name": "Friday Night",
+    "name": "Tonight",
     "start": "2026-11-13T18:00:00-05:00",
     "is_day": false,
     "temp_f": 29,
@@ -167,26 +157,22 @@
     "wind": "S 6 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 52. South wind around 6 mph."
+   },
+   {
+    "name": "Thursday Night",
+    "start": "2026-11-19T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 33,
+    "pop": 0,
+    "wind": "S 6 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 33. South wind around 6 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-13T07:41:23+00:00",
   "hours": [
-   {
-    "t": "2026-11-13T05:00:00-05:00",
-    "temp_f": 32,
-    "feels_f": 24,
-    "pop": 14,
-    "humidity": 82,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 95,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 17
-   },
    {
     "t": "2026-11-13T06:00:00-05:00",
     "temp_f": 32,
@@ -676,6 +662,20 @@
     "qpf_in": 0.003,
     "snow_in": 0.0,
     "gust_mph": 13
+   },
+   {
+    "t": "2026-11-14T17:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 34,
+    "pop": 76,
+    "humidity": 89,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 94,
+    "short": "Rain And Snow Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -962,9 +962,9 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-13T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-13T06:00:00.000-05:00",
   "level_ft": 93.81,
-  "level_at": "2026-11-13T05:00:00.000-05:00",
+  "level_at": "2026-11-13T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -972,7 +972,7 @@
   "aqi": 22,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "11/13/26 5:00",
+  "observed": "11/13/26 6:00",
   "discussion": "On Friday, November 13th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1011,7 +1011,7 @@
      "ICON": 40
     },
     "pop_max": {
-     "GFS": 73,
+     "GFS": 71,
      "Euro": 100,
      "ICON": 95
     },
@@ -1045,26 +1045,12 @@
  },
  "brief": {
   "date": "2026-11-13",
-  "generated": "2026-11-13T10:59:56+00:00",
-  "text": "Cloudy overnight, low 29. Cloudy today, high 41.",
+  "generated": "2026-11-13T11:20:04+00:00",
+  "text": "Cloudy today, high 41. Cloudy tonight, low 29. Saturday, snow from noon on, under a tenth of an inch, high 42.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 29,
-    "sky": "cloudy",
-    "start": "2026-11-13T05:00:00-05:00",
-    "end": "2026-11-13T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 24,
-    "feels_hi": 24,
-    "text": "Cloudy overnight, low 29."
-   },
-   {
     "label": "Today",
-    "name": "Friday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 41,
     "sky": "cloudy",
@@ -1075,6 +1061,20 @@
     "feels_lo": 24,
     "feels_hi": 35,
     "text": "Cloudy today, high 41."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 29,
+    "sky": "cloudy",
+    "start": "2026-11-13T18:00:00-05:00",
+    "end": "2026-11-14T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 24,
+    "feels_hi": 32,
+    "text": "Cloudy tonight, low 29."
    }
   ]
  }
