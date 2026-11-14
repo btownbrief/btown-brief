@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-14T13:00:57+00:00",
+ "updated": "2026-11-14T14:21:01+00:00",
  "sections_updated": {
-  "now": "2026-11-14T13:00:57+00:00",
-  "forecast": "2026-11-14T13:00:57+00:00",
-  "hourly": "2026-11-14T13:00:57+00:00",
-  "alerts": "2026-11-14T13:00:57+00:00",
-  "afd": "2026-11-14T13:00:57+00:00",
-  "lake_forecast": "2026-11-14T13:00:57+00:00",
-  "lake_gage": "2026-11-14T13:00:57+00:00",
-  "air": "2026-11-14T13:00:57+00:00",
-  "sun": "2026-11-14T13:00:57+00:00",
-  "models": "2026-11-14T13:00:57+00:00"
+  "now": "2026-11-14T14:21:01+00:00",
+  "forecast": "2026-11-14T14:21:01+00:00",
+  "hourly": "2026-11-14T14:21:01+00:00",
+  "alerts": "2026-11-14T14:21:01+00:00",
+  "afd": "2026-11-14T14:21:01+00:00",
+  "lake_forecast": "2026-11-14T14:21:01+00:00",
+  "lake_gage": "2026-11-14T14:21:01+00:00",
+  "air": "2026-11-14T14:21:01+00:00",
+  "sun": "2026-11-14T14:21:01+00:00",
+  "models": "2026-11-14T14:21:01+00:00"
  },
  "now": {
-  "observed_at": "2026-11-14T12:50:00+00:00",
+  "observed_at": "2026-11-14T13:40:00+00:00",
   "station": "KBTV",
   "description": "Light Rain and Light Snow",
   "temp_f": 37,
-  "feels_like_f": 33,
-  "humidity": 75,
-  "dewpoint_f": 30,
-  "wind_mph": 6,
+  "feels_like_f": 37,
+  "humidity": 81,
+  "dewpoint_f": 32,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "WNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-14T08:00:00-05:00",
+    "start": "2026-11-14T09:00:00-05:00",
     "is_day": true,
     "temp_f": 42,
     "pop": 83,
     "wind": "NW 6 mph",
     "short": "Rain And Snow Showers Likely",
-    "detailed": "Rain and snow showers likely before 4pm, then rain and snow showers. Cloudy, with a high near 42. Northwest wind around 6 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers before 10am, then rain and snow showers likely between 10am and 4pm, then rain and snow showers. Cloudy, with a high near 42. Northwest wind around 6 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-14T06:05:35+00:00",
   "hours": [
-   {
-    "t": "2026-11-14T08:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 34,
-    "pop": 27,
-    "humidity": 79,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 91,
-    "short": "Chance Rain And Snow Showers",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
    {
     "t": "2026-11-14T09:00:00-05:00",
     "temp_f": 41,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 17
+   },
+   {
+    "t": "2026-11-15T20:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 32,
+    "pop": 2,
+    "humidity": 82,
+    "wind_mph": 10,
+    "wind_dir": "NW",
+    "sky": 96,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 17
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-14T07:00:00.000-05:00",
-  "level_ft": 93.79,
-  "level_at": "2026-11-14T07:00:00.000-05:00",
+  "water_temp_at": "2026-11-14T09:00:00.000-05:00",
+  "level_ft": 93.8,
+  "level_at": "2026-11-14T09:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 20,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/14/26 7:00",
+  "observed": "11/14/26 9:00",
   "discussion": "On Saturday, November 14th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -987,7 +987,7 @@
     "date": "2026-11-14",
     "high_f": {
      "GFS": 42,
-     "Euro": 39,
+     "Euro": 41,
      "ICON": 40
     },
     "pop_max": {
@@ -996,16 +996,16 @@
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.05,
-     "Euro": 0.18,
+     "GFS": 0.07,
+     "Euro": 0.16,
      "ICON": 0.33
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-15",
     "high_f": {
-     "GFS": 43,
+     "GFS": 42,
      "Euro": 44,
      "ICON": 43
     },
@@ -1015,17 +1015,17 @@
      "ICON": 65
     },
     "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.18,
+     "GFS": 0.09,
+     "Euro": 0.15,
      "ICON": 0.03
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-11-16",
     "high_f": {
      "GFS": 42,
-     "Euro": 44,
+     "Euro": 45,
      "ICON": 44
     },
     "pop_max": {
@@ -1034,18 +1034,18 @@
      "ICON": 11
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.02,
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    }
   ]
  },
  "brief": {
   "date": "2026-11-14",
-  "generated": "2026-11-14T13:01:01+00:00",
-  "text": "Rain and snow today from 11am on, about a tenth of an inch, high 42. Snow likely tonight until 10pm, about a tenth of an inch, low 32. Sunday, mostly cloudy, high 42.",
+  "generated": "2026-11-14T14:21:04+00:00",
+  "text": "Rain and snow today from 11am on, under a tenth of an inch, high 42. Snow likely tonight until 10pm, about a tenth of an inch, low 32. Sunday, mostly cloudy, high 42.",
   "periods": [
    {
     "label": "Today",
@@ -1053,7 +1053,7 @@
     "is_day": true,
     "temp_f": 42,
     "sky": "sunny",
-    "start": "2026-11-14T08:00:00-05:00",
+    "start": "2026-11-14T09:00:00-05:00",
     "end": "2026-11-14T18:00:00-05:00",
     "precip": {
      "kind": "rain and snow",
@@ -1064,12 +1064,12 @@
      "when": "from 11am on",
      "amount_in": 0.05,
      "snow_in": 0,
-     "amount": "about a tenth of an inch"
+     "amount": "under a tenth of an inch"
     },
     "wind": null,
-    "feels_lo": 34,
+    "feels_lo": 35,
     "feels_hi": 38,
-    "text": "Rain and snow today from 11am on, about a tenth of an inch, high 42."
+    "text": "Rain and snow today from 11am on, under a tenth of an inch, high 42."
    },
    {
     "label": "Tonight",
