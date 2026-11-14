@@ -1,0 +1,158 @@
+{
+ "v": 1,
+ "generated": "2026-11-14T16:41:20+00:00",
+ "window_hours": 24,
+ "intake_generated": "2026-11-14T16:41:20+00:00",
+ "intake_state": {
+  "paused": true,
+  "since": "2026-11-12T23:41:25+00:00",
+  "newest_first_seen": "2026-11-12T23:41:25+00:00",
+  "pause_after_hours": 36,
+  "routes_live": [],
+  "reason": "no new post from any route in 36h"
+ },
+ "subs": {
+  "r/burlington": {
+   "new_24h": 0,
+   "made_24h": 0,
+   "overlap": {},
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 92,
+     "last_new": "2026-11-12T21:41:27+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 94,
+     "last_new": "2026-11-12T21:41:27+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 29
+     },
+     "last_error": "REDDIT_CLIENT_ID/SECRET not set"
+    },
+    "shreddit": {
+     "new_24h": 0,
+     "new_prior_6d": 64,
+     "last_new": "2026-11-11T07:03:06+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "error": 29
+     },
+     "last_error": "HTTP 403"
+    }
+   }
+  },
+  "r/vermont": {
+   "new_24h": 0,
+   "made_24h": 0,
+   "overlap": {},
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 90,
+     "last_new": "2026-11-12T22:41:22+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 103,
+     "last_new": "2026-11-12T23:41:25+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 29
+     },
+     "last_error": "REDDIT_CLIENT_ID/SECRET not set"
+    },
+    "shreddit": {
+     "new_24h": 0,
+     "new_prior_6d": 72,
+     "last_new": "2026-11-11T04:58:39+00:00",
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "error": 29
+     },
+     "last_error": "shreddit stopped for this run (HTTP 403)"
+    }
+   }
+  }
+ },
+ "routes": {
+  "inoreader": {
+   "status": "no runs",
+   "new_24h": 0,
+   "error": null
+  },
+  "rss": {
+   "status": "no runs",
+   "new_24h": 0,
+   "error": null
+  },
+  "oauth": {
+   "status": "skipped",
+   "new_24h": 0,
+   "error": "REDDIT_CLIENT_ID/SECRET not set"
+  },
+  "shreddit": {
+   "status": "error",
+   "new_24h": 0,
+   "error": "shreddit stopped for this run (HTTP 403)"
+  }
+ },
+ "alarms": [
+  {
+   "level": "red",
+   "text": "Reddit is paused on the site (no new post from any route since Nov 12)"
+  },
+  {
+   "level": "red",
+   "sub": "r/burlington",
+   "text": "no route delivered a new r/burlington post in 24h"
+  },
+  {
+   "level": "red",
+   "sub": "r/vermont",
+   "text": "no route delivered a new r/vermont post in 24h"
+  }
+ ],
+ "level": "red",
+ "brief_line": "Reddit: RED: Reddit is paused on the site (no new post from any route since Nov 12); no route delivered a new r/burlington post in 24h; and 1 more (0 new posts in 24h: OAuth not set up, Reddit web blocked (shreddit stopped for this run (HTTP 403)))"
+}
