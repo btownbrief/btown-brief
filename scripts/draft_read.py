@@ -187,6 +187,56 @@ def afd_discussion(raw):
     return text[:3000] or None
 
 
+EYE_MAX_AGE_H = 30   # the Fairbanks Museum rewrites the post every morning
+
+
+def eye_lines(eye, now=None):
+    """Eye on the Sky, the Fairbanks Museum's forecast (Vermont Public).
+    Statewide, written from St. Johnsbury: "north" and "west of the Greens"
+    are the halves Burlington sits in. Skipped when the post is older than
+    a day, so a missed morning update never passes for today's call."""
+    if not eye or not (eye.get("periods") or eye.get("discussion")):
+        return []
+    try:
+        issued = datetime.fromisoformat(eye["issued"])
+        age_h = ((now or datetime.now(timezone.utc)) - issued).total_seconds() / 3600
+    except (KeyError, TypeError, ValueError):
+        return []
+    if age_h > EYE_MAX_AGE_H:
+        return []
+    stamp = issued.astimezone(ZoneInfo("America/New_York")).strftime("%a %-I:%M %p")
+    out = [f"EYE ON THE SKY, FAIRBANKS MUSEUM METEOROLOGISTS (last updated {stamp}; "
+           "a statewide forecast: Burlington is in the north half, west of the Greens, "
+           "near Route 2, in the broad Champlain Valley; use only what applies here, "
+           "never their place names or branding, never their sentences):"]
+    if eye.get("summary"):
+        out.append(f"  summary: {eye['summary']}")
+    if eye.get("hazards"):
+        out.append(f"  hazards: {eye['hazards']}")
+    for period in eye.get("periods") or []:
+        out.append(f"  {period['name']}: {period['text']}")
+    if eye.get("discussion"):
+        out.append(f"  discussion: {eye['discussion']}")
+    return out
+
+
+def forecaster_sources(outlets):
+    """Whose forecasts this read compared, for attribution next to it:
+    the outlets that actually loaded, with when each was issued if known."""
+    out = []
+    for key, name, url, when in (
+            ("wcax", "WCAX", "https://www.wcax.com/weather/", None),
+            ("nbc5", "NBC5", "https://www.mynbc5.com/weather", "published"),
+            ("eye", "Eye on the Sky, Fairbanks Museum",
+             "https://fairbanksmuseum.org/eye-on-the-sky/", "issued")):
+        o = outlets.get(key)
+        if not o:
+            continue
+        out.append({"name": name, "url": o.get("url") or url,
+                    "issued": o.get(when) if when else None})
+    return out
+
+
 def build_packet(d, outlets):
     """A compact, human-readable packet — small enough to read at review
     time, complete enough to write from."""
@@ -285,6 +335,7 @@ def build_packet(d, outlets):
     if nbc5 and (nbc5.get("headline") or nbc5.get("body")):
         lines.append(f"NBC5 METEOROLOGIST ({nbc5.get('published', '?')} — same caveat): "
                      f"{nbc5.get('headline') or ''} — {nbc5.get('body') or ''}")
+    lines.extend(eye_lines(outlets.get("eye")))
 
     return "\n".join(lines)
 
@@ -331,8 +382,8 @@ def build_week_packet(d, outlets):
         lines.append("WEATHER UNDERGROUND / WEATHER.COM:")
         for day in wu["days"]:
             lines.append(f"  {day.get('date') or '?'}: high {day['high_f']}, low {day['low_f']}: {day['narrative']}")
-    # No free-form outlet prose here — WCAX/NBC5 cover northern New York and
-    # all of Vermont, and their regional wording leaks into blurbs. The NWS
+    # No free-form outlet prose here — WCAX/NBC5/Eye on the Sky cover northern
+    # New York and all of Vermont, and their regional wording leaks into blurbs. The NWS
     # point forecast and the model spread are already Burlington-scoped.
     return "\n".join(lines), [day["date"] for day in days]
 
@@ -367,7 +418,8 @@ REGIONAL_RE = re.compile(
     r"\b(new york|adirondacks?|north country|capital region|plattsburgh|"
     r"saranac|lake placid|glens falls|st\.? lawrence|malone|massena|"
     r"rutland|bennington|brattleboro|windham|windsor|"
-    r"southern vermont|central vermont|first alert|first warning)\b", re.I)
+    r"southern vermont|central vermont|northeast kingdom|st\.? johnsbury|"
+    r"(?:route|rt\.?) 2|first alert|first warning|eye on the sky|fairbanks)\b", re.I)
 
 
 def api_call(key, brain, prompt, max_tokens=2000):
@@ -534,6 +586,7 @@ def main():
         "text": text or "",
         "week": week,
         "packet": packet,
+        "sources": forecaster_sources(outlets),
     }
     with open(DRAFT, "w") as f:
         json.dump(draft, f, indent=1, ensure_ascii=False)
