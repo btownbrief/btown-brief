@@ -1,0 +1,1464 @@
+{
+  "updated": "2026-10-29",
+  "note": "Built 2026-10-29 by hand from market, farm, food-shelf and NOFA-VT/CVOEO pages (each record cites the page where its facts were seen). All of it is hand-maintained: re-check market dates every spring and fall, the BFM winter list each November, and community-fridge status before publishing.",
+  "markets": [
+    {
+      "id": "burlington-farmers-market",
+      "name": "Burlington Farmers Market",
+      "town": "Burlington",
+      "address": "345 Pine St, Burlington, VT 05401",
+      "coords": [
+        44.4694743,
+        -73.2154077
+      ],
+      "days": [
+        "sat"
+      ],
+      "hours": "9:00-14:00",
+      "season": "May-Oct",
+      "season_dates": "May 9 - October 31, 2026",
+      "winter": {
+        "name": "Burlington Winter Farmers Market",
+        "days": [
+          "sat"
+        ],
+        "hours": "10:00-13:00",
+        "location": "Burlington Beer Co. (Lumiere Hall), 180 Flynn Ave, Burlington, VT 05401",
+        "season": "Nov-Apr",
+        "dates": [
+          "2026-11-21",
+          "2026-12-05",
+          "2026-12-19",
+          "2027-01-16",
+          "2027-01-30",
+          "2027-02-13",
+          "2027-02-27",
+          "2027-03-13",
+          "2027-03-27",
+          "2027-04-03",
+          "2027-04-17"
+        ],
+        "accepts": [
+          "Debit",
+          "Credit",
+          "SNAP/3SquaresVT",
+          "Crop Cash/Crop Cash PLUS",
+          "Personal checks",
+          "Venmo"
+        ],
+        "vendors": [
+          {
+            "name": "Agricola Farm / Monti Verdi",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Barn First Creamery",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Beautiful Arrangements",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Bee Happy Vermont",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Fern River Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Flower Gap Farm and Creamery",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Full Moon Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Grass Cattle Company",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Green Mountain Blue Cheese",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Head Over Fields",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Lewis Creek Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Maple Wind Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "RambleBramble Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Shelburne Farms",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Starbird Fish",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "The Painted Tulip Flower Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Valley Clayplain Forest Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Vermont Cranberry Co.",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "Witt Acres Farm",
+            "sells": "agriculture (category only; products not listed)"
+          },
+          {
+            "name": "April’s Chocolates",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Back Home Bakery",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Backus Distillery",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Benitos Hot Sauce",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Bramble Bakery",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Garuka Bars",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Jericho Lemonade Company",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Karen's Artisan Popcorn",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Kraemer & Kin",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Little Acts of Sweetness",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Lou's Big Cannoli",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Max and co Bakehouse",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Mitra Ventures",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Peak Macaya Coop",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Peruvian Hands",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Roll Away Cafe",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Samosaman",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Seedsong Bakery and Market Garden",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Sisters of Anarchy Ice Cream & Bakery",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Small Oven Pastries",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Syrup & Spice",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Talya's Treats",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "The Wild Fig",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Tremolo Bread",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Ukrainian Kitchen",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "umamiso",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Uphill Bakery",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "V Smiley Preserves",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Vermont Fermentation Adventures",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Whiskers Spirits",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "Wildbranch Cider",
+            "sells": "prepared foods (category only)"
+          },
+          {
+            "name": "B.Williams Cutlery",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Cindy’s Leather Goods",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Daisy Does Art",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Dasha Kalisz Ceramics",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Happy Fantastic Designs",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Harold Kaplan Pottery",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Hartwig Handmade",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "HoneyBee Heather",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "iclaydirty",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Kimberlee Forney",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "KP Farm Pottery",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Light and Lather",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Marsha Drake Jewelry",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "New-Century Woodworks",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Romeo's Naturals",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Vermallow",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "Wishnik Ceramics",
+            "sells": "crafts (category only)"
+          },
+          {
+            "name": "wjd photography",
+            "sells": "crafts (category only)"
+          }
+        ],
+        "source_url": "https://www.burlingtonfarmersmarket.org/winter-market",
+        "verified": "2026-10-29",
+        "note": "Dates are on the market's '2026-27 Winter Market Dates' page; the page says about forty vendors per market and lists the season lineup by category only. Day of week is not printed on the page; NOFA-VT lists the winter market as Saturdays 10-1, and every listed date is a Saturday. Payment list is from NOFA-VT's winter-market entry (https://www.nofavt.org/burlington-farmers-market-winter)."
+      },
+      "season_year": 2026,
+      "accepts": [
+        "Cash",
+        "Debit/Credit",
+        "SNAP/3SquaresVT",
+        "Crop Cash",
+        "Farm to Family",
+        "Checks",
+        "Bumper Crop"
+      ],
+      "vendors": [],
+      "vendors_url": "https://www.burlingtonfarmersmarket.org/summer-vendor-directory",
+      "website": "https://www.burlingtonfarmersmarket.org",
+      "source_url": "https://www.burlingtonfarmersmarket.org/",
+      "verified": "2026-10-29",
+      "note": "Summer season dates from the homepage ('Every Saturday May 9 - October 31, 2026', rain or shine); the summer market's last day this year is Sat Oct 31. SNAP is redeemed at the Manager's Tent (https://www.burlingtonfarmersmarket.org/snap-benefits); payment list is NOFA-VT's (https://www.nofavt.org/burlington-farmers-market). Summer vendor directory is an embedded MarketWurks widget that did not render for scraping, so vendors is empty. Coords are the map pin in the market website's own site data. Getting there: limited handicap parking in the lot; GMT #5 bus stops every half hour on Saturdays (https://www.burlingtonfarmersmarket.org/location-transit-options)."
+    },
+    {
+      "id": "old-north-end-farmers-market",
+      "name": "Old North End Farmers Market",
+      "town": "Old North End",
+      "address": "Dewey Park, where Archibald, Spring & Walnut Streets intersect, Burlington, VT 05401",
+      "coords": null,
+      "days": [
+        "tue"
+      ],
+      "hours": "15:00-18:30",
+      "season": "Jun-Oct",
+      "season_dates": "June 2 - October 27, 2026",
+      "season_year": 2026,
+      "accepts": [
+        "Crop Cash",
+        "Farm to Family",
+        "SNAP/3SquaresVT",
+        "Debit/Credit",
+        "Cash"
+      ],
+      "vendors": [
+        {
+          "name": "Diggers’ Mirth Collective Farm",
+          "sells": "organic vegetables (Intervale)"
+        },
+        {
+          "name": "UVM Catamount Farm",
+          "sells": "certified organic fruits and vegetables"
+        },
+        {
+          "name": "Tremolo Bread",
+          "sells": "naturally leavened bread"
+        },
+        {
+          "name": "Born to Swarm Apiaries",
+          "sells": "honey, including thyme- and lavender-infused"
+        },
+        {
+          "name": "Burly Blooms",
+          "sells": "cut flowers"
+        },
+        {
+          "name": "Feral Gnome Bakeshop",
+          "sells": "baked goods"
+        },
+        {
+          "name": "Kalaat Moroccan Kitchen",
+          "sells": "Moroccan and Bosnian home-style prepared food"
+        },
+        {
+          "name": "Samosaman",
+          "sells": "samosas / prepared food"
+        },
+        {
+          "name": "Yalla Eats",
+          "sells": "Yemeni prepared food"
+        },
+        {
+          "name": "Bergeron’s Produce & Goods",
+          "sells": null
+        }
+      ],
+      "vendors_url": "https://onefarmersmarket.com/",
+      "website": "https://onefarmersmarket.com/",
+      "source_url": "https://onefarmersmarket.com/",
+      "verified": "2026-10-29",
+      "note": "Still running in 2026 (since 1992). The 2026 season ended Tuesday Oct 27, two days before this check; no winter market is advertised. Payment list is from the market's own site; NOFA-VT (https://www.nofavt.org/old-north-end-farmers-market) additionally lists checks, Venmo and Bumper Crop. 'Bergeron’s Produce & Goods' shows 'Details to come' on the vendor page. Volunteer hours count as City Market member work."
+    },
+    {
+      "id": "winooski-farmers-market",
+      "name": "Winooski Farmers Market",
+      "town": "Winooski",
+      "address": "20 Winooski Falls Way (Champlain Mill green), Winooski, VT 05404",
+      "coords": null,
+      "days": [
+        "sun"
+      ],
+      "hours": "10:00-14:00",
+      "season": "May-Oct",
+      "season_dates": "May 17 - October 25, 2026",
+      "season_year": 2026,
+      "winter": {
+        "name": "Winooski Winter Farmers Market",
+        "days": [
+          "sun"
+        ],
+        "hours": "10:00-14:00",
+        "location": "Winooski Senior Center, 123 Barlow St, Winooski, VT 05404",
+        "season": "winter (dates not published for 2026-27)",
+        "accepts": [
+          "Cash",
+          "Checks",
+          "Venmo"
+        ],
+        "source_url": "https://www.nofavt.org/winooski-winter-farmers-market",
+        "verified": "2026-10-29",
+        "note": "NOFA-VT lists the winter market (Sundays 10-2, Senior Center) but gives no 2026-27 dates. NOFA-VT's 2025-26 winter poster showed it monthly (11/23/25 and 12/21/25), so expect a monthly holiday-season schedule, but this is unconfirmed for 2026."
+      },
+      "accepts": [
+        "Cash",
+        "Debit/Credit",
+        "SNAP/3SquaresVT",
+        "Crop Cash",
+        "Farm to Family",
+        "Venmo",
+        "Bumper Crop"
+      ],
+      "vendors": [],
+      "vendors_url": null,
+      "website": "https://downtownwinooski.org/winooski-farmers-market/",
+      "source_url": "https://www.nofavt.org/winooski-farmers-market",
+      "verified": "2026-10-29",
+      "note": "Run by Downtown Winooski. Its own site returned 403 to every fetch, so days, hours, dates and payments come from NOFA-VT's directory entry. WCAX (https://www.wcax.com/2026/05/18/winooski-farmers-market-opens-season-with-13-new-vendors/) reported about 20-25 vendors each Sunday, 13 new vendors for 2026, and special events with extra vendors and music on the last Sunday of each month. The 2026 summer season has ended (last market Oct 25). No vendor list was published that I could reach."
+    },
+    {
+      "id": "south-burlington-farmers-market",
+      "name": "South Burlington Farmers Market",
+      "town": "South Burlington",
+      "address": "BTV Airport Recreation Path (GPS 1223 Airport Drive), between Elizabeth St and Le Doux Terrace, South Burlington, VT 05403",
+      "coords": null,
+      "days": [
+        "fri"
+      ],
+      "hours": "17:00-19:00",
+      "season": "Jun-Sep (every other Friday)",
+      "season_dates": "June 12 - September 18, 2026 (Jun 12, Jun 26, Jul 10, Jul 24, Aug 7, Aug 21, Sep 4, Sep 18)",
+      "season_year": 2026,
+      "accepts": [
+        "Cash",
+        "Debit/Credit"
+      ],
+      "vendors": [
+        {
+          "name": "Common Roots",
+          "sells": null
+        },
+        {
+          "name": "Lussier Maples",
+          "sells": null
+        },
+        {
+          "name": "Pleasant Valley Field & Forest",
+          "sells": null
+        },
+        {
+          "name": "Smoke Pond Gardens",
+          "sells": null
+        },
+        {
+          "name": "Tejas Tex & Mex",
+          "sells": null
+        },
+        {
+          "name": "Green Valley Coconut Water",
+          "sells": null
+        },
+        {
+          "name": "this.sourdoughmicrobakery LLC",
+          "sells": null
+        },
+        {
+          "name": "Le Bon Gout",
+          "sells": null
+        },
+        {
+          "name": "Mighty Mike's Lemonade",
+          "sells": null
+        },
+        {
+          "name": "Samosa Man",
+          "sells": null
+        },
+        {
+          "name": "Aba's Kitchen",
+          "sells": null
+        },
+        {
+          "name": "Yalla Eats",
+          "sells": null
+        },
+        {
+          "name": "Meza Bosnian Cuisine",
+          "sells": null
+        },
+        {
+          "name": "Cosmo's Cool Thinx",
+          "sells": null
+        },
+        {
+          "name": "Ian MacDonald Photography",
+          "sells": null
+        },
+        {
+          "name": "Body Charge Therapeutics",
+          "sells": null
+        },
+        {
+          "name": "Pop Up Party Vermont",
+          "sells": null
+        },
+        {
+          "name": "Hartwig Handmade",
+          "sells": null
+        },
+        {
+          "name": "Speckled Ceramics",
+          "sells": null
+        },
+        {
+          "name": "Butterfly Creations",
+          "sells": null
+        },
+        {
+          "name": "Pixie Dust",
+          "sells": null
+        },
+        {
+          "name": "Btown Brief",
+          "sells": null
+        },
+        {
+          "name": "Designs from Marz",
+          "sells": null
+        },
+        {
+          "name": "Mountain Flamingo Expressions",
+          "sells": null
+        },
+        {
+          "name": "flower.pot",
+          "sells": null
+        },
+        {
+          "name": "WJD Photography",
+          "sells": null
+        }
+      ],
+      "vendors_url": "https://www.southburlingtonvt.gov/702/South-Burlington-Farmers-Market",
+      "website": "https://www.southburlingtonvt.gov/702/South-Burlington-Farmers-Market",
+      "source_url": "https://www.southburlingtonvt.gov/702/South-Burlington-Farmers-Market",
+      "verified": "2026-10-29",
+      "note": "New in 2026, run by South Burlington Recreation & Parks. It ran every other Friday, not weekly as a WCAX story said. The city page lists vendors for each date; the list here is the final market (Sep 18) as printed, with no product info. Parking is in the airport garage, with overflow at Chamberlin Elementary and a free shuttle. NBT Bank gave $5 'Fresh Pick' vouchers to the first 75 households each night. Payment list is from NOFA-VT (https://www.nofavt.org/south-burlington-farmers-market), which does not list SNAP. NOFA-VT and Vermont Farm to Plate have older entries for a different South Burlington market (550 Dorset St / South Burlington High School). That one is not the 2026 market and may be defunct. The market is done for 2026 and the city has not posted a 2027 season."
+    }
+  ],
+  "in_season": [
+    {
+      "month": 1,
+      "month_name": "January",
+      "produce": [
+        "Apples",
+        "Pears",
+        "Beets",
+        "Cabbage",
+        "Carrots",
+        "Celeriac",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Potatoes",
+        "Rutabaga",
+        "Shallots",
+        "Spinach",
+        "Squash, Winter",
+        "Sweet Potatoes",
+        "Turnips, Purple Top"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 2,
+      "month_name": "February",
+      "produce": [
+        "Apples",
+        "Pears",
+        "Beets",
+        "Cabbage",
+        "Carrots",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Potatoes",
+        "Rutabaga",
+        "Spinach",
+        "Sweet Potatoes",
+        "Turnips, Purple Top"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 3,
+      "month_name": "March",
+      "produce": [
+        "Apples",
+        "Arugula",
+        "Beets",
+        "Cabbage",
+        "Carrots",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Potatoes",
+        "Rutabaga",
+        "Spinach",
+        "Sweet Potatoes",
+        "Turnips, Purple Top"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 4,
+      "month_name": "April",
+      "produce": [
+        "Apples",
+        "Arugula",
+        "Beets",
+        "Bok Choy",
+        "Cabbage",
+        "Carrots",
+        "Cucumbers",
+        "Lettuce, Salad Mix",
+        "Potatoes",
+        "Radishes",
+        "Rutabaga",
+        "Spinach",
+        "Sweet Potatoes",
+        "Tomatoes",
+        "Turnips, Purple Top",
+        "Chives"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 5,
+      "month_name": "May",
+      "produce": [
+        "Apples",
+        "Arugula",
+        "Asparagus",
+        "Beets",
+        "Bok Choy",
+        "Carrots",
+        "Cucumbers",
+        "Kale",
+        "Kohlrabi",
+        "Lettuce, Salad Mix",
+        "Potatoes",
+        "Radishes",
+        "Rhubarb",
+        "Rutabaga",
+        "Scallions",
+        "Spinach",
+        "Tomatoes",
+        "Turnips, Salad",
+        "Basil",
+        "Chives",
+        "Cilantro",
+        "Mint",
+        "Oregano"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 6,
+      "month_name": "June",
+      "produce": [
+        "Apples",
+        "Cranberries",
+        "Strawberries",
+        "Arugula",
+        "Asparagus",
+        "Beans",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Cabbage",
+        "Carrots",
+        "Celery",
+        "Chard",
+        "Collards",
+        "Cucumbers",
+        "Garlic Scapes",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Lettuce, Head",
+        "Lettuce, Salad Mix",
+        "Peas",
+        "Radishes",
+        "Rhubarb",
+        "Scallions",
+        "Spinach",
+        "Tomatoes",
+        "Turnips, Salad",
+        "Basil",
+        "Chives",
+        "Cilantro",
+        "Dill",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 7,
+      "month_name": "July",
+      "produce": [
+        "Apples",
+        "Blueberries",
+        "Cranberries",
+        "Strawberries",
+        "Plums",
+        "Arugula",
+        "Beans",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Cabbage",
+        "Carrots",
+        "Cauliflower",
+        "Celery",
+        "Chard",
+        "Collards",
+        "Corn",
+        "Cucumbers",
+        "Eggplant",
+        "Garlic",
+        "Garlic Scapes",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Lettuce, Head",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Peas",
+        "Peppers, Green",
+        "Peppers, Hot",
+        "Radishes",
+        "Scallions",
+        "Spinach",
+        "Squash, Summer",
+        "Squash, Zucchini",
+        "Tomatoes",
+        "Turnips, Salad",
+        "Basil",
+        "Cilantro",
+        "Dill",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 8,
+      "month_name": "August",
+      "produce": [
+        "Apples",
+        "Blueberries",
+        "Melons",
+        "Peaches",
+        "Pears",
+        "Plums",
+        "Watermelon",
+        "Arugula",
+        "Beans",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Cabbage",
+        "Carrots",
+        "Celery",
+        "Chard",
+        "Collards",
+        "Corn",
+        "Cucumbers",
+        "Eggplant",
+        "Garlic",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Lettuce, Head",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Peas",
+        "Peppers, Green",
+        "Peppers, Colored",
+        "Peppers, Hot",
+        "Potatoes",
+        "Scallions",
+        "Shallots",
+        "Squash, Summer",
+        "Squash, Zucchini",
+        "Tomatoes",
+        "Basil",
+        "Cilantro",
+        "Dill",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 9,
+      "month_name": "September",
+      "produce": [
+        "Apples",
+        "Blueberries",
+        "Melons",
+        "Peaches",
+        "Pears",
+        "Plums",
+        "Watermelon",
+        "Arugula",
+        "Beans",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Cabbage",
+        "Carrots",
+        "Cauliflower",
+        "Celery",
+        "Chard",
+        "Collards",
+        "Corn",
+        "Cucumbers",
+        "Eggplant",
+        "Garlic",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Leeks",
+        "Lettuce, Head",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Peppers, Green",
+        "Peppers, Colored",
+        "Peppers, Hot",
+        "Potatoes",
+        "Radishes",
+        "Scallions",
+        "Shallots",
+        "Spinach",
+        "Squash, Summer",
+        "Squash, Zucchini",
+        "Tomatoes",
+        "Turnips, Purple Top",
+        "Turnips, Salad",
+        "Basil",
+        "Cilantro",
+        "Dill",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage",
+        "Ginger",
+        "Turmeric"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 10,
+      "month_name": "October",
+      "produce": [
+        "Apples",
+        "Cranberries",
+        "Peaches",
+        "Pears",
+        "Plums",
+        "Arugula",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Brussels Sprouts",
+        "Cabbage",
+        "Carrots",
+        "Cauliflower",
+        "Celeriac",
+        "Celery",
+        "Chard",
+        "Collards",
+        "Eggplant",
+        "Garlic",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Leeks",
+        "Lettuce, Head",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Peppers, Green",
+        "Peppers, Colored",
+        "Peppers, Hot",
+        "Potatoes",
+        "Radishes",
+        "Rutabaga",
+        "Scallions",
+        "Shallots",
+        "Spinach",
+        "Squash, Winter",
+        "Sweet Potatoes",
+        "Tomatoes",
+        "Turnips, Purple Top",
+        "Turnips, Salad",
+        "Cilantro",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage",
+        "Ginger",
+        "Turmeric"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 11,
+      "month_name": "November",
+      "produce": [
+        "Apples",
+        "Cranberries",
+        "Pears",
+        "Arugula",
+        "Beets",
+        "Bok Choy",
+        "Broccoli",
+        "Brussels Sprouts",
+        "Cabbage",
+        "Carrots",
+        "Cauliflower",
+        "Celeriac",
+        "Celery",
+        "Collards",
+        "Garlic",
+        "Fennel",
+        "Kale",
+        "Kohlrabi",
+        "Leeks",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Peppers, Hot",
+        "Potatoes",
+        "Radishes",
+        "Rutabaga",
+        "Shallots",
+        "Spinach",
+        "Squash, Winter",
+        "Sweet Potatoes",
+        "Turnips, Purple Top",
+        "Turnips, Salad",
+        "Cilantro",
+        "Mint",
+        "Oregano",
+        "Parsley",
+        "Rosemary",
+        "Sage",
+        "Ginger",
+        "Turmeric"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "month": 12,
+      "month_name": "December",
+      "produce": [
+        "Apples",
+        "Cranberries",
+        "Pears",
+        "Arugula",
+        "Beets",
+        "Bok Choy",
+        "Brussels Sprouts",
+        "Cabbage",
+        "Carrots",
+        "Celeriac",
+        "Garlic",
+        "Kale",
+        "Kohlrabi",
+        "Lettuce, Salad Mix",
+        "Onions",
+        "Parsnips",
+        "Potatoes",
+        "Rutabaga",
+        "Shallots",
+        "Spinach",
+        "Squash, Winter",
+        "Sweet Potatoes",
+        "Turnips, Purple Top",
+        "Turnips, Salad",
+        "Cilantro",
+        "Rosemary",
+        "Sage"
+      ],
+      "source_url": "https://agriculture.vermont.gov/sites/agriculture/files/documents/Food%2BConnects%2BSeasonal%2BProduce%2BAvailability.pdf",
+      "verified": "2026-10-29"
+    }
+  ],
+  "farms_direct": [
+    {
+      "id": "intervale-community-farm",
+      "name": "Intervale Community Farm",
+      "town": "Burlington",
+      "sells": [
+        "csa",
+        "winter csa",
+        "supported (discounted) shares",
+        "bread/eggs/goat cheese add-on shares",
+        "pick-your-own (members)"
+      ],
+      "how_to_order": "Sign up for a share on the farm's website; summer and winter CSAs are separate sign-ups.",
+      "pickup": "At the farm, 282 Intervale Rd, Burlington. Winter 2026-27: Thursdays 2-6pm, every other week, Nov 5, 2026 to May 6, 2027, in two groups (Group 2 includes Wed Nov 25 and Mon Dec 21; closed Dec 24 and 31). Summer 2026: Mondays or Thursdays 2-6:30pm, June 8 to Oct 29.",
+      "price_note": "Winter 2026-27: $600 for 13 pickups (about $46/pickup); Supported Share $395 for qualifying households. Summer 2026 (sliding 'slide-up' scale): small $765-$918, medium $1050-$1260, large $1355-$1626.",
+      "website": "https://www.intervalecommunityfarm.com",
+      "source_url": "https://www.intervalecommunityfarm.com/winter-shares",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "diggers-mirth",
+      "name": "Diggers’ Mirth Collective Farm",
+      "town": "Burlington",
+      "sells": [
+        "farmers market",
+        "wholesale to grocery stores and restaurants"
+      ],
+      "how_to_order": "No retail ordering; buy at the Old North End Farmers Market on Tuesdays (May-Oct), or contact the farm.",
+      "pickup": "Old North End Farmers Market, Dewey Park, Tuesdays (season over for 2026).",
+      "price_note": null,
+      "website": "https://www.diggersmirth.com",
+      "source_url": "https://www.diggersmirth.com",
+      "verified": "2026-10-29",
+      "note": "The Intervale Center profile (https://www.intervale.org/diggers-mirth-collective-farm) says they also sell at the Saturday Burlington market and through City Market, Healthy Living and the Intervale Food Hub. Their own site mentions only the ONE market, so the Saturday listing may be out of date."
+    },
+    {
+      "id": "pitchfork-farm",
+      "name": "Pitchfork Farm",
+      "town": "Burlington",
+      "sells": [
+        "wholesale produce (restaurants, stores)"
+      ],
+      "how_to_order": "Ask to be on the produce availability list (sent Mondays and Thursdays by call, text or email). Orders are packed to order and delivered Tuesday and Friday mornings; there is an order minimum.",
+      "pickup": "Optional pickup at the farm's coolers on the Intervale, 282 Intervale Rd, Burlington.",
+      "price_note": null,
+      "website": "https://www.pitchforkfarmvt.com",
+      "source_url": "https://www.pitchforkfarmvt.com",
+      "verified": "2026-10-29",
+      "note": "Pitchfork is aimed at restaurants and other businesses; no household CSA or farm stand is advertised."
+    },
+    {
+      "id": "maendeleo-farm",
+      "name": "Maendeleo Farm",
+      "town": "Burlington",
+      "sells": [
+        "wholesale",
+        "specialty African crops",
+        "garlic at City Market"
+      ],
+      "how_to_order": "No direct ordering is published. Its garlic is sold at City Market.",
+      "pickup": null,
+      "price_note": null,
+      "website": null,
+      "source_url": "https://www.intervale.org/maendeleo",
+      "verified": "2026-10-29",
+      "note": "Grows on three acres in the Intervale and at the farmer's home in Colchester: eggplant, beans, tomatoes, spinach, blueberries, garlic."
+    },
+    {
+      "id": "bread-and-butter-farm",
+      "name": "Bread & Butter Farm",
+      "town": "Shelburne",
+      "sells": [
+        "seasonal csa",
+        "meat share",
+        "farm store",
+        "cafe"
+      ],
+      "how_to_order": "Buy seasonal CSA or meat shares through the farm's online store. Meat shares work like a running tab that never expires and can be used year-round.",
+      "pickup": "At the farm store, 200 Leduc Farm Rd, Shelburne (off Cheesefactory Rd near the South Burlington line). In-person free-choice pickup on Tuesdays 3-6pm (per the 2026 CSA page), with a pre-packed option on other days.",
+      "price_note": "Meat shares: 15 lb $225, 30 lb $420, 45 lb $600. Vegetable CSA comes in small (4 items), medium (8) or large (10) per week; prices not shown on the page.",
+      "website": "https://breadandbutterfarm.com",
+      "source_url": "https://breadandbutterfarm.com/meat-shares",
+      "verified": "2026-10-29",
+      "note": "Farm store hours: Mon-Fri 8am-4pm, Sat 9am-2pm, closed Sunday."
+    },
+    {
+      "id": "jericho-settlers-farm",
+      "name": "Jericho Settlers Farm",
+      "town": "Jericho",
+      "sells": [
+        "csa",
+        "winter csa",
+        "meat share",
+        "eggs",
+        "farm stand"
+      ],
+      "how_to_order": "Sign up on the farm's website. Winter 2026-27 sign-up is closed; individual meats are sold at the farmstand and online.",
+      "pickup": "Burlington: Tuesdays 4-6pm at 52 Locust St (South End). Winter 2026-27 monthly pickups are Nov 3, Dec 1, Jan 5 and Feb 2. Also Williston (ReSOURCE), Richmond and the Jericho farmstand.",
+      "price_note": "Fall/Winter CSA (10/19/2026-2/1/2027) vegetable share: $510 half, $675 regular.",
+      "website": "https://www.jerichosettlersfarm.com",
+      "source_url": "https://www.jerichosettlersfarm.com/csa-member-headquarters",
+      "verified": "2026-10-29",
+      "note": "Farmstand at 22 Barber Farm Rd, Jericho, open daily 8am-6pm year-round (https://www.jerichosettlersfarm.com). Vegetables are certified organic; meats are pasture-raised or grassfed."
+    },
+    {
+      "id": "maple-wind-farm",
+      "name": "Maple Wind Farm",
+      "town": "Richmond",
+      "sells": [
+        "meat",
+        "eggs",
+        "farm share (prepaid credit)",
+        "on-farm store",
+        "local delivery"
+      ],
+      "how_to_order": "Order online by 7am on your pickup day, or shop the self-serve on-farm store (open daily 8am-8pm). Local delivery is free over $60.",
+      "pickup": "Burlington: the Intervale Community Farm coolers (282 Intervale Rd) on ICF Monday/Thursday pickup days, or the Maple Wind booth at the Burlington Farmers Market on Saturdays (pre-order). Also at the farm in Richmond (1149 East Main St).",
+      "price_note": "Farm shares give 10% extra credit, valid 12 months: pay $225, $540 or $900.",
+      "website": "https://www.maplewindfarm.com",
+      "source_url": "https://www.maplewindfarm.com/pages/pickup",
+      "verified": "2026-10-29",
+      "note": "Maple Wind is also on the 2026-27 Burlington Winter Farmers Market vendor list. Richmond street address is from NOFA-VT's directory."
+    },
+    {
+      "id": "full-moon-farm",
+      "name": "Full Moon Farm",
+      "town": "Hinesburg",
+      "sells": [
+        "eggs (limited)",
+        "farmers market"
+      ],
+      "how_to_order": "No CSA for 2025-26. When there are extra eggs, non-members can buy them at the Burlington Farmers Market.",
+      "pickup": "Burlington Farmers Market; listed on the 2026-27 winter market vendor list.",
+      "price_note": null,
+      "website": "https://www.fullmoonfarminc.com",
+      "source_url": "https://www.fullmoonfarminc.com",
+      "verified": "2026-10-29",
+      "note": "The farmers posted that they are cutting back for health reasons and are still raising some organic crops. The site footer says ©2024, and the CSA notice names 2025-6; there is no 2026-27 CSA information."
+    },
+    {
+      "id": "shelburne-farms",
+      "name": "Shelburne Farms",
+      "town": "Shelburne",
+      "sells": [
+        "farm store",
+        "cheese",
+        "maple syrup",
+        "produce",
+        "meat",
+        "online store"
+      ],
+      "how_to_order": "Shop the Welcome Center & Farm Store, preorder for pickup by phone (802-985-0350), or order from the online store for shipping.",
+      "pickup": "Farm Store, 1611 Harbor Rd, Shelburne. Winter hours 10am-5:30pm (Nov 1-Mar 31); summer 9:30am-5:30pm (Apr 1-Oct 31).",
+      "price_note": null,
+      "website": "https://shelburnefarms.org",
+      "source_url": "https://shelburnefarms.org/visit-and-learn/welcome-center-farm-store",
+      "verified": "2026-10-29",
+      "note": "Also on the 2026-27 Burlington Winter Farmers Market vendor list."
+    },
+    {
+      "id": "adams-berry-farm",
+      "name": "Adam's Berry Farm",
+      "town": "Charlotte",
+      "sells": [
+        "pick-your-own berries and flowers",
+        "farm stand"
+      ],
+      "how_to_order": "Visit to pick your own or buy at the farmstand; email info@adamsberryfarm.com with questions.",
+      "pickup": "985 Bingham Brook Rd, Charlotte. Farmstand open dawn to dusk in season.",
+      "price_note": null,
+      "website": "https://www.adamsberryfarm.com",
+      "source_url": "https://www.adamsberryfarm.com/farmstand",
+      "verified": "2026-10-29",
+      "note": "The farmstand page still says 'now OPEN' with raspberries and blueberries, which reads like leftover summer copy; seasonal opening dates are not published. The farmstand sells pre-picked berries, jams, honey, eggs and local products."
+    },
+    {
+      "id": "stony-loam-farm",
+      "name": "Stony Loam Farm",
+      "town": "Charlotte",
+      "sells": [
+        "csa",
+        "pick-your-own (members)"
+      ],
+      "how_to_order": "Fill out the membership form on the farm's website before the season.",
+      "pickup": "At the farm, 2755 Hinesburg Rd, Charlotte, June-October: Tuesday 3-5:30pm or Thursday 3-6:30pm.",
+      "price_note": "Half, small family and large family shares; prices not on the page.",
+      "website": "https://www.stonyloamfarm.com",
+      "source_url": "https://www.stonyloamfarm.com/csa-info.html",
+      "verified": "2026-10-29",
+      "note": "The CSA page has no year on it, so 2026/2027 details are unconfirmed."
+    },
+    {
+      "id": "philo-ridge-farm",
+      "name": "Philo Ridge Farm",
+      "town": "Charlotte",
+      "sells": [
+        "farm market",
+        "organic produce",
+        "grass-fed meat",
+        "turkey preorders",
+        "restaurant"
+      ],
+      "how_to_order": "Shop the on-farm Market; Thanksgiving turkeys are preordered through the website.",
+      "pickup": "2766 Mt. Philo Rd, Charlotte. Market open Wed-Sat 8:30am-5pm, Sun 8:30am-3pm; closed Mon-Tue.",
+      "price_note": null,
+      "website": "https://philoridgefarm.org",
+      "source_url": "https://philoridgefarm.org/visit-us",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "head-over-fields",
+      "name": "Head Over Fields",
+      "town": "Charlotte",
+      "sells": [
+        "farm stand",
+        "farmers market"
+      ],
+      "how_to_order": "Buy at the farm stand or at the Shelburne Farmers Market on Saturdays.",
+      "pickup": "6035 Ethan Allen Hwy (Route 7), Charlotte. Summer farm stand Mon-Sat 10am-6pm, Sun 12-6pm.",
+      "price_note": null,
+      "website": "https://www.headoverfieldsvt.com",
+      "source_url": "https://www.headoverfieldsvt.com",
+      "verified": "2026-10-29",
+      "note": "The CSA page is out of date (it still mentions a 2022 CSA). Head Over Fields is on the 2026-27 Burlington Winter Farmers Market vendor list. Whether the farm stand is open in late October is not stated."
+    },
+    {
+      "id": "flower-gap-farm",
+      "name": "Flower Gap Farm & Creamery",
+      "town": "Charlotte",
+      "sells": [
+        "self-serve farm stand",
+        "goat yogurt and cheese",
+        "farmers market"
+      ],
+      "how_to_order": "Stop at the self-serve farm stand, or buy at the Burlington Farmers Market.",
+      "pickup": "4685 Greenbush Rd, Charlotte. Farm stand open daily 9am-6pm, April-December.",
+      "price_note": null,
+      "website": "https://www.flowergapfarm.com",
+      "source_url": "https://www.flowergapfarm.com",
+      "verified": "2026-10-29",
+      "note": "Also on the 2026-27 Burlington Winter Farmers Market vendor list."
+    },
+    {
+      "id": "shelburne-orchards",
+      "name": "Shelburne Orchards",
+      "town": "Shelburne",
+      "sells": [
+        "pick-your-own apples",
+        "apple tree sales",
+        "distillery (brandy)"
+      ],
+      "how_to_order": "Visit during the season (September and October); trees for sale are ordered online.",
+      "pickup": "216 Orchard Rd, Shelburne.",
+      "price_note": null,
+      "website": "https://www.shelburneorchards.com",
+      "source_url": "https://www.shelburneorchards.com",
+      "verified": "2026-10-29",
+      "note": "Homepage says 'Closed for the season!' as of this check."
+    },
+    {
+      "id": "isham-family-farm",
+      "name": "Isham Family Farm",
+      "town": "Williston",
+      "sells": [
+        "farm store",
+        "pick-your-own blueberries",
+        "Christmas trees",
+        "pumpkins",
+        "maple syrup"
+      ],
+      "how_to_order": "Visit the Farm Country Store.",
+      "pickup": "3515 Oak Hill Rd, Williston.",
+      "price_note": null,
+      "website": "https://www.ishamfamilyfarm.com",
+      "source_url": "https://www.ishamfamilyfarm.com/farm-country-store",
+      "verified": "2026-10-29",
+      "note": "Store hours are not published on the site."
+    },
+    {
+      "id": "paul-mazzas",
+      "name": "Paul Mazza's Fruit & Vegetable Stand",
+      "town": "Essex Junction",
+      "sells": [
+        "csa",
+        "prepaid produce card ('CSA Your Way')",
+        "farm stand",
+        "pick-your-own",
+        "Thanksgiving share"
+      ],
+      "how_to_order": "Buy a CSA through the website (by card, which adds a 4% fee, or by mailed check), or shop the farm stands.",
+      "pickup": "Traditional CSA (19 weeks, mid/late June-October): Saturdays 8-11am at the Essex farm, 182 River Rd, Essex Junction. The Essex stand is open daily 8am-6pm; the Colchester stand (135 Poor Farm Rd) is listed as closed.",
+      "price_note": "Four share sizes (Seedling to Wheelbarrow); prices not shown on the pages read. Members save 10-13%, per the homepage.",
+      "website": "https://www.paulmazzas.com",
+      "source_url": "https://www.paulmazzas.com/locations",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "sam-mazzas",
+      "name": "Sam Mazza's Farm Market, Bakery & Greenhouses",
+      "town": "Colchester",
+      "sells": [
+        "farm stand",
+        "bakery",
+        "pick-your-own strawberries, blueberries, raspberries",
+        "pumpkins",
+        "corn maze",
+        "Christmas trees"
+      ],
+      "how_to_order": "Walk in; the market is open year-round.",
+      "pickup": "277 Lavigne Rd, Colchester. Fall hours Mon-Sat 7am-6:30pm, Sun 7am-6pm; winter Mon-Sat 7am-6pm, Sun 7am-5pm. Hours are subject to change; Facebook has current hours.",
+      "price_note": null,
+      "website": "https://sammazzafarms.com",
+      "source_url": "https://sammazzafarms.com/contact/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "last-resort-farm",
+      "name": "Last Resort Farm",
+      "town": "Monkton",
+      "sells": [
+        "farm stand",
+        "farm share card"
+      ],
+      "how_to_order": "Buy prepaid Farm Share Cards by April 30, or shop the farmstand.",
+      "pickup": "2246 Tyler Bridge Rd, Monkton. Farmstand open daily 7am-7pm.",
+      "price_note": "Prepay $100 or $300 and get a 10% bonus ($110 or $330) on certified organic farm products.",
+      "website": "https://www.lastresortfarm.com",
+      "source_url": "https://www.lastresortfarm.com/farmshare-1",
+      "verified": "2026-10-29",
+      "note": "Monkton is about 25 miles from Burlington, at the edge of the requested radius. The site footer says ©2017; the farmstand hours page (https://www.lastresortfarm.com/farmstand-1) has no season dates."
+    }
+  ],
+  "community_fridges": [
+    {
+      "id": "food-not-bombs-burlington-fridge",
+      "name": "Food Not Bombs Burlington (community fridge listing)",
+      "address": "32 Hungerford Terrace, Burlington, VT 05401",
+      "neighborhood": null,
+      "hours": null,
+      "what_they_ask_for": [],
+      "what_not_to_leave": [],
+      "operator": "Food Not Bombs Burlington",
+      "contact": "https://www.facebook.com/FoodNotBombsBurlington/",
+      "source_url": "https://networks.whyhunger.org/organisation/41822",
+      "verified": "2026-10-29",
+      "status": "unconfirmed",
+      "note": "The only listing I could open is an undated WhyHunger database entry, program type 'Community Fridge'. Nothing dated 2026 confirms it still operates, and Vermont 211 lists no community fridge within 20 miles of Burlington (checked 2026-10-29). Treat as unverified; do not publish as active without a current photo or post."
+    }
+  ],
+  "food_shelves": [
+    {
+      "id": "feeding-champlain-valley-food-shelf",
+      "name": "Feeding Champlain Valley Food Shelf (formerly the Chittenden Emergency Food Shelf / Feeding Chittenden)",
+      "address": "228 North Winooski Ave, Burlington, VT 05401",
+      "hours": "Mon-Fri. Hot meals 9-11am; Grab 'N Go food 9am-2:30pm; groceries/shopping 9:30am-2:30pm; donations accepted 8:30am-3:30pm.",
+      "who_can_use": "People facing food insecurity in Chittenden County (no residency or ID rule is published on the page). Curbside pickup of pre-packed grocery boxes is offered; emergency grocery delivery by calling 802-658-7939 ext. 28.",
+      "what_they_ask_for": null,
+      "how_to_donate": "Bring food during donation hours (Mon-Fri 8:30am-3:30pm) or host a food or fund drive. Mail money to Feeding Champlain Valley, Attn: Philanthropy, PO Box 1265, Burlington, VT 05402, or give by phone at 802-862-2771 x744. Food shelf phone: 802-658-7939.",
+      "operator": "CVOEO (Champlain Valley Office of Economic Opportunity)",
+      "source_url": "https://www.cvoeo.org/get-help/feeding-champlain-valley",
+      "verified": "2026-10-29",
+      "note": "feedingchittenden.org is behind a SiteLock/Incapsula 'I'm not a robot' check, so it was not read. Facts come from CVOEO's pages. The CVOEO groceries page (https://www.cvoeo.org/get-help/groceries) gives different hours (Mon-Fri 9am-4pm), so call before going. No donation wish list was found."
+    },
+    {
+      "id": "winooski-food-shelf",
+      "name": "Winooski Food Shelf",
+      "address": "24 West Allen Street (United Methodist Church of Winooski), Winooski, VT 05404",
+      "hours": "2nd and 4th Wednesdays and Saturdays. The homepage says Wed 12-3pm and Sat 9-11am; the 'how to get food' page says Wed 1-3pm (pantry staples, veggies, meat, eggs) and Sat 9:30-11am (veggies, deli, bakery). Times vary around holidays.",
+      "who_can_use": "Winooski residents who self-identify as food insecure; bring proof of residency (utility or phone bill or current mail with your name and address). One Wednesday a month plus both Saturdays.",
+      "what_they_ask_for": "Money first: the pantry says it has to buy staples at retail because the Vermont Foodbank runs short. Frozen turkeys or $30 per turkey ($45 'with all the fixins') at the holidays. Volunteers to unload, shelve and drive.",
+      "how_to_donate": "Donate online at winooskifoodshelf.org or mail a check to Winooski Food Shelf c/o The United Methodist Church, P.O. Box 53, Winooski, VT 05404. Frozen turkeys are dropped off at the church on Tuesdays 9-11am or during holiday hours. Phone 802-655-7371, winooskifoodshelf@gmail.com.",
+      "operator": "United Methodist Church of Winooski (all-volunteer)",
+      "source_url": "https://www.winooskifoodshelf.org/how-to-get-food-1",
+      "verified": "2026-10-29",
+      "note": "The turkey drop-off dates on the donate page (https://www.winooskifoodshelf.org/how-to-volunteer-donate), such as Tue 11/4, fall on Tuesdays in 2025, not 2026, so that page is probably last year's. The homepage also notes eggs (1 dozen per household per month) and meat (monthly) are being cut back."
+    },
+    {
+      "id": "south-burlington-food-shelf",
+      "name": "South Burlington Food Shelf",
+      "address": "356 Dorset Street, South Burlington, VT 05403",
+      "hours": "Shopping: Thu 4-6pm, Fri 8:30-10:30am, Sat 8-10am.",
+      "who_can_use": "South Burlington residents. Fill out an information form at the first visit and update it yearly; up to two visits per month.",
+      "what_they_ask_for": "Canned chicken and tuna; pasta sauce; canned tomato products; hearty soups, chowder and chili; broth or bouillon; beans (canned, especially baked, and dried); rice in 1-2 lb bags and instant rice; mac & cheese and ramen; low-sugar canned fruit and applesauce (no cranberry sauce or pumpkin); canned vegetables; cereal and oatmeal; basic crackers; ketchup, yellow mustard, salad dressing, vegetable oil; flour and baking mixes; peanut butter, jams and jellies; boxed pasta (no lasagna noodles); period products; toilet paper and paper towels; toothpaste; diapers (sizes 3-6) and baby wipes. Not accepted: open containers, baby food or formula, turkeys, wild game, alcohol.",
+      "how_to_donate": "Drop off during shopping hours or Thursday mornings, not at the door. The homepage says Thursday drop-off is 9:30-11:30am and the footer says 8:30-11:30am. Money can be given online, including monthly. Phone (802) 858-5267, southburlingtonfoodshelf@gmail.com.",
+      "operator": "South Burlington Food Shelf",
+      "source_url": "https://www.southburlingtonfoodshelf.org/",
+      "verified": "2026-10-29",
+      "wishlist_url": "https://www.southburlingtonfoodshelf.org/wp-content/uploads/SBFS-Things-we-always-need.pdf"
+    }
+  ],
+  "gaps": [
+    "Community fridges: I could not confirm any fridge operating in Burlington, Winooski or South Burlington in 2026. Vermont 211's 'Community Fridges/Food Cabinets' search within 20 miles of Burlington returned nothing local on 2026-10-29. A Vermont 211 listing for an 'Old North End Community Fridge' (102 Lafountain St), seen only as a search-result snippet saying it was last checked 04/14/2025, now returns 404, so it was not added. The only record kept (Food Not Bombs, 32 Hungerford Terrace) comes from an undated WhyHunger entry.",
+    "feedingchittenden.org is behind a CAPTCHA ('I'm not a robot'), which I did not try to get past. Feeding Chittenden is now branded Feeding Champlain Valley (a CVOEO program). Its hours come from CVOEO pages, which disagree with each other. No donation wish list was found.",
+    "Winooski Farmers Market: downtownwinooski.org returned 403, so I could not see a vendor list or the market's own page. The 2026-27 Winooski Winter Market dates are not published anywhere I could reach (NOFA-VT lists the location and hours only).",
+    "Burlington Farmers Market summer vendor directory is an embedded MarketWurks widget that did not render, so the summer vendors list is empty (the winter vendor lineup is captured).",
+    "South Burlington Farmers Market payment options: NOFA-VT lists cash and debit/credit only; SNAP/Crop Cash acceptance is not published. The city has not announced a 2027 season.",
+    "Map coordinates are only filled where a source page gave them (Burlington Farmers Market). The others are null rather than guessed.",
+    "Other Burlington food shelves were not given full records: CVOEO's groceries page lists phone numbers only for the Joint Urban Ministry Project (862-4501), Salvation Army (864-6991), Sara Holbrook Center (862-6342), McClure MultiGen Center (658-3585), Hilltop Light Ministries (863-0524), St. Stephen's Church Rectory, Winooski (655-0318), and Little Green Pantry, Winooski (655-7371, the same number as the Winooski Food Shelf).",
+    "Farms not added because I could not verify a current page within the search budget: New Farms for New Americans (AALV page 404), Hallow Herbs Farm (Intervale profile 404), Lewis Creek Farm, Valley Clayplain Forest Farm, Footprint Farm, Rockville Market Farm, Charlotte Berry Farm, Fern River Farm (site has no location or ordering info), Pomykala Farm (it is in Grand Isle, not Williston). The web-search budget ran out partway through, so the community-fridge and extra-farm searches were cut short.",
+    "In-season calendar: the Food Connects chart was published by AAFM on 08/21/2026, but the PDF itself was made in May 2022. It counts storage and greenhouse supply (for example apples all year, cucumbers and tomatoes from April), so it describes what is available from Vermont growers, not field harvest only. Months were read off the chart's bars by machine: a month counts when the bar covers most of it.",
+    "Several farm pages have no year on them or are out of date (Stony Loam CSA, Head Over Fields CSA, Last Resort Farm ©2017, Full Moon Farm ©2024, Adam's Berry Farm farmstand copy). Each is flagged in its own note."
+  ]
+}
