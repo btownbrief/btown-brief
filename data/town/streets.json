@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-13T18:08:42+00:00",
+ "generated": "2026-11-14T16:45:53+00:00",
  "sources_file": "data/town/streets-sources.json",
  "sections": {
   "permits": {
-   "verified": "2026-11-13",
+   "verified": "2026-11-14",
    "export_date": "2026-10-20",
    "notes": "The city's OpenGov portal has no public API; this is its export to ArcGIS, refreshed by the city (last export 2026-10-20). Permits filed after that date are not here yet. Latitude/Longitude in the export are rounded to 44.5/-73.2, so a map needs geocoding of the address. Notable rule: demolition (not interior), ADU, commercial restaurant/bar/cafe or tenant fit-out or change of use, new building or 10+ units, est. cost >= $250,000.",
    "rule": {
@@ -75,19 +75,15 @@
     },
     {
      "week": "2026-W40",
-     "total": 38,
-     "notable": 2,
-     "est_cost_total": 35725625,
+     "total": 21,
+     "notable": 0,
+     "est_cost_total": 102550,
      "by_kind": {
-      "Plumbing": 15,
-      "Mechanical": 8,
-      "Building": 5,
-      "Zoning permit": 3,
-      "Electrical": 3,
-      "ZPR": 1,
-      "Zoning certificate of occupancy": 1,
-      "RS": 1,
-      "CHU": 1
+      "Plumbing": 12,
+      "Mechanical": 4,
+      "Building": 3,
+      "Zoning permit": 1,
+      "Electrical": 1
      }
     }
    ],
@@ -3037,232 +3033,20 @@
      "notable_reasons": [],
      "status": "Open",
      "id": "378c19c4073e"
-    },
-    {
-     "kind": "ZPR",
-     "layer": "zoning",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 9000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "b6076444a189"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 35500000,
-     "notable": true,
-     "notable_reasons": [
-      "demolition",
-      "big_project"
-     ],
-     "status": "Open",
-     "id": "66fb6368088d",
-     "home": false,
-     "pt": [
-      44.478837,
-      -73.212894
-     ],
-     "img": "a49d790af6bc46.jpg",
-     "address": "49 Church Street",
-     "land_use": "C - Commercial",
-     "source_url": "https://burlingtonvt.portal.opengov.com/records/345365",
-     "project": "CityPlace Phase 2 Permit Amendment"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "a0c951e74634"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "5dce10e7cc53"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 9000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "9a7ab038b9b7"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "ffbf8c73334b"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 3000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "6e9f8c99e296"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 50,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Stopped",
-     "id": "6e9a63445c2d"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 68000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "160ccee5a8b3"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 600,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "8acb89695f6d"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 5750,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "6c186c0f7ed7"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 5475,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "570a69a8cce6"
-    },
-    {
-     "kind": "CHU",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "89c308580fca"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 6000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "730a959d2004"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 2000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "9596796d870d"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 2200,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "a2d631d36936"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-02",
-     "week": "2026-W40",
-     "est_cost": 2000,
-     "notable": true,
-     "notable_reasons": [
-      "restaurant_or_fitout"
-     ],
-     "status": "Open",
-     "id": "69798cdd2841",
-     "home": false,
-     "pt": [
-      44.477388,
-      -73.212318
-     ],
-     "img": "06c6ecafb81379.jpg",
-     "address": "112 Church Street",
-     "land_use": "CR - Com/Resident",
-     "source_url": "https://burlingtonvt.portal.opengov.com/records/345399",
-     "project": "112 church st"
     }
    ],
    "ok": true,
    "stale": false
   },
   "sales": {
-   "verified": "2026-11-13",
+   "verified": "2026-11-14",
    "latest_posted": "2026-11-06",
    "notes": "Vermont property transfer tax returns, posted by the Department of Taxes about a week after closing and published by VCGI. Arm's length = fee-simple transfer, no tax exemption claimed, price above $0. Buyer state is the buyer's mailing address on the return, a proxy for 'out-of-state'. Individual names are not copied.",
    "medians": {
     "30d": {
-     "all_residential": 425000,
-     "count": 5,
-     "single_family": 460000,
+     "all_residential": 357000,
+     "count": 4,
+     "single_family": 442500,
      "condo": 264500,
      "out_of_state_share": 0.0
     },
@@ -3274,18 +3058,18 @@
      "out_of_state_share": 0.111
     },
     "365d": {
-     "all_residential": 515000,
-     "count": 359,
+     "all_residential": 517500,
+     "count": 358,
      "single_family": 562000,
-     "condo": 410000,
+     "condo": 417500,
      "out_of_state_share": 0.117
     }
    },
    "medians_by_month": [
     {
      "month": "2025-10",
-     "median": 530000,
-     "count": 29
+     "median": 561500,
+     "count": 26
     },
     {
      "month": "2025-11",
@@ -4865,87 +4649,13 @@
      "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
      "notable": false,
      "notable_reasons": []
-    },
-    {
-     "id": "b9a5566c9377",
-     "address": "South Meadow Drive",
-     "pt": [
-      44.45,
-      -73.213
-     ],
-     "home": true,
-     "img": "ec68ee215d2189.jpg",
-     "closed": "2026-09-14",
-     "posted": "2026-09-18",
-     "price": 355000,
-     "grand_list_value": 186100,
-     "property_class": "05. Condominium",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "6519e109f094",
-     "address": "South Meadow Drive",
-     "pt": [
-      44.45,
-      -73.213
-     ],
-     "home": true,
-     "img": "ec68ee215d2189.jpg",
-     "closed": "2026-09-14",
-     "posted": "2026-09-18",
-     "price": 195125,
-     "grand_list_value": 186100,
-     "property_class": "05. Condominium",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "c45d4a47c0c9",
-     "address": "Cherry Lane",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-14",
-     "posted": "2026-10-16",
-     "price": null,
-     "grand_list_value": 426300,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "ee1df8256180",
-     "address": "Northshore Drive",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-14",
-     "posted": "2026-11-04",
-     "price": null,
-     "grand_list_value": 349200,
-     "property_class": "05. Condominium",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
     }
    ],
    "ok": true,
    "stale": false
   },
   "blotter": {
-   "verified": "2026-11-13",
+   "verified": "2026-11-14",
    "notes": "The city publishes no daily police log. Press releases arrive by RSS (headline + link kept; bodies can name people, so the column writer applies the arrested-or-charged rule). Incident, arrest and fire exports are monthly, a month behind, and anonymous; the service is re-published each month with a new layer id, which the script discovers.",
    "press_releases": [
     {
@@ -4954,7 +4664,7 @@
      "case_number": "26BU025693",
      "is_update": false,
      "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3910",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "headline": "10/29/2026 Aggravated Assault - Simple Assault of a Police Officer | 26BU025618",
@@ -4962,15 +4672,7 @@
      "case_number": "26BU025618",
      "is_update": false,
      "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3909",
-     "verified": "2026-11-13"
-    },
-    {
-     "headline": "UPDATE 10/03/2026 Aggravated Assault | 26BU023503",
-     "posted": "2026-10-14T18:23:20+00:00",
-     "case_number": "26BU023503",
-     "is_update": true,
-     "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3905",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     }
    ],
    "police_incidents_month": {
@@ -5042,7 +4744,7 @@
      "alcohol_related": 100
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Burlington_Police_Department_Incidents/FeatureServer/161",
-    "verified": "2026-11-13"
+    "verified": "2026-11-14"
    },
    "arrests_month": {
     "month": "2026-09",
@@ -5071,7 +4773,7 @@
      "Rep Board - S": 3
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Burlington_Police_Department_Arrests/FeatureServer/163",
-    "verified": "2026-11-13"
+    "verified": "2026-11-14"
    },
    "fire_incidents_month": {
     "month": "2026-10",
@@ -5095,13 +4797,13 @@
      "Unknown": 8
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Fire_Department_Incidents/FeatureServer/169",
-    "verified": "2026-11-13"
+    "verified": "2026-11-14"
    },
    "ok": true,
    "stale": false
   },
   "projects": {
-   "verified": "2026-11-13",
+   "verified": "2026-11-14",
    "notes": "One record per PROJNAME from the city's construction portal layer (1,800+ street segments). Projects completed or cancelled more than a year ago are dropped. Since You Checked already emits a change line when a segment is edited (scripts/changes/sources/roads.py).",
    "items": [
     {
@@ -5133,7 +4835,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:58:49+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "leddy-park-north-gully-stabilization",
@@ -5164,7 +4866,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:57:07+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-2",
@@ -5195,7 +4897,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:55:04+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-1",
@@ -5226,7 +4928,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:46+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-4",
@@ -5257,7 +4959,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:30+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-3",
@@ -5288,7 +4990,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:16+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-5",
@@ -5319,7 +5021,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:53:53+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-6",
@@ -5350,7 +5052,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:53:38+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "summit-street-water-main-replacement",
@@ -5385,7 +5087,7 @@
      ],
      "last_edited": "2026-10-27T12:52:31+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy27-pavin",
@@ -5416,7 +5118,7 @@
      "links": [],
      "last_edited": "2026-10-13T13:47:22+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy27-paving",
@@ -5451,7 +5153,7 @@
      "links": [],
      "last_edited": "2026-10-13T13:38:56+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy28-paving",
@@ -5482,7 +5184,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:43:44+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy-25-paving",
@@ -5516,7 +5218,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:41:21+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy25-paving-co-1",
@@ -5553,7 +5255,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:41:07+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy25-paving",
@@ -5589,7 +5291,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:40:32+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy26-paving",
@@ -5629,7 +5331,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:40:10+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy29-paving",
@@ -5660,7 +5362,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:35:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-ave-infiltration-system-installation",
@@ -5691,7 +5393,7 @@
      "links": [],
      "last_edited": "2026-08-27T19:35:16+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "replace-drainage-infrastructure",
@@ -5724,7 +5426,7 @@
      "links": [],
      "last_edited": "2026-08-27T19:29:50+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pine-street-water-main-replacement",
@@ -5759,7 +5461,7 @@
      ],
      "last_edited": "2026-08-20T13:40:13+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "bennington-court-water-main-replacement",
@@ -5794,7 +5496,7 @@
      ],
      "last_edited": "2026-08-20T13:39:03+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pomeroy-park-playground-replacement",
@@ -5827,7 +5529,7 @@
      ],
      "last_edited": "2026-08-13T19:21:24+00:00",
      "source_url": "https://burlingtonvt.gov/1187/Pomeroy-Park-Playground",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy-26-paving",
@@ -5858,7 +5560,7 @@
      "links": [],
      "last_edited": "2026-06-29T13:32:02+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "intervale-rd-path",
@@ -5891,7 +5593,7 @@
      "links": [],
      "last_edited": "2026-06-08T14:31:26+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "grove-st-rubber-speed-humps",
@@ -5926,7 +5628,7 @@
      ],
      "last_edited": "2026-05-28T20:17:05+00:00",
      "source_url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "flynn-ave-rubber-speed-humps",
@@ -5961,7 +5663,7 @@
      ],
      "last_edited": "2026-05-28T20:07:02+00:00",
      "source_url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-beach-campground-pull-through-sites",
@@ -5992,7 +5694,7 @@
      "links": [],
      "last_edited": "2026-05-08T14:15:59+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "kieslich-park-trail",
@@ -6025,7 +5727,7 @@
      "links": [],
      "last_edited": "2026-05-08T14:13:56+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "appletree-tennis-court-resurfacing",
@@ -6058,7 +5760,7 @@
      ],
      "last_edited": "2026-05-08T14:12:02+00:00",
      "source_url": "https://burlingtonvt.gov/1190/Asphalt-Sport-Court-Resurfacing",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "schmanska-park-court-resurfacing",
@@ -6091,7 +5793,7 @@
      ],
      "last_edited": "2026-05-08T14:10:31+00:00",
      "source_url": "https://burlingtonvt.gov/1190/Asphalt-Sport-Court-Resurfacing",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "dredging-college-st-boathouse-marina",
@@ -6120,7 +5822,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:58:46+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "calahan-park-court-reconstruction-and-stormwater",
@@ -6151,7 +5853,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:40:19+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "calahan-park-sidepath-phase-i",
@@ -6184,7 +5886,7 @@
      ],
      "last_edited": "2026-05-08T13:38:12+00:00",
      "source_url": "https://burlingtonvt.gov/1188/Calahan-Shared-Use-Path",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "roosevelt-park-mini-pitch",
@@ -6215,7 +5917,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:31:31+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "gosse-court-traffic-calming",
@@ -6248,7 +5950,7 @@
      "links": [],
      "last_edited": "2026-04-29T14:55:11+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "sidewalk-reconstruction-contractor",
@@ -6328,7 +6030,7 @@
      ],
      "last_edited": "2026-04-29T13:54:59+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/pedestrians",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "bhs-stormwater-outfall-rehabilitation",
@@ -6361,7 +6063,7 @@
      "links": [],
      "last_edited": "2026-04-28T15:48:37+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pedestrian-crossing-improvement",
@@ -6395,7 +6097,7 @@
      "links": [],
      "last_edited": "2026-04-21T16:15:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "great-streets-cherry-street-reconstruction",
@@ -6430,7 +6132,7 @@
      ],
      "last_edited": "2026-04-17T18:36:58+00:00",
      "source_url": "http://www.burlingtonvt.gov/GreatStreetsSP",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "elmwood-intervale-traffic-calming",
@@ -6461,7 +6163,7 @@
      "links": [],
      "last_edited": "2026-04-02T19:20:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "sidewalk-reconstruction-dpw",
@@ -6546,7 +6248,7 @@
      ],
      "last_edited": "2025-10-20T16:25:32+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/pedestrians",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "hillcrest-rd-paving",
@@ -6581,7 +6283,7 @@
      ],
      "last_edited": "2025-10-06T14:00:03+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "row",
@@ -6616,7 +6318,7 @@
      "links": [],
      "last_edited": "2025-10-02T14:23:48+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "rose-st-sidewalk-replacement",
@@ -6652,7 +6354,7 @@
      ],
      "last_edited": "2025-09-29T20:48:47+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-champlain-sidewalk-replacement",
@@ -6685,7 +6387,7 @@
      "links": [],
      "last_edited": "2025-08-29T20:00:13+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "church-street-sidewalk-replacement",
@@ -6718,7 +6420,7 @@
      "links": [],
      "last_edited": "2025-07-21T15:01:03+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "from-rich-will-check",
@@ -6749,7 +6451,7 @@
      "links": [],
      "last_edited": "2025-07-21T15:00:00+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "from-rich",
@@ -6781,7 +6483,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:59:31+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "hillside-ter-sidewalk-replacement",
@@ -6814,7 +6516,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:55:42+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "germain-street-sidewalk-replacement",
@@ -6847,7 +6549,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:55:25+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "glenwood-ln-crack-sealing",
@@ -6881,7 +6583,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cwsrf-pipe-rehabilitation-project-rf1-187",
@@ -6971,7 +6673,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "hope-st-crack-sealing",
@@ -7005,7 +6707,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "billings-ct-sidewalk-replacement",
@@ -7041,7 +6743,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "south-cove-sewage-pump-station-improvements",
@@ -7074,7 +6776,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "stormwater-pipe-replacement",
@@ -7114,7 +6816,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "institute-rd-crack-sealing",
@@ -7148,7 +6850,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "2020-paving-water-resources-capital-improvements",
@@ -7190,7 +6892,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy22-paving-flynn-avenue",
@@ -7223,7 +6925,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "birchcliff-pkwy-greenway",
@@ -7256,7 +6958,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "walnut-sidewalk-replacement",
@@ -7289,7 +6991,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "ethan-allen-james-gazo-water-main-replacement",
@@ -7322,7 +7024,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cliff-st-water-main-consolidation",
@@ -7353,7 +7055,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-prospect-st-paving",
@@ -7388,7 +7090,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "caroline-st-sidewalk-replacement",
@@ -7425,7 +7127,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "http://burlingtonvt.gov/dpw/reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "deforest-hgts-crack-sealing",
@@ -7459,7 +7161,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cedar-rose-st-stormwater-retrofit",
@@ -7492,7 +7194,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "oakledge-lower-restroom-rehabilitation",
@@ -7525,7 +7227,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "lori-lane-sidewalk-replacement",
@@ -7560,7 +7262,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "ward-street-sidewalk-replacement",
@@ -7596,7 +7298,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cherry-ln-sidewalk-replacement",
@@ -7632,7 +7334,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "interval-ave-crack-sealing",
@@ -7666,7 +7368,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-winooski-ave-sidewalk-replacement",
@@ -7703,7 +7405,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "austin-home-to-red-rocks",
@@ -7738,7 +7440,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-willard-howard-shelburne-sidewalk-replacement",
@@ -7774,7 +7476,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "adams-st-crack-sealing",
@@ -7808,7 +7510,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "robinson-pkwy-water-main-replacement",
@@ -7841,7 +7543,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "from-polygon-layer",
@@ -7873,7 +7575,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "buell-st-crack-sealing",
@@ -7907,7 +7609,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "morse-pl-water-main-replacement",
@@ -7940,7 +7642,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "st-paul-sidewalk-replacement",
@@ -7975,7 +7677,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "colchester-ave-sidepath",
@@ -8006,7 +7708,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "convent-manhattan-outfall-repairs",
@@ -8039,7 +7741,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "orchard-terrace-crack-sealing",
@@ -8073,7 +7775,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-ave-shared-lane-markings",
@@ -8108,7 +7810,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/sites/default/files/PlanBTVWalkBike_MasterPlan_final-PlanOnly.pdf",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "chase-st-patch-paving",
@@ -8139,7 +7841,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "catherine-st-water-main-replacement",
@@ -8172,7 +7874,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "van-patten-pkwy-pump-station-improvements",
@@ -8205,7 +7907,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "upper-leb-stormwater-outfall-rehabilitation",
@@ -8238,7 +7940,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "walnut-oak-archibald-sidewalk-replacement",
@@ -8273,7 +7975,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "alfred-st-crack-sealing",
@@ -8307,7 +8009,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "sidewalk-replacement-bed",
@@ -8340,7 +8042,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "birchcliff-pkwy-traffic-calming",
@@ -8375,7 +8077,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/BirchcliffPkwy",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "so-prospect-sidewalk-replacement",
@@ -8410,7 +8112,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "n-champlain-two-way-protected-bike-lane",
@@ -8443,7 +8145,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "crescent-beach-pump-station-improvements",
@@ -8476,7 +8178,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy23-paving-clark-street",
@@ -8509,7 +8211,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pitkin-st-sidewalk-replacement",
@@ -8545,7 +8247,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "alexis-dr-crack-sealing",
@@ -8579,7 +8281,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "srf-2023-paving-north-prospect-st",
@@ -8612,7 +8314,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "riverside-ave-stormwater-outfall-rehabilitation",
@@ -8645,7 +8347,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-union-sidewalk-replacement",
@@ -8682,7 +8384,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "green-street-sidewalk-replacement",
@@ -8718,7 +8420,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "prospect-pkwy-water-main-replacement",
@@ -8751,7 +8453,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "so-prospect-st-sidewalk-replacement",
@@ -8784,7 +8486,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-winooski-av-maple-adams-sidewalk-replacement",
@@ -8820,7 +8522,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-williams-sidewalk-replacement",
@@ -8856,7 +8558,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "spruce-st-water-main-replacement",
@@ -8889,7 +8591,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "hayward-st-water-main-replacement",
@@ -8922,7 +8624,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "university-place-water-line-consolidation",
@@ -8953,7 +8655,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "winooski-ave-scoping-study-northern-section",
@@ -8988,7 +8690,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.ccrpcvt.org/our-work/transportation/current-projects/corridors-circulation/winooski-avenue-corridor-study/#documents",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "birchcliff-pkwy-water-main-rehabilitation",
@@ -9021,7 +8723,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "traffic-calming",
@@ -9054,7 +8756,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "permeable-bike-parking-in-place-of-greenbelt",
@@ -9090,7 +8792,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "shore-rd-stormwater-pipe-rehabilitation",
@@ -9123,7 +8825,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "hillcrest-dr-water-main-rehabilitation",
@@ -9156,7 +8858,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "sewer-cipp-2018-cherry-st-sanitary",
@@ -9189,7 +8891,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "home-av-crack-sealing",
@@ -9223,7 +8925,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "ledgemere-st-water-main-replacement",
@@ -9256,7 +8958,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "depot-street-greenway",
@@ -9291,7 +8993,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/sites/default/files/PlanBTVWalkBike_MasterPlan_final-PlanOnly.pdf",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "lake-st-sidewalk-replacement",
@@ -9327,7 +9029,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "proctor-pl-pump-station-improvements",
@@ -9360,7 +9062,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-st-curb",
@@ -9393,7 +9095,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "so-willard-sidewalk-replacement",
@@ -9430,7 +9132,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "holly-lane-crack-sealing",
@@ -9464,7 +9166,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "quick-build-intersection-improvements-archibald-in",
@@ -9497,7 +9199,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "inclusion-and-belonging-sculpture",
@@ -9530,7 +9232,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://sites.google.com/view/embraceandbelonging/home",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "fairmount-st-paving",
@@ -9565,7 +9267,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "school-st-water-main-replacement",
@@ -9598,7 +9300,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "chase-st-pump-station-improvements",
@@ -9631,7 +9333,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "s-union-pearl-buell-sidewalk-replacement",
@@ -9666,7 +9368,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "so-union-water-main-replacement",
@@ -9699,7 +9401,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "sidewalk-repair-dpw",
@@ -9734,7 +9436,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/transportation/pedestrians/sidewalks",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "winooski-ave-corridor-study-southern-section",
@@ -9769,7 +9471,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.ccrpcvt.org/our-work/transportation/current-projects/corridors-circulation/winooski-avenue-corridor-study/",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "leddy-park-stormwater-outfall-rehabilitation",
@@ -9802,7 +9504,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "stormwater-manhole-installation",
@@ -9835,7 +9537,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "316-flynn-ave-stormwater-pipe-rehab",
@@ -9868,7 +9570,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "woodlawn-rd-crack-sealing",
@@ -9902,7 +9604,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "vine-st-crack-sealing",
@@ -9936,7 +9638,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy23-proposed-patching-cottage-grove-grey-meadow",
@@ -9967,7 +9669,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cedar-lafountain-st-stormwater-retrofit",
@@ -10000,7 +9702,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "institute-rd-sidewalk-replacement",
@@ -10035,7 +9737,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "walnut-archibald-willow-sidewalk-replacement",
@@ -10070,7 +9772,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "ledge-rd-curb",
@@ -10103,7 +9805,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pine-lakeside-flynn-water-main-replacement",
@@ -10136,7 +9838,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "n-willard-pearl-adsit-sidewalk-replacement",
@@ -10172,7 +9874,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "plattsburg-ave-paving",
@@ -10203,7 +9905,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "beech-st-crack-sealing",
@@ -10237,7 +9939,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "overlake-park-crack-sealing",
@@ -10271,7 +9973,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "conger-ave-water-main-replacement",
@@ -10304,7 +10006,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "loomis-st-water-main-replacement",
@@ -10337,7 +10039,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-ave-shore-rd-ethan-allen-parkway-paving",
@@ -10371,7 +10073,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-av-sidewalk-replacement",
@@ -10407,7 +10109,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cherry-st-water-main-replacement",
@@ -10440,7 +10142,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "route-127-patch",
@@ -10471,7 +10173,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pine-st-sidewalk-replacement",
@@ -10504,7 +10206,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "505-riverside-ave-outfall-rehabilitation",
@@ -10537,7 +10239,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "catherine-st-sidewalk-replacement",
@@ -10573,7 +10275,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "allen-st-paving",
@@ -10604,7 +10306,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy21-street-paving",
@@ -10635,7 +10337,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "pine-st-paving",
@@ -10670,7 +10372,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/CEDO/TIF-Public-Improvements",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "curb-reconstruction-dpw",
@@ -10706,7 +10408,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "upper-n-beach-pump-station-improvements",
@@ -10737,7 +10439,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "howard-st-water-main-replacement",
@@ -10770,7 +10472,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "water-plant-pump-station-improvements",
@@ -10801,7 +10503,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "curtis-ave-water-main-replacement",
@@ -10834,7 +10536,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "colchester-ave-stormwater-pipe-rehab-2017",
@@ -10867,7 +10569,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "flynn-ave-advisory-bike-lanes",
@@ -10900,7 +10602,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "st-paul-shelburne-rd-howard-sidewalk-replacem",
@@ -10935,7 +10637,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "strong-st-sidewalk-replacement",
@@ -10971,7 +10673,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "st-paul-street-water-main-replacement",
@@ -11002,7 +10704,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "buell-st-sidewalk-replacement",
@@ -11035,7 +10737,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cedar-n-champlain-stormwater-retrofit",
@@ -11068,7 +10770,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "summit-st-sidewalk-replacement",
@@ -11101,7 +10803,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "st-paul-street-paving",
@@ -11136,7 +10838,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/CEDO/TIF-Public-Improvements",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "howard-curb-replacement-program",
@@ -11169,7 +10871,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "great-streets-bank-street-reconstruction",
@@ -11204,7 +10906,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "http://www.burlingtonvt.gov/GreatStreetsSP",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cambrian-rise",
@@ -11237,7 +10939,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "city-place-burlington",
@@ -11270,7 +10972,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://cityplaceburlington.com",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "edgemore-dr-underground-rebuild-phase-iii",
@@ -11301,7 +11003,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "uvm-athlethic-facility",
@@ -11332,7 +11034,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "scarff-underground-rebuild",
@@ -11363,7 +11065,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "appletree-point-13-8kv-conversion",
@@ -11394,7 +11096,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "buell-st-3-phase-conversion",
@@ -11425,7 +11127,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "1l4-reconductor-p3149-to-p3169",
@@ -11456,7 +11158,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "harbor-watch-urd-cable-replacement",
@@ -11487,7 +11189,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "1l4-long-spans",
@@ -11518,7 +11220,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "uvm-firestone-building",
@@ -11549,7 +11251,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "battery-pearl-switchgear-replacement",
@@ -11580,7 +11282,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "main-prospect-switchgear-replacement",
@@ -11611,7 +11313,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "main-street-great-streets",
@@ -11646,7 +11348,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://greatstreetsbtv.com/",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "cy24-paving-archibald-patch",
@@ -11677,7 +11379,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "intervale-patch-paving",
@@ -11710,7 +11412,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "wastewater-headworks-improvements",
@@ -11739,7 +11441,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "north-ave-sw-pipe-replacement",
@@ -11770,7 +11472,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "apple-tree-point-partial-water-main-replacement",
@@ -11803,7 +11505,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "champlain-parkway-final-contract",
@@ -11840,7 +11542,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://champlainparkway.com/",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "lakeview-cemetery-section-8-phase-1",
@@ -11871,7 +11573,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "calahan-park-scoreboard-replacement",
@@ -11904,7 +11606,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/974/Penny-For-Parks",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "dredging-perkins-pier",
@@ -11935,7 +11637,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "schifilliti-park-restroom-renovation",
@@ -11966,7 +11668,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     },
     {
      "slug": "n-champlain-2-way-protected-bike-lane",
@@ -12001,7 +11703,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://burlingtonvt.gov/624/North-Champlain-Protected-Bike-Lane",
-     "verified": "2026-11-13"
+     "verified": "2026-11-14"
     }
    ],
    "ok": true,
