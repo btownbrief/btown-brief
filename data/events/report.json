@@ -1,40 +1,40 @@
 {
- "generated": "2026-11-13T20:01:47-05:00",
+ "generated": "2026-11-14T11:03:43-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 14,
-   "seconds": 6.2
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 2.3
+   "count": 62,
+   "seconds": 4.7
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 81,
-   "seconds": 7.1
+   "count": 82,
+   "seconds": 4.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 153,
-   "seconds": 2.6
+   "count": 141,
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 172,
-   "seconds": 4.5
+   "count": 171,
+   "seconds": 4.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 31,
-   "seconds": 3.5
+   "count": 32,
+   "seconds": 3.4
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-13&end_date=2027-01-12&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-14&end_date=2027-01-13&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 190,
-   "seconds": 70.7
+   "count": 185,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 10,
+   "count": 9,
    "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 33.0
+   "seconds": 32.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 640,
-   "seconds": 33.0
+   "count": 630,
+   "seconds": 30.8
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,28 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 20.2
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 570,
-   "seconds": 74.3
+   "count": 567,
+   "seconds": 73.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 57,
-   "seconds": 111.6
+   "seconds": 104.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
-   "seconds": 0.2
+   "count": 20,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 0,
-   "error": "parksrec: all city iCalendar feeds failed",
-   "staleDays": 0
+   "count": 142,
+   "seconds": 15.6
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,86 +108,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 87,
-   "seconds": 5.0
+   "count": 85,
+   "seconds": 2.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 22,
-   "seconds": 18.5
+   "count": 23,
+   "seconds": 17.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2792,
-   "seconds": 3.6
+   "count": 2744,
+   "seconds": 23.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 2.8
+   "seconds": 3.1
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 285,
-   "seconds": 11.1
+   "count": 266,
+   "seconds": 17.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 168,
+   "count": 154,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 49,
-   "seconds": 64.8
+   "count": 47,
+   "seconds": 60.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 35,
-   "seconds": 0.4
+   "count": 34,
+   "seconds": 0.3
   }
  },
- "gathered": 5507,
- "afterDedup": 2328,
- "duplicatesMerged": 3179,
- "final": 2418,
- "firecrawlCalls": 1,
+ "gathered": 5529,
+ "afterDedup": 2417,
+ "duplicatesMerged": 3112,
+ "final": 2438,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Mad Robin Contra Dance",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "sevendays",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "Dwight + Nicole Winter Soiree",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "champlainvalley"
-   ],
-   "date": "2026-12-11"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-11"
-  },
   {
    "kept": {
     "title": "Reindeer LIVE",
@@ -2311,22 +2275,22 @@
   },
   {
    "kept": {
-    "title": "'Very Eric Carle' Exhibit",
+    "title": "Second Saturdays",
     "source": "sevendays"
    },
    "merged_sources": [
-    "helloburlington",
+    "champlainvalley",
     "sevendays"
    ],
    "date": "2027-01-09"
   },
   {
    "kept": {
-    "title": "Second Saturdays",
+    "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
    "merged_sources": [
-    "champlainvalley",
+    "helloburlington",
     "sevendays"
    ],
    "date": "2027-01-09"
@@ -2389,6 +2353,17 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-12"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2397,44 +2372,32 @@
     "sevendays"
    ],
    "date": "2027-01-12"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-13"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-13"
   }
  ],
  "changes": [
-  {
-   "id": "53860be4a047",
-   "title": "Lunch with the Poets",
-   "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-13T12:21:17-05:00"
-  },
-  {
-   "id": "0228ce26be51",
-   "title": "'My Undesirable Friends: Part II — Exile'",
-   "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
-  {
-   "id": "379e419b171f",
-   "title": "Ariel Zevon & The Wolf",
-   "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
-  {
-   "id": "b61e88e2ec41",
-   "title": "Kathleen Schneider",
-   "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-12T20:28:02-05:00"
-  },
-  {
-   "id": "93c3f3524255",
-   "title": "Trystan Bates",
-   "date": "2026-11-13",
-   "change": "missing",
-   "lastSeen": "2026-11-12T20:28:02-05:00"
-  },
   {
    "id": "288d4c48ca7d",
    "title": "Chess Club",
@@ -2448,6 +2411,20 @@
    "date": "2026-11-14",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
+  },
+  {
+   "id": "5e351c87e135",
+   "title": "Kathleen Schneider",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-13T20:01:47-05:00"
+  },
+  {
+   "id": "e69b93122827",
+   "title": "Trystan Bates",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-13T20:01:47-05:00"
   },
   {
    "id": "7a24d69102fd",
@@ -2520,11 +2497,11 @@
    "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
-   "id": "2a1c7633f5af",
-   "title": "Thanksgiving Day",
+   "id": "963fa6eb41fc",
+   "title": "CLOSED - Thanksgiving Day",
    "date": "2026-11-26",
    "change": "missing",
-   "lastSeen": "2026-11-13T12:21:17-05:00"
+   "lastSeen": "2026-11-13T20:01:47-05:00"
   },
   {
    "id": "0e28a1fa550e",
@@ -2532,12 +2509,6 @@
    "date": "2026-11-29",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
-  },
-  {
-   "id": "41a44b9691e0",
-   "title": "UDL Campfire - Action and Expression",
-   "date": "2026-12-01",
-   "change": "dropped"
   },
   {
    "id": "11cc6ac55220",
