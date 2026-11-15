@@ -431,15 +431,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10313": {
-    "name": "Ward 2 NPA",
-    "start": "2026-11-12T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Ward 2 NPA Agenda 11/12/2026",
-     "Ward 2 NPA Agenda Packet 11/12/2026"
-    ]
-   },
    "10315": {
     "name": "Special Fire Commission Meeting",
     "start": "2026-11-13T08:30:00+00:00",
@@ -559,6 +550,15 @@
     "files": [
      "Ward 8 NPA Agenda 11/18/2026 v3",
      "Ward 8 NPA Agenda Packet 11/18/2026"
+    ]
+   },
+   "9967": {
+    "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
+    "start": "2026-11-18T18:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "IZCWG Meeting Agenda",
+     "IZCWG Meeting Packet"
     ]
    }
   }
@@ -863,11 +863,11 @@
       "summary": "Vermont's top journalists join moderator Mitch Wertlieb to delve into the most important news stories of the week."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-11-13/vermont-musician-and-collage-artists-song-is-a-tour-of-his-neighborhood",
-      "title": "Vermont musician and collage artist's song is a tour of his neighborhood",
-      "link": "https://www.vermontpublic.org/local-news/2026-11-13/vermont-musician-and-collage-artists-song-is-a-tour-of-his-neighborhood",
+      "id": "https://www.vermontpublic.org/local-news/2026-11-13/jason-eaton-asks-court-for-new-trial-citing-negative-media-coverage",
+      "title": "Jason Eaton asks court for a new trial, citing 'negative' media coverage",
+      "link": "https://www.vermontpublic.org/local-news/2026-11-13/jason-eaton-asks-court-for-new-trial-citing-negative-media-coverage",
       "ts": "2026-11-13T10:00:00+00:00",
-      "summary": "\"Sirens\" is The Friday Song from Burlington-based musician Ben Roque."
+      "summary": "A jury convicted Eaton in September on three counts of attempted second-degree murder. His attorneys, in a motion filed last month, said that reporting about their client prior to the trial was uniformly negative and made it impossible for him to get a fair trial. They also argue that jurors didn’t follow court instructions during deliberations."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-11-13/vermont-adds-homeless-shelter-capacity-still-not-enough-meet-need",
@@ -877,11 +877,11 @@
       "summary": "For the first time in recent memory, Vermont has more beds in traditional shelters for people experiencing homelessness than the number of state-funded motel rooms. Temporary winter shelters will once again supplement the offerings on the coldest nights."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-11-13/jason-eaton-asks-court-for-new-trial-citing-negative-media-coverage",
-      "title": "Jason Eaton asks court for a new trial, citing 'negative' media coverage",
-      "link": "https://www.vermontpublic.org/local-news/2026-11-13/jason-eaton-asks-court-for-new-trial-citing-negative-media-coverage",
+      "id": "https://www.vermontpublic.org/local-news/2026-11-13/vermont-musician-and-collage-artists-song-is-a-tour-of-his-neighborhood",
+      "title": "Vermont musician and collage artist's song is a tour of his neighborhood",
+      "link": "https://www.vermontpublic.org/local-news/2026-11-13/vermont-musician-and-collage-artists-song-is-a-tour-of-his-neighborhood",
       "ts": "2026-11-13T10:00:00+00:00",
-      "summary": "A jury convicted Eaton in September on three counts of attempted second-degree murder. His attorneys, in a motion filed last month, said that reporting about their client prior to the trial was uniformly negative and made it impossible for him to get a fair trial. They also argue that jurors didn’t follow court instructions during deliberations."
+      "summary": "\"Sirens\" is The Friday Song from Burlington-based musician Ben Roque."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-11-12/vermont-to-get-nearly-190m-federal-rural-health-funding",
@@ -943,6 +943,27 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "HHXOTA26INH6JASDWLJGJ4UPWQ",
+      "title": "Vermont Pub and Brewery serves final beers after 38 years",
+      "link": "https://www.wcax.com/2026/11/15/vermont-pub-brewery-serves-final-beers-after-38-years/",
+      "ts": "2026-11-15T00:55:41+00:00",
+      "summary": "Founder Greg Noonan paved the way for craft brewing in Vermont."
+     },
+     {
+      "id": "PDAOF2WKVVAC3MA572F6IJ5MKA",
+      "title": "BTV flights relatively back to normal, delays still expected",
+      "link": "https://www.wcax.com/2026/11/15/btv-flights-relatively-back-normal-delays-still-expected/",
+      "ts": "2026-11-15T00:53:26+00:00",
+      "summary": "Aviation director says six flights were affected right away Friday evening."
+     },
+     {
+      "id": "3IZPZ25NDJCK5LNBTE5RDYLHPM",
+      "title": "Vermont Air National Guard members return from Germany",
+      "link": "https://www.wcax.com/2026/11/15/vermont-air-national-guard-members-return-germany/",
+      "ts": "2026-11-15T00:52:19+00:00",
+      "summary": "About 70 return Saturday after training Ukrainian soldiers; more expected Sunday."
+     },
      {
       "id": "YFW7QDHKXJAXJC7PGIGVSKB3RE",
       "title": "Vermont officials, criminal justice reform advocates explore ‘second-look’ sentencing legislation",
@@ -1271,32 +1292,67 @@
       "link": "https://www.wcax.com/2026/11/11/rutland-unveils-world-war-ii-memorial-honoring-fallen-service-members/",
       "ts": "2026-11-12T00:52:07+00:00",
       "summary": "A new memorial honoring the “greatest generation” was unveiled in Rutland on Wednesday to mark Veterans Day."
-     },
-     {
-      "id": "FWHLYL7BQ5ENDGGMLEIRKHTFPM",
-      "title": "Molly Gray outlines priorities for return to Vermont Statehouse",
-      "link": "https://www.wcax.com/2026/11/11/molly-gray-outlines-priorities-return-vermont-statehouse/",
-      "ts": "2026-11-11T23:07:04+00:00",
-      "summary": "WCAX reporter Abigail Saxe took a walk with Gray and discussed policy priorities."
-     },
-     {
-      "id": "5JEUL7BLOFGKNJFC4A3S6DCF3E",
-      "title": "Welch pushes to extend PACT Act protections to Iran war veterans",
-      "link": "https://www.wcax.com/2026/11/11/welch-pushes-extend-pact-act-protections-iran-war-veterans/",
-      "ts": "2026-11-11T23:04:00+00:00",
-      "summary": "Vermont Sen. Peter Welch is pushing to make sure veterans of the ongoing Iran war can access available benefits."
-     },
-     {
-      "id": "6KP4GFYJFFFTZNCGPQM6WWSRBQ",
-      "title": "Sudbury neighbors serve up soup and support for veterans",
-      "link": "https://www.wcax.com/2026/11/11/sudbury-neighbors-serve-up-soup-support-veterans/",
-      "ts": "2026-11-11T22:45:39+00:00",
-      "summary": "In Vermont’s Own Sudbury, a small group of women is honoring military members and making sure they’re well fed, too."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "74431820",
+      "title": "Rex Ryan will appear on Sunday NFL Countdown",
+      "link": "https://www.mynbc5.com/article/rex-ryan-on-espn-sunday-nfl-countdown/74431820",
+      "ts": "2026-11-15T02:36:00+00:00",
+      "summary": "ESPN will keep Rex Ryan on the air while he faces misdemeanor charges from an alleged hit-and-run in Nashville,"
+     },
+     {
+      "id": "74431766",
+      "title": "NFL teams with German mascots wooing fans in Munich",
+      "link": "https://www.mynbc5.com/article/nfl-teams-with-german-mascots/74431766",
+      "ts": "2026-11-15T01:45:00+00:00",
+      "summary": "NFL teams are using mascot diplomacy to win over international fans, and several teams have created German versions of their fun and furry characters"
+     },
+     {
+      "id": "74431705",
+      "title": "'It's insane': Lost class ring found after six years",
+      "link": "https://www.mynbc5.com/article/clemson-utility-workers-find-lost-class-ring/74431705",
+      "ts": "2026-11-15T00:49:00+00:00",
+      "summary": "Two Clemson utility workers discovered a class ring lost for six years, reuniting its owner with decades of cherished memories."
+     },
+     {
+      "id": "74298414",
+      "title": "2026 VPA Football Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-vpa-football-playoffs-bracket/74298414",
+      "ts": "2026-11-15T00:06:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the Vermont high school gridiron"
+     },
+     {
+      "id": "74431436",
+      "title": "Police lift evacuation order after bomb found near ethanol plant in central Illinois",
+      "link": "https://www.mynbc5.com/article/peoria-ethanol-plant-bomb-evacuation-lifted/74431436",
+      "ts": "2026-11-15T00:03:00+00:00",
+      "summary": "An evacuation order that forced hundreds of people from their homes near an industrial site in central Illinois was lifted Saturday after law enforcement agencies completed a search of the area"
+     },
+     {
+      "id": "74431219",
+      "title": "New Orleans port sues to get control of tanker that crashed into cruise ship on Mississippi River",
+      "link": "https://www.mynbc5.com/article/new-orleans-port-sues-to-get-control-of-tanker-that-crashed-into-cruise-ship-on-mississippi-river/74431219",
+      "ts": "2026-11-14T23:48:00+00:00",
+      "summary": "New Orleans port officials have sued the owner of a tanker that slammed into a cruise ship on the Mississippi River."
+     },
+     {
+      "id": "74431505",
+      "title": "'Almost magic': SpaceX's Starship Flight 15 makes history",
+      "link": "https://www.mynbc5.com/article/starship-flight-15-historic-launch-booster-upper-stage/74431505",
+      "ts": "2026-11-14T23:35:00+00:00",
+      "summary": "SpaceX on Friday launched the 15th flight test of its Starship rocket from Starbase in Texas and, on Saturday, successfully caught the upper stage of the launch vehicle."
+     },
+     {
+      "id": "74430639",
+      "title": "US air travel schedule should recover from ground stop by the end of Sunday, FAA says",
+      "link": "https://www.mynbc5.com/article/faa-nationwide-ground-stop-sean-duffy-update/74430639",
+      "ts": "2026-11-14T23:28:00+00:00",
+      "summary": "Transportation Secretary Sean Duffy gives an update Saturday at the White House after rare FAA nationwide ground stop."
+     },
      {
       "id": "74431136",
       "title": "With shifting Iran rhetoric following US elections, Trump leaves Mideast in limbo about path ahead",
@@ -1333,13 +1389,6 @@
       "summary": "Nico Edwards said he heard people blowing their horns and saw the man attempting to cross the tracks at the Blue Heron Boulevard and President Barack Obama Highway intersection."
      },
      {
-      "id": "74431219",
-      "title": "New Orleans port sues to get control of tanker that crashed into cruise ship on Mississippi River",
-      "link": "https://www.mynbc5.com/article/new-orleans-port-sues-to-get-control-of-tanker-that-crashed-into-cruise-ship-on-mississippi-river/74431219",
-      "ts": "2026-11-14T21:20:00+00:00",
-      "summary": "New Orleans port officials have sued the owner of a tanker that slammed into a cruise ship on the Mississippi River."
-     },
-     {
       "id": "74431180",
       "title": "Creole Queen crew rescues nine after Mississippi cruise ship collision",
       "link": "https://www.mynbc5.com/article/creole-queen-crew-rescue-mississippi-cruise-ship-collision/74431180",
@@ -1352,13 +1401,6 @@
       "link": "https://www.mynbc5.com/article/faa-ground-stop-when-flight-delays-return-to-normal/74430323",
       "ts": "2026-11-14T18:05:00+00:00",
       "summary": "Some flights had resumed as of Saturday morning, but many passengers remained stranded."
-     },
-     {
-      "id": "74430639",
-      "title": "US air travel schedule should recover from ground stop by the end of Sunday, FAA says",
-      "link": "https://www.mynbc5.com/article/faa-nationwide-ground-stop-sean-duffy-update/74430639",
-      "ts": "2026-11-14T17:49:00+00:00",
-      "summary": "Transportation Secretary Sean Duffy gives an update Saturday at the White House after rare FAA nationwide ground stop."
      },
      {
       "id": "74428717",
@@ -1394,48 +1436,6 @@
       "link": "https://www.mynbc5.com/article/avril-lavigne-welcomes-first-child/74430493",
       "ts": "2026-11-14T15:10:00+00:00",
       "summary": "Avril Lavigne has welcomed her first child, a baby (skater) girl, the pop-punk singer revealed on social media on Friday."
-     },
-     {
-      "id": "74430373",
-      "title": "Charted: Here's how FAA ground stop compares to other flight cancellations, delays this year",
-      "link": "https://www.mynbc5.com/article/flight-delay-cancellation-faa-ground-stop/74430373",
-      "ts": "2026-11-14T15:05:00+00:00",
-      "summary": "See charts on how the Federal Aviation Administration's nationwide ground stop on Friday compares to other flight cancellations and delays this year."
-     },
-     {
-      "id": "74426654",
-      "title": "Plattsburgh opens ADA-accessible bocce ball courts",
-      "link": "https://www.mynbc5.com/article/plattsburgh-bocce-ball-courts-south-acres-park/74426654",
-      "ts": "2026-11-14T14:11:00+00:00",
-      "summary": "Plattsburgh has unveiled four new bocce ball courts at South Acres Park, designed to be accessible for people of all ages and abilities."
-     },
-     {
-      "id": "74426535",
-      "title": "Senior Planet celebrates 10 years of helping seniors",
-      "link": "https://www.mynbc5.com/article/senior-planet-anniversary-plattsburgh/74426535",
-      "ts": "2026-11-14T14:09:00+00:00",
-      "summary": "Senior Planet marked its 10-year anniversary at the Champlain Centre Mall, celebrating a decade of helping seniors learn technology and stay connected."
-     },
-     {
-      "id": "74430258",
-      "title": "New Orleans cruise ship collision: Dispatch audio gives a glimpse into initial chaotic moments",
-      "link": "https://www.mynbc5.com/article/new-orleans-cruise-ship-collision-dispatch-audio/74430258",
-      "ts": "2026-11-14T13:50:00+00:00",
-      "summary": "New dispatch audio gives a glimpse into the chaotic moment a cruise ship was struck by a tanker in the Mississippi River in New Orleans on Friday."
-     },
-     {
-      "id": "74430170",
-      "title": "Things to do: Nov. 14, 2026",
-      "link": "https://www.mynbc5.com/article/things-to-do-nov-14-2026/74430170",
-      "ts": "2026-11-14T13:09:00+00:00",
-      "summary": "Looking for festive activities to get you in the holiday spirit? NBC5's Andrew Grautski has you covered with \"Things to do.\""
-     },
-     {
-      "id": "74430091",
-      "title": "Travelers around the country react after rare FAA nationwide ground stop",
-      "link": "https://www.mynbc5.com/article/faa-nationwide-ground-stop-traveler-impacts/74430091",
-      "ts": "2026-11-14T12:37:00+00:00",
-      "summary": "Thousands of travelers around the country were left scrambling to make hotel accommodations or find other ways to get to their destinations after the FAA's rare nationwide ground stop on Friday."
      }
     ]
    },
@@ -1899,20 +1899,20 @@
     "venue": "AO Glass"
    },
    {
-    "id": "b5fec84d51f4",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/317130965/",
-    "ts": "2026-10-16T10:12:13-04:00",
-    "start": "2026-11-14T10:00:00-05:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
     "id": "54a0cff7297f",
     "title": "Felted Acorns from Fluffy Sheep",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/felted-acorns-from-fluffy-sheep/20035294/2026-11-14T10",
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-11-14T10:00:00-05:00",
     "venue": "Shelburne Farms"
+   },
+   {
+    "id": "b5fec84d51f4",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/317130965/",
+    "ts": "2026-10-16T10:12:13-04:00",
+    "start": "2026-11-14T10:00:00-05:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "c5288060e76d",
@@ -1931,20 +1931,20 @@
     "venue": "Winooski Memorial Library"
    },
    {
-    "id": "a8124fe39ea2",
-    "title": "French Conversation for All",
-    "link": "https://community.sevendaysvt.com/event/french-conversation-for-all-35203431",
-    "ts": "2026-09-15T19:10:06-04:00",
-    "start": "2026-11-14T10:30:00-05:00",
-    "venue": "Dorothy Alling Memorial Library"
-   },
-   {
     "id": "647d3d3ec9c0",
     "title": "'Sea Otters: A Wild Family Adventure 3D'",
     "link": "https://community.sevendaysvt.com/event/sea-otters-a-wild-family-adventure-3d-44804713",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14T10:30:00-05:00",
     "venue": "ECHO, Leahy Center for Lake Champlain"
+   },
+   {
+    "id": "a8124fe39ea2",
+    "title": "French Conversation for All",
+    "link": "https://community.sevendaysvt.com/event/french-conversation-for-all-35203431",
+    "ts": "2026-09-15T19:10:06-04:00",
+    "start": "2026-11-14T10:30:00-05:00",
+    "venue": "Dorothy Alling Memorial Library"
    },
    {
     "id": "62ffd27d9e20",
@@ -1973,7 +1973,7 @@
    {
     "id": "e32ad44b48d0",
     "title": "Harvest Festival",
-    "link": "https://shelburnevineyard.com/events-list/harvest-festivall",
+    "link": "https://community.sevendaysvt.com/event/harvest-festival-45681371",
     "ts": "2026-10-29T20:21:30-04:00",
     "start": "2026-11-14T11:00:00-05:00",
     "venue": "Shelburne Vineyard"
@@ -2179,18 +2179,26 @@
     "venue": "Hilton Burlington Lake Champlain"
    },
    {
-    "id": "ba3a93bcf538",
-    "title": "Good Clean Fun! (Family Friendly Show)",
-    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/378591",
-    "ts": "2026-09-15T10:26:13-04:00",
-    "start": "2026-11-14T16:30:00-05:00",
-    "venue": "Vermont Comedy Club"
-   },
-   {
     "id": "8912dfdd454a",
     "title": "Vermont Comedy Club Show: Good Clean Fun Adult",
     "link": "https://secure.rec1.com/VT/south-burlington-vt-recreation-parks/catalog?filter=c2VhcmNoPTQ0MTUzMDQ=",
     "ts": "2026-11-09T15:04:37-05:00",
+    "start": "2026-11-14T16:30:00-05:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
+    "id": "3d4bf089f1d2",
+    "title": "Good Clean Fun! (Family Friendly Improv Show) at VT Comedy Club",
+    "link": "https://www.helloburlingtonvt.com/event/good-clean-fun!-(family-friendly-improv-show)-at-vt-comedy-club/7985/",
+    "ts": "2026-11-14T19:16:41-05:00",
+    "start": "2026-11-14T16:30:00-05:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
+    "id": "ba3a93bcf538",
+    "title": "Good Clean Fun! (Family Friendly Show)",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/378591",
+    "ts": "2026-09-15T10:26:13-04:00",
     "start": "2026-11-14T16:30:00-05:00",
     "venue": "Vermont Comedy Club"
    },
@@ -2307,20 +2315,20 @@
     "venue": "Red Square"
    },
    {
-    "id": "56c65ff4506c",
-    "title": "Eric Bailey, Darkside Skinny Dippers, Ruminations",
-    "link": "https://community.sevendaysvt.com/event/eric-bailey-darkside-skinny-dippers-ruminations-45688735",
-    "ts": "2026-11-12T12:43:53-05:00",
-    "start": "2026-11-14T19:00:00-05:00",
-    "venue": "Queen City Lodge Oddfellows Hall"
-   },
-   {
     "id": "06af563f696a",
     "title": "Paul Asbell",
     "link": "https://community.sevendaysvt.com/event/paul-asbell-45688888",
     "ts": "2026-11-12T12:43:53-05:00",
     "start": "2026-11-14T19:00:00-05:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "56c65ff4506c",
+    "title": "Eric Bailey, Darkside Skinny Dippers, Ruminations",
+    "link": "https://community.sevendaysvt.com/event/eric-bailey-darkside-skinny-dippers-ruminations-45688735",
+    "ts": "2026-11-12T12:43:53-05:00",
+    "start": "2026-11-14T19:00:00-05:00",
+    "venue": "Queen City Lodge Oddfellows Hall"
    },
    {
     "id": "12aa45eb8c55",
@@ -2371,20 +2379,20 @@
     "venue": "Royall Tyler Theatre"
    },
    {
+    "id": "fbbd3d5e6b9c",
+    "title": "Fitter Happier: A Radiohead Tribute",
+    "link": "https://community.sevendaysvt.com/event/fitter-happier-a-radiohead-tribute-45686015",
+    "ts": "2026-09-15T10:26:13-04:00",
+    "start": "2026-11-14T19:30:00-05:00",
+    "venue": "Higher Ground"
+   },
+   {
     "id": "16dc113d0062",
     "title": "Social Band",
     "link": "https://community.sevendaysvt.com/event/social-band-45638918",
     "ts": "2026-10-26T12:18:04-04:00",
     "start": "2026-11-14T19:30:00-05:00",
     "venue": "Richmond Free Library"
-   },
-   {
-    "id": "5de0b54f7555",
-    "title": "HUMP! Film Festival",
-    "link": "https://community.sevendaysvt.com/event/hump-film-festival-45641086",
-    "ts": "2026-11-02T14:46:10-05:00",
-    "start": "2026-11-14T19:30:00-05:00",
-    "venue": "Majestic 10"
    },
    {
     "id": "ad2a7beef816",
@@ -2403,12 +2411,12 @@
     "venue": "ArtsRiot"
    },
    {
-    "id": "fbbd3d5e6b9c",
-    "title": "Fitter Happier: A Radiohead Tribute",
-    "link": "https://community.sevendaysvt.com/event/fitter-happier-a-radiohead-tribute-45686015",
-    "ts": "2026-09-15T10:26:13-04:00",
+    "id": "5de0b54f7555",
+    "title": "HUMP! Film Festival",
+    "link": "https://community.sevendaysvt.com/event/hump-film-festival-45641086",
+    "ts": "2026-11-02T14:46:10-05:00",
     "start": "2026-11-14T19:30:00-05:00",
-    "venue": "Higher Ground"
+    "venue": "Majestic 10"
    },
    {
     "id": "50113d4e22c7",
@@ -2547,20 +2555,20 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
-    "id": "7f94dc9c7bf9",
-    "title": "'Autumn into Winter: Vermont Landscape Paintings'",
-    "link": "https://community.sevendaysvt.com/event/autumn-into-winter-vermont-landscape-paintings-45646575",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "J. Kenneth Fine Art"
-   },
-   {
     "id": "e7d9df37c46c",
     "title": "Jeffrey Trubisz",
     "link": "https://community.sevendaysvt.com/event/jeffrey-trubisz-45530449",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "7f94dc9c7bf9",
+    "title": "'Autumn into Winter: Vermont Landscape Paintings'",
+    "link": "https://community.sevendaysvt.com/event/autumn-into-winter-vermont-landscape-paintings-45646575",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "J. Kenneth Fine Art"
    },
    {
     "id": "646e6f03939f",
@@ -2603,20 +2611,52 @@
     "venue": "Patrick Leahy Burlington International Airport"
    },
    {
-    "id": "e10559aae517",
-    "title": "'Thinking Different Changes You and the World'",
-    "link": "https://community.sevendaysvt.com/event/thinking-different-changes-you-and-the-world-45663366",
+    "id": "3fc9951ae495",
+    "title": "Art at the Hospital: Tessa Holmes",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-tessa-holmes-45640139",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
-    "venue": "Champlain College"
+    "venue": "UVM Medical Center"
    },
    {
-    "id": "770c7130372b",
-    "title": "Lucia Monge",
-    "link": "https://community.sevendaysvt.com/event/lucia-monge-45659986",
+    "id": "e10f2041d959",
+    "title": "Art at City Hall: Community Steamroller Block Prints",
+    "link": "https://community.sevendaysvt.com/event/art-at-city-hall-community-steamroller-block-prints-45640150",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
-    "venue": "Saint Michael's College"
+    "venue": "Burlington City Hall"
+   },
+   {
+    "id": "037e5fef6f9c",
+    "title": "'Dark Autumnal Work'",
+    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "Gaston Weed Company"
+   },
+   {
+    "id": "6864fcf5c7b4",
+    "title": "Art at the Hospital: Robert Waldo Brunelle Jr.",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-robert-waldo-brunelle-jr-45639665",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "af5cedae0bf8",
+    "title": "'Small Works'",
+    "link": "https://community.sevendaysvt.com/event/small-works-45677526",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "dd604a5d5b0d",
+    "title": "Art at the Hospital: Kari Meyer",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-kari-meyer-45640142",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "UVM Medical Center"
    },
    {
     "id": "8d39785a1e55",
@@ -2635,57 +2675,25 @@
     "venue": "UVM Medical Center"
    },
    {
+    "id": "e10559aae517",
+    "title": "'Thinking Different Changes You and the World'",
+    "link": "https://community.sevendaysvt.com/event/thinking-different-changes-you-and-the-world-45663366",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "Champlain College"
+   },
+   {
+    "id": "770c7130372b",
+    "title": "Lucia Monge",
+    "link": "https://community.sevendaysvt.com/event/lucia-monge-45659986",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-14",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "ff18c5d1d5fe",
     "title": "Art at the Hospital: Trevor Tebbs",
     "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-trevor-tebbs-45640136",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "af5cedae0bf8",
-    "title": "'Small Works'",
-    "link": "https://community.sevendaysvt.com/event/small-works-45677526",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "The S.P.A.C.E. Gallery"
-   },
-   {
-    "id": "3a627c4aaff2",
-    "title": "Art at the Hospital: Carol Boucher",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-carol-boucher-45640148",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "6d25baf6eb5f",
-    "title": "Art at the Hospital: Lorraine Manley",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-lorraine-manley-45639662",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "3fc9951ae495",
-    "title": "Art at the Hospital: Tessa Holmes",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-tessa-holmes-45640139",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "e10f2041d959",
-    "title": "Art at City Hall: Community Steamroller Block Prints",
-    "link": "https://community.sevendaysvt.com/event/art-at-city-hall-community-steamroller-block-prints-45640150",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-14",
-    "venue": "Burlington City Hall"
-   },
-   {
-    "id": "6864fcf5c7b4",
-    "title": "Art at the Hospital: Robert Waldo Brunelle Jr.",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-robert-waldo-brunelle-jr-45639665",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
     "venue": "UVM Medical Center"
@@ -2707,20 +2715,20 @@
     "venue": "Fleming Museum of Art"
    },
    {
-    "id": "dd604a5d5b0d",
-    "title": "Art at the Hospital: Kari Meyer",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-kari-meyer-45640142",
+    "id": "3a627c4aaff2",
+    "title": "Art at the Hospital: Carol Boucher",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-carol-boucher-45640148",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
     "venue": "UVM Medical Center"
    },
    {
-    "id": "037e5fef6f9c",
-    "title": "'Dark Autumnal Work'",
-    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
+    "id": "6d25baf6eb5f",
+    "title": "Art at the Hospital: Lorraine Manley",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-lorraine-manley-45639662",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-14",
-    "venue": "Gaston Weed Company"
+    "venue": "UVM Medical Center"
    },
    {
     "id": "f8eb9ed36fe7",
@@ -2761,14 +2769,6 @@
     "ts": "2026-11-13T12:21:17-05:00",
     "start": "2026-11-14",
     "venue": "BCA Center"
-   },
-   {
-    "id": "7a24d69102fd",
-    "title": "Volunteer at the Non-Fiction Comic Fest",
-    "link": "https://fletcherfree.libcal.com/event/15613626",
-    "ts": "2026-09-17T19:05:36-04:00",
-    "start": "2026-11-14",
-    "venue": ""
    },
    {
     "id": "1b1d87b177ff",
@@ -3123,14 +3123,6 @@
     "venue": "Westford Common Hall"
    },
    {
-    "id": "045a73c26841",
-    "title": "Aurora Chamber Singers and Champlain Consort",
-    "link": "https://community.sevendaysvt.com/event/aurora-chamber-singers-and-champlain-consort-45594059",
-    "ts": "2026-11-02T14:46:10-05:00",
-    "start": "2026-11-15T16:00:00-05:00",
-    "venue": "College Street Congregational Church"
-   },
-   {
     "id": "0b765a120c27",
     "title": "Thanksgiving Potluck Dinner",
     "link": "https://community.sevendaysvt.com/event/thanksgiving-potluck-dinner-45596752",
@@ -3145,6 +3137,14 @@
     "ts": "2026-11-12T12:43:53-05:00",
     "start": "2026-11-15T16:00:00-05:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "045a73c26841",
+    "title": "Aurora Chamber Singers and Champlain Consort",
+    "link": "https://community.sevendaysvt.com/event/aurora-chamber-singers-and-champlain-consort-45594059",
+    "ts": "2026-11-02T14:46:10-05:00",
+    "start": "2026-11-15T16:00:00-05:00",
+    "venue": "College Street Congregational Church"
    },
    {
     "id": "122876079501",
@@ -3299,17 +3299,17 @@
     "venue": "Emile A. Gruppe Gallery"
    },
    {
-    "id": "c5e4ef67667d",
-    "title": "Trystan Bates",
-    "link": "https://community.sevendaysvt.com/event/trystan-bates-45560681",
+    "id": "d4cdd74c0a02",
+    "title": "Kathleen Schneider",
+    "link": "https://community.sevendaysvt.com/event/kathleen-schneider-45560539",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-15",
     "venue": "BCA Center"
    },
    {
-    "id": "d4cdd74c0a02",
-    "title": "Kathleen Schneider",
-    "link": "https://community.sevendaysvt.com/event/kathleen-schneider-45560539",
+    "id": "c5e4ef67667d",
+    "title": "Trystan Bates",
+    "link": "https://community.sevendaysvt.com/event/trystan-bates-45560681",
     "ts": "2026-11-14T11:03:43-05:00",
     "start": "2026-11-15",
     "venue": "BCA Center"
@@ -3427,14 +3427,6 @@
     "venue": "UVM Davis Center"
    },
    {
-    "id": "614dc227cc06",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5603",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-16T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "682cbd3c3583",
     "title": "Film screening of The Paper Bag Plan",
     "link": "https://events.uvm.edu/event/film-screeing-of-the-paper-bag-plan",
@@ -3449,6 +3441,14 @@
     "ts": "2026-09-17T10:26:31-04:00",
     "start": "2026-11-16T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "614dc227cc06",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5603",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-16T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "63344b7a5eb6",
@@ -3531,14 +3531,6 @@
     "venue": "Old Spokes Home"
    },
    {
-    "id": "ad9418623e5f",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4648",
-    "ts": "2026-09-17T10:26:31-04:00",
-    "start": "2026-11-16T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "532bfb6a7a71",
     "title": "Monday Yoga",
     "link": "https://www.champlain.edu/event/monday-yoga-4/2026-11-16/",
@@ -3593,6 +3585,14 @@
     "ts": "2026-10-13T19:52:34-04:00",
     "start": "2026-11-16T18:00:00-05:00",
     "venue": "Essex Experience"
+   },
+   {
+    "id": "ad9418623e5f",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4648",
+    "ts": "2026-09-17T10:26:31-04:00",
+    "start": "2026-11-16T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "55d7649cc575",
@@ -3755,20 +3755,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "ab66c6510bfe",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5637",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-17T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "7c05ad0f49f7",
     "title": "Chauncey’s Closet Fall 2026 Outdoor Showcase",
     "link": "https://www.champlain.edu/event/chaunceys-closet-fall-2026-outdoor-showcase/",
     "ts": "2026-10-29T12:24:04-04:00",
     "start": "2026-11-17T11:00:00-05:00",
     "venue": "Finney Quad"
+   },
+   {
+    "id": "ab66c6510bfe",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5637",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-17T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1632ba38d56f",
@@ -4001,6 +4001,14 @@
     "ts": "2026-09-19T09:22:07-04:00",
     "start": "2026-11-17T17:30:00-05:00",
     "venue": "Room 221, Center for Communication & Creative Media (CCM)"
+   },
+   {
+    "id": "b480761b0c32",
+    "title": "5K Run @ Williston Folino's",
+    "link": "https://www.meetup.com/getting-active-in-burlington/events/317429439/",
+    "ts": "2026-11-14T19:16:41-05:00",
+    "start": "2026-11-17T17:30:00-05:00",
+    "venue": "Folino's Pizza Williston"
    },
    {
     "id": "6aea347d6025",
@@ -4379,14 +4387,6 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "76e0df07b62f",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5703",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-18T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "1b28ff7fd358",
     "title": "Stories & Songs for Library Littles",
     "link": "https://fletcherfree.libcal.com/event/17329836",
@@ -4401,6 +4401,14 @@
     "ts": "2026-10-20T19:23:28-04:00",
     "start": "2026-11-18T11:00:00-05:00",
     "venue": "UVM Davis Center"
+   },
+   {
+    "id": "76e0df07b62f",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5703",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-18T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "4cdb20fbf552",
@@ -5027,6 +5035,14 @@
     "venue": "Top of Church St."
    },
    {
+    "id": "e6eee19eb7a9",
+    "title": "SB3C Power Hour: Shop Talk",
+    "link": "https://southburlingtonlibrary.org/sb3c-power-hour-shop-talk",
+    "ts": "2026-11-14T19:16:41-05:00",
+    "start": "2026-11-19T08:30:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "6e565633425d",
     "title": "Toddlertime- 9:15am Session",
     "link": "https://southburlingtonlibrary.org/toddlertime-915am-session",
@@ -5107,14 +5123,6 @@
     "venue": "Dorothy Alling Memorial Library"
    },
    {
-    "id": "81b1062ae8fc",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5736",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-19T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "d6efdbe22064",
     "title": "GROW Preschool Yoga",
     "link": "https://fletcherfree.libcal.com/event/17316905",
@@ -5137,6 +5145,14 @@
     "ts": "2026-10-31T11:29:08-04:00",
     "start": "2026-11-19T11:00:00-05:00",
     "venue": "UVM Davis Center"
+   },
+   {
+    "id": "81b1062ae8fc",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5736",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-19T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "e3820f2a449e",
@@ -5195,20 +5211,20 @@
     "venue": "Burlington Bridge Club"
    },
    {
-    "id": "7b0f8ac9e1cd",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5768",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-19T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "074b182d12b6",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
     "ts": "2026-09-20T09:40:15-04:00",
     "start": "2026-11-19T13:00:00-05:00",
     "venue": "Heineberg Senior Center"
+   },
+   {
+    "id": "7b0f8ac9e1cd",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5768",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-19T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "42a77dc883f2",
@@ -5763,14 +5779,6 @@
     "venue": "Brownell Library"
    },
    {
-    "id": "f3485d788afb",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5800",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-20T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "a1cb6ce26eba",
     "title": "Music With Linda Bassick",
     "link": "https://community.sevendaysvt.com/event/music-with-linda-bassick-45573136",
@@ -5779,9 +5787,17 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
+    "id": "f3485d788afb",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5800",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-20T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
+   },
+   {
     "id": "25cccd680489",
     "title": "Lunch with the Poets",
-    "link": "https://www.meetup.com/burlington-writers/events/rzdwbvyjcpbbc/",
+    "link": "https://www.meetup.com/burlington-writers/events/317430869/",
     "ts": "2026-11-02T14:46:10-05:00",
     "start": "2026-11-20T11:45:00-05:00",
     "venue": "The Innovation Café"
@@ -5803,14 +5819,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "b6dc66a7cb78",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5832",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-20T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "26a1e0b875f2",
     "title": "CAT ECare Training",
     "link": "https://events.uvm.edu/event/cat-ecare-training-nov20",
@@ -5825,6 +5833,14 @@
     "ts": "2026-09-21T12:00:51-04:00",
     "start": "2026-11-20T13:00:00-05:00",
     "venue": "Dorothy Alling Memorial Library"
+   },
+   {
+    "id": "b6dc66a7cb78",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5832",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-20T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "c05d62949aaa",
@@ -6131,14 +6147,6 @@
     "venue": "Standing Stone Wines"
    },
    {
-    "id": "f552d781108c",
-    "title": "Transgender Day of Remembrance",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5369",
-    "ts": "2026-09-21T12:00:51-04:00",
-    "start": "2026-11-20",
-    "venue": "- Burlington VT 05401"
-   },
-   {
     "id": "10183d1b7be2",
     "title": "Youth Poetry Summit",
     "link": "https://community.sevendaysvt.com/event/youth-poetry-summit-45691283",
@@ -6155,6 +6163,14 @@
     "venue": "Hampton Inn Colchester"
    },
    {
+    "id": "f552d781108c",
+    "title": "Transgender Day of Remembrance",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5369",
+    "ts": "2026-09-21T12:00:51-04:00",
+    "start": "2026-11-20",
+    "venue": "- Burlington VT 05401"
+   },
+   {
     "id": "ad6647a529ce",
     "title": "Weekly Bird Walk",
     "link": "https://community.sevendaysvt.com/event/weekly-bird-walk-44890940",
@@ -6163,20 +6179,20 @@
     "venue": "Rock Point"
    },
    {
-    "id": "85ba34211c99",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5864",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-21T08:30:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "4729a2c4c6a7",
     "title": "Domestic Sewing Training",
     "link": "https://app.glueup.com/event/domestic-sewing-training-186817/",
     "ts": "2026-11-13T12:21:17-05:00",
     "start": "2026-11-21T08:30:00-05:00",
     "venue": "Generator Makerspace"
+   },
+   {
+    "id": "85ba34211c99",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5864",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-21T08:30:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "3c86693940ca",
@@ -6203,36 +6219,12 @@
     "venue": "Old Town Cafe & Comics"
    },
    {
-    "id": "7ee095bdf31e",
-    "title": "Generator Tour",
-    "link": "https://app.glueup.com/event/generator-tour-198929/",
-    "ts": "2026-11-12T20:28:02-05:00",
-    "start": "2026-11-21T10:00:00-05:00",
-    "venue": "Generator Makerspace"
-   },
-   {
-    "id": "570dea8dfa90",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/317239328/",
-    "ts": "2026-10-23T10:24:04-04:00",
-    "start": "2026-11-21T10:00:00-05:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
     "id": "0307325bee6c",
     "title": "Family Playshop",
     "link": "https://fletcherfree.libcal.com/event/17359017",
     "ts": "2026-09-22T10:09:50-04:00",
     "start": "2026-11-21T10:00:00-05:00",
     "venue": "Fletcher Free Library"
-   },
-   {
-    "id": "7108f4c85aae",
-    "title": "2026 Tibet Festival",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5504",
-    "ts": "2026-10-13T19:52:34-04:00",
-    "start": "2026-11-21T10:00:00-05:00",
-    "venue": "- Burlington VT 05401"
    },
    {
     "id": "37d2f33e2e9b",
@@ -6291,12 +6283,36 @@
     "venue": "Westford Elementary School"
    },
    {
+    "id": "570dea8dfa90",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/317239328/",
+    "ts": "2026-10-23T10:24:04-04:00",
+    "start": "2026-11-21T10:00:00-05:00",
+    "venue": "Zero Gravity Craft Brewery"
+   },
+   {
     "id": "a9ad50ac97cf",
     "title": "How to Make an Apple Pie & See the Farm",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/how-to-make-an-apple-pie-see-the-farm/20035297/2026-11-21T10",
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-11-21T10:00:00-05:00",
     "venue": "Shelburne Farms"
+   },
+   {
+    "id": "7ee095bdf31e",
+    "title": "Generator Tour",
+    "link": "https://app.glueup.com/event/generator-tour-198929/",
+    "ts": "2026-11-12T20:28:02-05:00",
+    "start": "2026-11-21T10:00:00-05:00",
+    "venue": "Generator Makerspace"
+   },
+   {
+    "id": "7108f4c85aae",
+    "title": "2026 Tibet Festival",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5504",
+    "ts": "2026-10-13T19:52:34-04:00",
+    "start": "2026-11-21T10:00:00-05:00",
+    "venue": "- Burlington VT 05401"
    },
    {
     "id": "ac40339c1751",
@@ -7067,14 +7083,6 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "dc578df6dfa3",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5604",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-23T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "d6e87148a12f-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-11-23/",
@@ -7091,6 +7099,14 @@
     "venue": "Birds of Vermont Museum"
    },
    {
+    "id": "dc578df6dfa3",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5604",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-23T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
+   },
+   {
     "id": "35287627ccfe",
     "title": "Shakespeare Out Loud",
     "link": "https://fletcherfree.libcal.com/event/17497829",
@@ -7105,14 +7121,6 @@
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-11-23T17:00:00-05:00",
     "venue": ""
-   },
-   {
-    "id": "ae19bacf1056",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4649",
-    "ts": "2026-09-24T10:26:17-04:00",
-    "start": "2026-11-23T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "9cdc348ca95f",
@@ -7145,6 +7153,14 @@
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-11-23T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "ae19bacf1056",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4649",
+    "ts": "2026-09-24T10:26:17-04:00",
+    "start": "2026-11-23T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "34c0ee5d5f2c",
@@ -7259,14 +7275,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "547988f2c586",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5638",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-24T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "198d14d797e8",
     "title": "Poetry Group",
     "link": "https://southburlingtonlibrary.org/poetry-group",
@@ -7275,20 +7283,20 @@
     "venue": "South Burlington Public Library"
    },
    {
+    "id": "547988f2c586",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5638",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-24T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
+   },
+   {
     "id": "67a2b5aa8b60",
     "title": "Sculpt HIIT and Flow",
     "link": "https://events.uvm.edu/event/sculpt-hiit-and-flow",
     "ts": "2026-10-12T22:14:11-04:00",
     "start": "2026-11-24T11:45:00-05:00",
     "venue": "Soulshine Power Yoga"
-   },
-   {
-    "id": "aaaa8bb5880a",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5671",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-24T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "49853b41bcd3",
@@ -7313,6 +7321,14 @@
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-11-24T13:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "aaaa8bb5880a",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5671",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-24T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "6a4bb5e86b97",
@@ -8067,12 +8083,12 @@
     "venue": "Citizen Cider"
    },
    {
-    "id": "2a1c7633f5af",
-    "title": "Thanksgiving Day",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5370",
-    "ts": "2026-09-27T10:48:54-04:00",
+    "id": "963fa6eb41fc",
+    "title": "CLOSED - Thanksgiving Day",
+    "link": "https://www.switchbackvt.com/beer-garden-events/closed-thanksgiving-day-2026",
+    "ts": "2026-11-13T20:01:47-05:00",
     "start": "2026-11-26T12:00:00-05:00",
-    "venue": "- Burlington VT 05401"
+    "venue": "Switchback Brewing Company"
    },
    {
     "id": "f709f950e496",
@@ -8091,12 +8107,12 @@
     "venue": "The Essex Resort & Spa"
    },
    {
-    "id": "963fa6eb41fc",
-    "title": "CLOSED - Thanksgiving Day",
-    "link": "https://www.switchbackvt.com/beer-garden-events/closed-thanksgiving-day-2026",
-    "ts": "2026-11-13T20:01:47-05:00",
+    "id": "2a1c7633f5af",
+    "title": "Thanksgiving Day",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5370",
+    "ts": "2026-09-27T10:48:54-04:00",
     "start": "2026-11-26T12:00:00-05:00",
-    "venue": "Switchback Brewing Company"
+    "venue": "- Burlington VT 05401"
    },
    {
     "id": "47bdf86a0f1e",
@@ -8355,20 +8371,20 @@
     "venue": "Outright Vermont"
    },
    {
-    "id": "cabef42d4247",
-    "title": "Public Skate",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5480",
-    "ts": "2026-11-09T21:54:46-05:00",
-    "start": "2026-11-27T15:00:00-05:00",
-    "venue": "Leddy Park"
-   },
-   {
     "id": "7184ce94ab60",
     "title": "Pub Hour",
     "link": "https://calendar.time.ly/vfaca7kw/event/78304347/20261127150000",
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-11-27T15:00:00-05:00",
     "venue": "Vermont Pub and Brewery"
+   },
+   {
+    "id": "cabef42d4247",
+    "title": "Public Skate",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5480",
+    "ts": "2026-11-09T21:54:46-05:00",
+    "start": "2026-11-27T15:00:00-05:00",
+    "venue": "Leddy Park"
    },
    {
     "id": "250901ed172b",
@@ -8579,20 +8595,20 @@
     "venue": "DoubleTree Convention Center - Burlington VT"
    },
    {
-    "id": "5d5e3b700932",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/317259749/",
-    "ts": "2026-10-24T18:43:31-04:00",
-    "start": "2026-11-28T10:00:00-05:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
     "id": "9a82dac56c41",
     "title": "Family Playshop",
     "link": "https://fletcherfree.libcal.com/event/17359018",
     "ts": "2026-09-29T12:06:11-04:00",
     "start": "2026-11-28T10:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "5d5e3b700932",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/317259749/",
+    "ts": "2026-10-24T18:43:31-04:00",
+    "start": "2026-11-28T10:00:00-05:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "7b7c03085031",
@@ -9003,20 +9019,20 @@
     "venue": "Linda’s Place"
    },
    {
-    "id": "6c5bd9ad2a87",
-    "title": "Public Skate",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4832",
-    "ts": "2026-11-09T21:54:46-05:00",
-    "start": "2026-11-29T14:30:00-05:00",
-    "venue": "Leddy Park"
-   },
-   {
     "id": "4e7f05f5eb61",
     "title": "In Good Company",
     "link": "https://shelburnevineyard.com/events-list/in-good-company",
     "ts": "2026-11-06T14:30:13-05:00",
     "start": "2026-11-29T14:30:00-05:00",
     "venue": "Shelburne Vineyard"
+   },
+   {
+    "id": "6c5bd9ad2a87",
+    "title": "Public Skate",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4832",
+    "ts": "2026-11-09T21:54:46-05:00",
+    "start": "2026-11-29T14:30:00-05:00",
+    "venue": "Leddy Park"
    },
    {
     "id": "04de6aebd10e",
@@ -9195,20 +9211,20 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "f94a98c899dd",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5605",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-11-30T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "523810ea0824-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-11-30/",
     "ts": "2026-10-01T12:41:27-04:00",
     "start": "2026-11-30T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "f94a98c899dd",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5605",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-11-30T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "fad965ee9a8f",
@@ -9299,14 +9315,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "f8522061b659",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4650",
-    "ts": "2026-10-01T12:41:27-04:00",
-    "start": "2026-11-30T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "310e2f994a26",
     "title": "Monday Yoga",
     "link": "https://www.champlain.edu/event/monday-yoga-4/2026-11-30/",
@@ -9345,6 +9353,14 @@
     "ts": "2026-10-01T12:41:27-04:00",
     "start": "2026-11-30T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "f8522061b659",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4650",
+    "ts": "2026-10-01T12:41:27-04:00",
+    "start": "2026-11-30T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "efa2e07a3ca9",
@@ -9835,20 +9851,20 @@
     "venue": "Vermont Pub and Brewery"
    },
    {
-    "id": "b21e923f4517",
-    "title": "National Human Rights Month",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5374",
-    "ts": "2026-10-02T11:57:22-04:00",
-    "start": "2026-12-01",
-    "venue": "- Burlington VT 05401"
-   },
-   {
     "id": "381d9bfa5d0f",
     "title": "Daily, ongoing programs for adults",
     "link": "https://brownelllibrary.org/event/daily-ongoing-programs-for-adults-2/",
     "ts": "2026-11-06T14:30:13-05:00",
     "start": "2026-12-01",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "b21e923f4517",
+    "title": "National Human Rights Month",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5374",
+    "ts": "2026-10-02T11:57:22-04:00",
+    "start": "2026-12-01",
+    "venue": "- Burlington VT 05401"
    },
    {
     "id": "54024a1fb321",
@@ -9955,20 +9971,20 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "ae76f0a61ff8",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5705",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-02T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "d710cc25d9ba",
     "title": "Stories & Songs for Library Littles",
     "link": "https://fletcherfree.libcal.com/event/17329838",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-12-02T11:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "ae76f0a61ff8",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5705",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-02T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "a2785a14fc69",
@@ -10209,6 +10225,14 @@
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-12-02T18:00:00-05:00",
     "venue": "First United Methodist Church"
+   },
+   {
+    "id": "08f08a5fd2a7",
+    "title": "Scrabble Night @ The Boardroom",
+    "link": "https://www.meetup.com/friendlytabletopgamers/events/317403225/",
+    "ts": "2026-11-14T19:16:41-05:00",
+    "start": "2026-12-02T18:00:00-05:00",
+    "venue": "The Boardroom"
    },
    {
     "id": "a08d247de0b4",
@@ -10467,14 +10491,6 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "74f8cb8a7e1f",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5738",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-03T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "62e190833906",
     "title": "GROW Preschool Yoga",
     "link": "https://fletcherfree.libcal.com/event/17316909",
@@ -10489,6 +10505,14 @@
     "ts": "2026-10-04T10:58:26-04:00",
     "start": "2026-12-03T11:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "74f8cb8a7e1f",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5738",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-03T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1f378bf1fc57",
@@ -10531,14 +10555,6 @@
     "venue": "Burlington Bridge Club"
    },
    {
-    "id": "e84c5d5ae31c",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5770",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-03T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "d278525bea6b",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
@@ -10553,6 +10569,14 @@
     "ts": "2026-11-06T14:30:13-05:00",
     "start": "2026-12-03T13:00:00-05:00",
     "venue": "Shelburne Museum"
+   },
+   {
+    "id": "e84c5d5ae31c",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5770",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-03T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "49559b0a9af6",
@@ -10893,7 +10917,7 @@
    {
     "id": "7dbae08b9ff3",
     "title": "Lunch with the Poets",
-    "link": "https://www.meetup.com/burlington-writers/events/rzdwbvyjcqbgb/",
+    "link": "https://www.meetup.com/burlington-writers/events/317430100/",
     "ts": "2026-11-02T14:46:10-05:00",
     "start": "2026-12-04T11:45:00-05:00",
     "venue": "The Innovation Café"
@@ -10905,14 +10929,6 @@
     "ts": "2026-10-06T12:14:15-04:00",
     "start": "2026-12-04T12:00:00-05:00",
     "venue": "Farrell Hall"
-   },
-   {
-    "id": "a3db09b9247b",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5834",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-04T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "443ee6c7075e",
@@ -10937,6 +10953,14 @@
     "ts": "2026-10-06T12:14:15-04:00",
     "start": "2026-12-04T13:00:00-05:00",
     "venue": "Howe Library"
+   },
+   {
+    "id": "a3db09b9247b",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5834",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-04T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "ce295aef630a",
@@ -11763,14 +11787,6 @@
     "venue": "Foam Brewers"
    },
    {
-    "id": "6aeb5fd1c257",
-    "title": "Stick & Puck",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5496",
-    "ts": "2026-10-09T20:18:39-04:00",
-    "start": "2026-12-06T13:00:00-05:00",
-    "venue": "Leddy Park"
-   },
-   {
     "id": "a6866b0c9fc6",
     "title": "Member Double Discount Days",
     "link": "https://shelburnemuseum.org/event/member-double-discount-days/2026-12-06/",
@@ -11785,6 +11801,14 @@
     "ts": "2026-11-06T14:30:13-05:00",
     "start": "2026-12-06T13:00:00-05:00",
     "venue": "Foam Brewers"
+   },
+   {
+    "id": "6aeb5fd1c257",
+    "title": "Stick & Puck",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5496",
+    "ts": "2026-10-09T20:18:39-04:00",
+    "start": "2026-12-06T13:00:00-05:00",
+    "venue": "Leddy Park"
    },
    {
     "id": "037032e3d0b3",
@@ -11971,20 +11995,20 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "6c277cc0c8d9",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5606",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-07T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "def51dd37754-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-12-07/",
     "ts": "2026-10-08T12:56:22-04:00",
     "start": "2026-12-07T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "6c277cc0c8d9",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5606",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-07T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "2869371a055b",
@@ -12035,14 +12059,6 @@
     "venue": ""
    },
    {
-    "id": "97eddfe0d419",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4651",
-    "ts": "2026-10-08T12:56:22-04:00",
-    "start": "2026-12-07T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "12aef8fb2c1f",
     "title": "Monday Yoga",
     "link": "https://www.champlain.edu/event/monday-yoga-4/2026-12-07/",
@@ -12081,6 +12097,14 @@
     "ts": "2026-10-08T12:56:22-04:00",
     "start": "2026-12-07T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "97eddfe0d419",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4651",
+    "ts": "2026-10-08T12:56:22-04:00",
+    "start": "2026-12-07T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "6e71e616fae6",
@@ -12187,14 +12211,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "6900b6762829",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5640",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-08T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "8e9bfbc4ecb0",
     "title": "Poetry Group",
     "link": "https://southburlingtonlibrary.org/poetry-group",
@@ -12209,6 +12225,14 @@
     "ts": "2026-10-09T12:31:32-04:00",
     "start": "2026-12-08T11:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "6900b6762829",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5640",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-08T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "e5fa5b1f6db9",
@@ -12251,14 +12275,6 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
-    "id": "93416bd5a34b",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5673",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-08T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "c3fe22f3afb0",
     "title": "Tech Help by Appointment",
     "link": "https://southburlingtonlibrary.org/technology-help2",
@@ -12273,6 +12289,14 @@
     "ts": "2026-10-09T12:31:32-04:00",
     "start": "2026-12-08T13:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "93416bd5a34b",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5673",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-08T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "9cc2747e72c5",
@@ -12667,20 +12691,20 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "95296b5ead21",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5706",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-09T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "212f26bc215f",
     "title": "Stories & Songs for Library Littles",
     "link": "https://fletcherfree.libcal.com/event/17329839",
     "ts": "2026-10-10T11:33:09-04:00",
     "start": "2026-12-09T11:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "95296b5ead21",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5706",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-09T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "5b23e1b66cd3",
@@ -13147,20 +13171,20 @@
     "venue": "Dorothy Alling Memorial Library"
    },
    {
-    "id": "dfddf0e7270b",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5739",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-10T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "2f843bd4a1d2",
     "title": "GROW Preschool Yoga",
     "link": "https://fletcherfree.libcal.com/event/17316910",
     "ts": "2026-10-11T11:56:18-04:00",
     "start": "2026-12-10T11:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "dfddf0e7270b",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5739",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-10T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1e4a1d78aa4c",
@@ -13195,20 +13219,20 @@
     "venue": "Burlington Bridge Club"
    },
    {
-    "id": "09c88a5fee0f",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5771",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-10T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "b74c9e390ac6",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
     "ts": "2026-10-11T11:56:18-04:00",
     "start": "2026-12-10T13:00:00-05:00",
     "venue": "Heineberg Senior Center"
+   },
+   {
+    "id": "09c88a5fee0f",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5771",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-10T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1ac9e1105959",
@@ -13467,20 +13491,20 @@
     "venue": "Women’s & Gender Center, Skiff Hall Annex"
    },
    {
-    "id": "d1e562bdb50a",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5803",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-11T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "5781ea40442c",
     "title": "Music With Linda Bassick",
     "link": "https://community.sevendaysvt.com/event/music-with-linda-bassick-45573136",
     "ts": "2026-10-12T15:18:29-04:00",
     "start": "2026-12-11T11:00:00-05:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "d1e562bdb50a",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5803",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-11T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1f4a7b22aabd",
@@ -13507,20 +13531,20 @@
     "venue": "Innovation Hall"
    },
    {
-    "id": "caeb739b007b",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5835",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-11T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "43359ad95027",
     "title": "CAT ECare Training",
     "link": "https://events.uvm.edu/event/cat-ecare-training-dec11",
     "ts": "2026-10-13T13:06:34-04:00",
     "start": "2026-12-11T13:00:00-05:00",
     "venue": "Rowell Hall"
+   },
+   {
+    "id": "caeb739b007b",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5835",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-11T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "e70933aaff98",
@@ -14371,20 +14395,20 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "da6d39ca4e08",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5607",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-14T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "600e13807a0e-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-12-14/",
     "ts": "2026-10-15T10:24:08-04:00",
     "start": "2026-12-14T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "da6d39ca4e08",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5607",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-14T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "8fca0964a9be",
@@ -14419,14 +14443,6 @@
     "venue": "Church Street Marketplace"
    },
    {
-    "id": "3acf596f9740",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4652",
-    "ts": "2026-10-15T10:24:08-04:00",
-    "start": "2026-12-14T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "fc2fb107166d",
     "title": "Trivia Monday",
     "link": "https://community.sevendaysvt.com/event/trivia-monday-42603487",
@@ -14457,6 +14473,14 @@
     "ts": "2026-10-15T10:24:08-04:00",
     "start": "2026-12-14T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "3acf596f9740",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4652",
+    "ts": "2026-10-15T10:24:08-04:00",
+    "start": "2026-12-14T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "51d042f5e714",
@@ -14963,20 +14987,20 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "326c1a48b228",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5707",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-16T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "cd30c7cb6d00",
     "title": "Stories & Songs for Library Littles",
     "link": "https://fletcherfree.libcal.com/event/17329840",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-12-16T11:00:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "326c1a48b228",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5707",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-16T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "2be54fddba90",
@@ -15363,14 +15387,6 @@
     "venue": "Dorothy Alling Memorial Library"
    },
    {
-    "id": "1ab598389ab3",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5740",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-17T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "64a3249f0a16",
     "title": "GROW Preschool Yoga",
     "link": "https://fletcherfree.libcal.com/event/17316911",
@@ -15385,6 +15401,14 @@
     "ts": "2026-10-18T18:35:15-04:00",
     "start": "2026-12-17T11:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "1ab598389ab3",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5740",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-17T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "6dd42333279e",
@@ -15411,20 +15435,20 @@
     "venue": "Burlington Bridge Club"
    },
    {
-    "id": "e0f115a3d439",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5772",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-17T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "4021b6cbc842",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
     "ts": "2026-10-18T18:35:15-04:00",
     "start": "2026-12-17T13:00:00-05:00",
     "venue": "Heineberg Senior Center"
+   },
+   {
+    "id": "e0f115a3d439",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5772",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-17T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "4dafed74fa9f",
@@ -15667,20 +15691,20 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "b5128092fa57",
-    "title": "Drop-In Advanced Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5804",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-18T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "a9dae55b9ddd",
     "title": "Music With Linda Bassick",
     "link": "https://community.sevendaysvt.com/event/music-with-linda-bassick-45573136",
     "ts": "2026-10-19T12:37:26-04:00",
     "start": "2026-12-18T11:00:00-05:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "b5128092fa57",
+    "title": "Drop-In Advanced Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5804",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-18T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "02d9ee26d779",
@@ -15691,20 +15715,20 @@
     "venue": "The Innovation Café"
    },
    {
-    "id": "e1727ab5e563",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5836",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-18T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "f04b9a183d21",
     "title": "Mah-Jongg",
     "link": "https://community.sevendaysvt.com/event/mah-jongg-37340600",
     "ts": "2026-10-19T12:37:26-04:00",
     "start": "2026-12-18T13:00:00-05:00",
     "venue": "Dorothy Alling Memorial Library"
+   },
+   {
+    "id": "e1727ab5e563",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5836",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-18T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "df21adfa059e",
@@ -15947,18 +15971,18 @@
     "venue": "Gutterson Fieldhouse"
    },
    {
-    "id": "b05753ec91a6",
-    "title": "Good Clean Fun! (Family Friendly Show)",
-    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/378592",
-    "ts": "2026-10-20T10:27:53-04:00",
-    "start": "2026-12-19T16:30:00-05:00",
-    "venue": "Vermont Comedy Club"
-   },
-   {
     "id": "921c1c027cac",
     "title": "Vermont Comedy Club Show: Good Clean Fun Adult",
     "link": "https://secure.rec1.com/VT/south-burlington-vt-recreation-parks/catalog?filter=c2VhcmNoPTQ0MTUzMzc=",
     "ts": "2026-11-09T15:04:37-05:00",
+    "start": "2026-12-19T16:30:00-05:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
+    "id": "b05753ec91a6",
+    "title": "Good Clean Fun! (Family Friendly Show)",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/378592",
+    "ts": "2026-10-20T10:27:53-04:00",
     "start": "2026-12-19T16:30:00-05:00",
     "venue": "Vermont Comedy Club"
    },
@@ -16363,14 +16387,6 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "fecb29d46495",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5608",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-21T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "2b8369de4e6a-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-12-21/",
@@ -16379,20 +16395,20 @@
     "venue": "Brownell Library"
    },
    {
+    "id": "fecb29d46495",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5608",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-21T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
+   },
+   {
     "id": "33a4879bc60b",
     "title": "Half Priced Wine at The Daily Planet",
     "link": "https://calendar.time.ly/vfaca7kw/event/78067600/20261221170000",
     "ts": "2026-10-22T10:39:26-04:00",
     "start": "2026-12-21T17:00:00-05:00",
     "venue": ""
-   },
-   {
-    "id": "b4dea491cfa3",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4653",
-    "ts": "2026-10-22T10:39:26-04:00",
-    "start": "2026-12-21T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "aa104eef7395",
@@ -16425,6 +16441,14 @@
     "ts": "2026-10-22T10:39:26-04:00",
     "start": "2026-12-21T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "b4dea491cfa3",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4653",
+    "ts": "2026-10-22T10:39:26-04:00",
+    "start": "2026-12-21T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "df532ccd481d",
@@ -16515,14 +16539,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "3ff7d3689347",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5642",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-22T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "d47019196528",
     "title": "Poetry Group",
     "link": "https://southburlingtonlibrary.org/poetry-group",
@@ -16531,20 +16547,20 @@
     "venue": "South Burlington Public Library"
    },
    {
+    "id": "3ff7d3689347",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5642",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-22T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
+   },
+   {
     "id": "57c40308dc6a",
     "title": "Sculpt HIIT and Flow",
     "link": "https://events.uvm.edu/event/sculpt-hiit-and-flow",
     "ts": "2026-10-24T09:33:48-04:00",
     "start": "2026-12-22T11:45:00-05:00",
     "venue": "Soulshine Power Yoga"
-   },
-   {
-    "id": "6a46e566d314",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5675",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-22T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "06c90230a8f6",
@@ -16561,6 +16577,14 @@
     "ts": "2026-10-23T10:24:04-04:00",
     "start": "2026-12-22T13:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "6a46e566d314",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5675",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-22T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "d452fa8cb799",
@@ -17163,20 +17187,20 @@
     "venue": "Expressive Arts Burlington Studio"
    },
    {
-    "id": "b94c67b538b8",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5773",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-24T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "3421ee71e1c6",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
     "ts": "2026-10-25T09:53:36-04:00",
     "start": "2026-12-24T13:00:00-05:00",
     "venue": "Heineberg Senior Center"
+   },
+   {
+    "id": "b94c67b538b8",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5773",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-24T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "1a80ed86d010",
@@ -17731,14 +17755,6 @@
     "venue": ""
    },
    {
-    "id": "42db99c54bab",
-    "title": "Adult Drop- In Table Tennis",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4654",
-    "ts": "2026-10-29T12:24:04-04:00",
-    "start": "2026-12-28T18:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "4263932fe787",
     "title": "Trivia Monday",
     "link": "https://community.sevendaysvt.com/event/trivia-monday-42603487",
@@ -17769,6 +17785,14 @@
     "ts": "2026-10-29T12:24:04-04:00",
     "start": "2026-12-28T18:00:00-05:00",
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
+   },
+   {
+    "id": "42db99c54bab",
+    "title": "Adult Drop- In Table Tennis",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4654",
+    "ts": "2026-10-29T12:24:04-04:00",
+    "start": "2026-12-28T18:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "ccedce3c1723",
@@ -17891,20 +17915,20 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "61bfd61b2a1b",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5676",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2026-12-29T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "6fd0dcd7950c",
     "title": "School Vacation Craftytown! Watercolor Painting",
     "link": "https://southburlingtonlibrary.org/school-vacation-craftytown-watercolor-painting",
     "ts": "2026-11-07T10:53:36-05:00",
     "start": "2026-12-29T13:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "61bfd61b2a1b",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5676",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2026-12-29T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "83cb576a024f",
@@ -18699,20 +18723,20 @@
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "81ba51aaf2b7",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5838",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-01T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "c91591f4987c",
     "title": "Mah-Jongg",
     "link": "https://community.sevendaysvt.com/event/mah-jongg-37340600",
     "ts": "2026-11-02T14:46:10-05:00",
     "start": "2027-01-01T13:00:00-05:00",
     "venue": "Dorothy Alling Memorial Library"
+   },
+   {
+    "id": "81ba51aaf2b7",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5838",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-01T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "aad22c8f6b0d",
@@ -19147,20 +19171,20 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "f303c845ab4a",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5610",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-04T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "52ec56022645-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2027-01-04/",
     "ts": "2026-11-06T14:30:13-05:00",
     "start": "2027-01-04T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "f303c845ab4a",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5610",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-04T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "e314f074d3e8",
@@ -19819,20 +19843,20 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "a6a535fcd4e4",
-    "title": "Drop-In High Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5743",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-07T11:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "5dbb8d3daaf6",
     "title": "Mandarin Conversation Circle",
     "link": "https://community.sevendaysvt.com/event/mandarin-conversation-circle-39630803",
     "ts": "2026-11-08T11:16:32-05:00",
     "start": "2027-01-07T11:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "a6a535fcd4e4",
+    "title": "Drop-In High Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5743",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-07T11:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "f97dcde8ea70",
@@ -19859,20 +19883,20 @@
     "venue": "Burlington Bridge Club"
    },
    {
-    "id": "4dc109828182",
-    "title": "Drop-In Beginner Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5775",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-07T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "16fefcae3636",
     "title": "Friendly Game of Bridge",
     "link": "https://community.sevendaysvt.com/event/friendly-game-of-bridge-44530483",
     "ts": "2026-11-08T11:16:32-05:00",
     "start": "2027-01-07T13:00:00-05:00",
     "venue": "Heineberg Senior Center"
+   },
+   {
+    "id": "4dc109828182",
+    "title": "Drop-In Beginner Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5775",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-07T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "92a0874f0a28",
@@ -20539,20 +20563,20 @@
     "venue": "Robert Miller Community & Recreation Center"
    },
    {
-    "id": "66e476424b59",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5611",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-11T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "9a5c202679bf-1300",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2027-01-11/",
     "ts": "2026-11-12T12:43:53-05:00",
     "start": "2027-01-11T13:00:00-05:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "66e476424b59",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5611",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-11T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "24826dafcfb7",
@@ -20699,20 +20723,20 @@
     "venue": "Soulshine Power Yoga"
    },
    {
-    "id": "9b7f9de86c31",
-    "title": "Drop-In Intermediate Pickleball",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5678",
-    "ts": "2026-11-14T11:03:43-05:00",
-    "start": "2027-01-12T13:00:00-05:00",
-    "venue": "Robert Miller Community & Recreation Center"
-   },
-   {
     "id": "92f48678ff35",
     "title": "Afternoon Tech Help",
     "link": "https://community.sevendaysvt.com/event/afternoon-tech-help-43003910",
     "ts": "2026-11-13T12:21:17-05:00",
     "start": "2027-01-12T13:00:00-05:00",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "9b7f9de86c31",
+    "title": "Drop-In Intermediate Pickleball",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5678",
+    "ts": "2026-11-14T11:03:43-05:00",
+    "start": "2027-01-12T13:00:00-05:00",
+    "venue": "Robert Miller Community & Recreation Center"
    },
    {
     "id": "23d48f29c599",
