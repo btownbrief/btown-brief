@@ -1,16 +1,16 @@
 {
- "updated": "2026-11-15T10:49:52+00:00",
+ "updated": "2026-11-15T11:09:54+00:00",
  "sections_updated": {
-  "now": "2026-11-15T10:49:52+00:00",
-  "forecast": "2026-11-15T10:49:52+00:00",
-  "hourly": "2026-11-15T10:49:52+00:00",
-  "alerts": "2026-11-15T10:49:52+00:00",
-  "afd": "2026-11-15T10:49:52+00:00",
-  "lake_forecast": "2026-11-15T10:49:52+00:00",
-  "lake_gage": "2026-11-15T10:49:52+00:00",
-  "air": "2026-11-15T10:49:52+00:00",
-  "sun": "2026-11-15T10:49:52+00:00",
-  "models": "2026-11-15T10:49:52+00:00"
+  "now": "2026-11-15T11:09:54+00:00",
+  "forecast": "2026-11-15T11:09:54+00:00",
+  "hourly": "2026-11-15T11:09:54+00:00",
+  "alerts": "2026-11-15T11:09:54+00:00",
+  "afd": "2026-11-15T11:09:54+00:00",
+  "lake_forecast": "2026-11-15T11:09:54+00:00",
+  "lake_gage": "2026-11-15T11:09:54+00:00",
+  "air": "2026-11-15T11:09:54+00:00",
+  "sun": "2026-11-15T11:09:54+00:00",
+  "models": "2026-11-15T11:09:54+00:00"
  },
  "now": {
   "observed_at": "2026-11-15T09:54:00+00:00",
@@ -26,20 +26,10 @@
   "precip_last_hr_in": 0.0
  },
  "forecast": {
-  "updated": "2026-11-15T06:20:16+00:00",
+  "updated": "2026-11-15T11:00:02+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-11-15T02:00:00-05:00",
-    "is_day": false,
-    "temp_f": 33,
-    "pop": 30,
-    "wind": "NW 10 mph",
-    "short": "Chance Rain And Snow Showers",
-    "detailed": "A chance of rain and snow showers. Cloudy, with a low around 33. Northwest wind around 10 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Sunday",
+    "name": "Today",
     "start": "2026-11-15T06:00:00-05:00",
     "is_day": true,
     "temp_f": 43,
@@ -49,7 +39,7 @@
     "detailed": "A chance of rain and snow showers before 3pm. Cloudy, with a high near 43. Northwest wind around 12 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
-    "name": "Sunday Night",
+    "name": "Tonight",
     "start": "2026-11-15T18:00:00-05:00",
     "is_day": false,
     "temp_f": 32,
@@ -167,32 +157,28 @@
     "wind": "S 5 to 10 mph",
     "short": "Partly Sunny",
     "detailed": "Partly sunny, with a high near 54. South wind 5 to 10 mph."
+   },
+   {
+    "name": "Saturday Night",
+    "start": "2026-11-21T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 42,
+    "pop": 3,
+    "wind": "S 10 to 16 mph",
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 42. South wind 10 to 16 mph, with gusts as high as 26 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-11-15T06:20:16+00:00",
+  "updated": "2026-11-15T11:00:02+00:00",
   "hours": [
    {
-    "t": "2026-11-15T05:00:00-05:00",
-    "temp_f": 35,
-    "feels_f": 28,
-    "pop": 27,
-    "humidity": 92,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 94,
-    "short": "Chance Rain And Snow Showers",
-    "qpf_in": 0.002,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
-   {
     "t": "2026-11-15T06:00:00-05:00",
-    "temp_f": 35,
-    "feels_f": 28,
+    "temp_f": 39,
+    "feels_f": 33,
     "pop": 26,
-    "humidity": 92,
+    "humidity": 79,
     "wind_mph": 9,
     "wind_dir": "NW",
     "sky": 92,
@@ -203,10 +189,10 @@
    },
    {
     "t": "2026-11-15T07:00:00-05:00",
-    "temp_f": 34,
-    "feels_f": 27,
+    "temp_f": 38,
+    "feels_f": 32,
     "pop": 24,
-    "humidity": 100,
+    "humidity": 85,
     "wind_mph": 9,
     "wind_dir": "NW",
     "sky": 99,
@@ -217,10 +203,10 @@
    },
    {
     "t": "2026-11-15T08:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 30,
+    "temp_f": 40,
+    "feels_f": 33,
     "pop": 23,
-    "humidity": 89,
+    "humidity": 79,
     "wind_mph": 10,
     "wind_dir": "NW",
     "sky": 96,
@@ -245,10 +231,10 @@
    },
    {
     "t": "2026-11-15T10:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 34,
+    "temp_f": 40,
+    "feels_f": 33,
     "pop": 18,
-    "humidity": 76,
+    "humidity": 79,
     "wind_mph": 12,
     "wind_dir": "NW",
     "sky": 91,
@@ -259,10 +245,10 @@
    },
    {
     "t": "2026-11-15T11:00:00-05:00",
-    "temp_f": 41,
-    "feels_f": 34,
+    "temp_f": 40,
+    "feels_f": 33,
     "pop": 17,
-    "humidity": 76,
+    "humidity": 79,
     "wind_mph": 12,
     "wind_dir": "NW",
     "sky": 90,
@@ -676,17 +662,31 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 6
+   },
+   {
+    "t": "2026-11-16T17:00:00-05:00",
+    "temp_f": 41,
+    "feels_f": 39,
+    "pop": 0,
+    "humidity": 67,
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 30,
+    "short": "Mostly Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 5
    }
   ],
   "days": [
    {
     "date": "2026-11-14",
-    "precip_in": 0.042,
+    "precip_in": 0.01,
     "snow_in": 0.0
    },
    {
     "date": "2026-11-15",
-    "precip_in": 0.018,
+    "precip_in": 0.02,
     "snow_in": 0.0
    },
    {
@@ -961,9 +961,9 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-15T05:00:00.000-05:00",
+  "water_temp_at": "2026-11-15T06:00:00.000-05:00",
   "level_ft": 93.81,
-  "level_at": "2026-11-15T05:00:00.000-05:00",
+  "level_at": "2026-11-15T06:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -1044,36 +1044,12 @@
  },
  "brief": {
   "date": "2026-11-15",
-  "generated": "2026-11-15T10:49:54+00:00",
-  "text": "A chance of snow overnight, under a tenth of an inch, low 33. A chance of snow today until 7am, under a tenth of an inch, high 43.",
+  "generated": "2026-11-15T11:09:56+00:00",
+  "text": "A chance of snow today until 7am, under a tenth of an inch, high 43. Cloudy tonight, low 32. Monday, mostly cloudy, high 44.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 33,
-    "sky": "clear",
-    "start": "2026-11-15T10:00:00+00:00",
-    "end": "2026-11-15T06:00:00-05:00",
-    "precip": {
-     "kind": "snow",
-     "chance": 30,
-     "say": "a chance of snow",
-     "start": "2026-11-15T05:00:00-05:00",
-     "end": "2026-11-15T06:00:00-05:00",
-     "when": "",
-     "amount_in": 0.0,
-     "snow_in": 0,
-     "amount": "under a tenth of an inch"
-    },
-    "wind": null,
-    "feels_lo": 28,
-    "feels_hi": 28,
-    "text": "A chance of snow overnight, under a tenth of an inch, low 33."
-   },
-   {
     "label": "Today",
-    "name": "Sunday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 43,
     "sky": "sunny",
@@ -1091,9 +1067,23 @@
      "amount": "under a tenth of an inch"
     },
     "wind": null,
-    "feels_lo": 27,
+    "feels_lo": 32,
     "feels_hi": 37,
     "text": "A chance of snow today until 7am, under a tenth of an inch, high 43."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 32,
+    "sky": "cloudy",
+    "start": "2026-11-15T18:00:00-05:00",
+    "end": "2026-11-16T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 28,
+    "feels_hi": 35,
+    "text": "Cloudy tonight, low 32."
    }
   ]
  }
