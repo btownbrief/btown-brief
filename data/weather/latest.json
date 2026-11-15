@@ -1,52 +1,42 @@
 {
- "updated": "2026-11-14T23:24:54+00:00",
+ "updated": "2026-11-15T00:05:48+00:00",
  "sections_updated": {
-  "now": "2026-11-14T23:24:54+00:00",
-  "forecast": "2026-11-14T23:24:54+00:00",
-  "hourly": "2026-11-14T23:24:54+00:00",
-  "alerts": "2026-11-14T23:24:54+00:00",
-  "afd": "2026-11-14T23:24:54+00:00",
-  "lake_forecast": "2026-11-14T23:24:54+00:00",
-  "lake_gage": "2026-11-14T23:24:54+00:00",
-  "air": "2026-11-14T23:24:54+00:00",
-  "sun": "2026-11-14T23:01:26+00:00",
-  "models": "2026-11-14T23:01:26+00:00"
+  "now": "2026-11-15T00:05:48+00:00",
+  "forecast": "2026-11-15T00:05:48+00:00",
+  "hourly": "2026-11-15T00:05:48+00:00",
+  "alerts": "2026-11-15T00:05:48+00:00",
+  "afd": "2026-11-15T00:05:48+00:00",
+  "lake_forecast": "2026-11-15T00:05:48+00:00",
+  "lake_gage": "2026-11-15T00:05:48+00:00",
+  "air": "2026-11-15T00:05:48+00:00",
+  "sun": "2026-11-15T00:05:48+00:00",
+  "models": "2026-11-15T00:05:48+00:00"
  },
  "now": {
-  "observed_at": "2026-11-14T22:54:00+00:00",
+  "observed_at": "2026-11-14T23:35:00+00:00",
   "station": "KBTV",
   "description": "Light Rain",
-  "temp_f": 39,
-  "feels_like_f": 33,
-  "humidity": 82,
+  "temp_f": 37,
+  "feels_like_f": 30,
+  "humidity": 87,
   "dewpoint_f": 34,
-  "wind_mph": 9,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "NW",
-  "precip_last_hr_in": 0.02
+  "wind_dir": "NNW",
+  "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-11-14T22:18:53+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-11-14T17:00:00-05:00",
-    "is_day": true,
-    "temp_f": 41,
-    "pop": 78,
-    "wind": "N 6 mph",
-    "short": "Rain Showers",
-    "detailed": "Rain showers. Cloudy, with a high near 41. North wind around 6 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-11-14T18:00:00-05:00",
+    "start": "2026-11-14T19:00:00-05:00",
     "is_day": false,
     "temp_f": 33,
-    "pop": 83,
+    "pop": 76,
     "wind": "NW 7 to 10 mph",
     "short": "Chance Rain And Snow Showers",
-    "detailed": "Rain showers before 9pm, then a chance of rain and snow showers. Cloudy, with a low around 33. Northwest wind 7 to 10 mph. Chance of precipitation is 80%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "Rain showers before 9pm, then a chance of rain and snow showers. Cloudy, with a low around 33. Northwest wind 7 to 10 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Sunday",
@@ -167,40 +157,22 @@
     "wind": "N 5 mph",
     "short": "Mostly Cloudy",
     "detailed": "Mostly cloudy, with a low around 38. North wind around 5 mph."
+   },
+   {
+    "name": "Saturday",
+    "start": "2026-11-21T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 52,
+    "pop": 2,
+    "wind": "SW 5 to 8 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 52. Southwest wind 5 to 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-14T22:18:53+00:00",
   "hours": [
-   {
-    "t": "2026-11-14T17:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 34,
-    "pop": 78,
-    "humidity": 89,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 97,
-    "short": "Rain Showers",
-    "qpf_in": 0.012,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-11-14T18:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 33,
-    "pop": 83,
-    "humidity": 89,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 99,
-    "short": "Rain Showers",
-    "qpf_in": 0.012,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
    {
     "t": "2026-11-14T19:00:00-05:00",
     "temp_f": 37,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 14
+   },
+   {
+    "t": "2026-11-16T05:00:00-05:00",
+    "temp_f": 33,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 92,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 95,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 13
+   },
+   {
+    "t": "2026-11-16T06:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 92,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 89,
+    "short": "Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-14T18:54:00+00:00",
+  "issued": "2026-11-14T23:38:00+00:00",
   "key_messages": [
    "Rain and snow showers will continue across the region this afternoon and evening, especially in the favored upslope locations. Showers will taper off through the day tomorrow.",
    "A warm, dry and mostly sunny week is in store."
   ],
   "what_changed": "As of 153 PM EST Saturday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 141854\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n154 PM EST Sat Nov 14 2026\n\n.WHAT HAS CHANGED...\nAs of 153 PM EST Saturday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 153 PM EST Saturday...\n\n1. Rain and snow showers will continue across the region this \nafternoon and evening, especially in the favored upslope locations. \nShowers will taper off through the day tomorrow. \n\n2. A warm, dry and mostly sunny week is in store.\n\n&&\n\n.DISCUSSION...\nAs of 153 PM EST Saturday...\n\nKEY MESSAGE 1: Cyclonic northwest flow will continue as the region \nremains under the influence of an upper level low this weekend. An \nembedded shortwave will pass through the region, bringing more \nwidespread shower activity this afternoon into the evening. It's \nbeen a mix of rain and snow across the region today, with snow \nmostly confined to the high terrain and portions of the Northeast \nKingdom this afternoon and rain most other locations. Although most \nlocations are above freezing, temperatures may drop significantly \nwithin some of the showers, allowing for a rain/snow mix or even a \nbrief period of snow at lower elevations. The widespread shower \nactivity will end tonight, with lingering showers tapering off \nthrough the day tomorrow. Total snowfall accumulations this weekend \nlook to generally be in the 1-4 inch range for locations above 2000 \nft, with little to no accumulation expected at lower elevations. \nTemperatures will continue to remain on the cooler side this \nweekend, with daytime highs only climbing into the 30s to lower 40s.\n\nKEY MESSAGE 2: Unimpactful weather is expected all of the way through \nthe upcoming week into next weekend. Following one last seasonably \ncool day on Monday, temperatures should be near to around 10 degrees \nabove normal for the remainder of the period. In fact, our large \nscale pattern strongly favors above normal temperatures to continue \nfor much of the following week, as well. This week does not look \nparticularly unseasonable, however. There is only a weak signal for \nunusually high daytime temperatures on Wednesday and Thursday, \nparticularly in the Champlain and Lower Connecticut River valleys, \nahead of a likely cold front. Said front is currently favored to \ntrack through with little fanfare Friday morning; eventually PoPs \nwill probably increase when timing of this boundary becomes more \nclear; many ensemble and deterministic models show a period of some \nlight precipitation associated with the feature. This will be the \nprimary exception to a period of otherwise fair weather, with \nridging re-establishing itself at the start of next weekend.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...A well-defined upper level low to our north is\ncurrently pinwheeling spokes of showers into the airspace, with\nwidespread light precipitation rates at most terminals expected\nthrough tonight before winding down. Primarily MVFR is anticipated,\nwith highest probabilities of IFR at SLK where precipitation type\nwill be wet snow. Elsewhere, at EFK, BTV, and MPV especially,\ntemperatures are borderline to support snow. There may be marginally\nlow enough temperatures concurrent with slightly heavier\nprecipitation to result in intervals of snow showers mixing in with\nthe rain. Chances of this minor snow accumulation and/or IFR peaks\nin the 22Z to 01Z period at most sites. Ceilings will also mostly\nremain MVFR, with greater chances of seeing periods of IFR\nvisibilities at SLK, EFK, and RUT, and primarily in the 00Z-12Z\nrange. Winds will remain light through the overnight hours, mainly 3\nto 8 knots, and primarily out of the north. A more steady northwest\nwind 5 to 10 knots sustained is expected after sunrise as drier air\nand diurnal heating leads to better mixing late in the TAF period.\n\nOutlook...\n\nSunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Kutikoff\nAVIATION...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 142338\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n638 PM EST Sat Nov 14 2026\n\n.WHAT HAS CHANGED...\nAs of 153 PM EST Saturday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 153 PM EST Saturday...\n\n1. Rain and snow showers will continue across the region this \nafternoon and evening, especially in the favored upslope locations. \nShowers will taper off through the day tomorrow. \n\n2. A warm, dry and mostly sunny week is in store.\n\n&&\n\n.DISCUSSION...\nAs of 153 PM EST Saturday...\n\nKEY MESSAGE 1: Cyclonic northwest flow will continue as the region \nremains under the influence of an upper level low this weekend. An \nembedded shortwave will pass through the region, bringing more \nwidespread shower activity this afternoon into the evening. It's \nbeen a mix of rain and snow across the region today, with snow \nmostly confined to the high terrain and portions of the Northeast \nKingdom this afternoon and rain most other locations. Although most \nlocations are above freezing, temperatures may drop significantly \nwithin some of the showers, allowing for a rain/snow mix or even a \nbrief period of snow at lower elevations. The widespread shower \nactivity will end tonight, with lingering showers tapering off \nthrough the day tomorrow. Total snowfall accumulations this weekend \nlook to generally be in the 1-4 inch range for locations above 2000 \nft, with little to no accumulation expected at lower elevations. \nTemperatures will continue to remain on the cooler side this \nweekend, with daytime highs only climbing into the 30s to lower 40s.\n\nKEY MESSAGE 2: Unimpactful weather is expected all of the way through \nthe upcoming week into next weekend. Following one last seasonably \ncool day on Monday, temperatures should be near to around 10 degrees \nabove normal for the remainder of the period. In fact, our large \nscale pattern strongly favors above normal temperatures to continue \nfor much of the following week, as well. This week does not look \nparticularly unseasonable, however. There is only a weak signal for \nunusually high daytime temperatures on Wednesday and Thursday, \nparticularly in the Champlain and Lower Connecticut River valleys, \nahead of a likely cold front. Said front is currently favored to \ntrack through with little fanfare Friday morning; eventually PoPs \nwill probably increase when timing of this boundary becomes more \nclear; many ensemble and deterministic models show a period of some \nlight precipitation associated with the feature. This will be the \nprimary exception to a period of otherwise fair weather, with \nridging re-establishing itself at the start of next weekend.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...A mix of rain and snow showers continues to\nshift south across the region. Intermittent precipitation will\ncontinue through the next 4-8 hours, and then become\nincreasingly tied to terrain from 06z-12z and beyond. Ceilings \nrange from 800-3000 ft agl, and little is expected to change, \nexcept some slight improvement at KMSS. Intervals of reduced \nvisibility to 2-5 SM is possible in heavier showers, and may be \ncloser to 1SM in snow showers. Slow improvement is expected past\n13-15z under increasing northwest winds around 5-10 knots, but \nmany terminals could remain MVFR over the next 24 hours.\n\nOutlook...\n\nSunday Night: MVFR. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Kutikoff\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-11-14T18:22:00+00:00",
@@ -990,9 +990,9 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 12,
+  "aqi": 11,
   "category": "Good",
-  "pollutant": "OZONE",
+  "pollutant": "PM2.5",
   "observed": "11/14/26 18:00",
   "discussion": "On Saturday, November 14th, expect generally good air quality across Vermont."
  },
@@ -1013,12 +1013,12 @@
      "ICON": 40
     },
     "pop_max": {
-     "GFS": 59,
+     "GFS": 47,
      "Euro": 100,
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.02,
      "Euro": 0.17,
      "ICON": 0.33
     },
@@ -1032,7 +1032,7 @@
      "ICON": 43
     },
     "pop_max": {
-     "GFS": 18,
+     "GFS": 13,
      "Euro": 100,
      "ICON": 93
     },
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-11-14",
-  "generated": "2026-11-14T23:24:56+00:00",
+  "generated": "2026-11-15T00:05:52+00:00",
   "text": "Showers tonight until 9pm, about a tenth of an inch, low 33. Sunday, cloudy, high 43.",
   "periods": [
    {
@@ -1075,22 +1075,22 @@
     "is_day": false,
     "temp_f": 33,
     "sky": "clear",
-    "start": "2026-11-14T18:00:00-05:00",
+    "start": "2026-11-14T19:00:00-05:00",
     "end": "2026-11-15T06:00:00-05:00",
     "precip": {
      "kind": "showers",
      "chance": 80,
      "say": "showers",
-     "start": "2026-11-14T18:00:00-05:00",
+     "start": "2026-11-14T19:00:00-05:00",
      "end": "2026-11-14T21:00:00-05:00",
      "when": "until 9pm",
-     "amount_in": 0.07,
+     "amount_in": 0.06,
      "snow_in": 0,
      "amount": "about a tenth of an inch"
     },
     "wind": null,
     "feels_lo": 27,
-    "feels_hi": 33,
+    "feels_hi": 32,
     "text": "Showers tonight until 9pm, about a tenth of an inch, low 33."
    },
    {
