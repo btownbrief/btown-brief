@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T11:03:43-05:00",
+ "generated": "2026-11-14T19:16:41-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,13 +8,13 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 62,
-   "seconds": 4.7
+   "count": 61,
+   "seconds": 1.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 82,
-   "seconds": 4.3
+   "seconds": 5.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -24,12 +24,12 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 171,
-   "seconds": 4.7
+   "seconds": 4.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 32,
-   "seconds": 3.4
+   "seconds": 3.6
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -58,18 +58,18 @@
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 32.5
+   "count": 12,
+   "seconds": 31.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.8
+   "seconds": 2.6
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 630,
-   "seconds": 30.8
+   "seconds": 32.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,28 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 31.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 567,
-   "seconds": 73.4
+   "seconds": 74.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 57,
-   "seconds": 104.9
+   "count": 58,
+   "seconds": 109.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.3
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 142,
-   "seconds": 15.6
+   "count": 0,
+   "error": "parksrec: all city iCalendar feeds failed",
+   "staleDays": 0
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,28 +109,28 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 85,
+   "count": 86,
    "seconds": 2.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 23,
-   "seconds": 17.8
+   "seconds": 17.7
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2744,
-   "seconds": 23.7
+   "seconds": 3.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 3.1
+   "seconds": 3.5
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 266,
-   "seconds": 17.8
+   "seconds": 9.7
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -138,20 +139,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 47,
-   "seconds": 60.8
+   "count": 46,
+   "seconds": 59.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 34,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5529,
- "afterDedup": 2417,
- "duplicatesMerged": 3112,
- "final": 2438,
- "firecrawlCalls": 5,
+ "gathered": 5386,
+ "afterDedup": 2276,
+ "duplicatesMerged": 3110,
+ "final": 2441,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2399,6 +2400,13 @@
  ],
  "changes": [
   {
+   "id": "b5fec84d51f4",
+   "title": "BTown Coffee Club",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-14T11:03:43-05:00"
+  },
+  {
    "id": "288d4c48ca7d",
    "title": "Chess Club",
    "date": "2026-11-14",
@@ -2406,11 +2414,25 @@
    "lastSeen": "2026-11-12T12:43:53-05:00"
   },
   {
+   "id": "2de0c23da5d2",
+   "title": "Call of Cthulhu with Cole",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-14T11:03:43-05:00"
+  },
+  {
    "id": "e60fd9f0e815",
    "title": "'My Undesirable Friends: Part II — Exile'",
    "date": "2026-11-14",
    "change": "missing",
    "lastSeen": "2026-11-11T20:59:46-05:00"
+  },
+  {
+   "id": "ba3a93bcf538",
+   "title": "Good Clean Fun! (Family Friendly Show)",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-11-14T11:03:43-05:00"
   },
   {
    "id": "5e351c87e135",
@@ -2430,8 +2452,7 @@
    "id": "7a24d69102fd",
    "title": "Volunteer at the Non-Fiction Comic Fest",
    "date": "2026-11-14",
-   "change": "missing",
-   "lastSeen": "2026-11-11T12:25:11-05:00"
+   "change": "dropped"
   },
   {
    "id": "38c1c0f5c7cf",
@@ -2497,11 +2518,18 @@
    "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
-   "id": "963fa6eb41fc",
-   "title": "CLOSED - Thanksgiving Day",
+   "id": "7ee095bdf31e",
+   "title": "Generator Tour",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-11-14T11:03:43-05:00"
+  },
+  {
+   "id": "2a1c7633f5af",
+   "title": "Thanksgiving Day",
    "date": "2026-11-26",
    "change": "missing",
-   "lastSeen": "2026-11-13T20:01:47-05:00"
+   "lastSeen": "2026-11-14T11:03:43-05:00"
   },
   {
    "id": "0e28a1fa550e",
