@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-15T14:39:45+00:00",
+ "updated": "2026-11-15T15:59:48+00:00",
  "sections_updated": {
-  "now": "2026-11-15T14:39:45+00:00",
-  "forecast": "2026-11-15T14:39:45+00:00",
-  "hourly": "2026-11-15T14:39:45+00:00",
-  "alerts": "2026-11-15T14:39:45+00:00",
-  "afd": "2026-11-15T14:39:45+00:00",
-  "lake_forecast": "2026-11-15T14:39:45+00:00",
-  "lake_gage": "2026-11-15T14:39:45+00:00",
-  "air": "2026-11-15T14:39:45+00:00",
-  "sun": "2026-11-15T14:39:45+00:00",
-  "models": "2026-11-15T14:39:45+00:00"
+  "now": "2026-11-15T15:59:48+00:00",
+  "forecast": "2026-11-15T15:59:48+00:00",
+  "hourly": "2026-11-15T15:59:48+00:00",
+  "alerts": "2026-11-15T15:59:48+00:00",
+  "afd": "2026-11-15T15:59:48+00:00",
+  "lake_forecast": "2026-11-15T15:59:48+00:00",
+  "lake_gage": "2026-11-15T15:59:48+00:00",
+  "air": "2026-11-15T15:59:48+00:00",
+  "sun": "2026-11-15T15:59:48+00:00",
+  "models": "2026-11-15T15:59:48+00:00"
  },
  "now": {
-  "observed_at": "2026-11-15T14:00:00+00:00",
+  "observed_at": "2026-11-15T15:40:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 37,
-  "feels_like_f": 30,
-  "humidity": 87,
+  "description": "Cloudy",
+  "temp_f": 41,
+  "feels_like_f": 41,
+  "humidity": 75,
   "dewpoint_f": 34,
-  "wind_mph": 10,
-  "wind_gust_mph": 16,
-  "wind_dir": "NW",
+  "wind_mph": null,
+  "wind_gust_mph": null,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-11-15T06:00:00-05:00",
+    "start": "2026-11-15T10:00:00-05:00",
     "is_day": true,
     "temp_f": 43,
-    "pop": 26,
+    "pop": 18,
     "wind": "NW 12 mph",
-    "short": "Chance Rain And Snow Showers",
-    "detailed": "A chance of rain and snow showers before 3pm. Cloudy, with a high near 43. Northwest wind around 12 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers before 3pm. Cloudy, with a high near 43. Northwest wind around 12 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-15T11:00:02+00:00",
   "hours": [
-   {
-    "t": "2026-11-15T09:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 33,
-    "pop": 21,
-    "humidity": 82,
-    "wind_mph": 10,
-    "wind_dir": "NW",
-    "sky": 85,
-    "short": "Slight Chance Rain Showers",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 17
-   },
    {
     "t": "2026-11-15T10:00:00-05:00",
     "temp_f": 40,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 3
+   },
+   {
+    "t": "2026-11-16T21:00:00-05:00",
+    "temp_f": 34,
+    "feels_f": 34,
+    "pop": 0,
+    "humidity": 89,
+    "wind_mph": 2,
+    "wind_dir": "W",
+    "sky": 3,
+    "short": "Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 3
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-15T09:00:00.000-05:00",
-  "level_ft": 93.81,
-  "level_at": "2026-11-15T09:00:00.000-05:00",
+  "water_temp_at": "2026-11-15T10:00:00.000-05:00",
+  "level_ft": 93.78,
+  "level_at": "2026-11-15T10:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
   "aqi": 13,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "11/15/26 9:00",
+  "pollutant": "OZONE",
+  "observed": "11/15/26 10:00",
   "discussion": "On Monday, November 16th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -986,9 +986,9 @@
    {
     "date": "2026-11-15",
     "high_f": {
-     "GFS": 42,
+     "GFS": 43,
      "Euro": 44,
-     "ICON": 42
+     "ICON": 43
     },
     "pop_max": {
      "GFS": 12,
@@ -998,16 +998,16 @@
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.11,
-     "ICON": 0.04
+     "ICON": 0.03
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    },
    {
     "date": "2026-11-16",
     "high_f": {
      "GFS": 40,
      "Euro": 44,
-     "ICON": 43
+     "ICON": 42
     },
     "pop_max": {
      "GFS": 1,
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-11-15",
-  "generated": "2026-11-15T14:39:47+00:00",
+  "generated": "2026-11-15T15:59:51+00:00",
   "text": "Sunny today, high 43. Cloudy tonight, low 32. Monday, mostly cloudy, high 44.",
   "periods": [
    {
@@ -1053,7 +1053,7 @@
     "is_day": true,
     "temp_f": 43,
     "sky": "sunny",
-    "start": "2026-11-15T14:00:00+00:00",
+    "start": "2026-11-15T10:00:00-05:00",
     "end": "2026-11-15T18:00:00-05:00",
     "precip": null,
     "wind": null,
