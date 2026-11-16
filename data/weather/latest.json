@@ -1,26 +1,26 @@
 {
- "updated": "2026-11-16T00:11:57+00:00",
+ "updated": "2026-11-16T01:26:48+00:00",
  "sections_updated": {
-  "now": "2026-11-16T00:11:57+00:00",
-  "forecast": "2026-11-16T00:11:57+00:00",
-  "hourly": "2026-11-16T00:11:57+00:00",
-  "alerts": "2026-11-16T00:11:57+00:00",
-  "afd": "2026-11-16T00:11:57+00:00",
-  "lake_forecast": "2026-11-16T00:11:57+00:00",
-  "lake_gage": "2026-11-16T00:11:57+00:00",
-  "air": "2026-11-16T00:11:57+00:00",
+  "now": "2026-11-16T01:26:48+00:00",
+  "forecast": "2026-11-16T01:26:48+00:00",
+  "hourly": "2026-11-16T01:26:48+00:00",
+  "alerts": "2026-11-16T01:26:48+00:00",
+  "afd": "2026-11-16T01:26:48+00:00",
+  "lake_forecast": "2026-11-16T01:26:48+00:00",
+  "lake_gage": "2026-11-16T01:26:48+00:00",
+  "air": "2026-11-16T01:26:48+00:00",
   "sun": "2026-11-16T00:11:57+00:00",
   "models": "2026-11-16T00:11:57+00:00"
  },
  "now": {
-  "observed_at": "2026-11-15T23:45:00+00:00",
+  "observed_at": "2026-11-16T01:05:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 43,
-  "feels_like_f": 37,
-  "humidity": 65,
-  "dewpoint_f": 32,
-  "wind_mph": 10,
+  "feels_like_f": 39,
+  "humidity": 70,
+  "dewpoint_f": 34,
+  "wind_mph": 6,
   "wind_gust_mph": null,
   "wind_dir": "NW",
   "precip_last_hr_in": null
@@ -30,10 +30,10 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-15T19:00:00-05:00",
+    "start": "2026-11-15T18:00:00-05:00",
     "is_day": false,
     "temp_f": 38,
-    "pop": 2,
+    "pop": 3,
     "wind": "NW 7 to 12 mph",
     "short": "Cloudy",
     "detailed": "Cloudy, with a low around 38. Northwest wind 7 to 12 mph."
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-15T22:45:42+00:00",
   "hours": [
-   {
-    "t": "2026-11-15T19:00:00-05:00",
-    "temp_f": 42,
-    "feels_f": 36,
-    "pop": 2,
-    "humidity": 70,
-    "wind_mph": 12,
-    "wind_dir": "NW",
-    "sky": 98,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-11-15T20:00:00-05:00",
     "temp_f": 41,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 12
+   },
+   {
+    "t": "2026-11-17T07:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 88,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 19,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -983,17 +983,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-15T19:00:00.000-05:00",
-  "level_ft": 93.79,
-  "level_at": "2026-11-15T19:00:00.000-05:00",
+  "water_temp_at": "2026-11-15T20:00:00.000-05:00",
+  "level_ft": 93.78,
+  "level_at": "2026-11-15T20:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 20,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/15/26 18:00",
+  "observed": "11/15/26 20:00",
   "discussion": "On Monday, November 16th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-11-15",
-  "generated": "2026-11-16T00:12:00+00:00",
+  "generated": "2026-11-16T01:27:51+00:00",
   "text": "Cloudy tonight, low 38. Monday, cloudy, high 42.",
   "periods": [
    {
@@ -1075,12 +1075,12 @@
     "is_day": false,
     "temp_f": 38,
     "sky": "cloudy",
-    "start": "2026-11-15T19:00:00-05:00",
+    "start": "2026-11-16T01:00:00+00:00",
     "end": "2026-11-16T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 32,
-    "feels_hi": 36,
+    "feels_hi": 34,
     "text": "Cloudy tonight, low 38."
    },
    {
