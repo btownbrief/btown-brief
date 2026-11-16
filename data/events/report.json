@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-15T11:33:09-05:00",
+ "generated": "2026-11-15T19:22:08-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 14,
-   "seconds": 5.7
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 58,
-   "seconds": 6.2
+   "count": 53,
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 81,
-   "seconds": 4.4
+   "seconds": 4.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 134,
-   "seconds": 2.4
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 171,
-   "seconds": 3.9
+   "seconds": 4.3
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 30,
-   "seconds": 3.8
+   "seconds": 3.5
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 180,
-   "seconds": 76.7
+   "seconds": 71.2
   },
   "flynn": {
    "label": "The Flynn",
@@ -59,17 +59,17 @@
   "generator": {
    "label": "Generator Makerspace",
    "count": 10,
-   "seconds": 29.5
+   "seconds": 31.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.5
+   "seconds": 2.7
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 618,
-   "seconds": 38.8
+   "seconds": 32.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 21.6
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 565,
-   "seconds": 67.7
+   "seconds": 74.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 58,
-   "seconds": 113.8
+   "count": 57,
+   "seconds": 109.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.6
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 144,
-   "seconds": 17.0
+   "count": 143,
+   "seconds": 15.1
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -114,44 +114,44 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 21,
-   "seconds": 19.4
+   "seconds": 18.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2798,
-   "seconds": 23.7
+   "count": 2686,
+   "seconds": 2.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 3.8
+   "seconds": 3.3
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 257,
-   "seconds": 19.5
+   "seconds": 9.6
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 149,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 44,
-   "seconds": 60.6
+   "seconds": 60.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 34,
-   "seconds": 0.1
+   "seconds": 0.3
   }
  },
- "gathered": 5527,
- "afterDedup": 2365,
- "duplicatesMerged": 3162,
- "final": 2380,
- "firecrawlCalls": 5,
+ "gathered": 5408,
+ "afterDedup": 2357,
+ "duplicatesMerged": 3051,
+ "final": 2381,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -945,6 +945,7 @@
    },
    "merged_sources": [
     "helloburlington",
+    "meetup",
     "sevendays"
    ],
    "date": "2026-12-17"
@@ -2397,18 +2398,60 @@
  ],
  "changes": [
   {
-   "id": "0010482e4889",
-   "title": "Repertory Wednesday Series: 'Shampoo'",
-   "date": "2026-11-18",
-   "change": "time",
-   "was": "2026-11-18",
-   "now": "2026-11-18T20:25:00-05:00"
+   "id": "355dbbd88c24",
+   "title": "Breakfast Club!: Masala Elaichi",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
   },
   {
-   "id": "38c1c0f5c7cf",
-   "title": "'My Undesirable Friends: Part II — Exile'",
+   "id": "c711ee2b717d",
+   "title": "The Amazing Puzzle Race",
    "date": "2026-11-15",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "802d54d1c452",
+   "title": "Niquette Bay",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "9c959bb94688",
+   "title": "Kids Jam",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "b0ed80c97d2a",
+   "title": "Public Skate",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "c6b5d9b8c63e",
+   "title": "Blue Sundays",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "21222d433108",
+   "title": "Art at the Airport: Nancy Chapman",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "e2f4cbbadfc2",
+   "title": "Fall Photography Show",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
   },
   {
    "id": "d4cdd74c0a02",
@@ -2442,19 +2485,6 @@
    "id": "6aea347d6025",
    "title": "CANCELLED: Intro to Computer-Aided Design (CAD): Fusion 360 Workshop",
    "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-12T12:43:53-05:00"
-  },
-  {
-   "id": "7108b1d2e3d4",
-   "title": "'Warren Miller's Days Off'",
-   "date": "2026-11-17",
-   "change": "dropped"
-  },
-  {
-   "id": "21900eb591b6",
-   "title": "Embracing Slavic Culture",
-   "date": "2026-11-18",
    "change": "dropped"
   },
   {
@@ -2479,6 +2509,13 @@
    "lastSeen": "2026-11-12T20:28:02-05:00"
   },
   {
+   "id": "ab8a9e4a2897",
+   "title": "Cartooning Paint & Sip",
+   "date": "2026-11-20",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
    "id": "7ee095bdf31e",
    "title": "Generator Tour",
    "date": "2026-11-21",
@@ -2486,11 +2523,11 @@
    "lastSeen": "2026-11-14T11:03:43-05:00"
   },
   {
-   "id": "6afd4d014b2d",
-   "title": "HU Chant: Ancient Mantra for a Modern World",
-   "date": "2026-11-21",
+   "id": "18ecb23918e5",
+   "title": "Blue Sundays",
+   "date": "2026-11-22",
    "change": "missing",
-   "lastSeen": "2026-11-14T19:16:41-05:00"
+   "lastSeen": "2026-11-15T11:33:09-05:00"
   },
   {
    "id": "963fa6eb41fc",
@@ -2500,10 +2537,11 @@
    "lastSeen": "2026-11-14T19:16:41-05:00"
   },
   {
-   "id": "0e28a1fa550e",
-   "title": "Sound Bath in Support of the Abenaki Nation",
+   "id": "8669b5b3d0c3",
+   "title": "Blue Sundays",
    "date": "2026-11-29",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
   },
   {
    "id": "11cc6ac55220",
@@ -2511,6 +2549,13 @@
    "date": "2026-12-05",
    "change": "missing",
    "lastSeen": "2026-11-12T20:28:02-05:00"
+  },
+  {
+   "id": "a991fcfbdf81",
+   "title": "Blue Sundays",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-11-15T11:33:09-05:00"
   },
   {
    "id": "0657b5706b12",
@@ -2523,8 +2568,7 @@
    "id": "f9e3138ed638",
    "title": "Dead Sessions \"End of Semester Shakedown\" at Higher Ground",
    "date": "2026-12-11",
-   "change": "missing",
-   "lastSeen": "2026-11-12T12:43:53-05:00"
+   "change": "dropped"
   },
   {
    "id": "d580c36449d0",
@@ -2532,12 +2576,6 @@
    "date": "2026-12-19",
    "change": "missing",
    "lastSeen": "2026-11-13T12:21:17-05:00"
-  },
-  {
-   "id": "e5339b2ef1eb",
-   "title": "Winter Solstice Cosmic Sound Journey",
-   "date": "2026-12-20",
-   "change": "dropped"
   }
  ]
 }
