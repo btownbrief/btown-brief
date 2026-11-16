@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-15T23:11:14+00:00",
+ "updated": "2026-11-16T00:11:57+00:00",
  "sections_updated": {
-  "now": "2026-11-15T23:11:14+00:00",
-  "forecast": "2026-11-15T23:11:14+00:00",
-  "hourly": "2026-11-15T23:11:14+00:00",
-  "alerts": "2026-11-15T23:11:14+00:00",
-  "afd": "2026-11-15T23:11:14+00:00",
-  "lake_forecast": "2026-11-15T23:11:14+00:00",
-  "lake_gage": "2026-11-15T23:11:14+00:00",
-  "air": "2026-11-15T23:11:14+00:00",
-  "sun": "2026-11-15T23:11:14+00:00",
-  "models": "2026-11-15T23:11:14+00:00"
+  "now": "2026-11-16T00:11:57+00:00",
+  "forecast": "2026-11-16T00:11:57+00:00",
+  "hourly": "2026-11-16T00:11:57+00:00",
+  "alerts": "2026-11-16T00:11:57+00:00",
+  "afd": "2026-11-16T00:11:57+00:00",
+  "lake_forecast": "2026-11-16T00:11:57+00:00",
+  "lake_gage": "2026-11-16T00:11:57+00:00",
+  "air": "2026-11-16T00:11:57+00:00",
+  "sun": "2026-11-16T00:11:57+00:00",
+  "models": "2026-11-16T00:11:57+00:00"
  },
  "now": {
-  "observed_at": "2026-11-15T22:40:00+00:00",
+  "observed_at": "2026-11-15T23:45:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 43,
-  "feels_like_f": 38,
+  "feels_like_f": 37,
   "humidity": 65,
   "dewpoint_f": 32,
-  "wind_mph": 8,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "WNW",
+  "wind_dir": "NW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,10 +30,10 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-15T18:00:00-05:00",
+    "start": "2026-11-15T19:00:00-05:00",
     "is_day": false,
     "temp_f": 38,
-    "pop": 3,
+    "pop": 2,
     "wind": "NW 7 to 12 mph",
     "short": "Cloudy",
     "detailed": "Cloudy, with a low around 38. Northwest wind 7 to 12 mph."
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-15T22:45:42+00:00",
   "hours": [
-   {
-    "t": "2026-11-15T18:00:00-05:00",
-    "temp_f": 42,
-    "feels_f": 36,
-    "pop": 3,
-    "humidity": 67,
-    "wind_mph": 10,
-    "wind_dir": "NW",
-    "sky": 100,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 15
-   },
    {
     "t": "2026-11-15T19:00:00-05:00",
     "temp_f": 42,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-17T06:00:00-05:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 88,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 21,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-15T19:14:00+00:00",
+  "issued": "2026-11-15T23:30:00+00:00",
   "key_messages": [
    "After upslope snow showers/flurries at elevations above 1500 feet or so gradually wind down tonight, a dry period will begin areawide. Seasonably cool and cloudy conditions into Monday will trend sunny on Tuesday as a warming trend begins.",
    "Warm and dry weather will persist through mid to late week."
   ],
   "what_changed": "As of 214 PM EST Sunday... Nighttime temperatures are a few to several degrees milder for tonight and tomorrow night in most locations.",
-  "raw": "\n000\nFXUS61 KBTV 151914\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n214 PM EST Sun Nov 15 2026\n\n.WHAT HAS CHANGED...\nAs of 214 PM EST Sunday...\n\nNighttime temperatures are a few to several degrees milder for \ntonight and tomorrow night in most locations.\n\n&&\n\n.KEY MESSAGES...\nAs of 214 PM EST Sunday...\n\n1. After upslope snow showers/flurries at elevations above 1500 \nfeet or so gradually wind down tonight, a dry period will begin \nareawide. Seasonably cool and cloudy conditions into Monday will \ntrend sunny on Tuesday as a warming trend begins.\n\n2. Warm and dry weather will persist through mid to late week. \n\n&&\n\n.DISCUSSION...\nAs of 214 PM EST Sunday...\n\nKEY MESSAGE 1: Light snow showers in the Adirondacks, northern \nGreens, and northeastern highlands in Vermont have persisted \ninto early afternoon. Water vapor imagery shows an additional \nshortwave to our north pivoting towards northeastern Vermont \nwhich should keep slightly higher chances of showers in this \nregion into the evening. To the west, decreasing radar returns \nnearer to KTYX show cloud tops have warmed/lowered, and there \nare some increasing breaks in the clouds cover per webcams and \nsatellite imagery. Overall, this suggests further upslope \nprecipitation will trend lighter and more intermittent; expect \nno travel impacts given these precipitation rates and \nincreasingly localized precipitation. Also, while wet roads \noften leads to risk of ice formation at night, persistent \nnorthwest flow and cloud layer will prevent radiative cooling \nthat is needed for more substantial surface temperature falls. \nIn fact, based on recent temperature verification and this \ncloudy and breezy pattern, we went closer to raw model guidance \nand away from bias-corrected and more climatological overnight \ntemperatures. As such, think most lower elevation spots will see\nlow temperatures only bottom out near or slightly above \nfreezing rather than well below freezing.\n\nWhile increasingly anti-cyclonic flow will lead to dry weather \non Monday, low level moisture will be trapped due to strong \nsubsidence. As a result, persistent cloud cover just about\nareawide will be likely through the day as winds remain out of \nthe northwest. This cloudiness will limit mixing depth and \nheating, so it will be one more day with seasonably chilly \ndaytime temperatures in the upper 30s to mid 40s despite rising \ntemperatures aloft. In contrast, on Tuesday as the center of a \nlarge ridge of high pressure to our southwest migrates nearer \nand low level flow becomes southwesterly, we should scatter the \nshallow cloud cover with a mainly sunny sky for most of the day \nanticipated. The combination of a moderating air mass and \nsunshine should lead to the first in a series of days with high \ntemperatures at least 10 degrees above normal.\n\nKEY MESSAGE 2: A ridge of high pressure will remain entrenched across \nmuch of the eastern CONUS for the latter half of this week. The \nresult will be a continued period of dry weather. A series of \nshortwave troughs/frontal systems will attempt to break down the \nridge late in the week toward next weekend. However, the ridge looks \nto hold firm, shunting northern stream systems to our north, with \nperhaps a glancing blow along the international border on Friday. \nModels have some consensus in better chances for precipitation later \nnext weekend, but there's not much agreement in deterministic or \nensemble guidance in exactly how things would play out. In addition \nto the dry weather, temperatures will remain above normal, \nparticularly during the day when highs in the 50s will be common \n(low to mid 40s is normal for mid November). Lows will be a bit more \nseasonable due to a fairly favorable radiational cooling pattern; \nlows should remain in the 30s to around 40F most nights.\n\n&&\n\n.AVIATION /18Z SUNDAY THROUGH FRIDAY/...\nThrough 18Z Monday...A mix of VFR and MVFR conditions is expected to\nprevail through the first 6-12 hours of the TAF period. The\nexception will be periods of IFR at KSLK through 22z in light snow\nshowers, with ceilings dropping to below 1000 ft and visibility to\n2SM at times. Overall, though, expect ceilings to remain 1500-3500\nft, generally lowest at KSLK/KMPV/KEFK through 06z Mon. Conditions\nlower to widespread MVFR as moisture becomes trapped under an\ninversion, forcing ceilings down to 1200-2500 ft, to remain so\nthrough the remainder of the TAF period. Again, KSLK the likely\nexception, with the cloud deck to drop to below 1000 ft from 06z\nthrough the end of the period. N/NW winds 5-10 kt with localized\ngusts to 18 kt this afternoon will decrease to 3-8 kt overnight and\nthrough Monday morning.\n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Hastings/Kutikoff\nAVIATION...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 152330\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n630 PM EST Sun Nov 15 2026\n\n.WHAT HAS CHANGED...\nAs of 214 PM EST Sunday...\n\nNighttime temperatures are a few to several degrees milder for \ntonight and tomorrow night in most locations.\n\n&&\n\n.KEY MESSAGES...\nAs of 214 PM EST Sunday...\n\n1. After upslope snow showers/flurries at elevations above 1500 \nfeet or so gradually wind down tonight, a dry period will begin \nareawide. Seasonably cool and cloudy conditions into Monday will \ntrend sunny on Tuesday as a warming trend begins.\n\n2. Warm and dry weather will persist through mid to late week.\n\n&&\n\n.DISCUSSION...\nAs of 214 PM EST Sunday...\n\nKEY MESSAGE 1: Light snow showers in the Adirondacks, northern \nGreens, and northeastern highlands in Vermont have persisted \ninto early afternoon. Water vapor imagery shows an additional \nshortwave to our north pivoting towards northeastern Vermont \nwhich should keep slightly higher chances of showers in this \nregion into the evening. To the west, decreasing radar returns \nnearer to KTYX show cloud tops have warmed/lowered, and there \nare some increasing breaks in the clouds cover per webcams and \nsatellite imagery. Overall, this suggests further upslope \nprecipitation will trend lighter and more intermittent; expect \nno travel impacts given these precipitation rates and \nincreasingly localized precipitation. Also, while wet roads \noften leads to risk of ice formation at night, persistent \nnorthwest flow and cloud layer will prevent radiative cooling \nthat is needed for more substantial surface temperature falls. \nIn fact, based on recent temperature verification and this \ncloudy and breezy pattern, we went closer to raw model guidance \nand away from bias-corrected and more climatological overnight \ntemperatures. As such, think most lower elevation spots will see\nlow temperatures only bottom out near or slightly above \nfreezing rather than well below freezing.\n\nWhile increasingly anti-cyclonic flow will lead to dry weather \non Monday, low level moisture will be trapped due to strong \nsubsidence. As a result, persistent cloud cover just about\nareawide will be likely through the day as winds remain out of \nthe northwest. This cloudiness will limit mixing depth and \nheating, so it will be one more day with seasonably chilly \ndaytime temperatures in the upper 30s to mid 40s despite rising \ntemperatures aloft. In contrast, on Tuesday as the center of a \nlarge ridge of high pressure to our southwest migrates nearer \nand low level flow becomes southwesterly, we should scatter the \nshallow cloud cover with a mainly sunny sky for most of the day \nanticipated. The combination of a moderating air mass and \nsunshine should lead to the first in a series of days with high \ntemperatures at least 10 degrees above normal.\n\nKEY MESSAGE 2: A ridge of high pressure will remain entrenched across \nmuch of the eastern CONUS for the latter half of this week. The \nresult will be a continued period of dry weather. A series of \nshortwave troughs/frontal systems will attempt to break down the \nridge late in the week toward next weekend. However, the ridge looks \nto hold firm, shunting northern stream systems to our north, with \nperhaps a glancing blow along the international border on Friday. \nModels have some consensus in better chances for precipitation later \nnext weekend, but there's not much agreement in deterministic or \nensemble guidance in exactly how things would play out. In addition \nto the dry weather, temperatures will remain above normal, \nparticularly during the day when highs in the 50s will be common \n(low to mid 40s is normal for mid November). Lows will be a bit more \nseasonable due to a fairly favorable radiational cooling pattern; \nlows should remain in the 30s to around 40F most nights.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...At this time, ceilings range between about\n2000-4000 ft agl. Over the next 15-18 hours, northwest flow with\nadequate moisture will likely keep the region enveloped in\nstratus trapped near to below summit levels of our mountains.\nCeilings will likely lower over the next 4-8 hours, and then\nonly gradually improve around 16-18z Monday. Currently thinking\nonly KSLK will have a window of IFR ceilings, and KEFK is less\nlikely, but not impossible. Winds will be northwesterly around 5-10\nknots, and perhaps try to trend more westerly beyond that \n16-18z time frame. Approaching 00z Tuesday, clouds will begin to\ngradually scatter, lingering in the Northeast Kingdom and \nAdirondacks longest.\n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Hastings/Kutikoff\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-11-15T18:34:00+00:00",
@@ -983,9 +983,9 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-15T18:00:00.000-05:00",
+  "water_temp_at": "2026-11-15T19:00:00.000-05:00",
   "level_ft": 93.79,
-  "level_at": "2026-11-15T18:00:00.000-05:00",
+  "level_at": "2026-11-15T19:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
@@ -993,7 +993,7 @@
   "aqi": 20,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/15/26 17:00",
+  "observed": "11/15/26 18:00",
   "discussion": "On Monday, November 16th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-11-15",
-  "generated": "2026-11-15T23:11:17+00:00",
+  "generated": "2026-11-16T00:12:00+00:00",
   "text": "Cloudy tonight, low 38. Monday, cloudy, high 42.",
   "periods": [
    {
@@ -1075,7 +1075,7 @@
     "is_day": false,
     "temp_f": 38,
     "sky": "cloudy",
-    "start": "2026-11-15T18:00:00-05:00",
+    "start": "2026-11-15T19:00:00-05:00",
     "end": "2026-11-16T06:00:00-05:00",
     "precip": null,
     "wind": null,
