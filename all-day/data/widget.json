@@ -1,87 +1,95 @@
 {
  "v": 1,
- "updated": "2026-11-17T04:47:54+00:00",
+ "updated": "2026-11-17T10:44:28+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 28,
-  "sky": "Clear",
+  "temp": 30,
+  "sky": "Cloudy",
   "from": "airport",
-  "hi": 51,
+  "hi": 53,
   "lo": 31,
-  "rain": "Dry through Tuesday",
+  "rain": "Dry through today",
   "obs": {
-   "temp": 28,
-   "sky": "Clear",
-   "at": "2026-11-17T04:20:00+00:00"
+   "temp": 30,
+   "sky": "Cloudy",
+   "at": "2026-11-17T10:15:00+00:00"
   },
   "hours": [
    {
-    "t": "2026-11-16T23:00:00-05:00",
+    "t": "2026-11-17T05:00:00-05:00",
+    "temp": 36,
+    "sky": "Partly Cloudy"
+   },
+   {
+    "t": "2026-11-17T06:00:00-05:00",
+    "temp": 34,
+    "sky": "Mostly Sunny"
+   },
+   {
+    "t": "2026-11-17T07:00:00-05:00",
     "temp": 33,
-    "sky": "Clear"
+    "sky": "Mostly Sunny"
    },
    {
-    "t": "2026-11-17T00:00:00-05:00",
-    "temp": 32,
-    "sky": "Clear"
+    "t": "2026-11-17T08:00:00-05:00",
+    "temp": 36,
+    "sky": "Mostly Sunny"
    },
    {
-    "t": "2026-11-17T01:00:00-05:00",
-    "temp": 32,
-    "sky": "Clear"
+    "t": "2026-11-17T09:00:00-05:00",
+    "temp": 40,
+    "sky": "Mostly Sunny"
    },
    {
-    "t": "2026-11-17T02:00:00-05:00",
-    "temp": 32,
-    "sky": "Mostly Clear"
-   },
-   {
-    "t": "2026-11-17T03:00:00-05:00",
-    "temp": 31,
-    "sky": "Mostly Clear"
-   },
-   {
-    "t": "2026-11-17T04:00:00-05:00",
-    "temp": 31,
-    "sky": "Mostly Clear"
+    "t": "2026-11-17T10:00:00-05:00",
+    "temp": 44,
+    "sky": "Mostly Sunny"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
- "wire": [
-  {
-   "title": "Record late snow for Mount Mansfield and Burlington this past weekend",
-   "src": "WCAX",
-   "url": "https://www.wcax.com/2026/11/16/record-late-snow-mount-mansfield-burlington-this-past-weekend/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/e231a160be2c"
-  },
-  {
-   "title": "SCAM ALERT: Fire department fundraiser for displaced victims finds fake accounts",
-   "src": "Channel 3 News",
-   "url": "https://x.com/wcax/status/2122419437747761227",
-   "link": "https://guide.btownbrief.com/all-day/#wire/593f44fb3e0f"
-  },
-  {
-   "title": "Seeking shelter this winter",
-   "src": "The Frequency",
-   "url": "https://www.vermontpublic.org/podcast/the-frequency-daily-vermont-news/2026-11-16/seeking-shelter-this-winter",
-   "link": "https://guide.btownbrief.com/all-day/#wire/ff0309c88350"
-  }
- ],
+ "wire": [],
  "tonight": [
   {
-   "title": "Bike Basics",
+   "title": "4-Axis CNC Training",
+   "time": "5 pm",
+   "venue": "Generator Makerspace",
+   "start": "2026-11-17T17:00:00-05:00",
+   "end": "2026-11-17T21:00:00-05:00",
+   "url": "https://app.glueup.com/event/4-axis-cnc-training-186831/",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Laser Machine Training",
+   "time": "5:30 pm",
+   "venue": "Generator Makerspace",
+   "start": "2026-11-17T17:30:00-05:00",
+   "end": "2026-11-17T19:30:00-05:00",
+   "url": "https://app.glueup.com/event/laser-machine-training-186794/",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "LCES Singer-Songwriter Competition",
    "time": "6 pm",
-   "venue": "Old Spokes Home",
-   "start": "2026-11-16T18:00:00-05:00",
-   "end": "2026-11-18T20:00:00-05:00",
-   "url": "https://www.mychamplainvalley.com/calendar/#/details/bike-basics/20256005/2026-11-16T18",
+   "venue": "The S.P.A.C.E. Gallery",
+   "start": "2026-11-17T18:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/lces-singer-songwriter-competition-45688891",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Ray",
+   "time": "7 pm",
+   "venue": "Main Street Landing Performing Arts Center",
+   "start": "2026-11-17T19:00:00-05:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/ray-45667388",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
  "game": {
   "title": "UVM Men's Basketball at Yale",
-  "when": "Wed 7 pm",
+  "when": "Tomorrow 7 pm",
   "start": "2026-11-19T00:00:00+00:00",
   "all_day": false,
   "home": false,
