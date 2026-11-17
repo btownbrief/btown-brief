@@ -1,35 +1,35 @@
 {
- "generated": "2026-11-16T14:50:56-05:00",
+ "generated": "2026-11-16T22:09:20-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 15,
-   "seconds": 6.1
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 50,
-   "seconds": 4.8
+   "seconds": 3.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 81,
-   "seconds": 4.8
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 125,
-   "seconds": 2.7
+   "count": 127,
+   "seconds": 2.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 216,
-   "seconds": 7.7
+   "seconds": 6.2
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 29,
-   "seconds": 3.8
+   "seconds": 3.4
   },
   "eventbrite": {
    "label": "Eventbrite",
@@ -44,32 +44,32 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 177,
-   "seconds": 72.1
+   "seconds": 65.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 5,
-   "seconds": 0.6
+   "seconds": 0.3
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 15,
-   "seconds": 35.5
+   "seconds": 31.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.4
+   "seconds": 3.3
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 639,
-   "seconds": 34.0
+   "seconds": 31.8
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 17.0
+   "seconds": 24.3
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 564,
-   "seconds": 75.1
+   "seconds": 72.9
   },
   "meetup": {
    "label": "Meetup",
    "count": 58,
-   "seconds": 114.2
+   "seconds": 119.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.3
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 142,
-   "seconds": 15.8
+   "count": 140,
+   "seconds": 15.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,61 +109,50 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 86,
-   "seconds": 2.3
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 18.8
+   "seconds": 17.6
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2830,
-   "seconds": 70.3
+   "seconds": 3.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 51,
-   "seconds": 3.1
+   "seconds": 2.9
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 278,
-   "seconds": 23.8
+   "count": 282,
+   "seconds": 13.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 168,
-   "seconds": 0.1
+   "count": 172,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 46,
-   "seconds": 70.0
+   "seconds": 61.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 34,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 5648,
- "afterDedup": 2317,
- "duplicatesMerged": 3331,
- "final": 2390,
- "firecrawlCalls": 13,
+ "gathered": 5656,
+ "afterDedup": 2318,
+ "duplicatesMerged": 3338,
+ "final": 2395,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Crafters Drop-In",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-15"
-  },
   {
    "kept": {
     "title": "Postcard Club",
@@ -407,6 +396,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
+    "title": "De-stress at the Libraries: Puzzles",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-16"
   },
@@ -2401,46 +2401,6 @@
  ],
  "changes": [
   {
-   "id": "0010482e4889",
-   "title": "Repertory Wednesday Series: 'Shampoo'",
-   "date": "2026-11-18",
-   "change": "time",
-   "was": "2026-11-18",
-   "now": "2026-11-18T20:25:00-05:00"
-  },
-  {
-   "id": "a5984a40aeff",
-   "title": "E Pluribus Unum (Out of Many, One): 400 Years of American Song",
-   "date": "2026-11-21",
-   "change": "time",
-   "was": "2026-11-21T16:00:00-05:00",
-   "now": "2026-11-21T19:30:00-05:00"
-  },
-  {
-   "id": "dfc4ef9090b3",
-   "title": "Postcard Club",
-   "date": "2026-11-27",
-   "change": "time",
-   "was": "2026-11-27",
-   "now": "2026-11-27T10:00:00-05:00"
-  },
-  {
-   "id": "79c79c1e2ea8",
-   "title": "Burlington Illuminated: Obelisk and Anemone",
-   "date": "2026-12-17",
-   "change": "time",
-   "was": "2026-12-17",
-   "now": "2026-12-17T17:00:00-05:00"
-  },
-  {
-   "id": "d8949d349bc7",
-   "title": "Burlington Illuminated: Arecibo’s Message",
-   "date": "2027-01-08",
-   "change": "time",
-   "was": "2027-01-08",
-   "now": "2027-01-08T17:00:00-05:00"
-  },
-  {
    "id": "bd554bc7082a",
    "title": "Public Skate",
    "date": "2026-11-16",
@@ -2460,6 +2420,27 @@
    "date": "2026-11-16",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
+  },
+  {
+   "id": "614dc227cc06",
+   "title": "Drop-In Intermediate Pickleball",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-11-16T14:50:56-05:00"
+  },
+  {
+   "id": "ad9418623e5f",
+   "title": "Adult Drop- In Table Tennis",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-11-16T14:50:56-05:00"
+  },
+  {
+   "id": "34a7107b2cf3",
+   "title": "Trivia Mondays at Black Flannel",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-11-16T14:50:56-05:00"
   },
   {
    "id": "56394eca58c3",
@@ -2490,12 +2471,6 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "cf3b4bf142ea",
-   "title": "3D Printer Training 201 (Bambu)",
-   "date": "2026-11-17",
-   "change": "dropped"
-  },
-  {
    "id": "cc2fd573c6dc",
    "title": "Jewelry Training",
    "date": "2026-11-17",
@@ -2522,24 +2497,6 @@
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "2f8dd781e793",
-   "title": "ViVT Hold",
-   "date": "2026-11-18",
-   "change": "dropped"
-  },
-  {
-   "id": "2251d6980de4",
-   "title": "Domestic Sewing Training",
-   "date": "2026-11-18",
-   "change": "dropped"
-  },
-  {
-   "id": "e1bca4345274",
-   "title": "Vegan in Vermont",
-   "date": "2026-11-18",
-   "change": "dropped"
   },
   {
    "id": "29035dad48dc",
@@ -2731,12 +2688,6 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "11cc6ac55220",
-   "title": "Chess Club",
-   "date": "2026-12-05",
-   "change": "dropped"
-  },
-  {
    "id": "4fba75709b99",
    "title": "Holiday Market at BEARy Magical Lights",
    "date": "2026-12-05",
@@ -2756,6 +2707,20 @@
    "date": "2026-12-06",
    "change": "missing",
    "lastSeen": "2026-11-15T11:33:09-05:00"
+  },
+  {
+   "id": "12aef8fb2c1f",
+   "title": "Monday Yoga",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-11-16T14:50:56-05:00"
+  },
+  {
+   "id": "eae096595165",
+   "title": "De-stress at the Libraries: Puzzles",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-11-16T14:50:56-05:00"
   },
   {
    "id": "1085f92a5583",
@@ -2793,22 +2758,9 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "0657b5706b12",
-   "title": "Menorah Lighting",
-   "date": "2026-12-10",
-   "change": "dropped"
-  },
-  {
    "id": "971644900609",
    "title": "Pub Hour",
    "date": "2026-12-11",
-   "change": "missing",
-   "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "211b76fd82fb",
-   "title": "Classy Dinner Night Out!",
-   "date": "2026-12-12",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
@@ -2846,12 +2798,6 @@
    "date": "2026-12-18",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "d580c36449d0",
-   "title": "Nine Days",
-   "date": "2026-12-19",
-   "change": "dropped"
   },
   {
    "id": "bef37f802b91",
