@@ -1,19 +1,19 @@
 {
- "updated": "2026-11-17T10:43:50+00:00",
+ "updated": "2026-11-17T11:03:52+00:00",
  "sections_updated": {
-  "now": "2026-11-17T10:43:50+00:00",
-  "forecast": "2026-11-17T10:43:50+00:00",
-  "hourly": "2026-11-17T10:43:50+00:00",
-  "alerts": "2026-11-17T10:43:50+00:00",
-  "afd": "2026-11-17T10:43:50+00:00",
-  "lake_forecast": "2026-11-17T10:43:50+00:00",
-  "lake_gage": "2026-11-17T10:43:50+00:00",
-  "air": "2026-11-17T10:43:50+00:00",
+  "now": "2026-11-17T11:03:52+00:00",
+  "forecast": "2026-11-17T11:03:52+00:00",
+  "hourly": "2026-11-17T11:03:52+00:00",
+  "alerts": "2026-11-17T11:03:52+00:00",
+  "afd": "2026-11-17T11:03:52+00:00",
+  "lake_forecast": "2026-11-17T11:03:52+00:00",
+  "lake_gage": "2026-11-17T11:03:52+00:00",
+  "air": "2026-11-17T11:03:52+00:00",
   "sun": "2026-11-17T10:43:50+00:00",
   "models": "2026-11-17T10:43:50+00:00"
  },
  "now": {
-  "observed_at": "2026-11-17T10:15:00+00:00",
+  "observed_at": "2026-11-17T10:40:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 30,
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-11-17T05:00:00-05:00",
+    "start": "2026-11-17T03:00:00-05:00",
     "is_day": false,
     "temp_f": 31,
     "pop": 0,
     "wind": "S 8 mph",
-    "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 31. South wind around 8 mph."
+    "short": "Mostly Clear",
+    "detailed": "Mostly clear, with a low around 31. South wind around 8 mph."
    },
    {
     "name": "Tuesday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-17T06:22:28+00:00",
   "hours": [
-   {
-    "t": "2026-11-17T05:00:00-05:00",
-    "temp_f": 36,
-    "feels_f": 30,
-    "pop": 0,
-    "humidity": 75,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 32,
-    "short": "Partly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
    {
     "t": "2026-11-17T06:00:00-05:00",
     "temp_f": 34,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 8
+   },
+   {
+    "t": "2026-11-18T17:00:00-05:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 0,
+    "humidity": 59,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 73,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 8
    }
   ],
   "days": [
@@ -1044,23 +1044,9 @@
  },
  "brief": {
   "date": "2026-11-17",
-  "generated": "2026-11-17T10:44:07+00:00",
-  "text": "Partly cloudy overnight, low 31. Mostly sunny today, high 53.",
+  "generated": "2026-11-17T11:05:05+00:00",
+  "text": "Mostly sunny today, high 53. Mostly cloudy tonight, low 39. Wednesday, partly sunny, high 56.",
   "periods": [
-   {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 31,
-    "sky": "partly cloudy",
-    "start": "2026-11-17T05:00:00-05:00",
-    "end": "2026-11-17T06:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 30,
-    "feels_hi": 30,
-    "text": "Partly cloudy overnight, low 31."
-   },
    {
     "label": "Today",
     "name": "Tuesday",
@@ -1074,6 +1060,20 @@
     "feels_lo": 26,
     "feels_hi": 53,
     "text": "Mostly sunny today, high 53."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tuesday Night",
+    "is_day": false,
+    "temp_f": 39,
+    "sky": "mostly cloudy",
+    "start": "2026-11-17T18:00:00-05:00",
+    "end": "2026-11-18T06:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 35,
+    "feels_hi": 47,
+    "text": "Mostly cloudy tonight, low 39."
    }
   ]
  }
