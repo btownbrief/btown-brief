@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-17T21:16:39+00:00",
+ "updated": "2026-11-17T21:36:42+00:00",
  "sections_updated": {
-  "now": "2026-11-17T21:16:39+00:00",
-  "forecast": "2026-11-17T21:16:39+00:00",
-  "hourly": "2026-11-17T21:16:39+00:00",
-  "alerts": "2026-11-17T21:16:39+00:00",
-  "afd": "2026-11-17T21:16:39+00:00",
-  "lake_forecast": "2026-11-17T21:16:39+00:00",
-  "lake_gage": "2026-11-17T21:16:39+00:00",
-  "air": "2026-11-17T21:16:39+00:00",
-  "sun": "2026-11-17T21:16:39+00:00",
-  "models": "2026-11-17T21:16:39+00:00"
+  "now": "2026-11-17T21:36:42+00:00",
+  "forecast": "2026-11-17T21:36:42+00:00",
+  "hourly": "2026-11-17T21:36:42+00:00",
+  "alerts": "2026-11-17T21:36:42+00:00",
+  "afd": "2026-11-17T21:36:42+00:00",
+  "lake_forecast": "2026-11-17T21:36:42+00:00",
+  "lake_gage": "2026-11-17T21:36:42+00:00",
+  "air": "2026-11-17T21:36:42+00:00",
+  "sun": "2026-11-17T21:36:42+00:00",
+  "models": "2026-11-17T21:36:42+00:00"
  },
  "now": {
-  "observed_at": "2026-11-17T20:05:00+00:00",
+  "observed_at": "2026-11-17T21:00:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 50,
+  "temp_f": 52,
+  "feels_like_f": 52,
+  "humidity": 54,
   "dewpoint_f": 36,
-  "wind_mph": 9,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "SSW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-17T16:00:00-05:00",
+    "start": "2026-11-17T14:00:00-05:00",
     "is_day": true,
     "temp_f": 53,
     "pop": 0,
-    "wind": "S 7 mph",
+    "wind": "S 9 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 53. South wind around 7 mph."
+    "detailed": "Sunny, with a high near 53. South wind around 9 mph."
    },
    {
     "name": "Tonight",
@@ -986,7 +986,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "11/17/26 16:00",
@@ -1062,7 +1062,7 @@
  },
  "brief": {
   "date": "2026-11-17",
-  "generated": "2026-11-17T21:17:06+00:00",
+  "generated": "2026-11-17T21:36:58+00:00",
   "text": "Sunny today, high 53. Partly cloudy tonight, low 38. Wednesday, partly sunny, high 55.",
   "periods": [
    {
@@ -1071,7 +1071,7 @@
     "is_day": true,
     "temp_f": 53,
     "sky": "sunny",
-    "start": "2026-11-17T16:00:00-05:00",
+    "start": "2026-11-17T21:00:00+00:00",
     "end": "2026-11-17T18:00:00-05:00",
     "precip": null,
     "wind": null,
