@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-17T18:44:22+00:00",
+ "updated": "2026-11-17T19:56:43+00:00",
  "sections_updated": {
-  "now": "2026-11-17T18:44:22+00:00",
-  "forecast": "2026-11-17T18:44:22+00:00",
-  "hourly": "2026-11-17T18:44:22+00:00",
-  "alerts": "2026-11-17T18:44:22+00:00",
-  "afd": "2026-11-17T18:44:22+00:00",
-  "lake_forecast": "2026-11-17T18:44:22+00:00",
-  "lake_gage": "2026-11-17T18:44:22+00:00",
-  "air": "2026-11-17T18:44:22+00:00",
-  "sun": "2026-11-17T18:44:22+00:00",
-  "models": "2026-11-17T18:44:22+00:00"
+  "now": "2026-11-17T19:56:43+00:00",
+  "forecast": "2026-11-17T19:56:43+00:00",
+  "hourly": "2026-11-17T19:56:43+00:00",
+  "alerts": "2026-11-17T19:56:43+00:00",
+  "afd": "2026-11-17T19:56:43+00:00",
+  "lake_forecast": "2026-11-17T19:56:43+00:00",
+  "lake_gage": "2026-11-17T19:56:43+00:00",
+  "air": "2026-11-17T19:56:43+00:00",
+  "sun": "2026-11-17T19:56:43+00:00",
+  "models": "2026-11-17T19:56:43+00:00"
  },
  "now": {
-  "observed_at": "2026-11-17T18:20:00+00:00",
+  "observed_at": "2026-11-17T19:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 52,
-  "feels_like_f": 52,
+  "temp_f": 54,
+  "feels_like_f": 54,
   "humidity": 50,
-  "dewpoint_f": 34,
+  "dewpoint_f": 36,
   "wind_mph": 10,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-11-17T13:00:00-05:00",
+    "start": "2026-11-17T14:00:00-05:00",
     "is_day": true,
     "temp_f": 53,
     "pop": 0,
-    "wind": "S 7 to 10 mph",
+    "wind": "S 9 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 53. South wind 7 to 10 mph."
+    "detailed": "Sunny, with a high near 53. South wind around 9 mph."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-17T18:21:37+00:00",
   "hours": [
-   {
-    "t": "2026-11-17T13:00:00-05:00",
-    "temp_f": 50,
-    "feels_f": 46,
-    "pop": 0,
-    "humidity": 63,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 0,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-11-17T14:00:00-05:00",
     "temp_f": 53,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 7
+   },
+   {
+    "t": "2026-11-19T01:00:00-05:00",
+    "temp_f": 41,
+    "feels_f": 37,
+    "pop": 0,
+    "humidity": 79,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 51,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 8
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-17T11:42:00+00:00",
+  "issued": "2026-11-17T19:02:00+00:00",
   "key_messages": [
-   "Dry weather continues with a warming trend expected through the end of this week.",
-   "The weekend will start off on a dry note, with chances for showers returning by the end of the weekend."
+   "Dry weather with above normal temperatures continues through the end of the week.",
+   "The weekend will be unseasonably warm and primarily dry. By Sunday evening, chances for rain increase associated with a possible east coast storm. Then a strong front will bring much colder conditions to the region later Monday into Tuesday."
   ],
-  "what_changed": "As of 123 AM EST Tuesday... No significant changes were made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 171142\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n642 AM EST Tue Nov 17 2026\n\n.WHAT HAS CHANGED...\nAs of 123 AM EST Tuesday...\n\nNo significant changes were made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 123 AM EST Tuesday...\n\n1. Dry weather continues with a warming trend expected through \nthe end of this week.\n\n2. The weekend will start off on a dry note, with chances for \nshowers returning by the end of the weekend.\n\n&&\n\n.DISCUSSION...\nAs of 123 AM EST Tuesday...\n\nKEY MESSAGE 1: Low level moisture trapped beneath an inversion \nhas led to low clouds over the Adirondacks overnight. We also \nhave some fog forming in the valleys where the skies have \ncleared as surface high pressure is in control of our weather \nwith light winds. Center of surface high pressure will remain \nnearly stationary to the southwest of our region, but this will \nprovide us with very quiet weather through this week. \nTemperatures will be about 10 degrees above seasonal normals \nduring the day, and about 5 degrees above normal at night. Each \nday we should have partly to mostly sunny skies, with mainly \nclear nights as well.\n\nKEY MESSAGE 2: Our nice clear and dry stretch will hold on for \none more day this weekend on Saturday before shower chances \nreturn for Sunday into Monday. Temperatures Saturday will be \nsimilar to that of the work week with highs in the mid to upper \n50s and generally clear skies as a secondary ridge, associated \nwith our overarching high passes through. The high centered over\nthe Mid-Atlantic will slide east, but models remain uncertain \nas to how much the high departs, in addition to how much it \nweakens. This will play a role for our shower chances Sunday \ninto Monday. There is strong model agreement that a coastal low \nwill develop off the Carolina coast Sunday. However, models \nbegin to diverge on the track of the system towards next week. \nThe GFS and notably the Google AI Deepmind phase this system \nwith an approaching Great Lakes shortwave late Sunday bringing \nwidespread shower chances from south to north; the steadiest of \nwhich is focused over southern Vermont. This track depicts the \ndeparting high as keeping its strength off the east coast, \namplifying the Great Lakes shortwave, and dragging the coastal \nlow north into our region. Conversely, the ECMWF and CMC weaken \nthe departing high, keeping our pattern more progressive, and \ntracking the coastal low out to see, more near Benchmark. This \nleaves us with a weaker Great Lakes shortwave, which favors \nlighter showers mainly across the Adirondacks and areas near the\nInternational Border. Currently consensus favors the latter of \nthe two solutions, but we will closely monitor trends for the \nweekend into next week. Regardless, our temperatures will return\nto seasonable levels to start off next week with highs back \ninto the 40s.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Lower IFR ceilings have struggled to\nmaterialize this morning with overarching MVFR cigs spilling across\nthe area. There is still some possibility of an hour or so of IFR\ncigs at SLK with few009 in the latest observation, but trends \nhave decreased the chances and have left mention of IFR out of \nthis TAF package. Additionally, trends have also decreased for \nany cig reductions at MPV/EFK. Ceilings will otherwise range \nbetween 3500-5000ft agl and continue towards 14/15Z for most of\nour area terminals, outside of MSS where more prevailing SKC \nskies will persist. Thereafter, ceilings are expected to scatter\nout with prevailing VFR at all terminals by 17Z. After 14/15Z, \nsustained winds between 10-15 kts with gusts around 20 knots can\nbe expected at MSS/SLK before winds subside after 22/23Z. Some \nLLWS is possible tonight at SLK, and perhaps EFK as a weak LLJ \nto 35-40 knots at 2000ft agl develops at the higher terrain \nterminals after sunset.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Danzig\nAVIATION...Danzig\n"
+  "what_changed": "As of 201 PM EST Tuesday... No significant changes were made with this forecast package.",
+  "raw": "\n000\nFXUS61 KBTV 171902\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n202 PM EST Tue Nov 17 2026\n\n.WHAT HAS CHANGED...\nAs of 201 PM EST Tuesday...\n\nNo significant changes were made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 201 PM EST Tuesday...\n\n1. Dry weather with above normal temperatures continues through \nthe end of the week.  \n\n2. The weekend will be unseasonably warm and primarily dry. By \nSunday evening, chances for rain increase associated with a \npossible east coast storm. Then a strong front will bring much \ncolder conditions to the region later Monday into Tuesday.\n\n&&\n\n.DISCUSSION...\nAs of 201 PM EST Tuesday...\n\nKEY MESSAGE 1: A large area of high pressure will maintain generally \nquiet weather across the area through the end of the work week. \nTemperatures will run 5-10 degrees above normal through Friday. \nHighs will generally range through the 50s and lows will \nrange through the 30s into low 40s.  \n\nThe center of the surface high will remain to our south, which will \nmaintain a pressure gradient over our area that will support some \nlight west to southwest winds at the surface, with occasional gusts \nto around 15 mph possible each afternoon. Higher elevations, \nespecially over northern NY, will see higher gusts. Gusts over the \nnorthern Adirondacks will generally be in the 15 to 25 mph range, \nthough higher summits will see gusts in excess of 40 mph at times. \nThese breezes, along with some overnight cloud cover as shortwaves \nmove through, will prevent ideal radiational cooling conditions and \nwill keep lows seasonably mild.\n\nKEY MESSAGE 2: Dry conditions are near certain to continue through \nSunday morning, with near record daily high temperatures anticipated \nat long term climate sites. Sunday will mark six consecutive warm \ndays across the region. Thereafter, increasing chances of rain, \nespecially beginning Sunday evening into Monday, will be tied to two \nsystems that will generally converge towards our region. Through \nearly next week, while the risk of impactful weather is low, a more \nactive pattern will begin regardless of how things play out. \n\nThere are generally three scenarios that model solutions fall into \nfor this period; a mainly dry one, a light rain event with perhaps \nsome higher terrain snow showers in the wake of a cold front, or a \nmoderate rainfall favored in southern/eastern portions of the \nregion. This latter, more noteworthy outcome would occur if low \npressure developing later this week forms farther west than the \nconsensus across Florida, which leads to a track hugging the east \ncoast rather than out to sea. The latest run of the GEFS strongly \nfavors an out to sea scenario, but its operational run and many \nmembers of the ECMWF EPS and AIFS systems still show a risk of this \nwetter scenario. \n\nThe most likely outcome is in the official forecast, which shows \nsome rain showers associated with an incoming cold front from the \nwest that will put an end to our unseasonable warmth. The character \nof this front is hard to pin down right now; a sharper front could \ninduce some relatively heavy showers and a changeover to snow by \nTuesday morning. Otherwise, would expect no impacts with \nprecipitation amounts under 0.25\" and more likely under 0.1\" in most \nlocations. The final scenario is almost entirely dry with both a \nmiss in the coastal storm and a cold front that produces little \nprecipitation as low pressure weakens to our north as it passes \nthrough Monday.\n\n&&\n\n.AVIATION /19Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...VFR should prevail through the TAF period at\nall terminals with only high altitude clouds present, with the\npossible exception at SLK. Here, some upslope moisture transport\novernight could bring a brief period where an MVFR cloud deck\ndevelops; such clouds if they form are favored to dissipate within a\nfew hours with low (under 20%) chance of ceilings below 1000 feet.\nA modest and broad surface trough, along with the passage of a\nshortwave trough this evening, will promote enough\nwesterly/southwesterly winds to bring some LLWS concerns to more\nmountainous areas such that SLK and EFK will reach likely reach\ncriteria at times overnight and into early Wednesday. Otherwise,\ngusts at MSS and SLK near 20 knots will abate towards 21Z and pick\nback up within a few hours of sunrise to similar magnitudes.\nElsewhere surface winds will be mainly under 10 knots through the\nperiod.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance RA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Duell\nDISCUSSION...Kutikoff/Duell\nAVIATION...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-11-17T18:23:00+00:00",
@@ -979,18 +979,18 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-17T13:00:00.000-05:00",
-  "level_ft": 93.73,
-  "level_at": "2026-11-17T13:00:00.000-05:00",
+  "water_temp_at": "2026-11-17T14:00:00.000-05:00",
+  "level_ft": 93.75,
+  "level_at": "2026-11-17T14:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "11/17/26 13:00",
-  "discussion": "On Tuesday, November 17th, expect generally good air quality across Vermont."
+  "observed": "11/17/26 14:00",
+  "discussion": "On Wednesday, November 18th, expect moderate air quality across Vermont due to a combination of thermal inversions trapping local pollutants overnight, and elevated levels of fine particulate matter (PM25), entering the region from central sections of the continent."
  },
  "sun": {
   "sunrise": "2026-11-17T06:51-05:00",
@@ -1062,7 +1062,7 @@
  },
  "brief": {
   "date": "2026-11-17",
-  "generated": "2026-11-17T18:44:31+00:00",
+  "generated": "2026-11-17T19:57:05+00:00",
   "text": "Sunny today, high 53. Partly cloudy tonight, low 38. Wednesday, partly sunny, high 55.",
   "periods": [
    {
@@ -1071,7 +1071,7 @@
     "is_day": true,
     "temp_f": 53,
     "sky": "sunny",
-    "start": "2026-11-17T13:00:00-05:00",
+    "start": "2026-11-17T14:00:00-05:00",
     "end": "2026-11-17T18:00:00-05:00",
     "precip": null,
     "wind": null,
