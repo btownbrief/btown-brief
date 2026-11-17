@@ -1,14 +1,14 @@
 {
- "updated": "2026-11-17T22:56:45+00:00",
+ "updated": "2026-11-17T23:01:09+00:00",
  "sections_updated": {
-  "now": "2026-11-17T22:56:45+00:00",
-  "forecast": "2026-11-17T22:56:45+00:00",
-  "hourly": "2026-11-17T22:56:45+00:00",
-  "alerts": "2026-11-17T22:56:45+00:00",
-  "afd": "2026-11-17T22:56:45+00:00",
-  "lake_forecast": "2026-11-17T22:56:45+00:00",
+  "now": "2026-11-17T23:01:09+00:00",
+  "forecast": "2026-11-17T23:01:09+00:00",
+  "hourly": "2026-11-17T23:01:09+00:00",
+  "alerts": "2026-11-17T23:01:09+00:00",
+  "afd": "2026-11-17T23:01:09+00:00",
+  "lake_forecast": "2026-11-17T23:01:09+00:00",
   "lake_gage": "2026-11-17T21:36:42+00:00",
-  "air": "2026-11-17T22:56:45+00:00",
+  "air": "2026-11-17T23:01:09+00:00",
   "sun": "2026-11-17T22:56:45+00:00",
   "models": "2026-11-17T22:56:45+00:00"
  },
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-11-17T18:21:37+00:00",
   "hours": [
-   {
-    "t": "2026-11-17T17:00:00-05:00",
-    "temp_f": 48,
-    "feels_f": 45,
-    "pop": 0,
-    "humidity": 68,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 6,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
    {
     "t": "2026-11-17T18:00:00-05:00",
     "temp_f": 46,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-19T05:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 34,
+    "pop": 0,
+    "humidity": 82,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 52,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -1062,23 +1062,9 @@
  },
  "brief": {
   "date": "2026-11-17",
-  "generated": "2026-11-17T22:57:20+00:00",
-  "text": "Sunny today, high 53. Partly cloudy tonight, low 38. Wednesday, partly sunny, high 55.",
+  "generated": "2026-11-17T23:02:44+00:00",
+  "text": "Partly cloudy tonight, low 38. Wednesday, partly sunny, high 55.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 53,
-    "sky": "sunny",
-    "start": "2026-11-17T22:00:00+00:00",
-    "end": "2026-11-17T18:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 45,
-    "feels_hi": 45,
-    "text": "Sunny today, high 53."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1092,6 +1078,20 @@
     "feels_lo": 36,
     "feels_hi": 43,
     "text": "Partly cloudy tonight, low 38."
+   },
+   {
+    "label": "Wednesday",
+    "name": "Wednesday",
+    "is_day": true,
+    "temp_f": 55,
+    "sky": "partly sunny",
+    "start": "2026-11-18T06:00:00-05:00",
+    "end": "2026-11-18T18:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 34,
+    "feels_hi": 55,
+    "text": "Wednesday, partly sunny, high 55."
    }
   ]
  }
