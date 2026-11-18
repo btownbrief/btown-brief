@@ -6,8 +6,9 @@ read, NOT part of the hourly refresh (these are page scrapes; be polite).
 None of these are load-bearing: each returns None on any failure and the
 draft simply notes the outlet was unavailable. The quantitative divergence
 signal comes from the Open-Meteo model spread in latest.json; these add
-the consumer-facing narratives (WU/weather.com are the same TWC data) and
-the local TV voices.
+the consumer-facing narratives (WU/weather.com are the same TWC data),
+the local TV voices, and Eye on the Sky (the Fairbanks Museum's
+meteorologists in St. Johnsbury, heard daily on Vermont Public).
 
 Run directly to test:  python3 scripts/outlets.py
 """
@@ -144,9 +145,78 @@ def fetch_nbc5():
             "published": published, "body": body, "url": url}
 
 
+EYE_URL = "https://fairbanksmuseum.org/eye-on-the-sky/"
+# The forecast is one WordPress post the Fairbanks Museum rewrites in place
+# every morning and updates through the day; its REST record carries the
+# text and the time of the latest update. robots.txt allows everything.
+EYE_API = ("https://fairbanksmuseum.org/wp-json/wp/v2/posts?slug=weather-forecast-2"
+           "&_fields=id,link,date_gmt,modified_gmt,excerpt,content")
+EYE_PERIODS = 5        # tonight through the weekend's first day, roughly
+EYE_DISCUSSION_MAX = 2000
+
+
+def _plain(fragment):
+    text = re.sub(r"<br\s*/?>", " ", fragment)
+    text = re.sub(r"<[^>]+>", "", text)
+    return re.sub(r"\s+", " ", html.unescape(text)).strip()
+
+
+def parse_eye_on_the_sky(post):
+    """Eye on the Sky's statewide forecast, from the post's REST record:
+    the summary line, the period-by-period forecast, any hazards, and the
+    meteorologists' written discussion. The page is never shown this text;
+    the read model reads it to compare calls (Fairbanks Museum's work)."""
+    content = ((post.get("content") or {}).get("rendered")) or ""
+    sections = {}
+    for m in re.finditer(r"<h3>(.*?)</h3>(.*?)(?=<h3>|\Z)", content, re.S):
+        sections[_plain(m.group(1)).lower()] = m.group(2)
+
+    periods = []
+    for name in ("detailed forecast", "extended forecast"):
+        for p in re.findall(r"<p>(.*?)</p>", sections.get(name, ""), re.S):
+            pm = re.match(r"\s*<strong>(.*?)</strong>(.*)", p, re.S)
+            if not pm:
+                continue
+            label = _plain(pm.group(1)).rstrip(":").strip()
+            text = _plain(pm.group(2))
+            if label and text:
+                periods.append({"name": label, "text": text})
+    periods = periods[:EYE_PERIODS]
+
+    hazards = " ".join(_plain(p) for p in re.findall(
+        r"<p>(.*?)</p>", sections.get("significant/hazardous weather", ""), re.S))
+    hazards = re.sub(r"\s*Back to the top\s*", " ", hazards).strip()
+    if hazards.rstrip(".").lower() in ("", "none"):
+        hazards = None
+
+    paras = [_plain(p) for p in re.findall(
+        r"<p>(.*?)</p>", sections.get("detailed discussion", ""), re.S)]
+    discussion = " ".join(p for p in paras if p and p != "Back to the top") or None
+    if discussion and len(discussion) > EYE_DISCUSSION_MAX:
+        discussion = discussion[:EYE_DISCUSSION_MAX].rsplit(". ", 1)[0] + "."
+
+    summary = _plain(((post.get("excerpt") or {}).get("rendered")) or "") or None
+    issued = post.get("modified_gmt") or post.get("date_gmt")
+    if not (periods or discussion):
+        return None
+    return {"outlet": "Eye on the Sky (Fairbanks Museum)",
+            "url": EYE_URL,
+            "issued": f"{issued}+00:00" if issued else None,
+            "summary": summary, "periods": periods,
+            "hazards": hazards, "discussion": discussion}
+
+
+def fetch_eye_on_the_sky():
+    posts = json.loads(_get(EYE_API))
+    if not isinstance(posts, list) or not posts:
+        return None
+    return parse_eye_on_the_sky(posts[0])
+
+
 def fetch_all():
     out = {}
-    for name, fn in (("wu", fetch_wunderground), ("wcax", fetch_wcax), ("nbc5", fetch_nbc5)):
+    for name, fn in (("wu", fetch_wunderground), ("wcax", fetch_wcax),
+                     ("nbc5", fetch_nbc5), ("eye", fetch_eye_on_the_sky)):
         try:
             out[name] = fn()
         except Exception as e:  # noqa: BLE001 — outlets are never load-bearing
