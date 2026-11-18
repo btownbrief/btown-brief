@@ -1,40 +1,40 @@
 {
- "generated": "2026-11-17T21:35:07-05:00",
+ "generated": "2026-11-18T13:21:41-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 5.5
+   "seconds": 7.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 55,
-   "seconds": 2.7
+   "count": 74,
+   "seconds": 5.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 83,
-   "seconds": 3.5
+   "count": 81,
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 126,
-   "seconds": 2.9
+   "count": 123,
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 219,
-   "seconds": 5.9
+   "count": 218,
+   "seconds": 6.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 28,
+   "count": 27,
    "seconds": 3.5
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-17&end_date=2027-01-16&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-18&end_date=2027-01-17&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 0
   },
   "facebook": {
@@ -45,32 +45,32 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 179,
-   "seconds": 65.2
+   "count": 174,
+   "seconds": 71.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 5,
-   "seconds": 0.1
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 15,
-   "seconds": 31.3
+   "count": 11,
+   "seconds": 31.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 3.2
+   "seconds": 5.8
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 728,
-   "seconds": 36.7
+   "count": 727,
+   "seconds": 38.6
   },
   "higherground": {
    "label": "Higher Ground",
@@ -80,27 +80,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 23.7
+   "seconds": 16.3
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 568,
-   "seconds": 75.1
+   "count": 562,
+   "seconds": 74.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 54,
-   "seconds": 114.0
+   "count": 56,
+   "seconds": 102.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 17,
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 172,
-   "seconds": 16.7
+   "count": 169,
+   "seconds": 15.6
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,96 +109,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 88,
-   "seconds": 2.5
+   "count": 85,
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 21,
-   "seconds": 17.6
+   "seconds": 18.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2807,
-   "seconds": 3.5
+   "count": 2800,
+   "seconds": 30.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 55,
-   "seconds": 3.3
+   "seconds": 3.0
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 283,
-   "seconds": 13.1
+   "count": 280,
+   "seconds": 21.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 177,
-   "seconds": 0.2
+   "count": 178,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 48,
-   "seconds": 62.5
+   "seconds": 67.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 34,
-   "seconds": 0.2
+   "count": 33,
+   "seconds": 0.4
   }
  },
- "gathered": 5779,
+ "gathered": 5761,
  "afterDedup": 2338,
- "duplicatesMerged": 3441,
- "final": 2491,
- "firecrawlCalls": 1,
+ "duplicatesMerged": 3423,
+ "final": 2486,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Let's Talk at WAGE",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-15"
-  },
-  {
-   "kept": {
-    "title": "Open Studio",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-15"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-15"
-  },
-  {
-   "kept": {
-    "title": "Stories & Songs for Library Littles",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-16"
-  },
   {
    "kept": {
     "title": "Vegan in Vermont",
@@ -870,7 +825,7 @@
   },
   {
    "kept": {
-    "title": "Trivia with Craig Mitchell @ The Monkey House",
+    "title": "Trivia with Craig Mitchell (Sponsored by Dome City)",
     "source": "monkeyhouse"
    },
    "merged_sources": [
@@ -1344,7 +1299,7 @@
   },
   {
    "kept": {
-    "title": "Trivia with Craig Mitchell @ The Monkey House",
+    "title": "Trivia with Craig Mitchell (Sponsored by Dome City)",
     "source": "monkeyhouse"
    },
    "merged_sources": [
@@ -2403,11 +2358,35 @@
   {
    "kept": {
     "title": "Burlington Winter Farmers Market",
-    "source": "breweries"
+    "source": "uvm"
    },
    "merged_sources": [
     "breweries",
-    "loveburlington"
+    "loveburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-16"
+  },
+  {
+   "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2027-01-16"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs Merrimack",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2027-01-16"
   },
@@ -2421,109 +2400,82 @@
     "sevendays"
    ],
    "date": "2027-01-16"
+  },
+  {
+   "kept": {
+    "title": "Burlington Illuminated",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2027-01-17"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2027-01-17"
   }
  ],
  "changes": [
+  {
+   "id": "27933f460cbc",
+   "title": "Charlie Parr, Maisy Owen",
+   "date": "2026-11-19",
+   "change": "time",
+   "was": "2026-11-19T19:00:00-05:00",
+   "now": "2026-11-19T20:00:00-05:00"
+  },
   {
    "id": "08c1fb79b8c2",
    "title": "Karaoke in the Alley",
    "date": "2026-11-19",
    "change": "time",
-   "was": "2026-11-19T21:00:00-05:00",
-   "now": "2026-11-19T20:00:00-05:00"
-  },
-  {
-   "id": "27933f460cbc",
-   "title": "Charlie Parr & Maisy Owen",
-   "date": "2026-11-19",
-   "change": "time",
    "was": "2026-11-19T20:00:00-05:00",
-   "now": "2026-11-19T19:00:00-05:00"
+   "now": "2026-11-19T21:00:00-05:00"
   },
   {
-   "id": "bbeb351c9136",
-   "title": "Muscle Tough",
-   "date": "2026-11-21",
+   "id": "c03271081bdf",
+   "title": "Machine Mill Training",
+   "date": "2026-11-23",
    "change": "time",
-   "was": "2026-11-21T20:00:00-05:00",
-   "now": "2026-11-21T19:00:00-05:00"
+   "was": "2026-11-23T17:00:00-05:00",
+   "now": "2026-11-23T19:00:00-05:00"
   },
   {
-   "id": "52995634f55f",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-16T22:09:20-05:00"
-  },
-  {
-   "id": "39d0aaaf3dab",
-   "title": "CANCELLED: 3D Printer Training 201 (Bambu)",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "ab66c6510bfe",
-   "title": "Drop-In High Intermediate Pickleball",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-16T22:09:20-05:00"
-  },
-  {
-   "id": "cc746ce15fea",
-   "title": "Drop-In Intermediate Pickleball",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "b480761b0c32",
-   "title": "5K Run @ Williston Folino's",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "cc2fd573c6dc",
-   "title": "Jewelry Training",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "ae2d8eb3da00",
-   "title": "Friendsgiving",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "bee52d1fdc33",
-   "title": "Kathleen Schneider",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-16T22:09:20-05:00"
-  },
-  {
-   "id": "1b108fee179b",
-   "title": "Trystan Bates",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-16T22:09:20-05:00"
-  },
-  {
-   "id": "05a11fb7aeb8",
-   "title": "802sDay",
-   "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "9882cfd660df",
-   "title": "Vermont Women Shaping the Future of AI: Coffee Connect",
+   "id": "3d20bc4a5a1e",
+   "title": "Drop-In Adult Walking Group",
    "date": "2026-11-18",
    "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "f5b1d775b170",
+   "title": "Public Skate",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "66db4c34ef20",
+   "title": "Stick & Puck",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "76e0df07b62f",
+   "title": "Drop-In Advanced Pickleball",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "0b532576aaa9",
@@ -2540,25 +2492,25 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
+   "id": "23a19068abd0",
+   "title": "Kathleen Schneider",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "86f8b06b22eb",
+   "title": "Trystan Bates",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "29035dad48dc",
    "title": "Pub Hour",
    "date": "2026-11-19",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "ab3c316f4339",
-   "title": "Lincoln Sprague",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "47ba93490fdb",
-   "title": "Hard Scrabble",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
   },
   {
    "id": "a5e6c1164ba2",
@@ -2575,25 +2527,11 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "70fb7b63f7b0",
-   "title": "DJ Two Sev, Jp Black, Rubi, Chaston",
+   "id": "786f66d93680",
+   "title": "Tom Hamilton",
    "date": "2026-11-19",
    "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "2b6003c3ab29",
-   "title": "Tom Hamilton, Rob Compa Trio",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "08c1fb79b8c2-2000",
-   "title": "Karaoke in the Alley",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "b07ff5b53579",
@@ -2603,39 +2541,17 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "db16591e326e",
-   "title": "Grace Palmer",
-   "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "8e7e9bc30513",
-   "title": "Luky Luc, Two Sev, Ron Stoppable, Bounce, Xavier",
-   "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "67b0e6814caf",
-   "title": "Sibling Reverie",
-   "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
-   "id": "5cc18472e5dd",
-   "title": "OK Commuter",
-   "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
    "id": "ab8a9e4a2897",
    "title": "Cartooning Paint & Sip",
    "date": "2026-11-20",
+   "change": "dropped"
+  },
+  {
+   "id": "09a55c2bf58e",
+   "title": "Barbie N Bones at The Old Post",
+   "date": "2026-11-20",
    "change": "missing",
-   "lastSeen": "2026-11-15T11:33:09-05:00"
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "88c1613eb935",
@@ -2666,6 +2582,13 @@
    "lastSeen": "2026-11-17T13:43:51-05:00"
   },
   {
+   "id": "cad72d6f5da4",
+   "title": "Sparkomatik",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "bceb3932f5e9",
    "title": "Celebrate Craft Holiday Show",
    "date": "2026-11-22",
@@ -2673,18 +2596,17 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
-   "id": "0ea6bdd58caf",
-   "title": "Sunny Hollow, Colchester, VT",
-   "date": "2026-11-22",
-   "change": "missing",
-   "lastSeen": "2026-11-16T22:09:20-05:00"
-  },
-  {
    "id": "18ecb23918e5",
    "title": "Blue Sundays",
    "date": "2026-11-22",
+   "change": "dropped"
+  },
+  {
+   "id": "2ab887c8d15b",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-11-23",
    "change": "missing",
-   "lastSeen": "2026-11-15T11:33:09-05:00"
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "838c37961f24",
@@ -2706,12 +2628,6 @@
    "date": "2026-11-25",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
-  },
-  {
-   "id": "963fa6eb41fc",
-   "title": "CLOSED - Thanksgiving Day",
-   "date": "2026-11-26",
-   "change": "dropped"
   },
   {
    "id": "b92afee7355c",
@@ -2749,11 +2665,17 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
+   "id": "828e560b50ef",
+   "title": "Never Have I Ever",
+   "date": "2026-11-28",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "8669b5b3d0c3",
    "title": "Blue Sundays",
    "date": "2026-11-29",
-   "change": "missing",
-   "lastSeen": "2026-11-15T11:33:09-05:00"
+   "change": "dropped"
   },
   {
    "id": "e612bda37453",
@@ -2768,6 +2690,13 @@
    "date": "2026-11-30",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
+  },
+  {
+   "id": "766b1bfdfc94",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "da7a0d630c72",
@@ -2789,6 +2718,13 @@
    "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
+  },
+  {
+   "id": "cf870b160926",
+   "title": "UVM Entrepreneurship Gala",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "4340d68e1207",
@@ -2857,8 +2793,21 @@
    "id": "a991fcfbdf81",
    "title": "Blue Sundays",
    "date": "2026-12-06",
+   "change": "dropped"
+  },
+  {
+   "id": "567894739fd3",
+   "title": "Middlebury Acapella Jam",
+   "date": "2026-12-06",
    "change": "missing",
-   "lastSeen": "2026-11-15T11:33:09-05:00"
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "d17c48ad4a87",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "eae096595165",
@@ -2903,6 +2852,13 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
+   "id": "35fb7cff08fe",
+   "title": "Winter Lights & Classical Concert",
+   "date": "2026-12-10",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "971644900609",
    "title": "Pub Hour",
    "date": "2026-12-11",
@@ -2915,6 +2871,13 @@
    "date": "2026-12-12",
    "change": "missing",
    "lastSeen": "2026-11-17T13:43:51-05:00"
+  },
+  {
+   "id": "f566cf36e6da",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-12-14",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "a30cae310133",
@@ -2959,6 +2922,20 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
+   "id": "78ff12e08bd3",
+   "title": "Maiz on Fire",
+   "date": "2026-12-20",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "bb4ba723dbd6",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-12-21",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "427b15336f63",
    "title": "Industry Day",
    "date": "2026-12-21",
@@ -2994,6 +2971,13 @@
    "lastSeen": "2026-11-15T19:22:08-05:00"
   },
   {
+   "id": "22b586e60d92",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-12-28",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
    "id": "0c8bfa050b7f",
    "title": "Industry Day",
    "date": "2026-12-28",
@@ -3027,6 +3011,20 @@
    "date": "2027-01-01",
    "change": "missing",
    "lastSeen": "2026-11-15T19:22:08-05:00"
+  },
+  {
+   "id": "0760a59bd6c0",
+   "title": "Winter Lights Movie Night: Perfect Date",
+   "date": "2027-01-02",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
+  },
+  {
+   "id": "89e3f882c958",
+   "title": "Winter Lights Movie Night: Family Fun",
+   "date": "2027-01-03",
+   "change": "missing",
+   "lastSeen": "2026-11-17T21:35:07-05:00"
   },
   {
    "id": "1553aa1ff0aa",
