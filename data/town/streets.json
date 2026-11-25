@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-18T19:08:35+00:00",
+ "generated": "2026-11-25T20:14:53+00:00",
  "sources_file": "data/town/streets-sources.json",
  "sections": {
   "permits": {
-   "verified": "2026-11-18",
+   "verified": "2026-11-25",
    "export_date": "2026-10-20",
    "notes": "The city's OpenGov portal has no public API; this is its export to ArcGIS, refreshed by the city (last export 2026-10-20). Permits filed after that date are not here yet. Latitude/Longitude in the export are rounded to 44.5/-73.2, so a map needs geocoding of the address. Notable rule: demolition (not interior), ADU, commercial restaurant/bar/cafe or tenant fit-out or change of use, new building or 10+ units, est. cost >= $250,000.",
    "rule": {
@@ -26,48 +26,24 @@
     },
     {
      "week": "2026-W42",
-     "total": 101,
-     "notable": 8,
-     "est_cost_total": 1800615.69,
+     "total": 59,
+     "notable": 5,
+     "est_cost_total": 1297510.69,
      "by_kind": {
-      "Electrical": 25,
-      "Building": 15,
-      "Zoning permit": 11,
-      "Plumbing": 10,
-      "Mechanical": 10,
-      "Zoning certificate of occupancy": 9,
-      "ZPS": 4,
+      "Electrical": 13,
+      "Building": 9,
+      "Zoning permit": 7,
+      "Plumbing": 7,
+      "Mechanical": 5,
       "Sign": 4,
-      "RS": 3,
+      "Zoning certificate of occupancy": 3,
+      "ZPS": 3,
       "ZPF": 2,
-      "CHU": 2,
+      "RS": 2,
       "ZPW": 1,
       "Fence": 1,
       "ZSP": 1,
-      "ZPR": 1,
-      "ZPD": 1,
-      "Windows": 1
-     }
-    },
-    {
-     "week": "2026-W41",
-     "total": 62,
-     "notable": 0,
-     "est_cost_total": 1495261.46,
-     "by_kind": {
-      "Electrical": 16,
-      "Building": 9,
-      "RS": 8,
-      "Mechanical": 8,
-      "Zoning permit": 6,
-      "ZPF": 4,
-      "ZPR": 3,
-      "Plumbing": 2,
-      "Windows": 2,
-      "Fence": 1,
-      "ZPS": 1,
-      "ZPW": 1,
-      "Deck": 1
+      "CHU": 1
      }
     }
    ],
@@ -1077,1223 +1053,43 @@
      "land_use": null,
      "source_url": "https://burlingtonvt.portal.opengov.com/records/345913",
      "project": "180-192 MAIN STREET - NECTARS/CAPONES REFIT"
-    },
-    {
-     "kind": "ZPS",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 7500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "3376ccbe4055"
-    },
-    {
-     "kind": "ZPR",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 3500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "51b0e5b48952"
-    },
-    {
-     "kind": "ZPD",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 35000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "7df7e5d46490"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 20000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "cdadba7f99c6"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "5c4342e8d0a4"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "fc354d3941f9"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "9a2f0e1c3ded"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "4f964414c771"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": true,
-     "notable_reasons": [
-      "commercial_occupancy"
-     ],
-     "status": "Open",
-     "id": "537e3aea7bfd",
-     "home": false,
-     "pt": [
-      44.461548,
-      -73.21986
-     ],
-     "img": "e660505ba3ed76.jpg",
-     "address": "32-50 Lakeside Avenue",
-     "land_use": "C - Commercial",
-     "source_url": "https://burlingtonvt.portal.opengov.com/records/345820",
-     "project": "Project_391737"
-    },
-    {
-     "kind": "Windows",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "1b6f28f4fd32"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 221675,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "44e50e952fde"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 3000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "b87856eae1f6"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 4000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "08fd433713fb"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 8637,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "93b9a10c1e3c"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 9400,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "1559dd7a4cee"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 5122,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "b2eb714c1693"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 8000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "62e310639d94"
-    },
-    {
-     "kind": "CHU",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "ac7f8754b2ef"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 2000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "c7bb7e6101a7"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 1120,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "a3920effc643"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 1500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Stopped",
-     "id": "519ec985abd6"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 1300,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "ce627bdaa590"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 600,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "29d935e5de6f"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "a2a9596e0156"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 35000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "ccb145569559"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 50000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "655d4dcb1ea5"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 6000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "2ad498ce2922"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-13",
-     "week": "2026-W42",
-     "est_cost": 100,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "3676e8e316dc"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 3900,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "dcd52d76b905"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 10000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "91b5b506b70d"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": true,
-     "notable_reasons": [
-      "commercial_occupancy"
-     ],
-     "status": "Open",
-     "id": "975dfbfb304b",
-     "home": false,
-     "pt": [
-      44.462439,
-      -73.219838
-     ],
-     "img": "ab0205d0760e79.jpg",
-     "address": "44 Lakeside Avenue",
-     "land_use": "C - Commercial",
-     "source_url": "https://burlingtonvt.portal.opengov.com/records/345813",
-     "project": "Relocation of Previously Approved Sauna @ Hula"
-    },
-    {
-     "kind": "Zoning certificate of occupancy",
-     "layer": "zoning",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": null,
-     "notable": true,
-     "notable_reasons": [
-      "commercial_occupancy"
-     ],
-     "status": "Open",
-     "id": "649177a8750e",
-     "home": false,
-     "pt": [
-      44.462439,
-      -73.219838
-     ],
-     "img": "ab0205d0760e79.jpg",
-     "address": "44 Lakeside Avenue",
-     "land_use": "C - Commercial",
-     "source_url": "https://burlingtonvt.portal.opengov.com/records/345811",
-     "project": "Project_384130"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 2800,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "0da22e897681"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 10651,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "5705a34a06a4"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 1000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "f60a678df283"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 5300,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "221b1182e871"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 6000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "92e64bf252b8"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 4500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "235266182331"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 6000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "961f8dc30edd"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "b601bbd23c59"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 10000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "23305a962d5e"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-12",
-     "week": "2026-W42",
-     "est_cost": 8500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "30e233157ca2"
-    },
-    {
-     "kind": "ZPF",
-     "layer": "zoning",
-     "applied": "2026-10-11",
-     "week": "2026-W41",
-     "est_cost": 5428.8,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "76372a09b5f6"
-    },
-    {
-     "kind": "Fence",
-     "layer": "building",
-     "applied": "2026-10-11",
-     "week": "2026-W41",
-     "est_cost": 5428.8,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "efdd2b384ff4"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-11",
-     "week": "2026-W41",
-     "est_cost": 29000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "10bf5ca2a078"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-10",
-     "week": "2026-W41",
-     "est_cost": 15300,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "5f9193e2d07e"
-    },
-    {
-     "kind": "ZPS",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 9000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "facfad4c893d"
-    },
-    {
-     "kind": "ZPR",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 221675,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "d98aacd73bfc"
-    },
-    {
-     "kind": "ZPF",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 800,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "2170e821d48e"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 8830,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "9333e01e8289"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 149883,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "6ba2bf9fe310"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "46cf5f9fb132"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 16135,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "746c8d74f436"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 16000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "8a5947ca7d55"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 47500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "9fa366a624f2"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "108319e76db3"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 2500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "1117234d5518"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 1000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "e2dd826c2b5b"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 800,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "3c0148db89e8"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 72000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "f06c247a811b"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "ad246a7ca68b"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 8830,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "45f41c4b4382"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 142663,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "ed23142a35fa"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-09",
-     "week": "2026-W41",
-     "est_cost": 7500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "3becd0ac5bf0"
-    },
-    {
-     "kind": "ZPW",
-     "layer": "zoning",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 11143,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "75cafe13213e"
-    },
-    {
-     "kind": "ZPR",
-     "layer": "zoning",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 5840,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "f5c9197bdc1f"
-    },
-    {
-     "kind": "ZPF",
-     "layer": "zoning",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 5134,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "1f32215a7e21"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 150000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "2dd87c027451"
-    },
-    {
-     "kind": "Windows",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 11143,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "1785425380db"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 16590.26,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "cc87cfec9428"
-    },
-    {
-     "kind": "Deck",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 23125,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "381db62e0fea"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 65000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "35619f03e1ba"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 10690,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "8f5b910b5cc6"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 5765,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "4a1cf9d05f91"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 10003,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "11c63438ed1b"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 20668,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "43bda5f36b76"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 13525,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "afd1c49809cd"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 2500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "520a4e5cb43d"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 350,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "8c8657050530"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 67000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "831cf40a60cb"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 999,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "bf521dcd948d"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 2500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "71af46a1ac1a"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 800,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "fc8587c40038"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 95000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "6be7f0af6288"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 3000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "bf1227ee2acd"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 10508,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "5a9f1f1b8520"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 12000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "28920d3a86b8"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "258c6b5bd33b"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-08",
-     "week": "2026-W41",
-     "est_cost": 4255,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "4192fc9acccc"
-    },
-    {
-     "kind": "ZPR",
-     "layer": "zoning",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 10300,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "eff7bfe03aed"
-    },
-    {
-     "kind": "ZPF",
-     "layer": "zoning",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 5000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "c6abc41e73c3"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 16590.26,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "ee5e50fad05f"
-    },
-    {
-     "kind": "Zoning permit",
-     "layer": "zoning",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 0,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "b8de3b5924f4"
-    },
-    {
-     "kind": "Windows",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 9000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "4210484959bc"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 17000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "13affea9e99d"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 7625,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "c49b0f89fba2"
-    },
-    {
-     "kind": "RS",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 6000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "0a851892087b"
-    },
-    {
-     "kind": "Plumbing",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 2500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Closed",
-     "id": "22d1df189220"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 11500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "0bdba73f2773"
-    },
-    {
-     "kind": "Mechanical",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 4954.34,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "84e75468e0a1"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 3600,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "f784b040ac77"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 2500,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "383d09856690"
-    },
-    {
-     "kind": "Electrical",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 380,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "7b0541ebc8cd"
-    },
-    {
-     "kind": "Building",
-     "layer": "building",
-     "applied": "2026-10-07",
-     "week": "2026-W41",
-     "est_cost": 75000,
-     "notable": false,
-     "notable_reasons": [],
-     "status": "Open",
-     "id": "a321183cbb05"
     }
    ],
    "ok": true,
    "stale": false
   },
   "sales": {
-   "verified": "2026-11-18",
+   "verified": "2026-11-25",
    "latest_posted": "2026-11-13",
    "notes": "Vermont property transfer tax returns, posted by the Department of Taxes about a week after closing and published by VCGI. Arm's length = fee-simple transfer, no tax exemption claimed, price above $0. Buyer state is the buyer's mailing address on the return, a proxy for 'out-of-state'. Individual names are not copied.",
    "medians": {
     "30d": {
-     "all_residential": 507000,
-     "count": 8,
-     "single_family": 525000,
+     "all_residential": 525000,
+     "count": 7,
+     "single_family": 535000,
      "condo": 289000,
      "out_of_state_share": 0.0
     },
     "90d": {
-     "all_residential": 498000,
-     "count": 63,
+     "all_residential": 495000,
+     "count": 53,
      "single_family": 495000,
-     "condo": 440000,
-     "out_of_state_share": 0.111
+     "condo": 374000,
+     "out_of_state_share": 0.113
     },
     "365d": {
-     "all_residential": 522500,
-     "count": 356,
-     "single_family": 555000,
+     "all_residential": 515000,
+     "count": 351,
+     "single_family": 550500,
      "condo": 415000,
-     "out_of_state_share": 0.115
+     "out_of_state_share": 0.114
     }
    },
    "medians_by_month": [
     {
      "month": "2025-10",
-     "median": 566500,
-     "count": 18
+     "median": 580000,
+     "count": 11
     },
     {
      "month": "2025-11",
@@ -3679,331 +2475,30 @@
      "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
      "notable": false,
      "notable_reasons": []
-    },
-    {
-     "id": "d4eae4c8c936",
-     "address": "Cliff Street",
-     "pt": [
-      44.47,
-      -73.203
-     ],
-     "home": true,
-     "img": "805f1213350214.jpg",
-     "closed": "2026-09-25",
-     "posted": "2026-09-30",
-     "price": 2325000,
-     "grand_list_value": 947200,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": true,
-     "notable_reasons": [
-      "price_1m_plus"
-     ]
-    },
-    {
-     "id": "aed3033cd2eb",
-     "address": "Murray Street",
-     "pt": [
-      44.483,
-      -73.216
-     ],
-     "home": true,
-     "img": "8c9a735a606e85.jpg",
-     "closed": "2026-09-25",
-     "posted": "2026-09-30",
-     "price": 585000,
-     "grand_list_value": 381500,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "2892a68a674c",
-     "address": "Fletcher Place",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-25",
-     "posted": "2026-10-08",
-     "price": null,
-     "grand_list_value": 464500,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "4f6a1c19ddbc",
-     "address": "Ledgewood Circle",
-     "pt": [
-      44.451,
-      -73.224
-     ],
-     "home": true,
-     "img": "bf1cd0e62af5a6.jpg",
-     "closed": "2026-09-25",
-     "posted": "2026-10-07",
-     "price": 290000,
-     "grand_list_value": 229100,
-     "property_class": "05. Condominium",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "35df78ce0e80",
-     "address": "Shelburne Road",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-25",
-     "posted": "2026-10-14",
-     "price": null,
-     "grand_list_value": 406700,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "3888097becd9",
-     "address": "Henry Street",
-     "pt": [
-      44.484,
-      -73.204
-     ],
-     "home": true,
-     "img": "a6fb2f683c429b.jpg",
-     "closed": "2026-09-24",
-     "posted": "2026-09-30",
-     "price": 663500,
-     "grand_list_value": 570600,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "54e7273dbfcc",
-     "address": "Colchester Avenue",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-24",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 608900,
-     "property_class": "06. Multi Family",
-     "arms_length": false,
-     "company": true,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "2ede41b2ad3d",
-     "address": "Sherman Street",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-24",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 852200,
-     "property_class": "06. Multi Family",
-     "arms_length": false,
-     "company": true,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "1548a3719fff",
-     "address": "Sherman Street",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-24",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 476900,
-     "property_class": "06. Multi Family",
-     "arms_length": false,
-     "company": true,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "057659d074c8",
-     "address": "Lori Lane",
-     "pt": [
-      44.521,
-      -73.247
-     ],
-     "home": true,
-     "img": "4792cff0837f32.jpg",
-     "closed": "2026-09-23",
-     "posted": "2026-10-01",
-     "price": 451000,
-     "grand_list_value": 328300,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "c9a7f7728d4b",
-     "address": "Pine Street",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-22",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 9000,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "0d1b63a96739",
-     "address": "Eastman Way",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-22",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 2221200,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "a3ab5ebc7500",
-     "address": "Eastman Way",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-22",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 2221200,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "d558c2ebf57d",
-     "address": "Shelburne Street",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-22",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 608100,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "0d83e733efcd",
-     "address": "West Road",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-21",
-     "posted": "2026-09-30",
-     "price": null,
-     "grand_list_value": 299000,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": false,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "07fe506849ec",
-     "address": "South Prospect Street",
-     "pt": null,
-     "home": true,
-     "img": null,
-     "closed": "2026-09-21",
-     "posted": "2026-10-01",
-     "price": null,
-     "grand_list_value": 1130600,
-     "property_class": "06. Multi Family",
-     "arms_length": false,
-     "company": true,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
-    },
-    {
-     "id": "a8e24ddc9e1f",
-     "address": "Brierwood Lane",
-     "pt": [
-      44.508,
-      -73.254
-     ],
-     "home": true,
-     "img": "914fa2f232450a.jpg",
-     "closed": "2026-09-21",
-     "posted": "2026-09-30",
-     "price": 551000,
-     "grand_list_value": 353000,
-     "property_class": "02. Single Family Dwelling",
-     "arms_length": true,
-     "company": false,
-     "source_url": "https://www.arcgis.com/home/item.html?id=91afc67976d54f9c86437c4fe8744e03",
-     "notable": false,
-     "notable_reasons": []
     }
    ],
    "ok": true,
    "stale": false
   },
   "blotter": {
-   "verified": "2026-11-18",
+   "verified": "2026-11-25",
    "notes": "The city publishes no daily police log. Press releases arrive by RSS (headline + link kept; bodies can name people, so the column writer applies the arrested-or-charged rule). Incident, arrest and fire exports are monthly, a month behind, and anonymous; the service is re-published each month with a new layer id, which the script discovers.",
    "press_releases": [
+    {
+     "headline": "11/17/2026 Assault and Robbery | 26BU021T",
+     "posted": "2026-11-19T21:25:46+00:00",
+     "case_number": null,
+     "is_update": false,
+     "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3914",
+     "verified": "2026-11-25"
+    },
     {
      "headline": "10/30/2026 Reckless Endangerment | 26BU025693",
      "posted": "2026-11-02T13:05:32+00:00",
      "case_number": "26BU025693",
      "is_update": false,
      "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3910",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "headline": "10/29/2026 Aggravated Assault - Simple Assault of a Police Officer | 26BU025618",
@@ -4011,7 +2506,7 @@
      "case_number": "26BU025618",
      "is_update": false,
      "source_url": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3909",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     }
    ],
    "police_incidents_month": {
@@ -4083,7 +2578,7 @@
      "alcohol_related": 100
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Burlington_Police_Department_Incidents/FeatureServer/161",
-    "verified": "2026-11-18"
+    "verified": "2026-11-25"
    },
    "arrests_month": {
     "month": "2026-09",
@@ -4112,7 +2607,7 @@
      "Rep Board - S": 3
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Burlington_Police_Department_Arrests/FeatureServer/163",
-    "verified": "2026-11-18"
+    "verified": "2026-11-25"
    },
    "fire_incidents_month": {
     "month": "2026-10",
@@ -4136,13 +2631,13 @@
      "Unknown": 8
     },
     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Fire_Department_Incidents/FeatureServer/169",
-    "verified": "2026-11-18"
+    "verified": "2026-11-25"
    },
    "ok": true,
    "stale": false
   },
   "projects": {
-   "verified": "2026-11-18",
+   "verified": "2026-11-25",
    "notes": "One record per PROJNAME from the city's construction portal layer (1,800+ street segments). Projects completed or cancelled more than a year ago are dropped. Since You Checked already emits a change line when a segment is edited (scripts/changes/sources/roads.py).",
    "items": [
     {
@@ -4228,7 +2723,7 @@
      ],
      "last_edited": "2026-11-18T15:35:13+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/pedestrians",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "oak-beach-dr-gravel-wetland",
@@ -4259,7 +2754,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:58:49+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "leddy-park-north-gully-stabilization",
@@ -4290,7 +2785,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:57:07+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-2",
@@ -4321,7 +2816,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:55:04+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-1",
@@ -4352,7 +2847,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:46+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-4",
@@ -4383,7 +2878,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:30+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-3",
@@ -4414,7 +2909,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:54:16+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-5",
@@ -4445,7 +2940,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:53:53+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-retrofits-6",
@@ -4476,7 +2971,7 @@
      "links": [],
      "last_edited": "2026-10-29T19:53:38+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "summit-street-water-main-replacement",
@@ -4511,7 +3006,7 @@
      ],
      "last_edited": "2026-10-27T12:52:31+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy27-pavin",
@@ -4542,7 +3037,7 @@
      "links": [],
      "last_edited": "2026-10-13T13:47:22+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy27-paving",
@@ -4577,7 +3072,7 @@
      "links": [],
      "last_edited": "2026-10-13T13:38:56+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy28-paving",
@@ -4608,7 +3103,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:43:44+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy-25-paving",
@@ -4642,7 +3137,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:41:21+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy25-paving-co-1",
@@ -4679,7 +3174,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:41:07+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy25-paving",
@@ -4715,7 +3210,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:40:32+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy26-paving",
@@ -4755,7 +3250,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:40:10+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy29-paving",
@@ -4786,7 +3281,7 @@
      "links": [],
      "last_edited": "2026-10-06T12:35:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-ave-infiltration-system-installation",
@@ -4817,7 +3312,7 @@
      "links": [],
      "last_edited": "2026-08-27T19:35:16+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "replace-drainage-infrastructure",
@@ -4850,7 +3345,7 @@
      "links": [],
      "last_edited": "2026-08-27T19:29:50+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pine-street-water-main-replacement",
@@ -4885,7 +3380,7 @@
      ],
      "last_edited": "2026-08-20T13:40:13+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "bennington-court-water-main-replacement",
@@ -4920,7 +3415,7 @@
      ],
      "last_edited": "2026-08-20T13:39:03+00:00",
      "source_url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pomeroy-park-playground-replacement",
@@ -4953,7 +3448,7 @@
      ],
      "last_edited": "2026-08-13T19:21:24+00:00",
      "source_url": "https://burlingtonvt.gov/1187/Pomeroy-Park-Playground",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy-26-paving",
@@ -4984,7 +3479,7 @@
      "links": [],
      "last_edited": "2026-06-29T13:32:02+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "intervale-rd-path",
@@ -5017,7 +3512,7 @@
      "links": [],
      "last_edited": "2026-06-08T14:31:26+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "grove-st-rubber-speed-humps",
@@ -5052,7 +3547,7 @@
      ],
      "last_edited": "2026-05-28T20:17:05+00:00",
      "source_url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "flynn-ave-rubber-speed-humps",
@@ -5087,7 +3582,7 @@
      ],
      "last_edited": "2026-05-28T20:07:02+00:00",
      "source_url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-beach-campground-pull-through-sites",
@@ -5118,7 +3613,7 @@
      "links": [],
      "last_edited": "2026-05-08T14:15:59+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "kieslich-park-trail",
@@ -5151,7 +3646,7 @@
      "links": [],
      "last_edited": "2026-05-08T14:13:56+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "appletree-tennis-court-resurfacing",
@@ -5184,7 +3679,7 @@
      ],
      "last_edited": "2026-05-08T14:12:02+00:00",
      "source_url": "https://burlingtonvt.gov/1190/Asphalt-Sport-Court-Resurfacing",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "schmanska-park-court-resurfacing",
@@ -5217,7 +3712,7 @@
      ],
      "last_edited": "2026-05-08T14:10:31+00:00",
      "source_url": "https://burlingtonvt.gov/1190/Asphalt-Sport-Court-Resurfacing",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "dredging-college-st-boathouse-marina",
@@ -5246,7 +3741,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:58:46+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "calahan-park-court-reconstruction-and-stormwater",
@@ -5277,7 +3772,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:40:19+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "calahan-park-sidepath-phase-i",
@@ -5310,7 +3805,7 @@
      ],
      "last_edited": "2026-05-08T13:38:12+00:00",
      "source_url": "https://burlingtonvt.gov/1188/Calahan-Shared-Use-Path",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "roosevelt-park-mini-pitch",
@@ -5341,7 +3836,7 @@
      "links": [],
      "last_edited": "2026-05-08T13:31:31+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "gosse-court-traffic-calming",
@@ -5374,7 +3869,7 @@
      "links": [],
      "last_edited": "2026-04-29T14:55:11+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "sidewalk-reconstruction-contractor",
@@ -5454,7 +3949,7 @@
      ],
      "last_edited": "2026-04-29T13:54:59+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/pedestrians",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "bhs-stormwater-outfall-rehabilitation",
@@ -5487,7 +3982,7 @@
      "links": [],
      "last_edited": "2026-04-28T15:48:37+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pedestrian-crossing-improvement",
@@ -5521,7 +4016,7 @@
      "links": [],
      "last_edited": "2026-04-21T16:15:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "great-streets-cherry-street-reconstruction",
@@ -5556,7 +4051,7 @@
      ],
      "last_edited": "2026-04-17T18:36:58+00:00",
      "source_url": "http://www.burlingtonvt.gov/GreatStreetsSP",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "elmwood-intervale-traffic-calming",
@@ -5587,7 +4082,7 @@
      "links": [],
      "last_edited": "2026-04-02T19:20:20+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "hillcrest-rd-paving",
@@ -5622,7 +4117,7 @@
      ],
      "last_edited": "2025-10-06T14:00:03+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "row",
@@ -5657,7 +4152,7 @@
      "links": [],
      "last_edited": "2025-10-02T14:23:48+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "rose-st-sidewalk-replacement",
@@ -5693,7 +4188,7 @@
      ],
      "last_edited": "2025-09-29T20:48:47+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-champlain-sidewalk-replacement",
@@ -5726,7 +4221,7 @@
      "links": [],
      "last_edited": "2025-08-29T20:00:13+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "church-street-sidewalk-replacement",
@@ -5759,7 +4254,7 @@
      "links": [],
      "last_edited": "2025-07-21T15:01:03+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "from-rich-will-check",
@@ -5790,7 +4285,7 @@
      "links": [],
      "last_edited": "2025-07-21T15:00:00+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "from-rich",
@@ -5822,7 +4317,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:59:31+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "hillside-ter-sidewalk-replacement",
@@ -5855,7 +4350,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:55:42+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "germain-street-sidewalk-replacement",
@@ -5888,7 +4383,7 @@
      "links": [],
      "last_edited": "2025-07-21T14:55:25+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "glenwood-ln-crack-sealing",
@@ -5922,7 +4417,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cwsrf-pipe-rehabilitation-project-rf1-187",
@@ -6012,7 +4507,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "hope-st-crack-sealing",
@@ -6046,7 +4541,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "billings-ct-sidewalk-replacement",
@@ -6082,7 +4577,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "south-cove-sewage-pump-station-improvements",
@@ -6115,7 +4610,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "stormwater-pipe-replacement",
@@ -6155,7 +4650,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "institute-rd-crack-sealing",
@@ -6189,7 +4684,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "2020-paving-water-resources-capital-improvements",
@@ -6231,7 +4726,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/sewer-stormwater-main-rehabilitation",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy22-paving-flynn-avenue",
@@ -6264,7 +4759,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "birchcliff-pkwy-greenway",
@@ -6297,7 +4792,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "walnut-sidewalk-replacement",
@@ -6330,7 +4825,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "ethan-allen-james-gazo-water-main-replacement",
@@ -6363,7 +4858,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cliff-st-water-main-consolidation",
@@ -6394,7 +4889,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-prospect-st-paving",
@@ -6429,7 +4924,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "caroline-st-sidewalk-replacement",
@@ -6466,7 +4961,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "http://burlingtonvt.gov/dpw/reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "deforest-hgts-crack-sealing",
@@ -6500,7 +4995,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cedar-rose-st-stormwater-retrofit",
@@ -6533,7 +5028,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "oakledge-lower-restroom-rehabilitation",
@@ -6566,7 +5061,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "lori-lane-sidewalk-replacement",
@@ -6601,7 +5096,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "ward-street-sidewalk-replacement",
@@ -6637,7 +5132,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cherry-ln-sidewalk-replacement",
@@ -6673,7 +5168,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "interval-ave-crack-sealing",
@@ -6707,7 +5202,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-winooski-ave-sidewalk-replacement",
@@ -6744,7 +5239,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "austin-home-to-red-rocks",
@@ -6779,7 +5274,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-willard-howard-shelburne-sidewalk-replacement",
@@ -6815,7 +5310,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "adams-st-crack-sealing",
@@ -6849,7 +5344,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "robinson-pkwy-water-main-replacement",
@@ -6882,7 +5377,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "from-polygon-layer",
@@ -6914,7 +5409,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "buell-st-crack-sealing",
@@ -6948,7 +5443,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "morse-pl-water-main-replacement",
@@ -6981,7 +5476,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "st-paul-sidewalk-replacement",
@@ -7016,7 +5511,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "colchester-ave-sidepath",
@@ -7047,7 +5542,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "convent-manhattan-outfall-repairs",
@@ -7080,7 +5575,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "orchard-terrace-crack-sealing",
@@ -7114,7 +5609,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-ave-shared-lane-markings",
@@ -7149,7 +5644,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/sites/default/files/PlanBTVWalkBike_MasterPlan_final-PlanOnly.pdf",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "chase-st-patch-paving",
@@ -7180,7 +5675,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "catherine-st-water-main-replacement",
@@ -7213,7 +5708,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "van-patten-pkwy-pump-station-improvements",
@@ -7246,7 +5741,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "upper-leb-stormwater-outfall-rehabilitation",
@@ -7279,7 +5774,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "walnut-oak-archibald-sidewalk-replacement",
@@ -7314,7 +5809,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "alfred-st-crack-sealing",
@@ -7348,7 +5843,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "sidewalk-replacement-bed",
@@ -7381,7 +5876,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "birchcliff-pkwy-traffic-calming",
@@ -7416,7 +5911,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/BirchcliffPkwy",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "so-prospect-sidewalk-replacement",
@@ -7451,7 +5946,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "n-champlain-two-way-protected-bike-lane",
@@ -7484,7 +5979,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "crescent-beach-pump-station-improvements",
@@ -7517,7 +6012,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy23-paving-clark-street",
@@ -7550,7 +6045,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pitkin-st-sidewalk-replacement",
@@ -7586,7 +6081,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "alexis-dr-crack-sealing",
@@ -7620,7 +6115,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "srf-2023-paving-north-prospect-st",
@@ -7653,7 +6148,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "riverside-ave-stormwater-outfall-rehabilitation",
@@ -7686,7 +6181,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-union-sidewalk-replacement",
@@ -7723,7 +6218,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "green-street-sidewalk-replacement",
@@ -7759,7 +6254,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "prospect-pkwy-water-main-replacement",
@@ -7792,7 +6287,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "so-prospect-st-sidewalk-replacement",
@@ -7825,7 +6320,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-winooski-av-maple-adams-sidewalk-replacement",
@@ -7861,7 +6356,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-williams-sidewalk-replacement",
@@ -7897,7 +6392,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "spruce-st-water-main-replacement",
@@ -7930,7 +6425,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "hayward-st-water-main-replacement",
@@ -7963,7 +6458,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "university-place-water-line-consolidation",
@@ -7994,7 +6489,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "winooski-ave-scoping-study-northern-section",
@@ -8029,7 +6524,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.ccrpcvt.org/our-work/transportation/current-projects/corridors-circulation/winooski-avenue-corridor-study/#documents",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "birchcliff-pkwy-water-main-rehabilitation",
@@ -8062,7 +6557,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "traffic-calming",
@@ -8095,7 +6590,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "permeable-bike-parking-in-place-of-greenbelt",
@@ -8131,7 +6626,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "shore-rd-stormwater-pipe-rehabilitation",
@@ -8164,7 +6659,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "hillcrest-dr-water-main-rehabilitation",
@@ -8197,7 +6692,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "sewer-cipp-2018-cherry-st-sanitary",
@@ -8230,7 +6725,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "home-av-crack-sealing",
@@ -8264,7 +6759,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "ledgemere-st-water-main-replacement",
@@ -8297,7 +6792,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "depot-street-greenway",
@@ -8332,7 +6827,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/sites/default/files/PlanBTVWalkBike_MasterPlan_final-PlanOnly.pdf",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "lake-st-sidewalk-replacement",
@@ -8368,7 +6863,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "proctor-pl-pump-station-improvements",
@@ -8401,7 +6896,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-st-curb",
@@ -8434,7 +6929,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "so-willard-sidewalk-replacement",
@@ -8471,7 +6966,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "holly-lane-crack-sealing",
@@ -8505,7 +7000,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "quick-build-intersection-improvements-archibald-in",
@@ -8538,7 +7033,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "inclusion-and-belonging-sculpture",
@@ -8571,7 +7066,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://sites.google.com/view/embraceandbelonging/home",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "fairmount-st-paving",
@@ -8606,7 +7101,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Paving-Program",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "school-st-water-main-replacement",
@@ -8639,7 +7134,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "chase-st-pump-station-improvements",
@@ -8672,7 +7167,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "s-union-pearl-buell-sidewalk-replacement",
@@ -8707,7 +7202,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "so-union-water-main-replacement",
@@ -8740,7 +7235,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "sidewalk-repair-dpw",
@@ -8775,7 +7270,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/dpw/transportation/pedestrians/sidewalks",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "winooski-ave-corridor-study-southern-section",
@@ -8810,7 +7305,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.ccrpcvt.org/our-work/transportation/current-projects/corridors-circulation/winooski-avenue-corridor-study/",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "leddy-park-stormwater-outfall-rehabilitation",
@@ -8843,7 +7338,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "stormwater-manhole-installation",
@@ -8876,7 +7371,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "316-flynn-ave-stormwater-pipe-rehab",
@@ -8909,7 +7404,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "woodlawn-rd-crack-sealing",
@@ -8943,7 +7438,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "vine-st-crack-sealing",
@@ -8977,7 +7472,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy23-proposed-patching-cottage-grove-grey-meadow",
@@ -9008,7 +7503,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cedar-lafountain-st-stormwater-retrofit",
@@ -9041,7 +7536,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "institute-rd-sidewalk-replacement",
@@ -9076,7 +7571,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "walnut-archibald-willow-sidewalk-replacement",
@@ -9111,7 +7606,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "ledge-rd-curb",
@@ -9144,7 +7639,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pine-lakeside-flynn-water-main-replacement",
@@ -9177,7 +7672,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "n-willard-pearl-adsit-sidewalk-replacement",
@@ -9213,7 +7708,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "plattsburg-ave-paving",
@@ -9244,7 +7739,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "beech-st-crack-sealing",
@@ -9278,7 +7773,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "overlake-park-crack-sealing",
@@ -9312,7 +7807,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "conger-ave-water-main-replacement",
@@ -9345,7 +7840,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "loomis-st-water-main-replacement",
@@ -9378,7 +7873,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-ave-shore-rd-ethan-allen-parkway-paving",
@@ -9412,7 +7907,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-av-sidewalk-replacement",
@@ -9448,7 +7943,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cherry-st-water-main-replacement",
@@ -9481,7 +7976,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "route-127-patch",
@@ -9512,7 +8007,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pine-st-sidewalk-replacement",
@@ -9545,7 +8040,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "505-riverside-ave-outfall-rehabilitation",
@@ -9578,7 +8073,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "catherine-st-sidewalk-replacement",
@@ -9614,7 +8109,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "allen-st-paving",
@@ -9645,7 +8140,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy21-street-paving",
@@ -9676,7 +8171,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "pine-st-paving",
@@ -9711,7 +8206,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/CEDO/TIF-Public-Improvements",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "curb-reconstruction-dpw",
@@ -9747,7 +8242,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "upper-n-beach-pump-station-improvements",
@@ -9778,7 +8273,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "howard-st-water-main-replacement",
@@ -9811,7 +8306,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "water-plant-pump-station-improvements",
@@ -9842,7 +8337,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "curtis-ave-water-main-replacement",
@@ -9875,7 +8370,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "colchester-ave-stormwater-pipe-rehab-2017",
@@ -9908,7 +8403,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "flynn-ave-advisory-bike-lanes",
@@ -9941,7 +8436,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "st-paul-shelburne-rd-howard-sidewalk-replacem",
@@ -9976,7 +8471,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "strong-st-sidewalk-replacement",
@@ -10012,7 +8507,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/DPW/Reinvestment",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "st-paul-street-water-main-replacement",
@@ -10043,7 +8538,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "buell-st-sidewalk-replacement",
@@ -10076,7 +8571,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cedar-n-champlain-stormwater-retrofit",
@@ -10109,7 +8604,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "summit-st-sidewalk-replacement",
@@ -10142,7 +8637,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "st-paul-street-paving",
@@ -10177,7 +8672,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/CEDO/TIF-Public-Improvements",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "howard-curb-replacement-program",
@@ -10210,7 +8705,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "great-streets-bank-street-reconstruction",
@@ -10245,7 +8740,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "http://www.burlingtonvt.gov/GreatStreetsSP",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cambrian-rise",
@@ -10278,7 +8773,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "city-place-burlington",
@@ -10311,7 +8806,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://cityplaceburlington.com",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "edgemore-dr-underground-rebuild-phase-iii",
@@ -10342,7 +8837,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "uvm-athlethic-facility",
@@ -10373,7 +8868,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "scarff-underground-rebuild",
@@ -10404,7 +8899,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "appletree-point-13-8kv-conversion",
@@ -10435,7 +8930,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "buell-st-3-phase-conversion",
@@ -10466,7 +8961,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "1l4-reconductor-p3149-to-p3169",
@@ -10497,7 +8992,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "harbor-watch-urd-cable-replacement",
@@ -10528,7 +9023,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "1l4-long-spans",
@@ -10559,7 +9054,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "uvm-firestone-building",
@@ -10590,7 +9085,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "battery-pearl-switchgear-replacement",
@@ -10621,7 +9116,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "main-prospect-switchgear-replacement",
@@ -10652,7 +9147,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "main-street-great-streets",
@@ -10687,7 +9182,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://greatstreetsbtv.com/",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "cy24-paving-archibald-patch",
@@ -10718,7 +9213,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "intervale-patch-paving",
@@ -10751,7 +9246,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "wastewater-headworks-improvements",
@@ -10780,7 +9275,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "north-ave-sw-pipe-replacement",
@@ -10811,7 +9306,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "apple-tree-point-partial-water-main-replacement",
@@ -10844,7 +9339,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "champlain-parkway-final-contract",
@@ -10881,7 +9376,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://champlainparkway.com/",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "lakeview-cemetery-section-8-phase-1",
@@ -10912,7 +9407,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "calahan-park-scoreboard-replacement",
@@ -10945,7 +9440,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/974/Penny-For-Parks",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "dredging-perkins-pier",
@@ -10976,7 +9471,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "schifilliti-park-restroom-renovation",
@@ -11007,7 +9502,7 @@
      "links": [],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://www.burlingtonvt.gov/323/Construction-Portal",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     },
     {
      "slug": "n-champlain-2-way-protected-bike-lane",
@@ -11042,7 +9537,7 @@
      ],
      "last_edited": "2025-04-21T17:45:54+00:00",
      "source_url": "https://burlingtonvt.gov/624/North-Champlain-Protected-Bike-Lane",
-     "verified": "2026-11-18"
+     "verified": "2026-11-25"
     }
    ],
    "ok": true,
