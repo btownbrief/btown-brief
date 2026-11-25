@@ -1,24 +1,24 @@
 {
- "updated": "2026-11-25T20:13:19+00:00",
+ "updated": "2026-11-25T23:42:08+00:00",
  "sections_updated": {
-  "now": "2026-11-25T20:13:19+00:00",
-  "forecast": "2026-11-25T20:13:19+00:00",
-  "hourly": "2026-11-25T20:13:19+00:00",
-  "alerts": "2026-11-25T20:13:19+00:00",
-  "afd": "2026-11-25T20:13:19+00:00",
-  "lake_forecast": "2026-11-25T20:13:19+00:00",
-  "lake_gage": "2026-11-25T20:13:19+00:00",
-  "air": "2026-11-25T20:13:19+00:00",
-  "sun": "2026-11-25T20:13:19+00:00",
-  "models": "2026-11-25T20:13:19+00:00"
+  "now": "2026-11-25T23:42:08+00:00",
+  "forecast": "2026-11-25T23:42:08+00:00",
+  "hourly": "2026-11-25T23:42:08+00:00",
+  "alerts": "2026-11-25T23:42:08+00:00",
+  "afd": "2026-11-25T23:42:08+00:00",
+  "lake_forecast": "2026-11-25T23:42:08+00:00",
+  "lake_gage": "2026-11-25T23:42:08+00:00",
+  "air": "2026-11-25T23:42:08+00:00",
+  "sun": "2026-11-25T23:42:08+00:00",
+  "models": "2026-11-25T23:42:08+00:00"
  },
  "now": {
-  "observed_at": "2026-11-25T19:55:00+00:00",
+  "observed_at": "2026-11-25T23:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 39,
-  "feels_like_f": 39,
-  "humidity": 48,
+  "temp_f": 28,
+  "feels_like_f": 28,
+  "humidity": 74,
   "dewpoint_f": 21,
   "wind_mph": 0,
   "wind_gust_mph": null,
@@ -28,16 +28,6 @@
  "forecast": {
   "updated": "2026-11-25T18:22:37+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-11-25T15:00:00-05:00",
-    "is_day": true,
-    "temp_f": 40,
-    "pop": 0,
-    "wind": "N 2 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 40. North wind around 2 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-11-25T18:00:00-05:00",
@@ -66,7 +56,7 @@
     "pop": 100,
     "wind": "N 8 mph",
     "short": "Light Rain",
-    "detailed": "Rain. Cloudy, with a low around 33. North wind around 8 mph. Chance of precipitation is 100%. New rainfall amounts between a half and three quarters of an inch possible."
+    "detailed": "Rain. Cloudy. Low around 33, with temperatures rising to around 39 overnight. North wind around 8 mph. Chance of precipitation is 100%. New rainfall amounts between a half and three quarters of an inch possible."
    },
    {
     "name": "Friday",
@@ -96,7 +86,7 @@
     "pop": 39,
     "wind": "W 6 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Cloudy, with a high near 46. West wind around 6 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers. Cloudy, with a high near 46. West wind around 6 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Saturday Night",
@@ -167,54 +157,22 @@
     "wind": "SW 5 mph",
     "short": "Mostly Cloudy",
     "detailed": "Mostly cloudy, with a low around 28. Southwest wind around 5 mph."
+   },
+   {
+    "name": "Wednesday",
+    "start": "2026-12-02T06:00:00-05:00",
+    "is_day": true,
+    "temp_f": 44,
+    "pop": 8,
+    "wind": "S 5 to 8 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 44. South wind 5 to 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-11-25T18:22:37+00:00",
   "hours": [
-   {
-    "t": "2026-11-25T15:00:00-05:00",
-    "temp_f": 40,
-    "feels_f": 40,
-    "pop": 0,
-    "humidity": 41,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 8,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
-   {
-    "t": "2026-11-25T16:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 38,
-    "pop": 0,
-    "humidity": 46,
-    "wind_mph": 2,
-    "wind_dir": "NW",
-    "sky": 9,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
-   {
-    "t": "2026-11-25T17:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 37,
-    "pop": 0,
-    "humidity": 48,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 24,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
    {
     "t": "2026-11-25T18:00:00-05:00",
     "temp_f": 34,
@@ -676,6 +634,48 @@
     "qpf_in": 0.04,
     "snow_in": 0.0,
     "gust_mph": 13
+   },
+   {
+    "t": "2026-11-27T03:00:00-05:00",
+    "temp_f": 38,
+    "feels_f": 33,
+    "pop": 46,
+    "humidity": 85,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 91,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.04,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
+   {
+    "t": "2026-11-27T04:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 35,
+    "pop": 28,
+    "humidity": 85,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 91,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.04,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
+   {
+    "t": "2026-11-27T05:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 34,
+    "pop": 23,
+    "humidity": 85,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 93,
+    "short": "Slight Chance Light Rain",
+    "qpf_in": 0.04,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-11-25T19:39:00+00:00",
+  "issued": "2026-11-25T23:19:00+00:00",
   "key_messages": [
    "Pockets of freezing rain across northern New York and central and northeastern Vermont may cause slippery travel Thanksgiving evening and overnight.",
    "Isolated to scattered power outages near the western slopes of the central and southern Greens are possible associated with strong east winds.",
    "Next chance for precipitation will come Sunday night into Monday as a frontal system crosses our region."
   ],
   "what_changed": "As of 237 PM EST Wednesday... A Wind Advisory and a Winter Weather Advisory have been issued for the Thanksgiving evening and overnight hours for portions of the region.",
-  "raw": "\n000\nFXUS61 KBTV 251939\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n239 PM EST Wed Nov 25 2026\n\n.WHAT HAS CHANGED...\nAs of 237 PM EST Wednesday...\n\nA Wind Advisory and a Winter Weather Advisory have been issued for \nthe Thanksgiving evening and overnight hours for portions of the \nregion.\n\n&&\n\n.KEY MESSAGES...\nAs of 237 PM EST Wednesday...\n\n1. Pockets of freezing rain across northern New York and \ncentral and northeastern Vermont may cause slippery travel Thanksgiving\nevening and overnight. \n\n2. Isolated to scattered power outages near the western slopes \nof the central and southern Greens are possible associated with \nstrong east winds. \n\n3. Next chance for precipitation will come Sunday night into \nMonday as a frontal system crosses our region.\n\n&&\n\n.DISCUSSION...\nAs of 237 PM EST Wednesday...\n\nKEY MESSAGE 1: A potent and large low pressure system will track \nnorthward from interior North Carolina into western Pennsylvania on \nThanksgiving Day. We are dodging a bullet with regards to this storm \ntrack, which could have resulted in more widespread and greater \namounts of freezing rain; because high pressure will be retreating \nthere will be only marginally cold air to support wintry weather. \nGiven holiday travel, caution will be advised for slippery spots \ngiven lack of treatment in this early season. While a Winter Weather \nAdvisory has been issued from tomorrow at 4 PM through Friday at 7 \nAM, we think the impacts for this event will be on the lower side. \n\nOne mitigating factor against more widespread impact are expected \nroad temperatures primarily in the middle 30s, consistent with \nrecent warmth and sunshine along with air temperatures barely \nfalling below freezing in areas that see ice accumulations. Also, \nforecast soundings show the wedge of sub-freezing air will be too \nshallow for any other precipitation type besides freezing rain (no \nrisk of sleet/snow), and the depth of this layer favors ice \naccretion primarily above 1500 feet in most areas. Strong easterly \nwinds near the surface overnight, which are discussed in Key Message \n2, also should lead to eventual erosion of this sub-freezing layer \nin areas along and west of higher terrain. In contrast, areas upwind \nsuch as near Route 100 in central Vermont will see more persistent \ncold air result in a more likely ice accumulation. In northern New \nYork, stronger northeasterly flow in the St. Lawrence Valley will \nalso support a greater chance of sub-freezing temperatures being \nmore persistent and accordingly, some ice accretion on untreated \nsurfaces. Conditions should improve by Friday morning due to \ncombination of steady rain ending and continued warming.\n\nKEY MESSAGE 2: Strong easterly winds continue to be of some concern, \nparticularly in areas immediately downslope of the Green Mountains \nin central and southern Vermont where a Wind Advisory is now in \neffect. The timeframe of strongest winds is tricky, but there is \nvery good consensus that the low level jet will become situated \nbelow inversion height and high resolution guidance shows a \nlocalized, favorably sharp west-east pressure gradient developing in \npressure fields towards 10 PM, concurrent with a 70 knot east-\nsoutheast wind field in the 875 to 925 millibar layer just above a \nshallow low level inversion. Cross sections show some mountain wave \nbreaking, which would be expected to extend only a short distance \nfrom our mountain peaks. Therefore, the potential for damaging winds \ncurrently looks isolated to the more immediate western slopes. This \nthreat of localized 55 MPH gusts is favored towards our southern \nareas; the orientation of the spine of the Greens relative to wind \ndirection north of Camel's Hump, along with a weakening jet, \nmakes the threat lower farther north. The strongest winds are \nalso favored after steady rain ends, which opens up mainly a 1 \nto 3 hour window for the most notable impacts spreading \nnorthward after midnight.\n\nKEY MESSAGE 3: Sunday night into Monday will bring our next chance for \nany weather as a low pressure system and associated fronts will \ncross our forecast area. Minimal impacts are expected with this \nsystem as boundary layer temperatures will be mild enough that \nprecipitation type will be mainly light rain/rain showers in all but \nthe highest elevations. There could be a change over to show showers \nas the precipitation comes to an end Monday night, especially across \nthe northern higher elevation areas. After maximum temperatures on \nMonday reach the mid 40s to around 50 in the afternoon, cold air \nrushes in behind departing system and lows will dip back into the \n20s.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...VFR with light and variable winds \ngenerally 5 knots or less expected areawide through the forecast\nperiod as strong high pressure builds overhead. Skies mainly \nSKC with just some passing, thin high cirrus AOA 200 AGL.\n\nOutlook...\n\nThursday Night: Mainly VFR, with local IFR possible. Definite RA,\nDefinite FZRA.\nFriday: Mainly MVFR, with areas IFR possible. Definite RA.\nFriday Night: Mainly IFR, with local MVFR possible. Definite\nSHRA, Chance SHSN.\nSaturday: Mainly IFR, with areas MVFR possible. Chance SHRA.\nSaturday Night: MVFR/IFR conditions possible. Chance RA.\nSunday: Mainly MVFR, with local IFR possible. Slight chance RA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance RA.\nMonday: MVFR/IFR conditions possible. Likely RA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory from 4 PM Thursday to 7 AM EST Friday \n     for VTZ003-004-006>008-010-018>020.\n     Wind Advisory from 4 PM Thursday to 7 AM EST Friday for VTZ011-\n     018-019.\nNY...Winter Weather Advisory from 4 PM Thursday to 7 AM EST Friday \n     for NYZ026-027-031-034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Neiles/Kutikoff\nAVIATION...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 252319\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n619 PM EST Wed Nov 25 2026\n\n.WHAT HAS CHANGED...\nAs of 237 PM EST Wednesday...\n\nA Wind Advisory and a Winter Weather Advisory have been issued for \nthe Thanksgiving evening and overnight hours for portions of the \nregion.\n\n&&\n\n.KEY MESSAGES...\nAs of 237 PM EST Wednesday...\n\n1. Pockets of freezing rain across northern New York and \ncentral and northeastern Vermont may cause slippery travel Thanksgiving\nevening and overnight. \n\n2. Isolated to scattered power outages near the western slopes \nof the central and southern Greens are possible associated with \nstrong east winds. \n\n3. Next chance for precipitation will come Sunday night into \nMonday as a frontal system crosses our region.\n\n&&\n\n.DISCUSSION...\nAs of 237 PM EST Wednesday...\n\nKEY MESSAGE 1: A potent and large low pressure system will track \nnorthward from interior North Carolina into western Pennsylvania on \nThanksgiving Day. We are dodging a bullet with regards to this storm \ntrack, which could have resulted in more widespread and greater \namounts of freezing rain; because high pressure will be retreating \nthere will be only marginally cold air to support wintry weather. \nGiven holiday travel, caution will be advised for slippery spots \ngiven lack of treatment in this early season. While a Winter Weather \nAdvisory has been issued from tomorrow at 4 PM through Friday at 7 \nAM, we think the impacts for this event will be on the lower side. \n\nOne mitigating factor against more widespread impact are expected \nroad temperatures primarily in the middle 30s, consistent with \nrecent warmth and sunshine along with air temperatures barely \nfalling below freezing in areas that see ice accumulations. Also, \nforecast soundings show the wedge of sub-freezing air will be too \nshallow for any other precipitation type besides freezing rain (no \nrisk of sleet/snow), and the depth of this layer favors ice \naccretion primarily above 1500 feet in most areas. Strong easterly \nwinds near the surface overnight, which are discussed in Key Message \n2, also should lead to eventual erosion of this sub-freezing layer \nin areas along and west of higher terrain. In contrast, areas upwind \nsuch as near Route 100 in central Vermont will see more persistent \ncold air result in a more likely ice accumulation. In northern New \nYork, stronger northeasterly flow in the St. Lawrence Valley will \nalso support a greater chance of sub-freezing temperatures being \nmore persistent and accordingly, some ice accretion on untreated \nsurfaces. Conditions should improve by Friday morning due to \ncombination of steady rain ending and continued warming.\n\nKEY MESSAGE 2: Strong easterly winds continue to be of some concern, \nparticularly in areas immediately downslope of the Green Mountains \nin central and southern Vermont where a Wind Advisory is now in \neffect. The timeframe of strongest winds is tricky, but there is \nvery good consensus that the low level jet will become situated \nbelow inversion height and high resolution guidance shows a \nlocalized, favorably sharp west-east pressure gradient developing in \npressure fields towards 10 PM, concurrent with a 70 knot east-\nsoutheast wind field in the 875 to 925 millibar layer just above a \nshallow low level inversion. Cross sections show some mountain wave \nbreaking, which would be expected to extend only a short distance \nfrom our mountain peaks. Therefore, the potential for damaging winds \ncurrently looks isolated to the more immediate western slopes. This \nthreat of localized 55 MPH gusts is favored towards our southern \nareas; the orientation of the spine of the Greens relative to wind \ndirection north of Camel's Hump, along with a weakening jet, \nmakes the threat lower farther north. The strongest winds are \nalso favored after steady rain ends, which opens up mainly a 1 \nto 3 hour window for the most notable impacts spreading \nnorthward after midnight.\n\nKEY MESSAGE 3: Sunday night into Monday will bring our next chance for \nany weather as a low pressure system and associated fronts will \ncross our forecast area. Minimal impacts are expected with this \nsystem as boundary layer temperatures will be mild enough that \nprecipitation type will be mainly light rain/rain showers in all but \nthe highest elevations. There could be a change over to show showers \nas the precipitation comes to an end Monday night, especially across \nthe northern higher elevation areas. After maximum temperatures on \nMonday reach the mid 40s to around 50 in the afternoon, cold air \nrushes in behind departing system and lows will dip back into the \n20s.\n\n&&\n\n.AVIATION /00Z THURSDAY THROUGH MONDAY/...\nThrough 00Z Friday...VFR with high clouds bkn-ovc200-250 and\nlight variable winds except SE 5-7kts at KRUT through 12z\nThursday. Clouds continue to thicken and lower but remain VFR\nthrough the period. Light winds <5 kts will gradually increase\nto ESE at 10-15 kts and gusty at KRUT after 15z and ENE at KMSS\n13-18kts. LLWS will develop across southern VT shortly after 18z\nand lift northward especially after 00z Fri along with \nincreasing at the SFC.\n\nRain enters VT/MA border around 20-21z, lifting to KRUT ard/aft\n22z and elsewhere after 00z Fri.\n\n\n\nOutlook...\n\nThursday Night: MVFR/IFR conditions possible. Windy with gusts to\n35 kt. Definite RA, Definite FZRA.\nFriday: Mainly IFR, with areas MVFR possible. Definite SHRA.\nFriday Night: Mainly IFR, with areas MVFR possible. Definite\nSHRA.\nSaturday: Mainly IFR, with areas MVFR possible. Chance SHRA.\nSaturday Night: Mainly MVFR, with local IFR possible. Chance RA.\nSunday: Mainly MVFR, with areas VFR possible. NO SIG WX.\nSunday Night: Mainly VFR, with local MVFR possible. Chance RA.\nMonday: Mainly MVFR, with areas IFR possible. Likely RA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Winter Weather Advisory from 4 PM Thursday to 7 AM EST Friday \n     for VTZ003-004-006>008-010-018>020.\n     Wind Advisory from 4 PM Thursday to 7 AM EST Friday for VTZ011-\n     018-019.\nNY...Winter Weather Advisory from 4 PM Thursday to 7 AM EST Friday \n     for NYZ026-027-031-034.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Neiles\nAVIATION...SLW\n"
  },
  "lake_forecast": {
   "issued": "2026-11-25T18:28:00+00:00",
@@ -984,17 +984,17 @@
  },
  "lake_gage": {
   "water_temp_f": 49,
-  "water_temp_at": "2026-11-25T15:00:00.000-05:00",
-  "level_ft": 93.68,
-  "level_at": "2026-11-25T15:00:00.000-05:00",
+  "water_temp_at": "2026-11-25T18:00:00.000-05:00",
+  "level_ft": 93.69,
+  "level_at": "2026-11-25T18:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 44,
   "category": "Good",
-  "pollutant": "OZONE",
-  "observed": "11/25/26 14:00",
+  "pollutant": "PM10",
+  "observed": "11/25/26 18:00",
   "discussion": "On Wednesday, November 25th, expect moderate levels of fine particulate matter (PM25), in mountain valley locations with nearby air emission sources.  expect generally good air quality elsewhere across Vermont."
  },
  "sun": {
@@ -1010,8 +1010,8 @@
     "date": "2026-11-25",
     "high_f": {
      "GFS": 39,
-     "Euro": 39,
-     "ICON": 38
+     "Euro": 38,
+     "ICON": 39
     },
     "pop_max": {
      "GFS": 0,
@@ -1029,27 +1029,27 @@
     "date": "2026-11-26",
     "high_f": {
      "GFS": 47,
-     "Euro": 42,
-     "ICON": 38
+     "Euro": 40,
+     "ICON": 41
     },
     "pop_max": {
-     "GFS": 81,
+     "GFS": 67,
      "Euro": 100,
      "ICON": 90
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.0,
-     "ICON": 0.07
+     "ICON": 0.08
     },
-    "high_spread_f": 9
+    "high_spread_f": 7
    },
    {
     "date": "2026-11-27",
     "high_f": {
      "GFS": 48,
-     "Euro": 44,
-     "ICON": 39
+     "Euro": 43,
+     "ICON": 41
     },
     "pop_max": {
      "GFS": 100,
@@ -1057,33 +1057,19 @@
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.54,
-     "Euro": 0.77,
-     "ICON": 1.09
+     "GFS": 0.47,
+     "Euro": 0.73,
+     "ICON": 1.12
     },
-    "high_spread_f": 9
+    "high_spread_f": 7
    }
   ]
  },
  "brief": {
   "date": "2026-11-25",
-  "generated": "2026-11-25T20:13:30+00:00",
-  "text": "Sunny today, high 40. Partly cloudy tonight, low 23. Thursday, mostly cloudy, high 42.",
+  "generated": "2026-11-25T23:42:22+00:00",
+  "text": "Partly cloudy tonight, low 23. Thursday, mostly cloudy, high 42. Rain Thursday night from 8pm to 3am, about 0.6 inch, low 33.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 40,
-    "sky": "sunny",
-    "start": "2026-11-25T15:00:00-05:00",
-    "end": "2026-11-25T18:00:00-05:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 37,
-    "feels_hi": 40,
-    "text": "Sunny today, high 40."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1097,6 +1083,20 @@
     "feels_lo": 20,
     "feels_hi": 34,
     "text": "Partly cloudy tonight, low 23."
+   },
+   {
+    "label": "Thursday",
+    "name": "Thanksgiving Day",
+    "is_day": true,
+    "temp_f": 42,
+    "sky": "mostly cloudy",
+    "start": "2026-11-26T06:00:00-05:00",
+    "end": "2026-11-26T18:00:00-05:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 24,
+    "feels_hi": 41,
+    "text": "Thursday, mostly cloudy, high 42."
    }
   ]
  }
