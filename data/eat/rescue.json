@@ -1,0 +1,486 @@
+{
+  "updated": "2026-10-29",
+  "note": "Food rescue in and around Burlington, VT: consumer surplus apps (most don't serve Burlington), local rescue organizations, the legal rules a leftovers board must respect, and a build spec for a 'rescue' board kind. App availability changes; Too Good To Go and Flashfood lists can only be seen in their apps.",
+  "apps": [
+    {
+      "id": "too-good-to-go",
+      "name": "Too Good To Go",
+      "what_it_is": "App where restaurants, bakeries and grocers sell 'Surprise Bags' of same-day surplus food at roughly a third of retail price, picked up in a set window.",
+      "serves_burlington": "unclear",
+      "evidence": "No official listing, press release or local news found for Vermont. Every 'Burlington' store page on toogoodtogo.com that search surfaced is Burlington, MA (Just Salad, Caffe Nero) or Burlington, ON. The Aug 27, 2025 US expansion release names Albany, Syracuse, Buffalo, Rochester, Milwaukee, Madison, Las Vegas and Indianapolis and promises every US city over one million residents; Vermont is not mentioned. A TikTok 'discover' page titled for Burlington, Vermont exists but is auto-generated and could not be read. No Seven Days, VTDigger, WCAX or Free Press coverage found. Reddit and toogoodtogo.com blocked automated checks (429), so r/burlington was not searched.",
+      "participating_spots": [],
+      "how_to_use": "Install the app, set location to Burlington, VT, and browse; the live list changes daily and is only visible in the app. Reserve and pay in the app, pick up during the store's window.",
+      "website": "https://www.toogoodtogo.com/en-us",
+      "source_url": "https://www.prnewswire.com/news-releases/too-good-to-go-accelerates-us-expansion-through-rapidly-growing-partner-network-302539498.html",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "flashfood",
+      "name": "Flashfood",
+      "what_it_is": "App for buying grocery items near their best-before date at a discount (reports cite up to 50-60% off), paid in the app and picked up from a Flashfood Zone in a partner store.",
+      "serves_burlington": false,
+      "evidence": "Flashfood's partner list (Kroger, Loblaws, Meijer, Gelson's, Family Fare, Piggly Wiggly, Martin's, VG's Grocery, Tops, Giant Eagle) includes no chain with a Burlington-area store; Hannaford, Price Chopper and Shaw's are not listed and no news ties them to Flashfood. Tops is a partner and has Vermont stores, but the only Vermont Tops named in coverage is Hardwick (82 VT Route 15W, about 50 miles away), and no source confirms Hardwick runs Flashfood. Coverage of Tops' Flashfood rollout names only New York stores.",
+      "participating_spots": [],
+      "how_to_use": "Not usable in Burlington as of this check. Re-check the in-app store map if a new grocer partners.",
+      "website": "https://www.flashfood.com/",
+      "source_url": "https://www.flashfood.com/en/partner/tops-friendly-markets",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "olio",
+      "name": "Olio",
+      "what_it_is": "Free neighbor-to-neighbor sharing app for giving away surplus food and household items.",
+      "serves_burlington": "unclear",
+      "evidence": "The app can be downloaded in the US, but no source shows active Burlington or Vermont listings. Coverage of US use is mostly Seattle and older (2017-2019); one review says most users are in Europe. Whether anyone in Burlington is listing can only be seen in the app.",
+      "participating_spots": [],
+      "how_to_use": "Install and set location; listings are posted by individuals and come and go.",
+      "website": "https://olioapp.com/",
+      "source_url": "https://apps.apple.com/app/olio/id1008237086",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "karma",
+      "name": "Karma",
+      "what_it_is": "Swedish app selling surplus restaurant and grocery food at a discount.",
+      "serves_burlington": false,
+      "evidence": "App Store listing describes connected businesses in the UK and Sweden; FAO's June 2024 entry says Europe only. A 2018 article said the company was interested in the US; no US launch found.",
+      "participating_spots": [],
+      "how_to_use": "Not available in the US.",
+      "website": "https://www.karma.life/",
+      "source_url": "https://apps.apple.com/app/id1087490062",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "food-rescue-us",
+      "name": "Food Rescue US",
+      "what_it_is": "National nonprofit whose app sends volunteer drivers to move surplus food from businesses to local agencies, run through local site chapters.",
+      "serves_burlington": "unclear",
+      "evidence": "No Vermont site found. Profiles describe 39-43 locations in 23-25 states without naming Vermont; the foodrescue.us/locations page returned 404, so the full list could not be checked. Vermont's retail rescue is run instead by the Vermont Foodbank (Fresh Rescue) and Feeding Champlain Valley.",
+      "participating_spots": [],
+      "how_to_use": "Check foodrescue.us for a Vermont site before mentioning it.",
+      "website": "https://foodrescue.us/",
+      "source_url": "https://givingcompass.org/nonprofit/food-rescue-us",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "misfits-market",
+      "name": "Misfits Market",
+      "what_it_is": "Online grocery delivery that includes surplus and cosmetically imperfect produce and groceries.",
+      "serves_burlington": true,
+      "evidence": "Vermont is on Misfits Market's list of states served. Footnote says 'Limited service in a few select areas'; ZIP 05401 itself was not tested (sign-up requires email).",
+      "participating_spots": [],
+      "how_to_use": "Enter ZIP at sign-up to confirm delivery; delivery is weekly on an assigned day.",
+      "website": "https://www.misfitsmarket.com/",
+      "source_url": "https://www.misfitsmarket.com/waitlist",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "imperfect-foods",
+      "name": "Imperfect Foods",
+      "what_it_is": "Online grocery delivery of imperfect and surplus food.",
+      "serves_burlington": "unclear",
+      "evidence": "Official site only offers a ZIP checker; reviews claim near-nationwide coverage and older comparisons list 'Northeast'. No Vermont-specific source found.",
+      "participating_spots": [],
+      "how_to_use": "Enter 05401 at imperfectfoods.com.",
+      "website": "https://www.imperfectfoods.com/",
+      "source_url": "https://imperfectfoods.com/how-it-works",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "hungry-harvest",
+      "name": "Hungry Harvest",
+      "what_it_is": "Delivery of rescued and imperfect produce boxes.",
+      "serves_burlington": false,
+      "evidence": "'Where We Deliver' lists Maryland, DC, Virginia, Greater Philadelphia, Southern New Jersey, Northern Delaware and Raleigh NC only.",
+      "participating_spots": [],
+      "how_to_use": "Not available; waitlist only.",
+      "website": "https://www.hungryharvest.net/",
+      "source_url": "https://www.hungryharvest.net/where-we-deliver",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "mealconnect",
+      "name": "MealConnect (Feeding America)",
+      "what_it_is": "Free Feeding America app and website where food businesses post surplus (photo, details, pickup time) and are matched to a nearby food shelf or meal site that picks it up.",
+      "serves_burlington": true,
+      "evidence": "Vermont Foodbank's Food Industry Donations page directs businesses to MealConnect and names a Foodbank contact for help (Joshua Ellison, jellison@vtfoodbank.org, 802-683-2134).",
+      "participating_spots": [],
+      "how_to_use": "For restaurants and stores, not individuals: post the donation in MealConnect; a matched agency schedules pickup.",
+      "website": "https://mealconnect.org/",
+      "source_url": "https://www.vtfoodbank.org/businesses/food-industry-donations/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "hannaford-food-rescue",
+      "name": "Hannaford food rescue (store donations)",
+      "what_it_is": "Hannaford's daily store donation program: staff set aside bruised produce, damaged-package shelf items, and meat or dairy near sell-by for nearby food shelves. A donation program, not a consumer markdown app.",
+      "serves_burlington": true,
+      "evidence": "Williston Observer (Apr 16, 2026): Hannaford gave 2.5 million pounds to Vermont food shelves in 2025; 17 Vermont stores partner with at least one food shelf; the Williston store supplies the Williston Community Food Shelf. No Hannaford consumer markdown app (Flashfood-style) found.",
+      "participating_spots": [
+        {
+          "name": "Hannaford Williston",
+          "restaurant_hint": "grocery; donates to Williston Community Food Shelf, not a public pickup",
+          "evidence_url": "https://www.willistonobserver.com/news/williston/from-store-shelves-to-food-shelf/article_18876e38-54ce-4265-9d81-9ec91ee4bc83.html",
+          "evidence_date": "2026-04-16"
+        }
+      ],
+      "how_to_use": "People get this food through participating food shelves, not from the store.",
+      "website": "https://www.hannaford.com/",
+      "source_url": "https://www.willistonobserver.com/news/williston/from-store-shelves-to-food-shelf/article_18876e38-54ce-4265-9d81-9ec91ee4bc83.html",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "price-chopper-market-32",
+      "name": "Price Chopper / Market 32 markdowns",
+      "what_it_is": "Checked for a surplus-food app partnership or markdown program.",
+      "serves_burlington": "unclear",
+      "evidence": "No source found linking Price Chopper/Market 32 to Flashfood, Too Good To Go or a branded markdown program; results only covered food drives. In-store markdown stickers may exist but were not documented on any page found.",
+      "participating_spots": [],
+      "how_to_use": "No documented program.",
+      "website": "https://www.pricechopper.com/",
+      "source_url": "https://www.pricechopper.com/",
+      "verified": "2026-10-29"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "feeding-champlain-valley",
+      "name": "Feeding Champlain Valley (formerly Feeding Chittenden)",
+      "what_they_do": "CVOEO program, renamed from Feeding Chittenden in June 2024. Grocery distribution, hot meals, meal production, food rescue, home delivery, online ordering, gleaning, food kiosks. Says 40% of its food is donated and rescued. As of an Aug 11, 2026 announcement it runs gleaning in Chittenden County.",
+      "restaurants_donate": "Its Give Food page covers food drives and direct gifts 'from your farm, garden or business' without a restaurant-specific process; call 802-658-7939 to arrange. A Vermont Community Foundation story named New Moon Cafe and The Skinny Pancake among past donors (as Feeding Chittenden). Prepared food must meet DEC prepared-meal guidance.",
+      "people_get_food": "Food Shelf at 228 N. Winooski Ave., Burlington, Mon-Fri 9:30 AM-2:30 PM. Hot meals weekdays 9:30 AM-12:00 PM for guests of CVOEO's Community Resource Center on the same site. Home delivery or community drop-off by form; Stay at Home Grocery Delivery: Nasse Salhi, nsalhi@cvoeo.org.",
+      "area": "Chittenden, Addison, Franklin and Grand Isle counties",
+      "website": "https://www.feedingchamplainvalley.org/",
+      "contact_url": "https://www.feedingchamplainvalley.org/chittenden-county/",
+      "source_url": "https://www.feedingchamplainvalley.org/what-we-do/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vermont-foodbank",
+      "name": "Vermont Foodbank",
+      "what_they_do": "Statewide food bank (Barre). Takes industry donations and supplies a network of food shelves. Its Fresh Rescue / Retail Store Program has pre-approved food shelves and meal sites pick up unsaleable but usable food straight from grocery stores. A Foodbank page says it no longer runs a gleaning program and refers Chittenden County to Feeding Champlain Valley and the Intervale Center.",
+      "restaurants_donate": "Accepts dry, refrigerated and frozen products (surplus, discontinued, near-date, imperfect packaging); prepared food is not mentioned. Large donations: Mike Thomas, mthomas@vtfoodbank.org, 802-477-4107. Smaller or recurring surplus: post on MealConnect; help from Joshua Ellison, jellison@vtfoodbank.org, 802-683-2134.",
+      "people_get_food": "Through partner food shelves; use the Find a Food Shelf tool.",
+      "area": "Statewide",
+      "website": "https://www.vtfoodbank.org/",
+      "contact_url": "https://www.vtfoodbank.org/businesses/food-industry-donations/",
+      "source_url": "https://www.vtfoodbank.org/network-partner-hub/programs-for-network-partners/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "intervale-gleaning",
+      "name": "Intervale Center Gleaning & Food Rescue",
+      "what_they_do": "Volunteers glean produce farms won't harvest and give it away free, mostly through Fair Share, a free weekly produce share in Burlington July-October, plus monthly pop-up distributions December-June (in Winooski starting January).",
+      "restaurants_donate": "Not for restaurants. Chittenden County farms with crops to glean or donate: email gabby@intervale.org.",
+      "people_get_food": "Fair Share is for anyone struggling to afford produce; no income verification. Full for 2026; sign-ups go out mid-April to the mailing list. Contact Gabby, Food Access Manager, (802) 660-0440 x120.",
+      "area": "Burlington / Chittenden County",
+      "website": "https://www.intervale.org/",
+      "contact_url": "https://www.intervale.org/intervale-gleaning-food-rescue",
+      "source_url": "https://www.intervale.org/intervale-gleaning-food-rescue",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vermont-gleaning-collective",
+      "name": "Vermont Gleaning Collective",
+      "what_they_do": "Statewide partnership of community gleaning programs. Lists the Intervale Center for the Burlington area and Healthy Roots Collaborative for Northwest Vermont.",
+      "restaurants_donate": "Not for restaurants. Farms use the farm inquiry form; recipient sites use the site inquiry form.",
+      "people_get_food": "Indirectly, through recipient sites. Volunteers register as gleaners on the site.",
+      "area": "Statewide",
+      "website": "https://www.vermontgleaningcollective.org",
+      "contact_url": "https://www.vermontgleaningcollective.org",
+      "source_url": "https://www.vermontgleaningcollective.org",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "salvation-farms",
+      "name": "Salvation Farms",
+      "what_they_do": "Morrisville nonprofit that gleans farm surplus and moves it to meal programs, pantries and feeding sites at no cost to farmers, and is relaunching a farm-surplus processing program (Feb 2026 legislative testimony).",
+      "restaurants_donate": "Not for restaurants; farms use the Connect With Us page.",
+      "people_get_food": "Indirectly via partner sites. Whether it serves Burlington is not stated on its site.",
+      "area": "Based in Lamoille County (Morrisville); Burlington coverage unclear",
+      "website": "https://www.salvationfarms.org/",
+      "contact_url": "https://www.salvationfarms.org/",
+      "source_url": "https://www.salvationfarms.org/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "cswd",
+      "name": "Chittenden Solid Waste District (CSWD)",
+      "what_they_do": "County waste district. Explains Act 148 (food scraps banned from trash for everyone since 2020; food recovery hierarchy puts donating edible food second, after reducing waste). Keeps a food donation page listing local recipients.",
+      "restaurants_donate": "CSWD does not handle donations; donors contact food shelves and kitchens directly. Its list includes Vermont Foodbank, Feeding Chittenden (now Feeding Champlain Valley), COTS (802-864-7402), the Salvation Army at 64 Main St. (call 802-864-6991 to set a time), and UVM Campus Kitchen (status not re-checked).",
+      "people_get_food": "Points to the same recipient list and FoodPantries.org.",
+      "area": "Chittenden County",
+      "website": "https://cswd.net/",
+      "contact_url": "https://cswd.net/information-library/food-donations/",
+      "source_url": "https://cswd.net/information-library/food-donations/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-dec-food-donation",
+      "name": "Vermont DEC Food Donation program",
+      "what_they_do": "State Universal Recycling staff. Publishes donation guidance (prepared meals, perishable, meat, non-perishable), liability, tax and date-label fact sheets (revised May 2026), and a map of food shelves.",
+      "restaurants_donate": "Follow the Prepared Meals Donation Guidelines; food safety questions go to the Vermont Department of Health, 802-863-7221.",
+      "people_get_food": "Not direct; see the Materials Management Map of food shelves.",
+      "area": "Statewide",
+      "website": "https://dec.vermont.gov/waste-management/solid/materials-mgmt/food-donation-vermont",
+      "contact_url": "https://dec.vermont.gov/waste-management/solid/materials-mgmt/food-donation-vermont",
+      "source_url": "https://dec.vermont.gov/waste-management/solid/materials-mgmt/food-donation-vermont",
+      "verified": "2026-10-29"
+    }
+  ],
+  "rules": [
+    {
+      "id": "emerson-act",
+      "name": "Bill Emerson Good Samaritan Food Donation Act (42 U.S.C. 1791)",
+      "plain_english": "Federal law that protects donors and nonprofits from civil and criminal liability for good-faith donations of 'apparently wholesome' food that meets federal, state and local quality and labeling rules. Protection is lost only for gross negligence or intentional misconduct. Vermont's labeling and safety rules therefore must be followed to keep the federal protection.",
+      "applies_to_board": "Free posts only. The food has to meet Vermont food-code rules, which is why the board needs holding statements, allergen disclosure and time limits.",
+      "source_url": "https://dec.vermont.gov/sites/dec/files/documents/VT%20Liability%20Protection%20Fact%20Sheet%20Revised%20May%202026.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "fdia-2023",
+      "name": "Food Donation Improvement Act (Pub. L. 117-362, approved Jan 5, 2023)",
+      "plain_english": "Adds a 'Good Samaritan reduced price' (no more than the cost of handling, transporting and distributing) and lets 'qualified direct donors' (including restaurants, caterers and grocers) give straight to people in need. But the direct-to-individual protection covers only donations 'at zero cost'. The reduced price applies when a nonprofit distributes the food. So a restaurant selling leftovers at a discount directly to a person is NOT protected by Emerson/FDIA; that is an ordinary sale.",
+      "applies_to_board": "Corrects the brief's premise. A free post from a restaurant to a person is protected. A reduced-price post sold directly by the restaurant is a normal retail sale, as on Too Good To Go, with the restaurant's usual liability. Reduced price is protected only if a nonprofit runs the distribution.",
+      "source_url": "https://www.congress.gov/117/plaws/publ362/PLAW-117publ362.htm",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-good-samaritan",
+      "name": "Vermont Good Samaritan Law for Donations of Food (12 V.S.A. §§ 5761-5762)",
+      "plain_english": "The right cite is 12 V.S.A. chapter 197, not 18 V.S.A. § 4113. A good-faith donor of canned, perishable or farm food, given to a person for consumption or to a charity for free distribution, is shielded from civil and criminal liability if they reasonably inspect it and find it apparently fit, and don't know or have reason to know it is adulterated or harmful. Unlike federal law, it covers direct donations to individuals by any donor. The section title says 'distributed free of charge', and charities that sell donated food are excluded from the definition.",
+      "applies_to_board": "Backs free posts. Gives no protection to priced posts. Restaurants should be told this in plain words at sign-up.",
+      "source_url": "https://legislature.vermont.gov/statutes/fullchapter/12/197",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-time-temperature",
+      "name": "Vermont Health Regulations for Food Service Establishments: time and temperature",
+      "plain_english": "Hot food held at 135°F or above; cold food at 41°F or below. Cooked food cooled from 135°F to 41°F within four hours total. Ready-to-eat potentially hazardous food made more than 24 hours earlier must be date marked. Food taken off temperature control must be served or thrown out within four hours, marked with that time. The state's guide does not say which FDA Food Code edition is adopted.",
+      "applies_to_board": "Each post must state hot-held, cold-held or shelf-stable. Any item not held hot or cold must be ready within four hours of leaving temperature control, so the pickup window maxes out at 4 hours from posting for time-controlled items. The restaurant attests at post time.",
+      "source_url": "https://www.healthvermont.gov/sites/default/files/document/env-fl-retail-critical-food-violations.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-no-reservice",
+      "name": "No re-service of served or returned food (critical violation item 7)",
+      "plain_english": "Food that was served to a customer or sent back may not be offered to another customer.",
+      "applies_to_board": "Plate leftovers, buffet-line food that was out for self-service, and returned items are banned. Only food that never left the kitchen.",
+      "source_url": "https://www.healthvermont.gov/sites/default/files/document/env-fl-retail-critical-food-violations.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-prepared-meal-donation",
+      "name": "Vermont DEC / Vermont Foodbank Prepared Meals Donation Guidelines",
+      "plain_english": "Prepared meals for donation must never have left the kitchen or been served. They must be cooled quickly if held hot and completely wrapped, and labeled with an ingredient list, donation date and donor name. Keep thawed meals at 41°F or below and frozen at 0°F or below, off the floor. Thawed meals are good up to 3 days, frozen up to 3 months, baked goods 3-5 days if not moldy. Transport cold (refrigerated truck, iced cooler or commercial insulated blanket).",
+      "applies_to_board": "Required item labels: ingredients, prepared date, restaurant name. Pickup instructions should tell claimers to bring a bag or cooler and get it cold within the window.",
+      "source_url": "https://dec.vermont.gov/sites/dec/files/wmp/SolidWaste/Documents/Universal-Recycling/Prepared-Meals-Donation-Guidelines.pdf",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "vt-universal-recycling",
+      "name": "Universal Recycling Law (Act 148 of 2012)",
+      "plain_english": "Food scraps are banned from the trash for all businesses and residents since 2020, phased in from 2014 for big generators. Vermont's food recovery hierarchy says to reduce waste first, then feed people (donate), then animals, compost or digestion.",
+      "applies_to_board": "Good framing for restaurant recruitment: posting on the board is the law's second priority. Unclaimed food still goes to food scraps/compost, never the trash.",
+      "source_url": "https://cswd.net/information-library/act-148-universal-recycling-law/",
+      "verified": "2026-10-29"
+    },
+    {
+      "id": "allergen-disclosure",
+      "name": "Allergen disclosure",
+      "plain_english": "Unsure: no Vermont-specific restaurant allergen-disclosure statute or rule was found in this pass. The DEC prepared-meal guideline does require an ingredient list on donated meals.",
+      "applies_to_board": "Make allergen fields required anyway (big 9 checklist plus 'may contain'), as a board rule, not a claimed legal requirement.",
+      "source_url": "https://dec.vermont.gov/sites/dec/files/wmp/SolidWaste/Documents/Universal-Recycling/Prepared-Meals-Donation-Guidelines.pdf",
+      "verified": "2026-10-29"
+    }
+  ],
+  "board_spec": {
+    "summary": "A 'rescue' post kind on the existing Supabase boards framework. Verified restaurants post the leftovers they have at closing; signed-in residents claim a portion and pick it up in a short window. Posts auto-hide when the window ends. Launch free-only. Free food is covered by Emerson/FDIA and 12 V.S.A. § 5762; priced food is an ordinary sale and is not (see rules fdia-2023 and vt-good-samaritan).",
+    "post_kind": "rescue",
+    "fields": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "required": true,
+        "notes": "Framework default."
+      },
+      {
+        "name": "kind",
+        "type": "text = 'rescue'",
+        "required": true,
+        "notes": "Existing post-kind column."
+      },
+      {
+        "name": "restaurant_id",
+        "type": "text",
+        "required": true,
+        "notes": "Must match an id in data/restaurants.json (slugs like '99-restaurants'). Reject if the restaurant is closed=true. Copy name, address and coords into the post at create time so it still renders if restaurants.json changes."
+      },
+      {
+        "name": "posted_by",
+        "type": "uuid (auth user)",
+        "required": true,
+        "notes": "Must be a member of restaurant_accounts with status='verified' for this restaurant_id. Enforce in RLS, not just UI."
+      },
+      {
+        "name": "items",
+        "type": "jsonb array",
+        "required": true,
+        "notes": "1-20 items. Each: name (text, ≤80), quantity (int ≥1), unit ('portion'|'item'|'tray'|'loaf'|'bag'|'lb'), dietary_tags (from a fixed list: vegetarian, vegan, gluten-free-ingredients, dairy-free, halal, kosher), allergens (required array from the big 9: milk, eggs, fish, shellfish, tree nuts, peanuts, wheat, soy, sesame; empty only with an explicit 'none of the 9' checkbox), may_contain (text, optional), ingredients (text, required for prepared dishes per DEC guideline), prepared_at (timestamp, required)."
+      },
+      {
+        "name": "price_type",
+        "type": "enum('free','reduced')",
+        "required": true,
+        "notes": "Launch with 'free' only. 'reduced' sits behind a feature flag until Stephen decides (see open questions)."
+      },
+      {
+        "name": "price_cents",
+        "type": "int",
+        "required": false,
+        "notes": "Only when price_type='reduced'. Board does no payments; pay at pickup. Must be below the restaurant's normal menu price; show the original price for context."
+      },
+      {
+        "name": "holding",
+        "type": "enum('hot_held','cold_held','shelf_stable','time_controlled')",
+        "required": true,
+        "notes": "Restaurant attests: hot ≥135°F, cold ≤41°F, shelf-stable (bread, pastries), or time-controlled (off temp control; must be gone within 4 hours of time_off_control)."
+      },
+      {
+        "name": "time_off_control",
+        "type": "timestamptz",
+        "required": false,
+        "notes": "Required when holding='time_controlled'. pickup_window.end must be ≤ this + 4h."
+      },
+      {
+        "name": "attestations",
+        "type": "jsonb",
+        "required": true,
+        "notes": "Checkboxes saved with timestamp: never served or returned; prepared in our licensed kitchen (no home-cooked); wrapped/packaged; labels include ingredients, date and our name; held as stated; not for resale."
+      },
+      {
+        "name": "pickup_window",
+        "type": "tstzrange {start,end}",
+        "required": true,
+        "notes": "Start ≥ now-5min; end > start; length 15 min to 3 h (4 h hard cap for time-controlled, measured from time_off_control). Times shown in America/New_York."
+      },
+      {
+        "name": "pickup_instructions",
+        "type": "text ≤300",
+        "required": true,
+        "notes": "e.g. 'Side door on Bank St, ask for the rescue bag, bring a cooler bag.' Plain text, no links."
+      },
+      {
+        "name": "expires_at",
+        "type": "timestamptz",
+        "required": true,
+        "notes": "Generated = upper(pickup_window). Hidden from public reads when now() > expires_at (RLS/view filter), plus a scheduled job (pg_cron every 5 min) that sets status='expired'."
+      },
+      {
+        "name": "status",
+        "type": "enum('open','fully_claimed','expired','withdrawn','removed')",
+        "required": true,
+        "notes": "'removed' = moderator action."
+      },
+      {
+        "name": "photo_url",
+        "type": "text (storage path)",
+        "required": false,
+        "notes": "Optional, one image, ≤5 MB, EXIF stripped, through existing upload moderation."
+      },
+      {
+        "name": "claim_limit_per_person",
+        "type": "int",
+        "required": true,
+        "notes": "Default 1 claim per post, max portions per claim set by restaurant (default 2)."
+      },
+      {
+        "name": "visibility",
+        "type": "enum('public','signed_in')",
+        "required": true,
+        "notes": "Default: post card (restaurant, item names, window) public; exact pickup instructions and the Claim button for signed-in users only."
+      },
+      {
+        "name": "created_at / updated_at",
+        "type": "timestamptz",
+        "required": true,
+        "notes": "Framework defaults. Edits after the first claim may only add quantity, extend the window within caps, or withdraw."
+      },
+      {
+        "name": "rescue_claims (child table)",
+        "type": "table",
+        "required": true,
+        "notes": "post_id, item index, user_id, quantity, status ('reserved','picked_up','no_show','cancelled'), pickup_code (4-digit, shown to the claimer), created_at. Unique (post_id, user_id). Reserve with an atomic decrement (SQL function with row lock) so two people can't claim the last portion."
+      }
+    ],
+    "rules": [
+      "Only verified restaurant accounts can create rescue posts; one account can be tied to several restaurant_ids (owner groups).",
+      "Licensed commercial kitchens only. No home-cooked or cottage food, no plate leftovers, no food that was served, put out for self-serve, or returned (VT critical violation item 7).",
+      "Pickup window: 15 min minimum, 3 h maximum. Time-controlled items: window must end within 4 h of leaving temperature control.",
+      "Auto-expiry: hidden at expires_at, status flipped by cron; unclaimed food goes to the restaurant's compost/food scraps stream (Act 148) or a food shelf, never the trash.",
+      "Allergen field required for every item (or an explicit 'none of the big 9' checkbox). Ingredient list required for prepared dishes.",
+      "Holding statement required (hot/cold/shelf-stable/time-controlled), with an attestation saved on each post.",
+      "No resale: claimers agree not to resell; posts say 'not for resale'. Restaurants can't post items bought in for resale (e.g. retail bottled drinks) unless their own surplus.",
+      "Claim limits: 1 claim per user per post, restaurant sets max portions (default 2); max 3 active reservations per user across the board at once.",
+      "No-shows: a reservation not marked picked up by window end becomes no_show; 3 no-shows in 30 days blocks claiming for 14 days.",
+      "Free-only at launch. If reduced price is enabled later, those posts carry a label: 'Discounted sale by the restaurant, not a donation'.",
+      "Restaurant may post at most 3 open rescue posts at a time and at most 6 per day (anti-spam).",
+      "Board shows a standing note: 'Food is provided by the restaurant. Check allergens; refrigerate within 2 hours; when in doubt, throw it out.' (The 2-hour line is general food-safety advice, not a cited Vermont rule; swap for whatever the Health Department wording ends up being.)",
+      "Visibility: card public so it can be shared or appear on the City Guide; pickup details and claiming need sign-in (protects restaurants from crowds and enables limits)."
+    ],
+    "moderation": [
+      "Restaurant verification: owner/manager requests access for a restaurant_id. Proof is one of (a) a code sent to the phone number or email on the restaurant's Google listing or website (from restaurants.json links), or (b) an admin call to the published number. Optional extra: the Vermont Health Department food service license number, checked by hand. Admin approves in the queue; status pending → verified. Re-verify yearly or when the restaurant's closed flag flips.",
+      "Report button on each post with reasons: food-safety concern (temperature, spoiled), allergen info wrong, food wasn't there / restaurant closed, not a real restaurant / impersonation, resale or price gouging, rude or unsafe pickup, other (free text ≤300).",
+      "Food-safety and allergen reports from a claimer who picked up go to the top of the admin queue and email the admin immediately; the post is auto-hidden after 2 such reports pending review.",
+      "Strike policy for restaurants: 1 confirmed minor issue (wrong window, missing label) = warning; confirmed food-safety or allergen issue = strike plus 7-day posting pause; 2 strikes in 12 months = posting suspended pending a call; impersonation = removal. Strikes expire after 12 months.",
+      "Strike policy for claimers: resale, harassment or abusive no-show patterns → claiming suspended; repeat → account ban through the framework's existing ban tools.",
+      "Admin queue (existing moderation UI): tabs for pending restaurant verifications, open reports (sorted by severity, then age), auto-hidden posts, and a 7-day log of expired posts with claim counts. Actions: approve or reject verification, restore or remove post, warn or strike, suspend.",
+      "Every moderator action writes to the existing audit log with reason."
+    ],
+    "notifications": [
+      "Residents opt in to follow restaurants or neighborhoods (neighborhood field from restaurants.json); push/email when a matching rescue post goes live. Batch so a user gets at most one alert per 30 min.",
+      "Claimer: confirmation with pickup code, address and window; reminder 15 min before window end if not picked up; notice if the restaurant withdraws the post.",
+      "Restaurant: notice on each claim (in-app; optional SMS/email digest), and a 'window ending, X portions unclaimed' nudge 10 min before end. A one-tap 'mark picked up' by pickup code.",
+      "Restaurant: weekly summary (portions posted vs claimed); can be quoted for Act 148 / tax records.",
+      "Admin: email on high-severity reports and new verification requests."
+    ],
+    "edge_cases": [
+      "Restaurant closes early or runs out (staff ate it, sold it): 'withdraw' button notifies all claimers; frequent withdrawals count toward warnings.",
+      "Last portion race: two claims at once; atomic SQL decrement, the loser sees 'just claimed'.",
+      "Claimer arrives after the window: post is hidden; restaurant has no obligation; reservation marked no_show unless the restaurant marks picked_up.",
+      "Restaurant posts a window that crosses midnight or DST change: store as timestamptz, display local; reject windows > caps regardless.",
+      "restaurant_id later marked closed=true or deleted from restaurants.json: block new posts, keep history; the snapshot of name/address keeps old posts rendering.",
+      "Multi-location chains: each location is its own restaurant_id; a manager account can be verified for several.",
+      "Restaurant edits allergens after claims exist: notify every claimer with the change; edits that add an allergen are logged and reviewed.",
+      "Someone claims on behalf of a shelter or group wanting more than the limit: route to Feeding Champlain Valley / MealConnect instead; consider an 'organization claimer' role later.",
+      "Bulk trays too big for individuals: suggest MealConnect for >20 portions.",
+      "Alcohol, raw meat or seafood, and unpasteurized items: block alcohol entirely. Raw animal foods off by default (riskier, not DEC prepared-meal scope).",
+      "Photo shows people or another business: moderation removes it.",
+      "Time zone: all checks in America/New_York; server uses UTC.",
+      "Abuse: one person with several accounts to beat limits; rely on the framework's phone or email verification, rate-limit by device where available.",
+      "Restaurant on Too Good To Go too: allowed; board doesn't care, but a post shouldn't double-sell the same food. Attestation covers it."
+    ],
+    "open_questions_for_stephen": [
+      "Free-only, or allow reduced price? Reduced-price direct sales get no Emerson/FDIA or 12 V.S.A. § 5762 protection and make the board a sales channel competing with Too Good To Go. Recommend free-only at launch.",
+      "Should claiming need sign-in (recommended, enables limits) or allow anonymous claims with a phone number?",
+      "Should a lawyer or the Vermont Department of Health Food & Lodging program (802-863-7221) review the attestation text and the standing safety note before launch?",
+      "Verification strength: is a code to the listed phone/email enough, or require a license number too?",
+      "Is there demand? Recruiting 5-10 pilot restaurants (bakeries and cafes first: shelf-stable, lowest risk) before building may be the real first step.",
+      "Should unclaimed-food guidance point restaurants to Feeding Champlain Valley pickup, or just compost?",
+      "Neighborhood alerts: reuse restaurants.json neighborhood values or the City Guide's own areas?"
+    ]
+  },
+  "gaps": [
+    "Too Good To Go: no Burlington, VT store pages or news found; toogoodtogo.com returned 429 to direct checks and the TikTok page couldn't be read. Only the app can confirm. Worth a 2-minute manual check in the app set to 05401.",
+    "Reddit (r/burlington, r/vermont) blocked automated search; no Reddit evidence for any app was collected.",
+    "Flashfood's in-app store map wasn't viewable; conclusion rests on its partner list plus news coverage.",
+    "Misfits Market and Imperfect Foods: ZIP 05401 not actually tested (needs sign-up).",
+    "Food Rescue US locations page 404'd; Vermont absence not fully confirmed.",
+    "Feeding Champlain Valley has no published restaurant-donation process for prepared food; its Aug 11, 2026 gleaning announcement text wasn't extractable beyond the title.",
+    "Salvation Farms' Burlington coverage not stated on its site.",
+    "Which FDA Food Code edition Vermont's food service rules adopt was not confirmed; numbers used come from the Health Department's Oct 2025 Guide to Critical Violations.",
+    "No Vermont restaurant allergen-disclosure rule found; the board's allergen requirement is a policy choice.",
+    "UVM Campus Kitchen (listed by CSWD) not re-checked; may be inactive.",
+    "No local news found (Seven Days, VTDigger, WCAX, Free Press) on any surplus-food app in Burlington."
+  ]
+}
