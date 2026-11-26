@@ -1,41 +1,40 @@
 {
- "generated": "2026-11-25T14:33:11-05:00",
+ "generated": "2026-11-25T22:05:36-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 22,
-   "seconds": 5.9
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 77,
-   "seconds": 5.5
+   "count": 75,
+   "seconds": 5.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 88,
-   "seconds": 3.5
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 88,
-   "seconds": 2.6
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 127,
-   "seconds": 2.9
+   "seconds": 2.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 23,
-   "seconds": 3.2
+   "seconds": 4.0
   },
   "eventbrite": {
    "label": "Eventbrite",
-   "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-25&end_date=2027-01-24&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 8
+   "count": 84,
+   "seconds": 34.0
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -45,32 +44,32 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 181,
-   "seconds": 67.7
+   "seconds": 74.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 3,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 16,
-   "seconds": 33.3
+   "seconds": 30.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.9
+   "seconds": 2.6
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 734,
-   "seconds": 38.1
+   "seconds": 43.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -80,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 28.4
+   "seconds": 18.9
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 549,
-   "seconds": 79.0
+   "seconds": 73.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 57,
-   "seconds": 106.4
+   "seconds": 110.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 14,
-   "seconds": 0.4
+   "seconds": 1.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 165,
-   "seconds": 14.6
+   "seconds": 15.3
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,12 +109,12 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 96,
-   "seconds": 8.2
+   "seconds": 6.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 22.2
+   "seconds": 23.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -126,46 +125,35 @@
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 54,
-   "seconds": 5.2
+   "seconds": 2.9
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 249,
-   "seconds": 11.7
+   "seconds": 18.1
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 158,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 45,
-   "seconds": 59.2
+   "seconds": 62.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 28,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 2797,
- "afterDedup": 1491,
- "duplicatesMerged": 1306,
- "final": 2140,
- "firecrawlCalls": 11,
+ "gathered": 2879,
+ "afterDedup": 1563,
+ "duplicatesMerged": 1316,
+ "final": 2181,
+ "firecrawlCalls": 10,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Documents and Details: Raul Hilberg at 100",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-14"
-  },
   {
    "kept": {
     "title": "De-stress at the Libraries: Coffee, tea, and snacks",
@@ -919,6 +907,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Kids Jam",
+    "source": "breweries"
+   },
+   "merged_sources": [
+    "breweries",
+    "eventbrite"
    ],
    "date": "2026-12-20"
   },
@@ -2396,6 +2395,181 @@
  ],
  "changes": [
   {
+   "id": "ddb77d97bb60",
+   "title": "Children's Story Time ﻿With Christine﻿",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "6c40467c12e1",
+   "title": "Yarn & Yak",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "96abf8d4cf43",
+   "title": "The All-Inclusive Dyke-Tacular",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "29e4749af66d",
+   "title": "Yarn Crafters Group",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "82b0a24241a4",
+   "title": "Midweek Dharma",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "d85c8f95a1dd",
+   "title": "Community Cooking",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "a95d89ec7c43",
+   "title": "Recovery Dharma",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "4afac4f9f685",
+   "title": "Trivia",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "25b4a5ed324b",
+   "title": "Standup Open Mic",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "2f45a5ec0ca1",
+   "title": "Jazz Night with Ray Vega",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "0a157f776c25",
+   "title": "Jazz Jam",
+   "date": "2026-12-30",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "a8d679bdd01c",
+   "title": "BTV Clean Up Crew",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "73d482f9cd88",
+   "title": "Baby & Me Class",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "7afc327d5420",
+   "title": "Duplicate Bridge Games",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "8cd51286271a",
+   "title": "Friendly Game of Bridge",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "1881295e73a0",
+   "title": "Trivia Night",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "493d30478a78",
+   "title": "Peer Support Dungeons & Dragons",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "fc4b71ff5724",
+   "title": "Karaoke in the Alley",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "1f2c045c3883",
+   "title": "Funk Jam",
+   "date": "2026-12-31",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "08e9e82ea83c",
+   "title": "Weekly Meditation",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "4ed3b3965976",
+   "title": "Family Friday With Linda Bassick",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "aa0ff4bf03e5",
+   "title": "Duplicate Bridge Games",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "4c9b555b9e5b",
+   "title": "Morning Tech Help",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "c91591f4987c",
+   "title": "Mah-Jongg",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
+   "id": "aad22c8f6b0d",
+   "title": "Drop-In",
+   "date": "2027-01-01",
+   "change": "source-down",
+   "lastSeen": "2026-11-18T13:21:41-05:00"
+  },
+  {
    "id": "736042328e0f",
    "title": "Laughter Yoga",
    "date": "2027-01-01",
@@ -2457,12 +2631,6 @@
    "date": "2027-01-02",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "0760a59bd6c0",
-   "title": "Winter Lights Movie Night: Perfect Date",
-   "date": "2027-01-02",
-   "change": "dropped"
   },
   {
    "id": "d9041283a19d",
@@ -2542,12 +2710,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "89e3f882c958",
-   "title": "Winter Lights Movie Night: Family Fun",
-   "date": "2027-01-03",
-   "change": "dropped"
-  },
-  {
    "id": "659dc9c653b3",
    "title": "Burlington Insight Meditation Community",
    "date": "2027-01-03",
@@ -2616,12 +2778,6 @@
    "date": "2027-01-04",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "1553aa1ff0aa",
-   "title": "Industry Day",
-   "date": "2027-01-04",
-   "change": "dropped"
   },
   {
    "id": "9d544f3e7a36",
@@ -2715,23 +2871,11 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "9ccd5514992a",
-   "title": "802sDay",
-   "date": "2027-01-05",
-   "change": "dropped"
-  },
-  {
    "id": "bacf742dfdb6",
    "title": "Children's Story Time ﻿With Christine﻿",
    "date": "2027-01-06",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "10582cc0b52c",
-   "title": "Pub Hour",
-   "date": "2027-01-06",
-   "change": "dropped"
   },
   {
    "id": "14251eb01256",
@@ -2860,12 +3004,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "9e9c33445ceb",
-   "title": "Hot Dog & A Can Thursdays",
-   "date": "2027-01-07",
-   "change": "dropped"
-  },
-  {
    "id": "09e434d07021",
    "title": "Duplicate Bridge Games",
    "date": "2027-01-07",
@@ -2880,23 +3018,11 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "92a0874f0a28",
-   "title": "Pub Hour",
-   "date": "2027-01-07",
-   "change": "dropped"
-  },
-  {
    "id": "380ba9995d5b",
    "title": "Tween Group",
    "date": "2027-01-07",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "a8f06409e526",
-   "title": "Hold for minecraft",
-   "date": "2027-01-07",
-   "change": "dropped"
   },
   {
    "id": "2ae75e2c4f87",
@@ -2906,23 +3032,11 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "91083364d7f0",
-   "title": "Trivia",
-   "date": "2027-01-07",
-   "change": "dropped"
-  },
-  {
    "id": "963e86173205",
    "title": "Trivia Night",
    "date": "2027-01-07",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "54fe3189338c",
-   "title": "Trivia",
-   "date": "2027-01-07",
-   "change": "dropped"
   },
   {
    "id": "1ce8689821d9",
@@ -2974,12 +3088,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "5179554af1f7",
-   "title": "Pub Hour",
-   "date": "2027-01-08",
-   "change": "dropped"
-  },
-  {
    "id": "c2949d863915",
    "title": "Mindfulness Meditation",
    "date": "2027-01-08",
@@ -3022,13 +3130,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "6b57ad263bb6",
-   "title": "Winter on the Farm Playdate",
-   "date": "2027-01-09",
-   "change": "source-down",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
-  },
-  {
    "id": "52008a6df193",
    "title": "French Story Time",
    "date": "2027-01-09",
@@ -3048,12 +3149,6 @@
    "date": "2027-01-09",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "33458229aa90",
-   "title": "Second Saturdays",
-   "date": "2027-01-09",
-   "change": "dropped"
   },
   {
    "id": "6bb751d9b77f",
@@ -3098,12 +3193,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "78b4431f7041",
-   "title": "Sensory-Friendly Sunday",
-   "date": "2027-01-10",
-   "change": "dropped"
-  },
-  {
    "id": "ba5b4c8f5f97",
    "title": "Sunday Brunch Tunes",
    "date": "2027-01-10",
@@ -3123,13 +3212,6 @@
    "date": "2027-01-10",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "d7437dee1399",
-   "title": "Burlington VT Wedding Show",
-   "date": "2027-01-10",
-   "change": "source-down",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
   },
   {
    "id": "25d7b8670bff",
@@ -3244,12 +3326,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "579ecb70483a",
-   "title": "Industry Day",
-   "date": "2027-01-11",
-   "change": "dropped"
-  },
-  {
    "id": "628437c9a362",
    "title": "Mini Clean Up Crew",
    "date": "2027-01-12",
@@ -3334,12 +3410,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "31a65205341c",
-   "title": "802sDay",
-   "date": "2027-01-12",
-   "change": "dropped"
-  },
-  {
    "id": "535bdd0fe2ec",
    "title": "Green Mountain Chapter of the Embroiderers’ Guild of America",
    "date": "2027-01-13",
@@ -3375,12 +3445,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "5ef0fc734ddd",
-   "title": "Pub Hour",
-   "date": "2027-01-13",
-   "change": "dropped"
-  },
-  {
    "id": "9d8d967c4ea8",
    "title": "Yarn & Yak",
    "date": "2027-01-13",
@@ -3407,13 +3471,6 @@
    "date": "2027-01-13",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "738d0e0df23f",
-   "title": "Mushroom Medicine",
-   "date": "2027-01-13",
-   "change": "source-down",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
   },
   {
    "id": "3a2ca7b75304",
@@ -3486,12 +3543,6 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "eb69edc49061",
-   "title": "Hot Dog & A Can Thursdays",
-   "date": "2027-01-14",
-   "change": "dropped"
-  },
-  {
    "id": "abf97bd29751",
    "title": "Duplicate Bridge Games",
    "date": "2027-01-14",
@@ -3506,35 +3557,11 @@
    "lastSeen": "2026-11-18T13:21:41-05:00"
   },
   {
-   "id": "fa0d279c8b94",
-   "title": "Pub Hour",
-   "date": "2027-01-14",
-   "change": "dropped"
-  },
-  {
-   "id": "536b62710217",
-   "title": "Hold for minecraft",
-   "date": "2027-01-14",
-   "change": "dropped"
-  },
-  {
-   "id": "75a8a392d3ea",
-   "title": "Trivia",
-   "date": "2027-01-14",
-   "change": "dropped"
-  },
-  {
    "id": "51e312eba445",
    "title": "Trivia Night",
    "date": "2027-01-14",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "f79f4da098f7",
-   "title": "Trivia",
-   "date": "2027-01-14",
-   "change": "dropped"
   },
   {
    "id": "f1145591b280",
@@ -3647,13 +3674,6 @@
    "date": "2027-01-16",
    "change": "source-down",
    "lastSeen": "2026-11-18T13:21:41-05:00"
-  },
-  {
-   "id": "d23ff1a715b4",
-   "title": "Granola Making, from Seed to Snack",
-   "date": "2027-01-16",
-   "change": "source-down",
-   "lastSeen": "2026-11-17T13:43:51-05:00"
   },
   {
    "id": "82408b6248d9",
