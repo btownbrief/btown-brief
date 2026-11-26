@@ -1,40 +1,41 @@
 {
- "generated": "2026-11-25T22:05:36-05:00",
+ "generated": "2026-11-26T14:16:42-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 22,
-   "seconds": 6.3
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 5.8
+   "count": 74,
+   "seconds": 2.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 88,
-   "seconds": 2.9
+   "count": 86,
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 88,
-   "seconds": 2.4
+   "count": 100,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 127,
-   "seconds": 2.5
+   "seconds": 3.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
-   "count": 23,
-   "seconds": 4.0
+   "count": 22,
+   "seconds": 3.6
   },
   "eventbrite": {
    "label": "Eventbrite",
-   "count": 84,
-   "seconds": 34.0
+   "count": 0,
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-26&end_date=2027-01-25&page=1 (HTTP Error 405: Not Allowed)",
+   "staleDays": 0
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,22 +45,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 181,
-   "seconds": 74.2
+   "count": 179,
+   "seconds": 71.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 3,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 16,
-   "seconds": 30.4
+   "seconds": 30.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +69,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 734,
-   "seconds": 43.5
+   "count": 727,
+   "seconds": 38.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +80,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 18.9
+   "seconds": 31.8
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 549,
-   "seconds": 73.4
+   "count": 543,
+   "seconds": 83.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 57,
-   "seconds": 110.4
+   "count": 56,
+   "seconds": 108.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 14,
-   "seconds": 1.4
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 165,
-   "seconds": 15.3
+   "count": 169,
+   "seconds": 17.9
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,18 +110,18 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 96,
-   "seconds": 6.9
+   "seconds": 7.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 23.4
+   "seconds": 22.9
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 0,
    "error": "HTTP Error 429: Too Many Requests",
-   "staleDays": 7
+   "staleDays": 8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,8 +130,8 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 249,
-   "seconds": 18.1
+   "count": 248,
+   "seconds": 10.9
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -140,18 +141,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 45,
-   "seconds": 62.1
+   "seconds": 60.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 28,
-   "seconds": 0.3
+   "count": 27,
+   "seconds": 0.2
   }
  },
- "gathered": 2879,
- "afterDedup": 1563,
- "duplicatesMerged": 1316,
- "final": 2181,
+ "gathered": 2789,
+ "afterDedup": 1489,
+ "duplicatesMerged": 1300,
+ "final": 2161,
  "firecrawlCalls": 10,
  "mergeLog": [
   {
@@ -907,17 +908,6 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
-   ],
-   "date": "2026-12-20"
-  },
-  {
-   "kept": {
-    "title": "Kids Jam",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "eventbrite"
    ],
    "date": "2026-12-20"
   },
@@ -2391,6 +2381,17 @@
     "loveburlington"
    ],
    "date": "2027-01-24"
+  },
+  {
+   "kept": {
+    "title": "Burlington Illuminated",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2027-01-25"
   }
  ],
  "changes": [
