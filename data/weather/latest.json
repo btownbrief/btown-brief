@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-25T23:42:08+00:00",
+ "updated": "2026-11-26T02:58:59+00:00",
  "sections_updated": {
-  "now": "2026-11-25T23:42:08+00:00",
-  "forecast": "2026-11-25T23:42:08+00:00",
-  "hourly": "2026-11-25T23:42:08+00:00",
-  "alerts": "2026-11-25T23:42:08+00:00",
-  "afd": "2026-11-25T23:42:08+00:00",
-  "lake_forecast": "2026-11-25T23:42:08+00:00",
-  "lake_gage": "2026-11-25T23:42:08+00:00",
-  "air": "2026-11-25T23:42:08+00:00",
+  "now": "2026-11-26T02:58:59+00:00",
+  "forecast": "2026-11-26T02:58:59+00:00",
+  "hourly": "2026-11-26T02:58:59+00:00",
+  "alerts": "2026-11-26T02:58:59+00:00",
+  "afd": "2026-11-26T02:58:59+00:00",
+  "lake_forecast": "2026-11-26T02:58:59+00:00",
+  "lake_gage": "2026-11-26T02:58:59+00:00",
+  "air": "2026-11-26T02:58:59+00:00",
   "sun": "2026-11-25T23:42:08+00:00",
   "models": "2026-11-25T23:42:08+00:00"
  },
  "now": {
-  "observed_at": "2026-11-25T23:20:00+00:00",
+  "observed_at": "2026-11-26T02:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 28,
-  "feels_like_f": 28,
+  "temp_f": 27,
+  "feels_like_f": 27,
   "humidity": 74,
-  "dewpoint_f": 21,
+  "dewpoint_f": 19,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-25T18:00:00-05:00",
+    "start": "2026-11-25T21:00:00-05:00",
     "is_day": false,
     "temp_f": 23,
     "pop": 0,
-    "wind": "NE 5 mph",
+    "wind": "E 3 mph",
     "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 23. Northeast wind around 5 mph."
+    "detailed": "Partly cloudy, with a low around 23. East wind around 3 mph."
    },
    {
     "name": "Thanksgiving Day",
@@ -173,48 +173,6 @@
  "hourly": {
   "updated": "2026-11-25T18:22:37+00:00",
   "hours": [
-   {
-    "t": "2026-11-25T18:00:00-05:00",
-    "temp_f": 34,
-    "feels_f": 34,
-    "pop": 0,
-    "humidity": 54,
-    "wind_mph": 2,
-    "wind_dir": "NE",
-    "sky": 34,
-    "short": "Partly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
-   {
-    "t": "2026-11-25T19:00:00-05:00",
-    "temp_f": 32,
-    "feels_f": 27,
-    "pop": 0,
-    "humidity": 61,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 39,
-    "short": "Partly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
-   {
-    "t": "2026-11-25T20:00:00-05:00",
-    "temp_f": 31,
-    "feels_f": 28,
-    "pop": 0,
-    "humidity": 63,
-    "wind_mph": 3,
-    "wind_dir": "NE",
-    "sky": 54,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
    {
     "t": "2026-11-25T21:00:00-05:00",
     "temp_f": 30,
@@ -676,6 +634,48 @@
     "qpf_in": 0.04,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-11-27T06:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 34,
+    "pop": 35,
+    "humidity": 85,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 93,
+    "short": "Chance Light Rain",
+    "qpf_in": 0.04,
+    "snow_in": 0.0,
+    "gust_mph": 9
+   },
+   {
+    "t": "2026-11-27T07:00:00-05:00",
+    "temp_f": 37,
+    "feels_f": 32,
+    "pop": 46,
+    "humidity": 92,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 94,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.005,
+    "snow_in": 0.0,
+    "gust_mph": 9
+   },
+   {
+    "t": "2026-11-27T08:00:00-05:00",
+    "temp_f": 38,
+    "feels_f": 34,
+    "pop": 45,
+    "humidity": 96,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 91,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.005,
+    "snow_in": 0.0,
+    "gust_mph": 9
    }
   ],
   "days": [
@@ -983,18 +983,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 49,
-  "water_temp_at": "2026-11-25T18:00:00.000-05:00",
-  "level_ft": 93.69,
-  "level_at": "2026-11-25T18:00:00.000-05:00",
+  "water_temp_f": 48,
+  "water_temp_at": "2026-11-25T21:00:00.000-05:00",
+  "level_ft": 93.68,
+  "level_at": "2026-11-25T21:00:00.000-05:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 44,
-  "category": "Good",
-  "pollutant": "PM10",
-  "observed": "11/25/26 18:00",
+  "aqi": 51,
+  "category": "Moderate",
+  "pollutant": "PM2.5",
+  "observed": "11/25/26 21:00",
   "discussion": "On Wednesday, November 25th, expect moderate levels of fine particulate matter (PM25), in mountain valley locations with nearby air emission sources.  expect generally good air quality elsewhere across Vermont."
  },
  "sun": {
@@ -1067,7 +1067,7 @@
  },
  "brief": {
   "date": "2026-11-25",
-  "generated": "2026-11-25T23:42:22+00:00",
+  "generated": "2026-11-26T03:00:05+00:00",
   "text": "Partly cloudy tonight, low 23. Thursday, mostly cloudy, high 42. Rain Thursday night from 8pm to 3am, about 0.6 inch, low 33.",
   "periods": [
    {
@@ -1076,12 +1076,12 @@
     "is_day": false,
     "temp_f": 23,
     "sky": "partly cloudy",
-    "start": "2026-11-25T18:00:00-05:00",
+    "start": "2026-11-26T03:00:00+00:00",
     "end": "2026-11-26T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 20,
-    "feels_hi": 34,
+    "feels_hi": 29,
     "text": "Partly cloudy tonight, low 23."
    },
    {
