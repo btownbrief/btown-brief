@@ -1,0 +1,724 @@
+[
+ {
+  "school": "Burlington High School",
+  "town": "Burlington",
+  "athletics_url": "https://burlingtonathletics.com/",
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/2775",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=2775",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/2775 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 105,
+  "feed_home_events": 57,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-11",
+  "home_venues": [
+   {
+    "name": "Burlington High School Burlington High School Gymnasium 110 Institute Rd/Seahorse Street Burlington, VT 05401"
+   },
+   {
+    "name": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-12-11",
+    "time": "8:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": null,
+    "url": "https://arbiterlive.com/Teams/Game/105175396/2775/7777098/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": "Burlington High School Burlington High School Gymnasium 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/105143242/2775/10093003/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "5:15pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "North Country Union High School",
+    "venue": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/105176315/2775/7777098/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Enosburg Falls HS",
+    "venue": "Burlington High School Burlington High School Gymnasium 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/105143615/2775/10093003/93"
+   },
+   {
+    "date": "2026-12-28",
+    "time": "4:15pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Spaulding HS",
+    "venue": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/103912405/2775/11299379/93"
+   },
+   {
+    "date": "2027-01-02",
+    "time": "2:15pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Burr And Burton Academy",
+    "venue": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/103912435/2775/11299379/93"
+   },
+   {
+    "date": "2027-01-02",
+    "time": "2:30pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "South Burlington High School",
+    "venue": "Burlington High School Burlington High School Gymnasium 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/105149032/2775/10095764/93"
+   },
+   {
+    "date": "2027-01-07",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Burlington High School Burlington High School Gymnasium 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/105149073/2775/10095764/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/2775",
+  "verified": "2026-10-29",
+  "notes": null
+ },
+ {
+  "school": "South Burlington High School",
+  "town": "South Burlington",
+  "athletics_url": null,
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/21273",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=21273",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/21273 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 102,
+  "feed_home_events": 48,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-11",
+  "home_venues": [
+   {
+    "name": "South Burlington High School Burleigh Court 550 Dorset Street South BUrlington, VT 05403"
+   },
+   {
+    "name": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403"
+   },
+   {
+    "name": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465"
+   },
+   {
+    "name": "South Burlington High School Green Mtn. Training Center 550 Dorset Street South BUrlington, VT 05403"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-12-14",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Montpelier HS",
+    "venue": "South Burlington High School Burleigh Court 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104768763/21273/10005318/93"
+   },
+   {
+    "date": "2026-12-15",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "South Burlington High School Burleigh Court 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104770761/21273/10005402/93"
+   },
+   {
+    "date": "2026-12-16",
+    "time": "7:40pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Essex HS",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/105153653/21273/7773422/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "5:30pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Rutland HS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104586178/21273/10005402/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "7:00pm",
+    "sport": "Girls Gymnastics",
+    "level": "varsity",
+    "opponent": "Burr And Burton Academy",
+    "venue": "South Burlington High School Green Mtn. Training Center 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104964838/21273/10467059/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "5:30pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Mt. Anthony UHS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104586182/21273/10005402/93"
+   },
+   {
+    "date": "2027-01-05",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Essex HS",
+    "venue": "South Burlington High School Burleigh Court 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104770805/21273/10005402/93"
+   },
+   {
+    "date": "2027-01-07",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Champlain Valley UHS",
+    "venue": "South Burlington High School Burleigh Court 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104768830/21273/10005318/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/21273",
+  "verified": "2026-10-29",
+  "notes": "District site sbschools.net serves a JavaScript bot challenge to scripts, so its athletics page could not be read."
+ },
+ {
+  "school": "Champlain Valley Union High School",
+  "town": "Hinesburg",
+  "athletics_url": "https://athletics.cvuhs.org/",
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/3879",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=3879",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/3879 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 118,
+  "feed_home_events": 60,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-05",
+  "home_venues": [
+   {
+    "name": "Cairns Arena Cairns Arena #2 599 Swift St. South Burlington, Vermont 05403"
+   },
+   {
+    "name": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403"
+   },
+   {
+    "name": "Champlain Valley Union High Main Gym 369 CVU Rd Hinesburg, Vermont 05461"
+   },
+   {
+    "name": "Hartford HS Barwood Arena 37 Highland Ave White River Junction, VT 05001-1797"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-11-01",
+    "time": "7:30pm",
+    "sport": "Boys Soccer",
+    "level": "varsity",
+    "opponent": "Essex HS",
+    "venue": null,
+    "url": "https://arbiterlive.com/Teams/Game/105170743/3879/7715704/93"
+   },
+   {
+    "date": "2026-12-12",
+    "time": "2:35pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Harwood UHS",
+    "venue": "Cairns Arena Cairns Arena #2 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104368449/3879/7974405/93"
+   },
+   {
+    "date": "2026-12-16",
+    "time": "5:25pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Spaulding HS",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104367926/3879/7777096/93"
+   },
+   {
+    "date": "2026-12-17",
+    "time": "6:30pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Vergennes UMHS",
+    "venue": "Champlain Valley Union High Main Gym 369 CVU Rd Hinesburg, Vermont 05461",
+    "url": "https://arbiterlive.com/Teams/Game/103366832/3879/10087050/93"
+   },
+   {
+    "date": "2026-12-18",
+    "time": "4:00pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Brattleboro UHS",
+    "venue": "Hartford HS Barwood Arena 37 Highland Ave White River Junction, VT 05001-1797",
+    "url": "https://arbiterlive.com/Teams/Game/105143382/3879/7974405/93"
+   },
+   {
+    "date": "2026-12-19",
+    "time": "3:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Burr And Burton Academy",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104368031/3879/7777096/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": null,
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "South Burlington High School",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104368060/3879/7777096/93",
+    "time_note": "ArbiterLive shows 12:01 AM, a placeholder; treat as TBA"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "5:25pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Missisquoi Valley Union High School",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104368665/3879/7974405/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/3879",
+  "verified": "2026-10-29",
+  "notes": "Athletics site links to its ArbiterLive page (entityId=3879)."
+ },
+ {
+  "school": "Essex High School",
+  "town": "Essex Junction",
+  "athletics_url": null,
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/7075",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=7075",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/7075 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 69,
+  "feed_home_events": 3,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-03",
+  "home_venues": [
+   {
+    "name": "Essex High School Stadium Field 2 Educational Dr Essex Junction, Vermont 05452-3194"
+   },
+   {
+    "name": "Essex High School Essex Skating Facility 2 Educational Dr Essex Junction, Vermont 05452-3194"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-10-30",
+    "time": "7:00pm",
+    "sport": "Coed Football",
+    "level": "varsity",
+    "opponent": "SeaWolves Football",
+    "venue": "Essex High School Stadium Field 2 Educational Dr Essex Junction, Vermont 05452-3194",
+    "url": "https://arbiterlive.com/Teams/Game/105052032/7075/10612571/93"
+   },
+   {
+    "date": "2026-12-19",
+    "time": "3:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Rutland HS",
+    "venue": "Essex High School Essex Skating Facility 2 Educational Dr Essex Junction, Vermont 05452-3194",
+    "url": "https://arbiterlive.com/Teams/Game/104100890/7075/7777102/93"
+   },
+   {
+    "date": "2027-01-20",
+    "time": "6:00pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Essex High School Essex Skating Facility 2 Educational Dr Essex Junction, Vermont 05452-3194",
+    "url": "https://arbiterlive.com/Teams/Game/104101213/7075/7974406/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/7075",
+  "verified": "2026-10-29",
+  "notes": "District site ewsd.org serves a JavaScript bot challenge; Essex appears to keep few of its own home games in ArbiterLive (most rows are entered by opponents)."
+ },
+ {
+  "school": "Colchester High School",
+  "town": "Colchester",
+  "athletics_url": "https://www.csdvt.org/chs/athletics/athletics.php",
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/4662",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=4662",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/4662 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 113,
+  "feed_home_events": 59,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-05",
+  "home_venues": [
+   {
+    "name": "Colchester High School Stadium Field 131 Laker Lane Colchester, VT 05446"
+   },
+   {
+    "name": "Colchester High School Gym 131 Laker Lane Colchester, VT 05446"
+   },
+   {
+    "name": "Colchester High School Leddy Arena - Olympic Rink 131 Laker Lane Colchester, VT 05446"
+   },
+   {
+    "name": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-10-30",
+    "time": "7:00pm",
+    "sport": "Coed Football",
+    "level": "varsity",
+    "opponent": "Hartford HS",
+    "venue": "Colchester High School Stadium Field 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/105048345/4662/10671234/93"
+   },
+   {
+    "date": "2026-12-18",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Burlington HS",
+    "venue": "Colchester High School Gym 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/104083194/4662/10201240/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "4:15pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": "Colchester High School Leddy Arena - Olympic Rink 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/103907800/4662/7974367/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Rice Memorial HS",
+    "venue": "Colchester High School Gym 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/104083239/4662/10201240/93"
+   },
+   {
+    "date": "2026-12-22",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Montpelier HS",
+    "venue": "Colchester High School Gym 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/102854914/4662/10095762/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "6:45pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Hartford HS",
+    "venue": "Colchester High School Leddy Arena - Olympic Rink 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/103907873/4662/7974367/93"
+   },
+   {
+    "date": "2026-12-28",
+    "time": "4:15pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Spaulding HS",
+    "venue": "Burlington High School Gordon Paquette Leddy Park Arena 110 Institute Rd/Seahorse Street Burlington, VT 05401",
+    "url": "https://arbiterlive.com/Teams/Game/103912405/4662/11299379/93"
+   },
+   {
+    "date": "2026-12-28",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "South Burlington High School",
+    "venue": "Colchester High School Gym 131 Laker Lane Colchester, VT 05446",
+    "url": "https://arbiterlive.com/Teams/Game/104085348/4662/10201240/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/4662",
+  "verified": "2026-10-29",
+  "notes": "Athletics page links 'CHS SPORTS SCHEDULES' to ArbiterLive entityId=4662."
+ },
+ {
+  "school": "Rice Memorial High School",
+  "town": "South Burlington",
+  "athletics_url": null,
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/19089",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=19089",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/19089 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 113,
+  "feed_home_events": 55,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-11",
+  "home_venues": [
+   {
+    "name": "South Burlington High School South Burlington High School 550 Dorset Street South BUrlington, VT 05403"
+   },
+   {
+    "name": "Rice Memorial High School Gym 99 Proctor Ave South Burlington, VT 05403"
+   },
+   {
+    "name": "Gutterson Fieldhouse, VT rink 147 Spear Street Burlington, VT 05405"
+   },
+   {
+    "name": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-10-31",
+    "time": "2:00pm",
+    "sport": "Boys Soccer",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": "South Burlington High School South Burlington High School 550 Dorset Street South BUrlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/105170817/19089/8892846/93"
+   },
+   {
+    "date": "2026-12-11",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Rice Memorial High School Gym 99 Proctor Ave South Burlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104795104/19089/8857895/93"
+   },
+   {
+    "date": "2026-12-13",
+    "time": "12:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Hingham High School",
+    "venue": "Gutterson Fieldhouse, VT rink 147 Spear Street Burlington, VT 05405",
+    "url": "https://arbiterlive.com/Teams/Game/102566328/19089/7974389/93"
+   },
+   {
+    "date": "2026-12-15",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Enosburg Falls HS",
+    "venue": "Rice Memorial High School Gym 99 Proctor Ave South Burlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104795124/19089/8857895/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "5:15pm",
+    "sport": "Girls Hockey",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104101180/19089/612446/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Middlebury UHS",
+    "venue": "Rice Memorial High School Gym 99 Proctor Ave South Burlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104773592/19089/10005311/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "7:40pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Rutland HS",
+    "venue": "Cairns Arena Cairns Arena #1 599 Swift St. South Burlington, Vermont 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104073357/19089/7974389/93"
+   },
+   {
+    "date": "2027-01-02",
+    "time": "2:30pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Rice Memorial High School Gym 99 Proctor Ave South Burlington, VT 05403",
+    "url": "https://arbiterlive.com/Teams/Game/104774615/19089/10005311/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/19089",
+  "verified": "2026-10-29",
+  "notes": "rmhsvt.org returns a Cloudflare challenge (403) to scripts."
+ },
+ {
+  "school": "Winooski Middle/High School",
+  "town": "Winooski",
+  "athletics_url": "https://www.wsdvt.org/athletic-department/",
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/26089",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=26089",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/26089 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 39,
+  "feed_home_events": 2,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-11",
+  "home_venues": [
+   {
+    "name": "Winooski High School Gym 60 Normand St Winooski, VT 05404"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2027-02-18",
+    "time": "7:30pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Missisquoi Valley Union High School",
+    "venue": "Winooski High School Gym 60 Normand St Winooski, VT 05404",
+    "url": "https://arbiterlive.com/Teams/Game/103910899/26089/10144989/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/26089",
+  "verified": "2026-10-29",
+  "notes": "Winooski's athletics page links Arbiter registration (students.arbitersports.com), not a schedule; its ArbiterLive calendar holds mostly away games entered by opponents."
+ },
+ {
+  "school": "Mount Mansfield Union High School",
+  "town": "Jericho",
+  "athletics_url": null,
+  "schedule_platform": "ArbiterLive",
+  "schedule_source": "https://arbiterlive.com/School/Calendar/15304",
+  "teams_url": "https://arbiterlive.com/Teams?entityId=15304",
+  "feed_url": "https://arbiterlive.com/School/GetEventsByEntity/",
+  "feed_how": "GET https://arbiterlive.com/School/Calendar/15304 to get a session cookie, then POST startDate=YYYY-M-D&endDate=YYYY-M-D (X-Requested-With: XMLHttpRequest) to the feed URL; JSON field EventsFilteredDetailString holds title, start, isAwayGame and a game URL. Venue is on each game page. No key needed.",
+  "feed_checked": true,
+  "feed_events_2026_10_29_to_2027_03_31": 102,
+  "feed_home_events": 62,
+  "refreshable_by_script": true,
+  "winter_season_start": null,
+  "first_winter_game_listed": "2026-12-03",
+  "home_venues": [
+   {
+    "name": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465"
+   },
+   {
+    "name": "Essex Junction Skating Facility Essex Junction Skating Facility 2 Educational Dr. Essex, Vermont 05452"
+   }
+  ],
+  "upcoming_home_games": [
+   {
+    "date": "2026-12-03",
+    "time": "6:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104713385/15304/10095765/93"
+   },
+   {
+    "date": "2026-12-05",
+    "time": "1:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Middlebury UHS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104585459/15304/10092997/93"
+   },
+   {
+    "date": "2026-12-05",
+    "time": "4:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Colchester High School",
+    "venue": "Essex Junction Skating Facility Essex Junction Skating Facility 2 Educational Dr. Essex, Vermont 05452",
+    "url": "https://arbiterlive.com/Teams/Game/103862385/15304/7974375/93"
+   },
+   {
+    "date": "2026-12-09",
+    "time": "8:00pm",
+    "sport": "Boys Hockey",
+    "level": "varsity",
+    "opponent": "Milton HS",
+    "venue": "Essex Junction Skating Facility Essex Junction Skating Facility 2 Educational Dr. Essex, Vermont 05452",
+    "url": "https://arbiterlive.com/Teams/Game/103862390/15304/7974375/93"
+   },
+   {
+    "date": "2026-12-12",
+    "time": "11:30am",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "Missisquoi Valley Union High School",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104713399/15304/10095765/93"
+   },
+   {
+    "date": "2026-12-17",
+    "time": "7:00pm",
+    "sport": "Boys Basketball",
+    "level": "varsity",
+    "opponent": "North Country Union High School",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104713428/15304/10095765/93"
+   },
+   {
+    "date": "2026-12-21",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Mt. Anthony UHS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104586180/15304/10092997/93"
+   },
+   {
+    "date": "2026-12-23",
+    "time": "7:00pm",
+    "sport": "Girls Basketball",
+    "level": "varsity",
+    "opponent": "Rutland HS",
+    "venue": "Mount Mansfield Union High School Gym 211 Browns Trace Rd Jericho, VT 05465",
+    "url": "https://arbiterlive.com/Teams/Game/104586184/15304/10092997/93"
+   }
+  ],
+  "source_url": "https://arbiterlive.com/School/Calendar/15304",
+  "verified": "2026-10-29",
+  "notes": "mmuusd.org returns 403 to scripts."
+ }
+]
