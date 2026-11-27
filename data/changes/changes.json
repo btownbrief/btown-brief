@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-26T20:18:47+00:00",
+ "generated": "2026-11-27T02:58:30+00:00",
  "events": [
   {
    "ts": "2026-11-25T19:33:11+00:00",
@@ -660,6 +660,39 @@
    "sourceName": "NWS Burlington",
    "priority": 2,
    "kind": "changed"
+  },
+  {
+   "ts": "2026-11-27T00:21:17+00:00",
+   "category": "news",
+   "headline": "Church Street Marketplace asks Black Friday shoppers to think local",
+   "detail": "",
+   "url": "https://www.wcax.com/2026/11/26/church-street-marketplace-asks-black-friday-shoppers-think-local/",
+   "source": "wcax",
+   "sourceName": "WCAX",
+   "priority": 1,
+   "kind": "added"
+  },
+  {
+   "ts": "2026-11-27T02:58:31+00:00",
+   "category": "weather",
+   "headline": "Tonight: Rain and snow",
+   "detail": "",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
+   "source": "nws-weather",
+   "sourceName": "NWS Burlington",
+   "priority": 2,
+   "kind": "changed"
+  },
+  {
+   "ts": "2026-11-27T02:58:37+00:00",
+   "category": "cityhall",
+   "headline": "Ward 8 NPA Meeting scheduled for Tuesday, Dec 8",
+   "detail": "",
+   "url": "https://burlingtonvt.portal.civicclerk.com/event/10183/overview",
+   "source": "civicclerk",
+   "sourceName": "City meeting portal",
+   "priority": 1,
+   "kind": "added"
   }
  ]
 }
