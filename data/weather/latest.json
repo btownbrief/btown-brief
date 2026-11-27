@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-26T23:55:16+00:00",
+ "updated": "2026-11-27T03:06:09+00:00",
  "sections_updated": {
-  "now": "2026-11-26T23:55:16+00:00",
-  "forecast": "2026-11-26T23:55:16+00:00",
-  "hourly": "2026-11-26T23:55:16+00:00",
-  "alerts": "2026-11-26T23:55:16+00:00",
-  "afd": "2026-11-26T23:55:16+00:00",
-  "lake_forecast": "2026-11-26T23:55:16+00:00",
+  "now": "2026-11-27T03:06:09+00:00",
+  "forecast": "2026-11-27T03:06:09+00:00",
+  "hourly": "2026-11-27T03:06:09+00:00",
+  "alerts": "2026-11-27T03:06:09+00:00",
+  "afd": "2026-11-27T03:06:09+00:00",
+  "lake_forecast": "2026-11-27T03:06:09+00:00",
   "lake_gage": "2026-11-26T23:55:16+00:00",
-  "air": "2026-11-26T23:55:16+00:00",
-  "sun": "2026-11-26T23:55:16+00:00",
-  "models": "2026-11-26T23:55:16+00:00"
+  "air": "2026-11-27T03:06:09+00:00",
+  "sun": "2026-11-27T03:06:09+00:00",
+  "models": "2026-11-27T03:06:09+00:00"
  },
  "now": {
-  "observed_at": "2026-11-26T23:35:00+00:00",
+  "observed_at": "2026-11-27T02:30:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 34,
-  "feels_like_f": 29,
-  "humidity": 75,
-  "dewpoint_f": 27,
-  "wind_mph": 6,
+  "description": "Light Rain",
+  "temp_f": 39,
+  "feels_like_f": 39,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": null,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-11-26T18:00:00-05:00",
+    "start": "2026-11-26T22:00:00-05:00",
     "is_day": false,
     "temp_f": 35,
     "pop": 100,
-    "wind": "N 2 to 7 mph",
-    "short": "Rain And Snow",
-    "detailed": "Rain and snow after 8pm. Cloudy, with a low around 35. North wind 2 to 7 mph. Chance of precipitation is 100%. New rainfall amounts between a half and three quarters of an inch possible."
+    "wind": "N 7 mph",
+    "short": "Light Rain",
+    "detailed": "Rain. Cloudy, with a low around 35. North wind around 7 mph. Chance of precipitation is 100%. New rainfall amounts between a half and three quarters of an inch possible."
    },
    {
     "name": "Friday",
@@ -173,62 +173,6 @@
  "hourly": {
   "updated": "2026-11-26T18:24:30+00:00",
   "hours": [
-   {
-    "t": "2026-11-26T18:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 34,
-    "pop": 0,
-    "humidity": 67,
-    "wind_mph": 3,
-    "wind_dir": "NE",
-    "sky": 89,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
-   {
-    "t": "2026-11-26T19:00:00-05:00",
-    "temp_f": 38,
-    "feels_f": 38,
-    "pop": 7,
-    "humidity": 59,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 94,
-    "short": "Cloudy",
-    "qpf_in": 0.063,
-    "snow_in": 0.0,
-    "gust_mph": 8
-   },
-   {
-    "t": "2026-11-26T20:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 37,
-    "pop": 15,
-    "humidity": 61,
-    "wind_mph": 2,
-    "wind_dir": "NE",
-    "sky": 92,
-    "short": "Slight Chance Rain And Snow",
-    "qpf_in": 0.063,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
-   {
-    "t": "2026-11-26T21:00:00-05:00",
-    "temp_f": 37,
-    "feels_f": 34,
-    "pop": 27,
-    "humidity": 64,
-    "wind_mph": 3,
-    "wind_dir": "NE",
-    "sky": 92,
-    "short": "Chance Light Rain",
-    "qpf_in": 0.063,
-    "snow_in": 0.0,
-    "gust_mph": 8
-   },
    {
     "t": "2026-11-26T22:00:00-05:00",
     "temp_f": 37,
@@ -676,6 +620,62 @@
     "qpf_in": 0.007,
     "snow_in": 0.0,
     "gust_mph": 8
+   },
+   {
+    "t": "2026-11-28T06:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 39,
+    "pop": 27,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "SW",
+    "sky": 92,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.007,
+    "snow_in": 0.0,
+    "gust_mph": 7
+   },
+   {
+    "t": "2026-11-28T07:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 39,
+    "pop": 19,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "W",
+    "sky": 94,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 7
+   },
+   {
+    "t": "2026-11-28T08:00:00-05:00",
+    "temp_f": 38,
+    "feels_f": 36,
+    "pop": 19,
+    "humidity": 100,
+    "wind_mph": 3,
+    "wind_dir": "W",
+    "sky": 94,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 7
+   },
+   {
+    "t": "2026-11-28T09:00:00-05:00",
+    "temp_f": 39,
+    "feels_f": 35,
+    "pop": 19,
+    "humidity": 100,
+    "wind_mph": 6,
+    "wind_dir": "W",
+    "sky": 93,
+    "short": "Slight Chance Rain Showers",
+    "qpf_in": 0.003,
+    "snow_in": 0.0,
+    "gust_mph": 7
    }
   ],
   "days": [
@@ -992,10 +992,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 32,
+  "aqi": 31,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "11/26/26 18:00",
+  "pollutant": "OZONE",
+  "observed": "11/26/26 21:00",
   "discussion": "On Friday, November 27th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1015,12 +1015,12 @@
      "ICON": 37
     },
     "pop_max": {
-     "GFS": 83,
+     "GFS": 91,
      "Euro": 100,
      "ICON": 98
     },
     "precip_in": {
-     "GFS": 0.16,
+     "GFS": 0.11,
      "Euro": 0.0,
      "ICON": 0.06
     },
@@ -1039,8 +1039,8 @@
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.83,
-     "Euro": 0.72,
+     "GFS": 0.59,
+     "Euro": 0.61,
      "ICON": 0.66
     },
     "high_spread_f": 6
@@ -1049,17 +1049,17 @@
     "date": "2026-11-28",
     "high_f": {
      "GFS": 42,
-     "Euro": 44,
+     "Euro": 42,
      "ICON": 45
     },
     "pop_max": {
-     "GFS": 59,
-     "Euro": 100,
+     "GFS": 61,
+     "Euro": 88,
      "ICON": 83
     },
     "precip_in": {
-     "GFS": 0.5,
-     "Euro": 0.29,
+     "GFS": 0.61,
+     "Euro": 0.26,
      "ICON": 0.37
     },
     "high_spread_f": 3
@@ -1068,8 +1068,8 @@
  },
  "brief": {
   "date": "2026-11-26",
-  "generated": "2026-11-26T23:55:29+00:00",
-  "text": "Rain tonight from 10pm to 4am, about 0.6 inch, low 35. Friday, a chance of showers from 5pm on, about a tenth of an inch, high 47. Showers Friday night until 4am, about a tenth of an inch, low 38.",
+  "generated": "2026-11-27T03:06:15+00:00",
+  "text": "Rain tonight until 4am, about 0.4 inch, low 35. Friday, a chance of showers from 5pm on, about a tenth of an inch, high 47. Showers Friday night until 4am, about a tenth of an inch, low 38.",
   "periods": [
    {
     "label": "Tonight",
@@ -1077,7 +1077,7 @@
     "is_day": false,
     "temp_f": 35,
     "sky": "clear",
-    "start": "2026-11-26T18:00:00-05:00",
+    "start": "2026-11-26T22:00:00-05:00",
     "end": "2026-11-27T06:00:00-05:00",
     "precip": {
      "kind": "rain",
@@ -1085,15 +1085,15 @@
      "say": "rain",
      "start": "2026-11-26T22:00:00-05:00",
      "end": "2026-11-27T04:00:00-05:00",
-     "when": "from 10pm to 4am",
-     "amount_in": 0.61,
+     "when": "until 4am",
+     "amount_in": 0.42,
      "snow_in": 0,
-     "amount": "about 0.6 inch"
+     "amount": "about 0.4 inch"
     },
     "wind": null,
     "feels_lo": 30,
-    "feels_hi": 38,
-    "text": "Rain tonight from 10pm to 4am, about 0.6 inch, low 35."
+    "feels_hi": 33,
+    "text": "Rain tonight until 4am, about 0.4 inch, low 35."
    },
    {
     "label": "Friday",
