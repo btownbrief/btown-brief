@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-26T14:16:42-05:00",
+ "generated": "2026-11-26T22:15:44-05:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,34 +8,34 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 74,
-   "seconds": 2.2
+   "count": 73,
+   "seconds": 4.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 86,
-   "seconds": 3.2
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 100,
-   "seconds": 2.5
+   "seconds": 2.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 127,
-   "seconds": 3.0
+   "seconds": 3.2
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 22,
-   "seconds": 3.6
+   "seconds": 3.7
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-11-26&end_date=2027-01-25&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 0
+   "staleDays": 1
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -45,32 +45,32 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 0,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 179,
-   "seconds": 71.1
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 3,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 16,
-   "seconds": 30.9
+   "seconds": 32.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
    "count": 0,
-   "seconds": 2.6
+   "seconds": 2.9
   },
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 727,
-   "seconds": 38.3
+   "seconds": 38.7
   },
   "higherground": {
    "label": "Higher Ground",
@@ -80,27 +80,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 31.8
+   "seconds": 16.9
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 543,
-   "seconds": 83.5
+   "seconds": 82.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 56,
-   "seconds": 108.1
+   "count": 55,
+   "seconds": 120.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 14,
-   "seconds": 0.4
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 169,
-   "seconds": 17.9
+   "count": 168,
+   "seconds": 15.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,12 +110,12 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 96,
-   "seconds": 7.0
+   "seconds": 7.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 22,
-   "seconds": 22.9
+   "seconds": 22.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -126,12 +126,12 @@
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 54,
-   "seconds": 2.9
+   "seconds": 3.1
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 248,
-   "seconds": 10.9
+   "seconds": 8.3
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -141,18 +141,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 45,
-   "seconds": 60.1
+   "seconds": 58.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 27,
-   "seconds": 0.2
+   "seconds": 0.5
   }
  },
- "gathered": 2789,
- "afterDedup": 1489,
- "duplicatesMerged": 1300,
- "final": 2161,
+ "gathered": 2786,
+ "afterDedup": 1487,
+ "duplicatesMerged": 1299,
+ "final": 2162,
  "firecrawlCalls": 10,
  "mergeLog": [
   {
